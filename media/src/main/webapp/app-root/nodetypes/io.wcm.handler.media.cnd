@@ -1,0 +1,25 @@
+/**
+ * io.wcm.handler.media Nodetype definitions
+ */
+ 
+// define namespace
+<io-wcm-handler-media = 'http://wcm.io/handler/media'>
+
+
+[io-wcm-handler-media:MediaFormat] > nt:unstructured
+  - jcr:title (string) mandatory
+  - jcr:description (string)
+  - width (long)
+  - widthMin (long)
+  - widthMax (long)
+  - height (long)
+  - heightMin (long)
+  - heightMax (long)
+  - ratio (double)
+  - ratioWidth (long)
+  - ratioHeight (long)
+  - fileSizeMax (long)
+  - extension (string) multiple
+  - renditionGroup (string)
+  - internal (boolean)
+  - ranking (long)

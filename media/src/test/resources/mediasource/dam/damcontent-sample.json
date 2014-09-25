@@ -1,0 +1,286 @@
+{
+  "jcr:primaryType":"sling:OrderedFolder",
+  "jcr:content": {
+    "jcr:title":"test",
+    "jcr:primaryType":"nt:unstructured"
+  },
+
+  "standard.jpg": {
+    "jcr:primaryType":"dam:Asset",
+    "jcr:content": {
+      "jcr:primaryType":"dam:AssetContent",
+      "metadata": {
+        "jcr:primaryType": "nt:unstructured",
+        "dc:format": "image/jpeg",
+        "dam:MIMEtype": "image/jpeg",
+        "tiff:ImageWidth": 215,
+        "tiff:ImageLength": 102,
+        "dc:title": "Editorial Standard 1"
+      },
+      "renditions": {
+        "jcr:primaryType":"nt:folder",
+        "original": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.215.102.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.450.213.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.685.325.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.960.455.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.960.485.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.1280.1280.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        }
+      },
+      "renditionsMetadata": {
+        "jcr:primaryType":"nt:unstructured",
+        "cq5dam.web.215.102.jpg": {
+          "jcr:primaryType":"nt:unstructured",
+          "imageWidth": 215,
+          "imageHeight": 102
+        },
+        "cq5dam.web.450.213.jpg": {
+          "jcr:primaryType":"nt:unstructured",
+          "imageWidth": 450,
+          "imageHeight": 213
+        },
+        "cq5dam.web.685.325.jpg": {
+          "jcr:primaryType":"nt:unstructured",
+          "imageWidth": 685,
+          "imageHeight": 325
+        },
+        "cq5dam.web.960.455.jpg": {
+          "jcr:primaryType":"nt:unstructured",
+          "imageWidth": 960,
+          "imageHeight": 455
+        },
+        "cq5dam.web.960.485.jpg": {
+          "jcr:primaryType":"nt:unstructured",
+          "imageWidth": 960,
+          "imageHeight": 485
+        },
+        "cq5dam.web.1280.1280.jpg": {
+          "jcr:primaryType":"nt:unstructured",
+          "imageWidth": 1280,
+          "imageHeight": 1280
+        }
+      }
+    }
+  },
+
+  "imageNoAltNoDimensions.jpg": {
+    "jcr:primaryType":"dam:Asset",
+    "jcr:content": {
+      "jcr:primaryType":"dam:AssetContent",
+      "metadata": {
+        "jcr:primaryType": "nt:unstructured",
+        "dc:format": "image/jpeg",
+        "dam:MIMEtype": "image/jpeg",
+        "dc:title": "Image with no altText and a rendition w/o fileSize & dimensions"
+      },
+      "renditions": {
+        "jcr:primaryType":"nt:folder",
+        "original": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        }
+      }
+    }
+  },
+
+  "flashWithFallback.swf": {
+    "jcr:primaryType":"dam:Asset",
+    "jcr:content": {
+      "jcr:primaryType":"dam:AssetContent",
+      "metadata": {
+        "jcr:primaryType": "nt:unstructured",
+        "dc:format": "application/x-shockwave-flash",
+        "dam:MIMEtype": "application/x-shockwave-flash",
+        "tiff:ImageWidth": 215,
+        "tiff:ImageLength": 102,
+        "dc:title": "Flash with Fallback Image"
+      },
+      "renditions": {
+        "jcr:primaryType":"nt:folder",
+        "original": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"application/x-shockwave-flash",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.215.102.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        }
+      }
+    }
+  },
+
+  "flashWithoutFallback.swf": {
+    "jcr:primaryType":"dam:Asset",
+    "jcr:content": {
+      "jcr:primaryType":"dam:AssetContent",
+      "metadata": {
+        "jcr:primaryType": "nt:unstructured",
+        "dc:format": "application/x-shockwave-flash",
+        "dam:MIMEtype": "application/x-shockwave-flash",
+        "exif:PixelXDimension": 215,
+        "exif:PixelYDimension": 102,
+        "dc:title": "Flash withOUT Fallback Image"
+      },
+      "renditions": {
+        "jcr:primaryType":"nt:folder",
+        "original": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"application/x-shockwave-flash",
+            "jcr:primaryType":"nt:resource"
+          }
+        }
+      }
+    }
+  },
+
+  "movie.wmf": {
+    "jcr:primaryType": "dam:Asset",
+    "jcr:content": {
+      "jcr:primaryType": "dam:AssetContent",
+      "metadata": {
+        "dc:format": "video/x-ms-wmv",
+        "tiff:ImageLength": 720,
+        "tiff:ImageWidth": 1280,
+        "dc:title": [
+          "Wildlife in HD"
+        ],
+        "xmpDM:videoFrameSize": {
+          "jcr:primaryType": "nt:unstructured",
+          "stDim:unit": "pixel",
+          "stDim:w": "1280",
+          "stDim:h": "720"
+        }
+      },
+      "renditions": {
+        "jcr:primaryType": "nt:folder",
+        "original": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mimeType": "video/x-ms-wmv"
+          }
+        },
+        "cq5dam.thumbnail.319.319.png": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mimeType": "image/png"
+          }
+        },
+        "cq5dam.thumbnail.140.100.png": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mimeType": "image/png"
+          }
+        },
+        "cq5dam.thumbnail.48.48.png": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mimeType": "image/png"
+          }
+        },
+        "cq5dam.video.firefoxhq.ogg": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mimeType": "video/ogg"
+          }
+        },
+        "cq5dam.video.hq.m4v": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mimeType": "video/x-m4v"
+          }
+        },
+        "cq5dam.video.flv.320.240.flv": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:primaryType": "nt:resource",
+            "jcr:mimeType": "video/x-flv"
+          }
+        }
+      }
+    }
+  },
+
+  "asset with space.jpg": {
+    "jcr:primaryType":"dam:Asset",
+    "jcr:content": {
+      "jcr:primaryType":"dam:AssetContent",
+      "metadata": {
+        "jcr:primaryType": "nt:unstructured",
+        "dc:format": "image/jpeg",
+        "dam:MIMEtype": "image/jpeg",
+        "tiff:ImageWidth": 215,
+        "tiff:ImageLength": 102,
+        "dc:title": "Asset with whitepace in name"
+      },
+      "renditions": {
+        "jcr:primaryType":"nt:folder",
+        "original": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        }
+      }
+    }
+  }
+
+}

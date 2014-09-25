@@ -1,0 +1,78 @@
+{
+   "jcr:primaryType":"cq:Page",
+   "jcr:content":{
+      "sling:resourceType":"/apps/test/components/page/content",
+      "jcr:title":"test1",
+      "cq:template":"/apps/test/templates/content",
+      "jcr:primaryType":"cq:PageContent",
+      "content":{
+         "sling:resourceType":"/apps/test/components/parsys",
+         "jcr:primaryType":"nt:unstructured",
+         "par_standard_mediaRef":{
+           "mediaRef":"/content/dam/test/standard.jpg",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_standard_mediaRef_crop":{
+           "mediaRef":"/content/dam/test/standard.jpg",
+           "mediaCrop": "10,5,168,85",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_standard_mediaRef_altText":{
+           "mediaRef":"/content/dam/test/standard.jpg",
+           "mediaAltText":"Alt. Text from Paragraph",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_invalid_mediaRef":{
+           "mediaRef":"/content/dam/test/not_existant",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_empty_mediaRef":{
+           "mediaRef":"",
+           "mediaSource": "dam",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_null_mediaRef":{
+           "mediaSource": "dam",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_standard_mediaRef2":{
+           "mediaRef2":"/content/dam/test/standard.jpg",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_imageNoAltNoDimensions_mediaRef":{
+           "mediaRef":"/content/dam/test/imageNoAltNoDimensions.jpg",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_flashWithFallback_mediaRef":{
+           "mediaRef":"/content/dam/test/flashWithFallback.swf",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_flashWithoutFallback_mediaRef":{
+           "mediaRef":"/content/dam/test/flashWithoutFallback.swf",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
+         "par_inlineImage":{
+           "image":{
+             "jcr:primaryType":"nt:file",
+             "jcr:content":{
+               "jcr:mimeType":"image/png",
+               "jcr:primaryType":"nt:resource"
+             }
+           },
+           "mediaAltText":"Inline Alt.Text",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         }
+      }
+   }
+}
