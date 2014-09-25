@@ -42,7 +42,7 @@ public final class MediaNameConstants {
   /**
    * Media format node type
    */
-  public static final String NT_MEDIAFORMAT = "io-wcm-handler-media:MediaFormat";
+  public static final String NT_MEDIAFORMAT = "io_wcm_handler_media:MediaFormat";
 
   /**
    * Media source

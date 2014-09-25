@@ -5,7 +5,7 @@
 
   /* home_stage */
   "home_stage": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Home Stage",
     "width": 960,
     "height": 485,
@@ -16,7 +16,7 @@
 
   /* home_teaser */
   "home_teaser": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Home Teaser",
     "width": 206,
     "height": 104,
@@ -25,7 +25,7 @@
     "ranking": 131
   },
   "home_teaser_scale1": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Home Teaser (scaled)",
     "width": 158,
     "height": 80,
@@ -36,7 +36,7 @@
 
   /* home_teaser_2col */
   "home_teaser_2col": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Home Teaser 2 Columns",
     "width": 346,
     "height": 80,
@@ -46,7 +46,7 @@
 
     /* home_teaser_jdp_small */
   "home_teaser_jdp_small": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Home Teaser for teaserlist below stage, four teaser per row.",
     "width": 229,
     "height": 84,
@@ -56,7 +56,7 @@
 
       /* home_teaser_jdp_medium */
   "home_teaser_jdp_medium": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Home Teaser for teaserlist below stage, three teaser per row.",
     "width": 316,
     "height": 84,
@@ -65,7 +65,7 @@
   },
 
   "cutout_large": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Modelfinder Cutout large",
     "width": 150,
     "height": 58,
@@ -75,7 +75,7 @@
   },
   /* holzauto_cutout */
   "holzauto_cutout_large": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Carline Cutout large",
     "width": 595,
     "height": 229,
@@ -84,7 +84,7 @@
     "ranking": 40
   },
   "holzauto_cutout_2to6": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Carline Cutout (scaled)",
     "width": 305,
     "height": 117,
@@ -94,7 +94,7 @@
     "ranking": 41
   },
   "holzauto_cutout_7to12": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Carline Cutout (scaled)",
     "width": 190,
     "height": 73,
@@ -104,7 +104,7 @@
     "ranking": 42
   },
   "holzauto_cutout_13plus": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Carline Cutout small",
     "width": 120,
     "height": 46,
@@ -115,7 +115,7 @@
 
   /* holzauto_cutout_navigation_flyout */
   "holzauto_cutout_navigation_flyout": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Carline Cutout Flyout Navigation",
     "width": 164,
     "height": 69,
@@ -125,7 +125,7 @@
 
   /* holzauto_modelselector_badge */
   "holzauto_modelselector_badge": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Carline Badge",
     "width": 134,
     "height": 37,
@@ -134,7 +134,7 @@
 
   /* holzauto_banner */
   "holzauto_banner": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Banner",
     "width": 194,
     "height": 40,
@@ -143,7 +143,7 @@
 
   /* holzauto_navigation_flyout */
   "holzauto_navigation_flyout": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Carline Flyout Navigation",
     "width": 580,
     "height": 482,
@@ -152,7 +152,7 @@
 
   /* standard_image */
   "standard_image": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Standard 2,1:1",
     "width": 1055,
     "height": 500,
@@ -162,7 +162,7 @@
     "ranking": 20
   },
   "standard_stage": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Standard Stage",
     "width": 960,
     "height": 455,
@@ -172,7 +172,7 @@
     "ranking": 21
   },
   "standard_3col": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Standard 3 Columns",
     "width": 685,
     "height": 325,
@@ -182,7 +182,7 @@
     "ranking": 22
   },
   "showroom_feature_gallery": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Feature Gallery",
     "width": 570,
     "height": 270,
@@ -191,7 +191,7 @@
     "ranking": 23
   },
   "standard_2col": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Standard 2 Columns",
     "width": 450,
     "height": 213,
@@ -201,7 +201,7 @@
     "ranking": 24
   },
   "standard_1col": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Standard 1 Column",
     "width": 215,
     "height": 102,
@@ -211,7 +211,7 @@
     "ranking": 25
   },
   "showroom_flyout_feature": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Flyout Feature",
     "width": 205,
     "height": 97,
@@ -220,7 +220,7 @@
     "ranking": 26
   },
   "showroom_controls": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Thumbnail",
     "width": 84,
     "height": 40,
@@ -229,7 +229,7 @@
     "ranking": 27
   },
   "showroom_controls_scale1": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Thumbnail small",
     "width": 64,
     "height": 30,
@@ -238,7 +238,7 @@
     "ranking": 28
   },
   "showroom_controls_scale1_onlywidth": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Thumbnail small",
     "width": 64,
     "extension": ["gif","jpg","png"],
@@ -246,7 +246,7 @@
     "ranking": 28
   },
   "showroom_controls_scale1_onlywidth_ratio1": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Thumbnail small",
     "width": 64,
     "ratioWidth": 64,
@@ -256,7 +256,7 @@
     "ranking": 28
   },
   "showroom_controls_scale1_onlywidth_ratio2": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Thumbnail small",
     "width": 64,
     "ratioWidth": 64,
@@ -266,7 +266,7 @@
     "ranking": 28
   },
   "showroom_controls_scale1_onlyheight": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Thumbnail small",
     "height": 30,
     "extension": ["gif","jpg","png"],
@@ -274,7 +274,7 @@
     "ranking": 28
   },
   "standard_1col_small": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Trimlevel Navigation (scaled)",
     "width": 178,
     "height": 85,
@@ -284,7 +284,7 @@
     "ranking": 29
   },
   "showroom_trimlevel_compare_flyout": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Trimlevel Flyout",
     "width": 137,
     "height": 65,
@@ -293,7 +293,7 @@
     "ranking": 30
   },
   "editorial_stage_medium": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Editorial Stage Medium",
     "width": 705,
     "height": 335,
@@ -305,7 +305,7 @@
 
   /* showroom_campaign */
   "showroom_campaign": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Showroom Campaign Special",
     "width": 960,
     "height": 455,
@@ -316,7 +316,7 @@
 
   /* feature_flash */
   "feature_flash": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Feature Flash Demo",
     "width": 570,
     "height": 270,
@@ -326,7 +326,7 @@
 
   /* wallpaper */
   "wallpaper": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Wallpaper",
     "widthMax": 2000,
     "heightMax": 2000,
@@ -335,7 +335,7 @@
     "ranking": 993
   },
   "wallpaper_1024_768": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Wallpaper 4:3",
     "width": 1024,
     "height": 768,
@@ -344,7 +344,7 @@
     "ranking": 50
   },
   "wallpaper_1280_1024": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Wallpaper 5:4",
     "width": 1280,
     "height": 1024,
@@ -353,7 +353,7 @@
     "ranking": 51
   },
   "wallpaper_1680_1050": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Wallpaper 16:9",
     "width": 1680,
     "height": 1050,
@@ -362,7 +362,7 @@
     "ranking": 52
   },
   "wallpaper_1440_900": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Wallpaper 16:9",
     "width": 1440,
     "height": 900,
@@ -373,7 +373,7 @@
 
   /* editorial_stage_large */
   "editorial_stage_large": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Editorial Stage Large",
     "width": 960,
     "height": 335,
@@ -384,7 +384,7 @@
 
   /* editorial_stage_small */
   "editorial_stage_small": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Editorial Stage Small",
     "width": 960,
     "height": 150,
@@ -395,7 +395,7 @@
 
   /* download */
   "download": {
-    "jcr:primaryType": "io-wcm-handler-media:MediaFormat",
+    "jcr:primaryType": "io_wcm_handler_media:MediaFormat",
     "jcr:title": "Download",
     "extension": ["pdf","zip","exe","xml","swf","flv","f4v","f4p","f4a","f4b","mp4","mov","mp3","html","htm","css","json","js"],
     "fileSizeMax": 104857600, // 100MB
