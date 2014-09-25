@@ -72,9 +72,7 @@
         <configuration>
           <instructions>
             <Export-Package>
-              io.wcm.config.api;version=${project.version},
-              io.wcm.config.api.management;version=${project.version},
-              io.wcm.config.spi;version=${project.version}
+              io.wcm.handler.commons.*;version=${project.version}
             </Export-Package>
           </instructions>
         </configuration>
