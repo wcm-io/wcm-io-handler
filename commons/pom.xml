@@ -72,7 +72,8 @@
         <configuration>
           <instructions>
             <Export-Package>
-              io.wcm.handler.commons.*;version=${project.version}
+              io.wcm.handler.commons.dom;version=${project.version},
+              io.wcm.handler.commons.editcontext;version=${project.version}
             </Export-Package>
           </instructions>
         </configuration>
