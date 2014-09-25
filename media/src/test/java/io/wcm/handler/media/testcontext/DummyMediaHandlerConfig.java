@@ -30,12 +30,14 @@ import io.wcm.handler.mediasource.dam.DamMediaSource;
 import io.wcm.handler.url.UrlParams;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Dummy media configuration
@@ -56,9 +58,9 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
           EditPlaceholderMediaMarkupBuilder.class
           );
 
-  private static final String[] DOWNLOAD_MEDIA_FORMATS = new String[] {
-    "download"
-  };
+  private static final Set<String> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of(
+      "download"
+      );
 
   @Override
   public List<Class<? extends MediaSource>> getMediaSources() {
@@ -71,7 +73,7 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
   }
 
   @Override
-  public String[] getDownloadMediaFormats() {
+  public Set<String> getDownloadMediaFormats() {
     return DOWNLOAD_MEDIA_FORMATS;
   }
 

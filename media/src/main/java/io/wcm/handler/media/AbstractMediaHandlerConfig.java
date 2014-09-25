@@ -24,10 +24,12 @@ import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Default implementation of configuration options of {@link MediaHandlerConfig} interface.
@@ -35,9 +37,9 @@ import com.google.common.collect.ImmutableList;
  */
 public abstract class AbstractMediaHandlerConfig implements MediaHandlerConfig {
 
-  private static final String[] DOWNLOAD_MEDIA_FORMATS = new String[] {
+  private static final Set<String> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of(
       "download"
-  };
+      );
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES =
       ImmutableList.<Class<? extends MediaSource>>of(
@@ -73,7 +75,7 @@ public abstract class AbstractMediaHandlerConfig implements MediaHandlerConfig {
   }
 
   @Override
-  public String[] getDownloadMediaFormats() {
+  public Set<String> getDownloadMediaFormats() {
     return DOWNLOAD_MEDIA_FORMATS;
   }
 

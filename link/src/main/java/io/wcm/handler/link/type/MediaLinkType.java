@@ -94,7 +94,12 @@ public final class MediaLinkType extends AbstractLinkType {
     boolean isDownload = props.get(LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD, false);
 
     // only allow linking to "download" medialib formats
-    MediaArgsType mediaArgs = MediaArgs.mediaFormats(mediaHandlerConfig.getDownloadMediaFormats());
+    String[] downloadMediaFormats = null;
+    if (mediaHandlerConfig.getDownloadMediaFormats() != null) {
+      downloadMediaFormats = mediaHandlerConfig.getDownloadMediaFormats().toArray(
+          new String[mediaHandlerConfig.getDownloadMediaFormats().size()]);
+    }
+    MediaArgsType mediaArgs = MediaArgs.mediaFormats(downloadMediaFormats);
     mediaArgs.setForceDownload(isDownload);
     mediaArgs.setUrlMode(linkReference.getLinkArgs().getUrlMode());
 

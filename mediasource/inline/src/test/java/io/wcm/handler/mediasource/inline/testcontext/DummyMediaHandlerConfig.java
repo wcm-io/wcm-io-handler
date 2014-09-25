@@ -46,9 +46,6 @@ import com.google.common.collect.ImmutableList;
 @Application(UrlParams.APPLICATION_ID)
 public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
 
-  private static final String[] DOWNLOAD_MEDIA_FORMATS = new String[] {
-    "download"
-  };
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
       InlineMediaSource.class
       );
@@ -56,11 +53,6 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
       SimpleImageMediaMarkupBuilder.class,
       EditPlaceholderMediaMarkupBuilder.class
       );
-
-  @Override
-  public String[] getDownloadMediaFormats() {
-    return DOWNLOAD_MEDIA_FORMATS;
-  }
 
   @Override
   public List<Class<? extends MediaSource>> getMediaSources() {

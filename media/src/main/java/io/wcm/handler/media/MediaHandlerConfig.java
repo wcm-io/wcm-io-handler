@@ -20,6 +20,7 @@
 package io.wcm.handler.media;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Provides application-specific configuration information required for media handling.
@@ -34,7 +35,7 @@ public interface MediaHandlerConfig {
   /**
    * @return Media format names for downloads that are allowed as target for links
    */
-  String[] getDownloadMediaFormats();
+  Set<String> getDownloadMediaFormats();
 
   /**
    * @return Supported media sources
