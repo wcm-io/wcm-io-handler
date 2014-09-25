@@ -42,7 +42,7 @@ import com.day.cq.wcm.api.WCMMode;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
-public final class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
+public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
   @AemObject
   private WCMMode wcmMode;
@@ -50,13 +50,13 @@ public final class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
   private SlingHttpServletRequest request;
 
   @Override
-  public boolean accepts(MediaMetadata mediaMetadata) {
+  public final boolean accepts(MediaMetadata mediaMetadata) {
     // accept if rendition is an image rendition
     return mediaMetadata.getRendition() != null && mediaMetadata.getRendition().isImage();
   }
 
   @Override
-  public HtmlElement<?> build(MediaMetadata pMediaMetadata) {
+  public final HtmlElement<?> build(MediaMetadata pMediaMetadata) {
 
     // render media element for rendition
     HtmlElement<?> mediaElement = getImageElement(pMediaMetadata);
@@ -131,7 +131,7 @@ public final class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   @Override
-  public boolean isValidMedia(HtmlElement<?> element) {
+  public final boolean isValidMedia(HtmlElement<?> element) {
     if (element instanceof Image) {
       Image img = (Image)element;
       return StringUtils.isNotEmpty(img.getSrc())

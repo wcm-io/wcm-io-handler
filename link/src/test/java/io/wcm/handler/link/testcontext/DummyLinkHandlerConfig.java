@@ -84,8 +84,8 @@ public class DummyLinkHandlerConfig extends AbstractLinkHandlerConfig {
   }
 
   @Override
-  public boolean isRedirect(Page pPage) {
-    String templatePath = pPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+  public boolean isRedirect(Page page) {
+    String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
     return StringUtils.equals(templatePath, DummyAppTemplate.REDIRECT.getTemplatePath());
   }
 

@@ -73,7 +73,7 @@ public abstract class AbstractLinkHandlerConfig implements LinkHandlerConfig {
   }
 
   @Override
-  public boolean isRedirect(Page pPage) {
+  public boolean isRedirect(Page page) {
     // not supported by default
     return false;
   }

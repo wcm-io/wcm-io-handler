@@ -65,14 +65,14 @@ public class DummyUrlHandlerConfig implements UrlHandlerConfig {
   }
 
   @Override
-  public boolean isSecure(Page pPage) {
-    String templatePath = pPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+  public boolean isSecure(Page page) {
+    String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
     return StringUtils.equals(templatePath, DummyAppTemplate.CONTENT_SECURE.getTemplatePath());
   }
 
   @Override
-  public boolean isIntegrator(Page pPage) {
-    String templatePath = pPage.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
+  public boolean isIntegrator(Page page) {
+    String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
     return StringUtils.equals(templatePath, DummyAppTemplate.INTEGRATOR.getTemplatePath());
   }
 

@@ -55,19 +55,6 @@ public final class SyntheticLinkResource extends SyntheticResource {
     this.properties = new ValueMapDecorator(properties);
   }
 
-  /**
-   * Instantiate resource with static path/resource type
-   * @param resolver Resource resolver
-   * @param linkType Link type
-   * @param linkRef Link reference (depending on link type)
-   */
-  public SyntheticLinkResource(ResourceResolver resolver, LinkType linkType, String linkRef) {
-    super(resolver, PATH, PATH);
-    properties = new ValueMapDecorator(new HashMap<String, Object>());
-    properties.put(LinkNameConstants.PN_LINK_TYPE, linkType.getId());
-    properties.put(linkType.getPrimaryLinkRefProperty(), linkRef);
-  }
-
   @Override
   @SuppressWarnings("unchecked")
   public <Type> Type adaptTo(Class<Type> type) {

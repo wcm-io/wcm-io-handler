@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.video;
+package io.wcm.handler.media.markup;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Video;
@@ -25,7 +25,6 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -60,7 +59,7 @@ import com.day.cq.dam.video.VideoProfile;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
-public final class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
+public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   private static final String H264_PROFILE = "hq";
   private static final String OGG_PROFILE = "firefoxhq";
@@ -78,7 +77,7 @@ public final class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   private UrlHandler urlHandler;
 
   @Override
-  public boolean accepts(MediaMetadata mediaMetadata) {
+  public final boolean accepts(MediaMetadata mediaMetadata) {
     Asset asset = getDamAsset(mediaMetadata);
     if (asset != null) {
       return asset.getRendition(new PrefixRenditionPicker(VideoConstants.RENDITION_PREFIX)) != null;
@@ -126,7 +125,7 @@ public final class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   @Override
-  public HtmlElement<?> build(MediaMetadata mediaMetadata) {
+  public final HtmlElement<?> build(MediaMetadata mediaMetadata) {
     return getVideoPlayerElement(mediaMetadata);
   }
 
@@ -281,7 +280,7 @@ public final class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   @Override
-  public boolean isValidMedia(HtmlElement<?> element) {
+  public final boolean isValidMedia(HtmlElement<?> element) {
     return (element instanceof Video);
   }
 

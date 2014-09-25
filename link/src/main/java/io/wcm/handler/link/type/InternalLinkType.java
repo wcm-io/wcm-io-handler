@@ -24,6 +24,7 @@ import io.wcm.handler.link.LinkHandlerConfig;
 import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkReference;
+import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.UrlHandlerConfig;
 import io.wcm.handler.url.UrlMode;
@@ -31,9 +32,13 @@ import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
@@ -276,6 +281,19 @@ public final class InternalLinkType extends AbstractLinkType {
     else {
       return null;
     }
+  }
+
+  /**
+   * Get synthetic link resource for this link type.
+   * @param resourceResolver Resource resolver
+   * @param pageRef Path to target page
+   * @return Synthetic link resource
+   */
+  public static Resource getSyntheticLinkResource(ResourceResolver resourceResolver, String pageRef) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(LinkNameConstants.PN_LINK_TYPE, ID);
+    map.put(LinkNameConstants.PN_LINK_CONTENT_REF, pageRef);
+    return new SyntheticLinkResource(resourceResolver, map);
   }
 
 }

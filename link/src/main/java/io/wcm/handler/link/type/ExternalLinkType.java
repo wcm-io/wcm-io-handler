@@ -21,10 +21,15 @@ package io.wcm.handler.link.type;
 
 import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.SyntheticLinkResource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 
@@ -77,6 +82,19 @@ public final class ExternalLinkType extends AbstractLinkType {
     linkMetadata.setLinkUrl(linkUrl);
 
     return linkMetadata;
+  }
+
+  /**
+   * Get synthetic link resource for this link type.
+   * @param resourceResolver Resource resolver
+   * @param url Link URL
+   * @return Synthetic link resource
+   */
+  public static Resource getSyntheticLinkResource(ResourceResolver resourceResolver, String url) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(LinkNameConstants.PN_LINK_TYPE, ID);
+    map.put(LinkNameConstants.PN_LINK_EXTERNAL_REF, url);
+    return new SyntheticLinkResource(resourceResolver, map);
   }
 
 }
