@@ -60,7 +60,7 @@ import com.day.text.Text;
  */
 @Component(immediate = true, metatype = true,
 label = "wcm.io DAM Rendition Metadata Service",
-description = "Extracts additional metadata like with and hight for DAM renditions.")
+description = "Extracts additional metadata like width and height for DAM renditions.")
 @Property(name = EventConstants.EVENT_TOPIC, value = DamEvent.EVENT_TOPIC, propertyPrivate = true)
 @Service(EventHandler.class)
 public final class DamRenditionMetadataService implements EventHandler {
