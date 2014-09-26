@@ -39,17 +39,17 @@ public final class UrlParams {
   /**
    * Site URL on public access from outside, for non-secure access (HTTP).
    */
-  public static final Parameter<String> SITE_URL = create("site-url", String.class, APPLICATION_ID).build();
+  public static final Parameter<String> SITE_URL = create("siteUrl", String.class, APPLICATION_ID).build();
 
 
   /**
    * Site URL for public access from outside, for secure access (HTTPS).
    */
-  public static final Parameter<String> SITE_URL_SECURE = create("site-url-secure", String.class, APPLICATION_ID).build();
+  public static final Parameter<String> SITE_URL_SECURE = create("siteUrlSecure", String.class, APPLICATION_ID).build();
 
   /**
    * Site URL on author instance.
    */
-  public static final Parameter<String> SITE_URL_AUTHOR = create("site-url-author", String.class, APPLICATION_ID).build();
+  public static final Parameter<String> SITE_URL_AUTHOR = create("siteUrlAuthor", String.class, APPLICATION_ID).build();
 
 }
