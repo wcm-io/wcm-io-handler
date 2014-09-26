@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.markup;
+package io.wcm.handler.mediasource.dam.markup;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Video;
@@ -25,6 +25,7 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
