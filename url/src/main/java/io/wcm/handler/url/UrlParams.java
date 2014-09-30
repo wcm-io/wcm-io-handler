@@ -21,6 +21,8 @@ package io.wcm.handler.url;
 
 import static io.wcm.config.api.ParameterBuilder.create;
 import io.wcm.config.api.Parameter;
+import io.wcm.config.editor.EditorNameConstants;
+import io.wcm.config.editor.WidgetTypes;
 
 /**
  * Configuration parameters for URL handler.
@@ -39,17 +41,23 @@ public final class UrlParams {
   /**
    * Site URL on public access from outside, for non-secure access (HTTP).
    */
-  public static final Parameter<String> SITE_URL = create("siteUrl", String.class, APPLICATION_ID).build();
+  public static final Parameter<String> SITE_URL = create("siteUrl", String.class, APPLICATION_ID).
+      properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration()).property(EditorNameConstants.PN_GROUP, "Link Handling").
+      property(EditorNameConstants.PN_DESCRIPTION, "Configuration of the site host.").build();
 
 
   /**
    * Site URL for public access from outside, for secure access (HTTPS).
    */
-  public static final Parameter<String> SITE_URL_SECURE = create("siteUrlSecure", String.class, APPLICATION_ID).build();
+  public static final Parameter<String> SITE_URL_SECURE = create("siteUrlSecure", String.class, APPLICATION_ID).
+      properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration()).property(EditorNameConstants.PN_GROUP, "Link Handling").
+      property(EditorNameConstants.PN_DESCRIPTION, "Configuration of the secure site host.").build();
 
   /**
    * Site URL on author instance.
    */
-  public static final Parameter<String> SITE_URL_AUTHOR = create("siteUrlAuthor", String.class, APPLICATION_ID).build();
+  public static final Parameter<String> SITE_URL_AUTHOR = create("siteUrlAuthor", String.class, APPLICATION_ID).
+      properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration()).property(EditorNameConstants.PN_GROUP, "Link Handling").
+      property(EditorNameConstants.PN_DESCRIPTION, "Configuration of the author site host.").build();
 
 }
