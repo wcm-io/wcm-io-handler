@@ -3,10 +3,10 @@
  */
  
 // define namespace
-<io_wcm_handler_media = 'http://wcm.io/handler/media'>
+<wcmio = 'http://wcm.io/ns'>
 
 
-[io_wcm_handler_media:MediaFormat] > nt:unstructured
+[wcmio:MediaFormat] > nt:unstructured
   - jcr:title (string) mandatory
   - jcr:description (string)
   - width (long)
