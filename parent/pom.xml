@@ -46,6 +46,8 @@
 
   <properties>
     <site.url.module.prefix>handler</site.url.module.prefix>
+    
+    <jdom2.version>2.0.5</jdom2.version>
   </properties>
 
   <dependencies>
@@ -82,10 +84,10 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.servicemix.bundles</groupId>
-      <artifactId>org.apache.servicemix.bundles.jdom</artifactId>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom2</artifactId>
       <scope>compile</scope>
-      <version>2.0.5_1</version>
+      <version>${jdom2.version}</version>
     </dependency>
 
     <dependency>

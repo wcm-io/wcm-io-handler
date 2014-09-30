@@ -71,10 +71,25 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
+
             <Export-Package>
               io.wcm.handler.commons.dom;version=${project.version},
               io.wcm.handler.commons.editcontext;version=${project.version}
             </Export-Package>
+
+            <!-- embed JDOM2 dependency -->
+            <Embed-Dependency>
+              jdom2;scope=compile;inline=false
+            </Embed-Dependency>
+            <!-- use _exportcontents instead of Export-Package to avoid conflict with Embed-Dependency an inline=true -->
+            <_exportcontents>
+              org.jdom2.*;version=${jdom2.version}
+            </_exportcontents>
+            <Import-Package>
+              org.jaxen.*;resolution:=optional,
+              *
+            </Import-Package>
+
           </instructions>
         </configuration>
       </plugin>
