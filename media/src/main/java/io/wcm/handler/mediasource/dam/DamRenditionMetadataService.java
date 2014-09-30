@@ -149,7 +149,7 @@ public final class DamRenditionMetadataService implements EventHandler {
     }
     catch (LoginException ex) {
       log.warn("Getting service resource resolver failed. "
-          + "Please make sure a service user is defined for bundle 'io.wcm.handler.mediasource.dam'.", ex);
+          + "Please make sure a service user is defined for bundle 'io.wcm.handler.media'.", ex);
     }
     finally {
       if (adminResourceResolver != null) {
