@@ -116,7 +116,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   @Override
   public MediaFormat getMediaFormat(String path) {
     String fullPath = path;
-    if (!StringUtils.startsWith(fullPath, "/")) {
+    if (!StringUtils.startsWith(fullPath, "/") && !StringUtils.isEmpty(mediaFormatsPath)) {
       fullPath = mediaFormatsPath + "/" + fullPath;
     }
     return mediaFormats.get(fullPath);
