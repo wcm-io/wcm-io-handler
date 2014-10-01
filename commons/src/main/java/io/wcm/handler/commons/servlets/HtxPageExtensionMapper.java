@@ -26,6 +26,7 @@ import java.util.Dictionary;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -76,7 +77,7 @@ public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
 
     // if not enabled: sent http 404
     if (!enabled) {
-      response.sendError(404);
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
 

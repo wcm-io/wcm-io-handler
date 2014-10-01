@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -60,7 +61,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
     // get binary data resource
     Resource resource = getBinaryDataResource(request);
     if (resource == null) {
-      response.sendError(404); // not found
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
     // check if the resource was modified since last request
@@ -71,7 +72,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
     // get binary data and send to client
     byte[] binaryData = getBinaryData(resource, request);
     if (binaryData == null || binaryData.length == 0) {
-      response.sendError(404); // not found
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
     else {
       String contentType = getContentType(resource, request);

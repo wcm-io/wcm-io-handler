@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 import io.wcm.testing.mock.osgi.MockOsgi;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -65,7 +66,7 @@ public class HtxPageExtensionMapperTest {
     underTest.activate(context);
 
     underTest.doGet(request, response);
-    verify(response).sendError(404);
+    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
     verifyNoMoreInteractions(response);
   }
 
