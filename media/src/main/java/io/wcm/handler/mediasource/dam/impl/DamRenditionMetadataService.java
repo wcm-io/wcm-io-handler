@@ -213,9 +213,10 @@ public final class DamRenditionMetadataService implements EventHandler {
       String renditionNodeName = Text.getName(renditionPath);
       if (renditionsMetadata.hasNode(renditionNodeName)) {
         Node metadataNode = renditionsMetadata.getNode(renditionNodeName);
+        String pathToRemove = metadataNode.getPath();
         metadataNode.remove();
         updateLastModifiedAndSave(asset, userId, resolver);
-        log.debug("Removed rendition metadata at " + metadataNode.getPath() + ".");
+        log.debug("Removed rendition metadata at " + pathToRemove + ".");
       }
     }
     catch (RepositoryException ex) {
