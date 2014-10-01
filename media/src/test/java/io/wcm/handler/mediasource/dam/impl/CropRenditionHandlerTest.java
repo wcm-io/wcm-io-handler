@@ -17,13 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam;
+package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 import org.junit.Before;
 import org.junit.Test;

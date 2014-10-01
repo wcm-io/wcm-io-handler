@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam;
+package io.wcm.handler.mediasource.dam.impl;
 
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.impl.MediaFileServlet;

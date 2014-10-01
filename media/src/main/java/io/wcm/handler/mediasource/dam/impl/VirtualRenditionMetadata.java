@@ -17,9 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam;
+package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 
@@ -29,19 +28,17 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 /**
- * Virtual rendition that is cropping and downscaling from an existing rendition.
+ * Virtual rendition that is downscaling from an existing rendition.
  */
-class VirtualCropRenditionMetadata extends RenditionMetadata {
+class VirtualRenditionMetadata extends RenditionMetadata {
 
   private final int width;
   private final int height;
-  private final CropDimension cropDimension;
 
-  public VirtualCropRenditionMetadata(Rendition rendition, int width, int height, CropDimension cropDimension) {
+  public VirtualRenditionMetadata(Rendition rendition, int width, int height) {
     super(rendition);
     this.width = width;
     this.height = height;
-    this.cropDimension = cropDimension;
   }
 
   @Override
@@ -60,15 +57,10 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
     return this.height;
   }
 
-  public CropDimension getCropDimension() {
-    return this.cropDimension;
-  }
-
   @Override
   public String getMediaPath(boolean forceDownload) {
     return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
         + "." + getWidth() + "." + getHeight()
-        + "." + this.cropDimension.getCropString()
         + (forceDownload ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
         + "." + MediaFileServlet.EXTENSION, getFileName());
   }
@@ -77,10 +69,7 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
   protected Layer getLayer() {
     Layer layer = super.getLayer();
     if (layer != null) {
-      layer.crop(cropDimension.getRectangle());
-      if (width <= layer.getWidth() && height <= layer.getHeight()) {
-        layer.resize(width, height);
-      }
+      layer.resize(getWidth(), getHeight());
     }
     return layer;
   }

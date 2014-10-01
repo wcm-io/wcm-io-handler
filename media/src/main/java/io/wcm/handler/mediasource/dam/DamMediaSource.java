@@ -28,6 +28,7 @@ import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaReference;
 import io.wcm.handler.media.source.AbstractMediaSource;
+import io.wcm.handler.mediasource.dam.impl.DamMediaItem;
 import io.wcm.sling.models.annotations.AemObject;
 
 import java.util.HashMap;

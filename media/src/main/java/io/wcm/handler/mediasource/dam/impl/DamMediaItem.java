@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam;
+package io.wcm.handler.mediasource.dam.impl;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgsType;
@@ -38,7 +38,7 @@ import com.day.cq.dam.api.DamConstants;
 /**
  * {@link MediaItem} implementation for DAM assets.
  */
-class DamMediaItem extends SlingAdaptable implements MediaItem {
+public final class DamMediaItem extends SlingAdaptable implements MediaItem {
 
   private final Adaptable adaptable;
   private final Asset asset;
@@ -50,7 +50,7 @@ class DamMediaItem extends SlingAdaptable implements MediaItem {
    * @param asset DAM asset
    * @param mediaMetadata Media metadata
    */
-  DamMediaItem(Asset asset, MediaMetadata mediaMetadata, Adaptable adaptable) {
+  public DamMediaItem(Asset asset, MediaMetadata mediaMetadata, Adaptable adaptable) {
     this.asset = asset;
     this.cropDimension = mediaMetadata.getCropDimension();
     this.defaultMediaArgs = mediaMetadata.getMediaReference().getMediaArgs();

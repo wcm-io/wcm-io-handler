@@ -17,10 +17,11 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam;
+package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.Assert.assertNotNull;
 import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 import org.junit.Assert;
 import org.junit.Before;
