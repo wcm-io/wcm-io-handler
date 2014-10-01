@@ -89,7 +89,7 @@ public class UrlModesTest {
         .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.EXTENDED.getId())
         .build());
 
-    slingSettings = context.slingScriptHelper().getService(SlingSettingsService.class);
+    slingSettings = context.getService(SlingSettingsService.class);
 
   }
 
