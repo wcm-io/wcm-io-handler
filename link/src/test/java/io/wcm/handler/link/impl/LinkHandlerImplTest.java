@@ -37,6 +37,7 @@ import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.AbstractLinkType;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 
@@ -51,7 +52,6 @@ import org.junit.Test;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Test {@link LinkHandlerImpl} methods.
@@ -66,9 +66,7 @@ public class LinkHandlerImplTest {
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
-          ImmutableMap.<String, Object>builder()
-          .put(Constants.SERVICE_RANKING, 1)
-          .build());
+          ImmutableValueMap.of(Constants.SERVICE_RANKING, 1));
     }
   });
 
@@ -81,10 +79,10 @@ public class LinkHandlerImplTest {
 
     // test pipelining and resolve link
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
-        ImmutableMap.<String, Object>builder()
-            .put(LinkNameConstants.PN_LINK_TYPE, "dummy")
-            .put("dummyLinkRef", "/path1")
-            .build());
+        ImmutableValueMap.builder()
+        .put(LinkNameConstants.PN_LINK_TYPE, "dummy")
+        .put("dummyLinkRef", "/path1")
+        .build());
     LinkReference linkReference = new LinkReference(linkResource, LinkArgs.urlMode(UrlModes.DEFAULT));
     LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkReference);
 

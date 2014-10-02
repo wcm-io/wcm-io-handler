@@ -39,6 +39,7 @@ import io.wcm.handler.media.source.AbstractMediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 
@@ -53,7 +54,6 @@ import org.junit.Test;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Test {@link MediaHandlerImpl} methods.
@@ -67,9 +67,7 @@ public class MediaHandlerImplTest {
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
-          ImmutableMap.<String, Object>builder()
-              .put(Constants.SERVICE_RANKING, 1)
-              .build());
+          ImmutableValueMap.of(Constants.SERVICE_RANKING, 1));
     }
   });
 

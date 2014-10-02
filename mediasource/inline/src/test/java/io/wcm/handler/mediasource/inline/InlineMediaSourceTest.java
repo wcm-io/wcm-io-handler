@@ -38,6 +38,7 @@ import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.inline.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -50,7 +51,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Test {@link InlineMediaSource}
@@ -89,7 +89,7 @@ public class InlineMediaSourceTest {
 
     // prepare inline media object: node with mediaInline subnode (only nt:resource) and with filename
     Resource unstructuredNodeMediaInline = context.resourceResolver().create(contentNode, "resourceMediaInline",
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "mediainlinedata.bin")
         .put(MediaNameConstants.PN_MEDIA_ALTTEXT, "Inline Media Alt. Text")
         .build());
@@ -97,7 +97,7 @@ public class InlineMediaSourceTest {
 
     // prepare inline media object: node with mediaInline subnode (nt:file and nt:resource) and with filename
     Resource unstructuredNodeMediaInlineWithFile = context.resourceResolver().create(contentNode, "resourceMediaInlineWithFile",
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "mediainlinedata2.bin")
         .put(MediaNameConstants.PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 2")
         .build());
@@ -105,7 +105,7 @@ public class InlineMediaSourceTest {
 
     // prepare inline media object with real image binary data to test scaling
     Resource unstructuredNodeMediaInlineSampleImage = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage",
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "sample_image_215x102.jpg")
         .build());
     context.load().binaryResource("/sample_image_215x102.jpg",

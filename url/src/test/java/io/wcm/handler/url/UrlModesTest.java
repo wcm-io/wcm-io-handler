@@ -27,6 +27,7 @@ import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.handler.url.integrator.IntegratorProtocol;
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
 import io.wcm.wcm.commons.util.RunMode;
@@ -40,7 +41,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableMap;
 
 public class UrlModesTest {
 
@@ -71,21 +71,21 @@ public class UrlModesTest {
 
     integratorPageSimple = context.create().page("/content/unittest/de_test/brand/de/section2/page4",
         DummyAppTemplate.INTEGRATOR.getTemplatePath(),
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.SIMPLE.getId())
         .put(IntegratorNameConstants.PN_INTEGRATOR_PROTOCOL, IntegratorProtocol.HTTP.name())
         .build());
 
     integratorPageSimpleSecure = context.create().page("/content/unittest/de_test/brand/de/section2/page5",
         DummyAppTemplate.INTEGRATOR.getTemplatePath(),
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.SIMPLE.getId())
         .put(IntegratorNameConstants.PN_INTEGRATOR_PROTOCOL, IntegratorProtocol.HTTPS.name())
         .build());
 
     integratorPageExtended = context.create().page("/content/unittest/de_test/brand/de/section2/page6",
         DummyAppTemplate.INTEGRATOR.getTemplatePath(),
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.EXTENDED.getId())
         .build());
 
@@ -102,7 +102,7 @@ public class UrlModesTest {
   }
 
   private void setSiteConfigNoUrl() {
-    MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", ImmutableMap.<String, Object>of());
+    MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", ImmutableValueMap.of());
   }
 
   // ==================================================================================================================

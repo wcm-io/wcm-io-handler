@@ -20,10 +20,10 @@
 package io.wcm.handler.url.testcontext;
 
 import io.wcm.config.api.annotations.Application;
-import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.UrlHandlerConfig;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
+import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 

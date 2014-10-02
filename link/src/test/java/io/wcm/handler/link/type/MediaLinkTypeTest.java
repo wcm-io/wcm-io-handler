@@ -30,13 +30,13 @@ import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.cq.wcm.api.WCMMode;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Test {@link MediaLinkType}
@@ -51,7 +51,7 @@ public class MediaLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
         .build());
 
@@ -68,7 +68,7 @@ public class MediaLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
         .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/invalid/media/link")
         .build());
@@ -88,7 +88,7 @@ public class MediaLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
         .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/invalid/media/link")
         .build());
@@ -124,7 +124,7 @@ public class MediaLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
-        ImmutableMap.<String, Object>builder()
+        ImmutableValueMap.builder()
         .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
         .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dummymedia/pdf1")
         .build());

@@ -23,6 +23,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.osgi.MockOsgi;
 
 import javax.servlet.RequestDispatcher;
@@ -37,8 +38,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.service.component.ComponentContext;
-
-import com.google.common.collect.ImmutableMap;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HtxPageExtensionMapperTest {
@@ -60,8 +59,8 @@ public class HtxPageExtensionMapperTest {
 
   @Test
   public void testDisabled() throws Exception {
-    ComponentContext context = MockOsgi.newComponentContext(ImmutableMap.<String, Object>builder()
-        .put(HtxPageExtensionMapper.PROPERTY_ENABLED, false).build());
+    ComponentContext context = MockOsgi.newComponentContext(
+        ImmutableValueMap.of(HtxPageExtensionMapper.PROPERTY_ENABLED, false));
     HtxPageExtensionMapper underTest = new HtxPageExtensionMapper();
     underTest.activate(context);
 
@@ -72,8 +71,8 @@ public class HtxPageExtensionMapperTest {
 
   @Test
   public void testSimpleUrl() throws Exception {
-    ComponentContext context = MockOsgi.newComponentContext(ImmutableMap.<String, Object>builder()
-        .put(HtxPageExtensionMapper.PROPERTY_ENABLED, true).build());
+    ComponentContext context = MockOsgi.newComponentContext(
+        ImmutableValueMap.of(HtxPageExtensionMapper.PROPERTY_ENABLED, true));
     HtxPageExtensionMapper underTest = new HtxPageExtensionMapper();
     underTest.activate(context);
 
@@ -89,8 +88,8 @@ public class HtxPageExtensionMapperTest {
 
   @Test
   public void testComplexUrl() throws Exception {
-    ComponentContext context = MockOsgi.newComponentContext(ImmutableMap.<String, Object>builder()
-        .put(HtxPageExtensionMapper.PROPERTY_ENABLED, true).build());
+    ComponentContext context = MockOsgi.newComponentContext(
+        ImmutableValueMap.of(HtxPageExtensionMapper.PROPERTY_ENABLED, true));
     HtxPageExtensionMapper underTest = new HtxPageExtensionMapper();
     underTest.activate(context);
 

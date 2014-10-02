@@ -24,6 +24,7 @@ import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.testing.mock.sling.ResourceResolverType;
@@ -32,8 +33,6 @@ import io.wcm.testing.mock.wcmio.config.MockConfig;
 import java.io.IOException;
 
 import org.apache.sling.api.resource.PersistenceException;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -97,7 +96,7 @@ public final class MediasourceDamAemContext {
 
       // default site config
       MockConfig.writeConfiguration(context, ROOTPATH_CONTENT,
-          ImmutableMap.<String, Object>builder()
+          ImmutableValueMap.builder()
           .put(UrlParams.SITE_URL.getName(), "http://www.dummysite.org")
           .put(UrlParams.SITE_URL_SECURE.getName(), "https://www.dummysite.org")
           .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
