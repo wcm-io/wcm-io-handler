@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
-import io.wcm.sling.commons.jcr.JcrBinary;
+import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.sling.commons.request.RequestPath;
 import io.wcm.wcm.commons.caching.CacheHeader;
 import io.wcm.wcm.commons.contenttype.ContentType;

@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.inline;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaItem;
@@ -28,7 +29,6 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaReference;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.source.AbstractMediaSource;
-import io.wcm.sling.commons.jcr.JcrBinary;
 import io.wcm.sling.commons.util.Escape;
 
 import org.apache.commons.lang3.StringUtils;

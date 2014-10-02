@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.inline;
 
+import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgsType;
@@ -30,7 +31,6 @@ import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.commons.jcr.JcrBinary;
 import io.wcm.wcm.commons.caching.ModificationDate;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
