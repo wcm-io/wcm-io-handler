@@ -74,7 +74,8 @@
 
             <Export-Package>
               io.wcm.handler.commons.dom;version=${project.version},
-              io.wcm.handler.commons.editcontext;version=${project.version}
+              io.wcm.handler.commons.editcontext;version=${project.version},
+              io.wcm.handler.commons.jcr;version=${project.version}
             </Export-Package>
 
             <!-- embed JDOM2 dependency -->
