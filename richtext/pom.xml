@@ -35,7 +35,7 @@
   <packaging>bundle</packaging>
 
   <name>RichText Handler</name>
-  <description>RichText processing and rendering.</description>
+  <description>RichText processing and markup generation</description>
 
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io.git</connection>
