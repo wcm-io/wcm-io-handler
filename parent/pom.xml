@@ -46,7 +46,7 @@
 
   <properties>
     <site.url.module.prefix>handler</site.url.module.prefix>
-    
+
     <jdom2.version>2.0.5</jdom2.version>
   </properties>
 
