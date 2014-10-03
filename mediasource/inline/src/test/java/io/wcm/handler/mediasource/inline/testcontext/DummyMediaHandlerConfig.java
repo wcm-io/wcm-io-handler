@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.mediasource.inline.testcontext;
 
-import io.wcm.config.api.annotations.Application;
+import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.media.AbstractMediaHandlerConfig;
 import io.wcm.handler.media.MediaHandlerConfig;
 import io.wcm.handler.media.MediaMarkupBuilder;

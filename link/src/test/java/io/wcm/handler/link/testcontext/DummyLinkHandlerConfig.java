@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.link.testcontext;
 
-import io.wcm.config.api.annotations.Application;
+import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.link.AbstractLinkHandlerConfig;
 import io.wcm.handler.link.LinkHandlerConfig;
 import io.wcm.handler.link.LinkMarkupBuilder;

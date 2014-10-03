@@ -21,7 +21,7 @@ package io.wcm.handler.link.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import io.wcm.config.api.annotations.Application;
+import io.wcm.config.spi.annotations.Application;
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.handler.link.AbstractLinkHandlerConfig;
 import io.wcm.handler.link.LinkHandler;

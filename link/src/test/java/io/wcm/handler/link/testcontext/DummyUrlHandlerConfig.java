@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.link.testcontext;
 
-import io.wcm.config.api.annotations.Application;
+import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.url.AbstractUrlHandlerConfig;
 import io.wcm.handler.url.UrlHandlerConfig;
 import io.wcm.handler.url.integrator.IntegratorMode;
