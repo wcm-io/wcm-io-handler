@@ -22,7 +22,7 @@ package io.wcm.handler.url;
 import static io.wcm.config.api.ParameterBuilder.create;
 import static io.wcm.config.editor.EditorProperties.DESCRIPTION;
 import static io.wcm.config.editor.EditorProperties.GROUP;
-import static io.wcm.config.editor.EditorProperties.PARAMETER_LABEL;
+import static io.wcm.config.editor.EditorProperties.LABEL;
 import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_ID;
 import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_LABEL;
 import io.wcm.config.api.Parameter;
@@ -41,7 +41,7 @@ public final class UrlParams {
    * Site URL on public access from outside, for non-secure access (HTTP).
    */
   public static final Parameter<String> SITE_URL = create("siteUrl", String.class, APPLICATION_ID)
-      .property(PARAMETER_LABEL, "Site URL")
+      .property(LABEL, "Site URL")
       .property(DESCRIPTION, "Public website URL for non-secure access.")
       .property(GROUP, APPLICATION_LABEL)
       .properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration())
@@ -51,7 +51,7 @@ public final class UrlParams {
    * Site URL for public access from outside, for secure access (HTTPS).
    */
   public static final Parameter<String> SITE_URL_SECURE = create("siteUrlSecure", String.class, APPLICATION_ID)
-      .property(PARAMETER_LABEL, "Site URL Secure")
+      .property(LABEL, "Site URL Secure")
       .property(DESCRIPTION, "Public website URL for secure access.")
       .property(GROUP, APPLICATION_LABEL)
       .properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration())
@@ -61,7 +61,7 @@ public final class UrlParams {
    * Site URL on author instance.
    */
   public static final Parameter<String> SITE_URL_AUTHOR = create("siteUrlAuthor", String.class, APPLICATION_ID)
-      .property(PARAMETER_LABEL, "Author URL")
+      .property(LABEL, "Author URL")
       .property(DESCRIPTION, "URL for author instance.")
       .property(GROUP, APPLICATION_LABEL)
       .properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration())
