@@ -26,7 +26,6 @@ import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaSource;
 import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
-import io.wcm.handler.url.UrlParams;
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ import com.google.common.collect.ImmutableList;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 }, adapters = MediaHandlerConfig.class)
-@Application(UrlParams.APPLICATION_ID)
+@Application(AppAemContext.APPLICATION_ID)
 public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES =

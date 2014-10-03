@@ -28,7 +28,6 @@ import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
-import io.wcm.handler.url.UrlParams;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ import com.google.common.collect.ImmutableList;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 }, adapters = LinkHandlerConfig.class)
-@Application(UrlParams.APPLICATION_ID)
+@Application(AppAemContext.APPLICATION_ID)
 public class DummyLinkHandlerConfig extends AbstractLinkHandlerConfig {
 
   private static final List<Class<? extends LinkType>> LINK_TYPES = ImmutableList.<Class<? extends LinkType>>of(

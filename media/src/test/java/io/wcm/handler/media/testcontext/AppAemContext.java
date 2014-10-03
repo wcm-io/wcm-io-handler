@@ -41,6 +41,11 @@ import org.osgi.framework.Constants;
 public final class AppAemContext {
 
   /**
+   * Appliation ID
+   */
+  public static final String APPLICATION_ID = "/apps/test";
+
+  /**
    * Media formats path
    */
   public static final String MEDIAFORMATS_PATH = "/apps/test/mediaformat";
@@ -91,12 +96,12 @@ public final class AppAemContext {
 
       // application provider
       context.registerService(ApplicationProvider.class,
-          MockConfig.applicationProvider(UrlParams.APPLICATION_ID, "/content"),
+          MockConfig.applicationProvider(APPLICATION_ID, "/content"),
           ImmutableValueMap.of(Constants.SERVICE_RANKING, 1000));
 
       // configuration finder strategy
       context.registerService(ConfigurationFinderStrategy.class,
-          MockConfig.configurationFinderStrategyAbsoluteParent(UrlParams.APPLICATION_ID,
+          MockConfig.configurationFinderStrategyAbsoluteParent(APPLICATION_ID,
               DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
 
       // wcm.io configuration

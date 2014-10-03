@@ -22,7 +22,6 @@ package io.wcm.handler.link.testcontext;
 import io.wcm.config.api.annotations.Application;
 import io.wcm.handler.url.AbstractUrlHandlerConfig;
 import io.wcm.handler.url.UrlHandlerConfig;
-import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 
@@ -43,7 +42,7 @@ import com.google.common.collect.ImmutableList;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 }, adapters = UrlHandlerConfig.class)
-@Application(UrlParams.APPLICATION_ID)
+@Application(AppAemContext.APPLICATION_ID)
 public class DummyUrlHandlerConfig extends AbstractUrlHandlerConfig {
 
   public static final int SITE_ROOT_LEVEL = 4;

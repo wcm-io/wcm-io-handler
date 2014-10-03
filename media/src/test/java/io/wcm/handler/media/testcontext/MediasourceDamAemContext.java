@@ -75,11 +75,11 @@ public final class MediasourceDamAemContext {
 
       // application provider
       context.registerService(ApplicationProvider.class,
-          MockConfig.applicationProvider(UrlParams.APPLICATION_ID, "/content"));
+          MockConfig.applicationProvider(AppAemContext.APPLICATION_ID, "/content"));
 
       // configuration finder strategy
       context.registerService(ConfigurationFinderStrategy.class,
-          MockConfig.configurationFinderStrategyAbsoluteParent(UrlParams.APPLICATION_ID,
+          MockConfig.configurationFinderStrategyAbsoluteParent(AppAemContext.APPLICATION_ID,
               DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
 
       // wcm.io configuration
