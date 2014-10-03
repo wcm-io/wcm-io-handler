@@ -20,6 +20,8 @@
 package io.wcm.handler.url;
 
 import static io.wcm.config.api.ParameterBuilder.create;
+import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_ID;
+import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_LABEL;
 import io.wcm.config.api.Parameter;
 import io.wcm.config.editor.EditorNameConstants;
 import io.wcm.config.editor.WidgetTypes;
@@ -34,30 +36,30 @@ public final class UrlParams {
   }
 
   /**
-   * Application ID
-   */
-  public static final String APPLICATION_ID = "/apps/wcm-io/handler/url";
-
-  /**
    * Site URL on public access from outside, for non-secure access (HTTP).
    */
-  public static final Parameter<String> SITE_URL = create("siteUrl", String.class, APPLICATION_ID).
-      properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration()).property(EditorNameConstants.PN_GROUP, "Link Handling").
-      property(EditorNameConstants.PN_DESCRIPTION, "Configuration of the site host.").build();
-
+  public static final Parameter<String> SITE_URL = create("siteUrl", String.class, APPLICATION_ID)
+      .properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration())
+      .property(EditorNameConstants.PN_GROUP, APPLICATION_LABEL)
+      .property(EditorNameConstants.PN_DESCRIPTION, "Public website URL for non-secure access.")
+      .build();
 
   /**
    * Site URL for public access from outside, for secure access (HTTPS).
    */
-  public static final Parameter<String> SITE_URL_SECURE = create("siteUrlSecure", String.class, APPLICATION_ID).
-      properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration()).property(EditorNameConstants.PN_GROUP, "Link Handling").
-      property(EditorNameConstants.PN_DESCRIPTION, "Configuration of the secure site host.").build();
+  public static final Parameter<String> SITE_URL_SECURE = create("siteUrlSecure", String.class, APPLICATION_ID)
+      .properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration())
+      .property(EditorNameConstants.PN_GROUP, APPLICATION_LABEL)
+      .property(EditorNameConstants.PN_DESCRIPTION, "Public website URL for secure access.")
+      .build();
 
   /**
    * Site URL on author instance.
    */
-  public static final Parameter<String> SITE_URL_AUTHOR = create("siteUrlAuthor", String.class, APPLICATION_ID).
-      properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration()).property(EditorNameConstants.PN_GROUP, "Link Handling").
-      property(EditorNameConstants.PN_DESCRIPTION, "Configuration of the author site host.").build();
+  public static final Parameter<String> SITE_URL_AUTHOR = create("siteUrlAuthor", String.class, APPLICATION_ID)
+      .properties(WidgetTypes.TEXTFIELD.getDefaultWidgetConfiguration())
+      .property(EditorNameConstants.PN_GROUP, APPLICATION_LABEL)
+      .property(EditorNameConstants.PN_DESCRIPTION, "URL for author instance.")
+      .build();
 
 }

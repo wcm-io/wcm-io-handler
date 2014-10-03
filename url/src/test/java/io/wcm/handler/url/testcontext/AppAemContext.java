@@ -23,6 +23,7 @@ import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.handler.url.UrlParams;
+import io.wcm.handler.url.impl.ApplicationProviderImpl;
 import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -60,11 +61,11 @@ public final class AppAemContext {
 
       // application provider
       context.registerService(ApplicationProvider.class,
-          MockConfig.applicationProvider(UrlParams.APPLICATION_ID, "/content"));
+          MockConfig.applicationProvider(ApplicationProviderImpl.APPLICATION_ID, "/content"));
 
       // configuration finder strategy
       context.registerService(ConfigurationFinderStrategy.class,
-          MockConfig.configurationFinderStrategyAbsoluteParent(UrlParams.APPLICATION_ID,
+          MockConfig.configurationFinderStrategyAbsoluteParent(ApplicationProviderImpl.APPLICATION_ID,
               DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
 
       // wcm.io configuration
