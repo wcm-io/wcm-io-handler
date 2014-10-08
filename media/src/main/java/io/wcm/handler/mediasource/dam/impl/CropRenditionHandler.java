@@ -27,7 +27,6 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.adapter.Adaptable;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -48,8 +47,8 @@ class CropRenditionHandler extends DefaultRenditionHandler implements RenditionH
    * @param asset DAM asset
    * @param cropDimension Crop dimension
    */
-  public CropRenditionHandler(Asset asset, CropDimension cropDimension, Adaptable adaptable) {
-    super(asset, adaptable);
+  public CropRenditionHandler(Asset asset, CropDimension cropDimension) {
+    super(asset);
     this.asset = asset;
     this.cropDimension = cropDimension;
 

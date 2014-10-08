@@ -22,13 +22,13 @@ package io.wcm.handler.media.markup;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaArgsType;
-import io.wcm.handler.media.MediaHandlerConfig;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaSource;
-import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
@@ -58,15 +58,13 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
   private MediaHandlerConfig mediaHandlerConfig;
   @AemObject
   private WCMMode wcmMode;
-  @Self
-  private MediaFormatHandler mediaFormatHandler;
 
   @Override
   public boolean accepts(MediaMetadata mediaMetadata) {
     // accept if not rendition was found and in edit mode
     // and at least one media format is given, and dummy image is not suppressed
     MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
-    String[] mediaFormats = mediaArgs.getMediaFormats();
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     return mediaMetadata.getRendition() == null
         && wcmMode == WCMMode.EDIT
         && (mediaFormats != null && mediaFormats.length > 0)
@@ -77,7 +75,7 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
   public HtmlElement<?> build(MediaMetadata mediaMetadata) {
 
     // Create dummy image element to be displayed in Edit mode as placeholder.
-    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(mediaMetadata, mediaFormatHandler);
+    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(mediaMetadata);
     MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
 
     // create dummy image
@@ -85,7 +83,8 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
     dummyImageUrl = urlHandler.url(dummyImageUrl)
         .urlMode(mediaMetadata.getMediaReference().getMediaArgs().getUrlMode())
         .externalizeResource().build();
-    Image image = new Image(dummyImageUrl, dimension.getWidth(), dimension.getHeight()).addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
+    Image image = new Image(dummyImageUrl, (int)dimension.getWidth(), (int)dimension.getHeight())
+    .addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
 
     // enable drag&drop for media source - if none is specified use first one defined in config
     MediaSource mediaSource = mediaMetadata.getMediaSource();

@@ -22,6 +22,8 @@ package io.wcm.handler.media.testcontext;
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
+import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
+import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -84,6 +86,10 @@ public final class MediasourceDamAemContext {
 
       // wcm.io configuration
       MockConfig.setUp(context);
+
+      // media formats
+      context.registerService(MediaFormatProvider.class, new DummyMediaFormatProvider());
+      context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.url");

@@ -17,10 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media;
+package io.wcm.handler.media.spi.helpers;
 
+import io.wcm.handler.media.MediaMetadataProcessor;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 
 import java.util.List;
@@ -37,9 +42,7 @@ import com.google.common.collect.ImmutableSet;
  */
 public abstract class AbstractMediaHandlerConfig implements MediaHandlerConfig {
 
-  private static final Set<String> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of(
-      "download"
-      );
+  private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of();
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES =
       ImmutableList.<Class<? extends MediaSource>>of(
@@ -75,14 +78,8 @@ public abstract class AbstractMediaHandlerConfig implements MediaHandlerConfig {
   }
 
   @Override
-  public Set<String> getDownloadMediaFormats() {
+  public Set<MediaFormat> getDownloadMediaFormats() {
     return DOWNLOAD_MEDIA_FORMATS;
-  }
-
-  @Override
-  public String getMediaFormatsPath() {
-    // no media formats
-    return null;
   }
 
   @Override

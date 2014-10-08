@@ -20,10 +20,10 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaItem;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.args.MediaArgsType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;

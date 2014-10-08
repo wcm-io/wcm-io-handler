@@ -17,8 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media;
+package io.wcm.handler.media.args;
 
+import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
 /**
@@ -31,19 +33,36 @@ public interface MediaArgsType<T extends MediaArgsType> extends Cloneable {
   /**
    * @return Absolute media format paths or relative (without media format parent path)
    */
-  String[] getMediaFormats();
+  MediaFormat[] getMediaFormats();
 
   /**
    * @param mediaFormats Absolute media format paths or relative (without media format parent path)
    * @return this
    */
-  T setMediaFormats(String... mediaFormats);
+  T setMediaFormats(MediaFormat... mediaFormats);
 
   /**
    * @param mediaFormat Absolute media format path or relative (without media format parent path)
    * @return this
    */
-  T setMediaFormat(String mediaFormat);
+  T setMediaFormat(MediaFormat mediaFormat);
+
+  /**
+   * @return Absolute media format paths or relative (without media format parent path)
+   */
+  String[] getMediaFormatNames();
+
+  /**
+   * @param mediaFormatNames Absolute media format paths or relative (without media format parent path)
+   * @return this
+   */
+  T setMediaFormatNames(String... mediaFormatNames);
+
+  /**
+   * @param mediaFormatName Absolute media format path or relative (without media format parent path)
+   * @return this
+   */
+  T setMediaFormatName(String mediaFormatName);
 
   /**
    * @return File extensions

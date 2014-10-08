@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.url.impl;
 
-import io.wcm.handler.url.AbstractUrlHandlerConfig;
-import io.wcm.handler.url.UrlHandlerConfig;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.handler.url.spi.helpers.AbstractUrlHandlerConfig;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;

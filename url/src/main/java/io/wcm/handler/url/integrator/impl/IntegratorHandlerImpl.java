@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.url.integrator.impl;
 
-import io.wcm.handler.url.UrlHandlerConfig;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorNameConstants;
 import io.wcm.handler.url.integrator.IntegratorProtocol;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.request.RequestPath;
 import io.wcm.sling.models.annotations.AemObject;
 

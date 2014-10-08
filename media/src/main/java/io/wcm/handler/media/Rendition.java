@@ -88,12 +88,12 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    * Gets the width of this rendition. If it is a virtual rendition the virtual height is returned.
    * @return Height in pixels. Returns 0 if no height information is available.
    */
-  int getWidth();
+  long getWidth();
 
   /**
    * Gets the height of this rendition. If it is a virtual rendition the virtual height is returned.
    * @return Height in pixels. Returns 0 if no height information is available.
    */
-  int getHeight();
+  long getHeight();
 
 }

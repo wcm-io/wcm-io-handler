@@ -19,12 +19,13 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import io.wcm.handler.media.MediaHandlerConfig;
+import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatCombinedTitleComparator;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.MediaFormatRankingComparator;
 import io.wcm.handler.media.format.MediaFormatSizeRankingComparator;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 import java.util.Comparator;
@@ -33,17 +34,16 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedSet;
 
 /**
  * Media format handling.
@@ -57,42 +57,57 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @SlingObject
   private ResourceResolver resourceResolver;
+  @SlingObject
+  private Resource currentResource;
+  @OSGiService
+  private MediaFormatProviderManager mediaFormatProviderManager;
+  @OSGiService
+  private ApplicationFinder applicationFinder;
 
-  private String mediaFormatsPath;
-  private Map<String, MediaFormat> mediaFormats;
+  // do not access directly - used for caching. use getMediaFormatsForApplication() and getMediaFormatMap() instead
+  private SortedSet<MediaFormat> mediaFormats;
+  private Map<String, MediaFormat> mediaFormatMap;
 
-  @PostConstruct
-  protected void activate() {
-    this.mediaFormatsPath = mediaHandlerConfig.getMediaFormatsPath();
-    this.mediaFormats = getMediaFormatsMap();
+  private SortedSet<MediaFormat> getMediaFormatsForApplication() {
+    if (this.mediaFormats == null) {
+      Application application = applicationFinder.find(currentResource);
+      if (application == null) {
+        this.mediaFormats = ImmutableSortedSet.of();
+      }
+      else {
+        this.mediaFormats = mediaFormatProviderManager.getMediaFormats(application.getApplicationId());
+      }
+    }
+    return this.mediaFormats;
   }
 
-  private Map<String, MediaFormat> getMediaFormatsMap() {
-    if (StringUtils.isEmpty(this.mediaFormatsPath)) {
-      return ImmutableMap.of();
+  private Map<String, MediaFormat> getMediaFormatMap() {
+    if (this.mediaFormatMap == null) {
+      this.mediaFormatMap = new HashMap<>();
+      for (MediaFormat mediaFormat : getMediaFormatsForApplication()) {
+        this.mediaFormatMap.put(mediaFormat.getName(), mediaFormat);
+      }
     }
-
-    Resource parent = resourceResolver.getResource(this.mediaFormatsPath);
-    if (parent == null) {
-      return ImmutableMap.of();
-    }
-
-    Map<String, MediaFormat> map = new HashMap<String, MediaFormat>();
-    for (Resource resource : parent.getChildren()) {
-      MediaFormat mediaFormat = new MediaFormat(resource);
-      map.put(mediaFormat.getPath(), mediaFormat);
-    }
-    return ImmutableMap.copyOf(map);
+    return this.mediaFormatMap;
   }
 
+  /**
+   * Resolves media format name to media format object.
+   * @param mediaFormatName Media format name
+   * @return Media format or null if no match found
+   */
+  @Override
+  public MediaFormat getMediaFormat(String mediaFormatName) {
+    return getMediaFormatMap().get(mediaFormatName);
+  }
 
   /**
    * Get media formats defined by a CMS application that is responsible for the given media library path.
-   * @return Media formats sorted by combined title
+   * @return Media formats sorted by media format name.
    */
   @Override
   public SortedSet<MediaFormat> getMediaFormats() {
-    return getMediaFormats(new MediaFormatCombinedTitleComparator());
+    return getMediaFormatsForApplication();
   }
 
   /**
@@ -103,23 +118,8 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   @Override
   public SortedSet<MediaFormat> getMediaFormats(Comparator<MediaFormat> comparator) {
     SortedSet<MediaFormat> set = new TreeSet<>(comparator);
-    set.addAll(mediaFormats.values());
-    return set;
-  }
-
-  /**
-   * Get media format by its path.
-   * @param path Media format definition path or media format name.
-   *          If only a name (without leading "/") is given the path is constructed by added the media formats path prefix.
-   * @return Media format instance or null if invalid
-   */
-  @Override
-  public MediaFormat getMediaFormat(String path) {
-    String fullPath = path;
-    if (!StringUtils.startsWith(fullPath, "/") && !StringUtils.isEmpty(mediaFormatsPath)) {
-      fullPath = mediaFormatsPath + "/" + fullPath;
-    }
-    return mediaFormats.get(fullPath);
+    set.addAll(getMediaFormatsForApplication());
+    return ImmutableSortedSet.copyOf(set);
   }
 
   /**
@@ -238,11 +238,11 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return true if media format is same size or bigger
    */
   private boolean isRenditionMatchSizeSameBigger(MediaFormat mediaFormat, MediaFormat mediaFormatRequested) {
-    long widthRequested = mediaFormatRequested.getEffectiveWidthMin();
-    long heightRequested = mediaFormatRequested.getEffectiveHeightMin();
+    long widthRequested = mediaFormatRequested.getEffectiveMinWidth();
+    long heightRequested = mediaFormatRequested.getEffectiveMinHeight();
 
-    long widthMax = mediaFormat.getEffectiveWidthMax();
-    long heightMax = mediaFormat.getEffectiveHeightMax();
+    long widthMax = mediaFormat.getEffectiveMaxWidth();
+    long heightMax = mediaFormat.getEffectiveMaxHeight();
 
     return ((widthMax >= widthRequested) || (widthMax == 0))
         && ((heightMax >= heightRequested) || (heightMax == 0));
@@ -255,11 +255,11 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return true if media format is same size or smaller
    */
   private boolean isRenditionMatchSizeSameSmaller(MediaFormat mediaFormat, MediaFormat mediaFormatRequested) {
-    long widthRequested = mediaFormatRequested.getEffectiveWidthMin();
-    long heightRequested = mediaFormatRequested.getEffectiveHeightMin();
+    long widthRequested = mediaFormatRequested.getEffectiveMinWidth();
+    long heightRequested = mediaFormatRequested.getEffectiveMinHeight();
 
-    long widthMin = mediaFormat.getEffectiveWidthMin();
-    long heightMin = mediaFormat.getEffectiveHeightMin();
+    long widthMin = mediaFormat.getEffectiveMinWidth();
+    long heightMin = mediaFormat.getEffectiveMinHeight();
 
     return widthMin <= widthRequested && heightMin <= heightRequested;
   }
@@ -270,7 +270,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return true if supported extension found
    */
   private boolean isRenditionMatchExtension(MediaFormat mediaFormat) {
-    for (String extension : mediaFormat.getExtension()) {
+    for (String extension : mediaFormat.getExtensions()) {
       if (FileExtension.isImage(extension)) {
         return true;
       }
@@ -315,8 +315,8 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
       // check extension
       boolean extensionMatch = false;
-      if (mediaFormat.getExtension() != null) {
-        for (String ext : mediaFormat.getExtension()) {
+      if (mediaFormat.getExtensions() != null) {
+        for (String ext : mediaFormat.getExtensions()) {
           if (StringUtils.equalsIgnoreCase(ext, extension)) {
             extensionMatch = true;
             break;
@@ -339,10 +339,10 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
       // width/height match
       boolean dimensionMatch = false;
       if (width > 0 && height > 0) {
-        dimensionMatch = (mediaFormat.getEffectiveWidthMin() == 0 || width >= mediaFormat.getEffectiveWidthMin())
-            && (mediaFormat.getEffectiveWidthMax() == 0 || width <= mediaFormat.getEffectiveWidthMax())
-            && (mediaFormat.getEffectiveHeightMin() == 0 || height >= mediaFormat.getEffectiveHeightMin())
-            && (mediaFormat.getEffectiveHeightMax() == 0 || height <= mediaFormat.getEffectiveHeightMax());
+        dimensionMatch = (mediaFormat.getEffectiveMinWidth() == 0 || width >= mediaFormat.getEffectiveMinWidth())
+            && (mediaFormat.getEffectiveMaxWidth() == 0 || width <= mediaFormat.getEffectiveMaxWidth())
+            && (mediaFormat.getEffectiveMinHeight() == 0 || height >= mediaFormat.getEffectiveMinHeight())
+            && (mediaFormat.getEffectiveMaxHeight() == 0 || height <= mediaFormat.getEffectiveMaxHeight());
       }
       else {
         dimensionMatch = true;

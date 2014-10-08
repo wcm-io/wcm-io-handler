@@ -20,6 +20,7 @@
 package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.spi.MediaSource;
 
 /**
  * Holds information about a media reference processed and resolved by {@link MediaHandler}

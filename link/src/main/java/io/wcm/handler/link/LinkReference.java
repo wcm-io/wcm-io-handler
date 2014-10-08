@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.link;
 
+import io.wcm.handler.link.args.LinkArgsType;
+
 import java.util.HashMap;
 
 import org.apache.sling.api.resource.Resource;

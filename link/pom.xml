@@ -93,6 +93,8 @@
               io.wcm.handler.link.args;version=${project.version},
               io.wcm.handler.link.markup;version=${project.version},
               io.wcm.handler.link.processor;version=${project.version},
+              io.wcm.handler.link.spi;version=${project.version},
+              io.wcm.handler.link.spi.helpers;version=${project.version},
               io.wcm.handler.link.type;version=${project.version}
             </Export-Package>
             <Sling-Model-Packages>

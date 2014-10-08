@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.media.impl;
 
-import io.wcm.handler.media.AbstractMediaHandlerConfig;
-import io.wcm.handler.media.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;

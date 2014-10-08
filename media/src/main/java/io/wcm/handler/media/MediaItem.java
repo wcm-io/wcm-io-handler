@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media;
 
+import io.wcm.handler.media.args.MediaArgsType;
+
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 

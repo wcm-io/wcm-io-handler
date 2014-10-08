@@ -31,8 +31,8 @@ public final class MediaFormatSizeRankingComparator implements Comparator<MediaF
 
   @Override
   public int compare(MediaFormat obj1, MediaFormat obj2) {
-    long totalSize1 = obj1.getEffectiveWidthMax() * obj1.getEffectiveHeightMax();
-    long totalSize2 = obj2.getEffectiveWidthMax() * obj2.getEffectiveHeightMax();
+    long totalSize1 = obj1.getEffectiveMaxWidth() * obj1.getEffectiveMaxHeight();
+    long totalSize2 = obj2.getEffectiveMaxWidth() * obj2.getEffectiveMaxHeight();
 
     if (totalSize1 == totalSize2) {
       long ranking1 = obj1.getRanking();

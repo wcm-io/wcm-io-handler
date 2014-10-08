@@ -19,10 +19,9 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.MediaArgsType;
+import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 import java.util.Collection;
@@ -31,9 +30,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.adapter.Adaptable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
@@ -46,16 +42,13 @@ import com.google.common.collect.Sets;
  */
 class DefaultRenditionHandler implements RenditionHandler {
 
-  private final Adaptable adaptable;
   private final Set<RenditionMetadata> renditions;
   private final RenditionMetadata originalRendition;
-
-  private static final Logger mLog = LoggerFactory.getLogger(DefaultRenditionHandler.class);
 
   /**
    * @param asset DAM asset
    */
-  public DefaultRenditionHandler(Asset asset, Adaptable adaptable) {
+  public DefaultRenditionHandler(Asset asset) {
 
     // gather rendition infos of all renditions and sort them by size (smallest first)
     this.renditions = new TreeSet<RenditionMetadata>();
@@ -72,8 +65,6 @@ class DefaultRenditionHandler implements RenditionHandler {
       }
     }
     this.originalRendition = orgRendition;
-
-    this.adaptable = adaptable;
   }
 
   /**
@@ -174,8 +165,8 @@ class DefaultRenditionHandler implements RenditionHandler {
 
       @Override
       public Object visit(MediaFormat pMediaFormat) {
-        if (pMediaFormat.getExtension() != null && pMediaFormat.getExtension().length > 0) {
-          mediaFormatFileExtensions.addAll(ImmutableList.copyOf(pMediaFormat.getExtension()));
+        if (pMediaFormat.getExtensions() != null && pMediaFormat.getExtensions().length > 0) {
+          mediaFormatFileExtensions.addAll(ImmutableList.copyOf(pMediaFormat.getExtensions()));
         }
         return null;
       }
@@ -232,10 +223,10 @@ class DefaultRenditionHandler implements RenditionHandler {
 
       @Override
       public Boolean visit(MediaFormat pMediaFormat) {
-        if (pMediaFormat.getEffectiveWidthMin() > 0
-            || pMediaFormat.getEffectiveWidthMax() > 0
-            || pMediaFormat.getEffectiveHeightMin() > 0
-            || pMediaFormat.getEffectiveHeightMax() > 0
+        if (pMediaFormat.getEffectiveMinWidth() > 0
+            || pMediaFormat.getEffectiveMaxWidth() > 0
+            || pMediaFormat.getEffectiveMinHeight() > 0
+            || pMediaFormat.getEffectiveMaxHeight() > 0
             || pMediaFormat.getRatio() > 0) {
           return true;
         }
@@ -268,10 +259,10 @@ class DefaultRenditionHandler implements RenditionHandler {
         @Override
         public RenditionMetadata visit(MediaFormat pMediaFormat) {
           for (RenditionMetadata candidate : candidates) {
-            if (candidate.matches((int)pMediaFormat.getEffectiveWidthMin(),
-                (int)pMediaFormat.getEffectiveHeightMin(),
-                (int)pMediaFormat.getEffectiveWidthMax(),
-                (int)pMediaFormat.getEffectiveHeightMax(),
+            if (candidate.matches((int)pMediaFormat.getEffectiveMinWidth(),
+                (int)pMediaFormat.getEffectiveMinHeight(),
+                (int)pMediaFormat.getEffectiveMaxWidth(),
+                (int)pMediaFormat.getEffectiveMaxHeight(),
                 pMediaFormat.getRatio())) {
               return candidate;
             }
@@ -292,15 +283,15 @@ class DefaultRenditionHandler implements RenditionHandler {
 
   /**
    * Returns original rendition - if it is contained in the candidate set. Otherwise first candidate is returned.
-   * @param pCandidates Candidates
+   * @param candidates Candidates
    * @return Original or first rendition of candidates or null
    */
-  private RenditionMetadata getOriginalOrFirstRendition(Set<RenditionMetadata> pCandidates) {
-    if (this.originalRendition != null && pCandidates.contains(this.originalRendition)) {
+  private RenditionMetadata getOriginalOrFirstRendition(Set<RenditionMetadata> candidates) {
+    if (this.originalRendition != null && candidates.contains(this.originalRendition)) {
       return this.originalRendition;
     }
-    else if (pCandidates.size() > 0) {
-      return pCandidates.iterator().next();
+    else if (candidates.size() > 0) {
+      return candidates.iterator().next();
     }
     else {
       return null;
@@ -310,33 +301,33 @@ class DefaultRenditionHandler implements RenditionHandler {
   /**
    * Check if a rendition is available from which the required format can be downscaled from and returns
    * a virtual rendition in this case.
-   * @param pCandidates Candidates
-   * @param pMediaArgs Media args
+   * @param candidates Candidates
+   * @param mediaArgs Media args
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(final Set<RenditionMetadata> pCandidates, MediaArgsType pMediaArgs) {
+  private RenditionMetadata getVirtualRendition(final Set<RenditionMetadata> candidates, MediaArgsType mediaArgs) {
 
     // get from fixed with/height
-    if (pMediaArgs.getFixedWidth() > 0 || pMediaArgs.getFixedHeight() > 0) {
-      int destWidth = pMediaArgs.getFixedWidth();
-      int destHeight = pMediaArgs.getFixedHeight();
+    if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
+      int destWidth = mediaArgs.getFixedWidth();
+      int destHeight = mediaArgs.getFixedHeight();
       double destRatio = 0;
       if (destWidth > 0 && destHeight > 0) {
         destRatio = (double)destWidth / (double)destHeight;
       }
-      return getVirtualRendition(pCandidates, destWidth, destHeight, destRatio);
+      return getVirtualRendition(candidates, destWidth, destHeight, destRatio);
     }
 
     // or from any media format
-    return visitMediaFormats(pMediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
+    return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
 
       @Override
       public RenditionMetadata visit(MediaFormat pMediaFormat) {
-        int destWidth = (int)pMediaFormat.getEffectiveWidthMin();
-        int destHeight = (int)pMediaFormat.getEffectiveHeightMin();
+        int destWidth = (int)pMediaFormat.getEffectiveMinWidth();
+        int destHeight = (int)pMediaFormat.getEffectiveMinHeight();
         double destRatio = pMediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
-        return getVirtualRendition(pCandidates, destWidth, destHeight, destRatio);
+        return getVirtualRendition(candidates, destWidth, destHeight, destRatio);
       }
     });
   }
@@ -344,28 +335,28 @@ class DefaultRenditionHandler implements RenditionHandler {
   /**
    * Check if a rendition is available from which the required format can be downscaled from and returns
    * a virtual rendition in this case.
-   * @param pCandidates Candidates
-   * @param pDestWidth Destination width
-   * @param pDestHeight Destination height
-   * @param pDestRatio Destination ratio
+   * @param candidates Candidates
+   * @param destWidth Destination width
+   * @param destHeight Destination height
+   * @param destRatio Destination ratio
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(Set<RenditionMetadata> pCandidates,
-      int pDestWidth, int pDestHeight, double pDestRatio) {
+  private RenditionMetadata getVirtualRendition(Set<RenditionMetadata> candidates,
+      int destWidth, int destHeight, double destRatio) {
 
     // if ratio is defined get first rendition with matching ratio and same or bigger size
-    if (pDestRatio > 0) {
-      for (RenditionMetadata candidate : pCandidates) {
-        if (candidate.matches(pDestWidth, pDestHeight, 0, 0, pDestRatio)) {
-          return getVirtualRendition(candidate, pDestWidth, pDestHeight, pDestRatio);
+    if (destRatio > 0) {
+      for (RenditionMetadata candidate : candidates) {
+        if (candidate.matches(destWidth, destHeight, 0, 0, destRatio)) {
+          return getVirtualRendition(candidate, destWidth, destHeight, destRatio);
         }
       }
     }
     // otherwise get first rendition which is same or bigger in width and height
     else {
-      for (RenditionMetadata candidate : pCandidates) {
-        if (candidate.matches(pDestWidth, pDestHeight, 0, 0, 0d)) {
-          return getVirtualRendition(candidate, pDestWidth, pDestHeight, 0d);
+      for (RenditionMetadata candidate : candidates) {
+        if (candidate.matches(destWidth, destHeight, 0, 0, 0d)) {
+          return getVirtualRendition(candidate, destWidth, destHeight, 0d);
         }
       }
     }
@@ -376,21 +367,21 @@ class DefaultRenditionHandler implements RenditionHandler {
 
   /**
    * Get virtual rendition for given width/height/ratio.
-   * @param pRendition Rendition
-   * @param pWidth Width
-   * @param pHeight Height
-   * @param pRatio Ratio
+   * @param rendition Rendition
+   * @param widthValue Width
+   * @param heightValue Height
+   * @param ratioValue Ratio
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(RenditionMetadata pRendition, int pWidth, int pHeight, double pRatio) {
+  private RenditionMetadata getVirtualRendition(RenditionMetadata rendition, int widthValue, int heightValue, double ratioValue) {
 
-    int width = pWidth;
-    int height = pHeight;
-    double ratio = pRatio;
+    int width = widthValue;
+    int height = heightValue;
+    double ratio = ratioValue;
 
     // if ratio is missing: calculate from given rendition
     if (ratio < MediaFormatHandler.RATIO_TOLERANCE) {
-      ratio = (double)pRendition.getWidth() / (double)pRendition.getHeight();
+      ratio = (double)rendition.getWidth() / (double)rendition.getHeight();
     }
 
     // if height is missing - calculate from width
@@ -404,13 +395,13 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
 
     // return virtual rendition
-    if (pWidth > 0 && pHeight > 0) {
-      if (pRendition instanceof VirtualCropRenditionMetadata) {
-        VirtualCropRenditionMetadata cropRendition = (VirtualCropRenditionMetadata)pRendition;
-        return new VirtualCropRenditionMetadata(cropRendition.getRendition(), pWidth, pHeight, cropRendition.getCropDimension());
+    if (widthValue > 0 && heightValue > 0) {
+      if (rendition instanceof VirtualCropRenditionMetadata) {
+        VirtualCropRenditionMetadata cropRendition = (VirtualCropRenditionMetadata)rendition;
+        return new VirtualCropRenditionMetadata(cropRendition.getRendition(), widthValue, heightValue, cropRendition.getCropDimension());
       }
       else {
-        return new VirtualRenditionMetadata(pRendition.getRendition(), pWidth, pHeight);
+        return new VirtualRenditionMetadata(rendition.getRendition(), widthValue, heightValue);
       }
     }
     else {
@@ -422,24 +413,17 @@ class DefaultRenditionHandler implements RenditionHandler {
    * Iterate over all media formats defined in media args. Ignores invalid media formats.
    * If the media format visitor returns a value that is not null, iteration is stopped and the value is returned from
    * this method.
-   * @param pMediaArgs Media args
-   * @param pMediaFormatVisitor Media format visitor
+   * @param mediaArgs Media args
+   * @param mediaFormatVisitor Media format visitor
    * @return Return value form media format visitor, if any returned a value that is not null
    */
-  private <T> T visitMediaFormats(MediaArgsType pMediaArgs, MediaFormatVisitor<T> pMediaFormatVisitor) {
-    MediaFormatHandler mediaFormatHandler = AdaptTo.notNull(adaptable, MediaFormatHandler.class);
-    String[] mediaFormats = pMediaArgs.getMediaFormats();
+  private <T> T visitMediaFormats(MediaArgsType mediaArgs, MediaFormatVisitor<T> mediaFormatVisitor) {
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     if (mediaFormats != null) {
-      for (String mediaFormatName : mediaFormats) {
-        MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
-        if (mediaFormat != null) {
-          T returnValue = pMediaFormatVisitor.visit(mediaFormat);
-          if (returnValue != null) {
-            return returnValue;
-          }
-        }
-        else {
-          mLog.debug("Media format is invalid, unable to resolve: {}", mediaFormatName);
+      for (MediaFormat mediaFormat : mediaFormats) {
+        T returnValue = mediaFormatVisitor.visit(mediaFormat);
+        if (returnValue != null) {
+          return returnValue;
         }
       }
     }

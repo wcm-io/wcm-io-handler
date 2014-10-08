@@ -22,10 +22,10 @@ package io.wcm.handler.media.markup;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.sling.models.annotations.AemObject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import com.day.cq.wcm.api.WCMMode;
 
 /**
- * Very basic implementation of {@link io.wcm.handler.media.MediaMarkupBuilder} for images.
+ * Very basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -116,13 +116,13 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
       // set width/height,
       if (rendition != null) {
-        int height = rendition.getHeight();
+        long height = rendition.getHeight();
         if (height > 0) {
-          img.setHeight(height);
+          img.setHeight((int)height);
         }
-        int width = rendition.getWidth();
+        long width = rendition.getWidth();
         if (width > 0) {
-          img.setWidth(width);
+          img.setWidth((int)width);
         }
       }
     }

@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.link.args;
 
-import io.wcm.handler.link.LinkArgsType;
 import io.wcm.handler.url.UrlMode;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;

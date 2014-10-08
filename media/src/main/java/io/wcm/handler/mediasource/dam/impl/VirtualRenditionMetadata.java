@@ -32,8 +32,8 @@ import com.day.image.Layer;
  */
 class VirtualRenditionMetadata extends RenditionMetadata {
 
-  private final int width;
-  private final int height;
+  private final long width;
+  private final long height;
 
   public VirtualRenditionMetadata(Rendition rendition, int width, int height) {
     super(rendition);
@@ -48,12 +48,12 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public int getWidth() {
+  public long getWidth() {
     return this.width;
   }
 
   @Override
-  public int getHeight() {
+  public long getHeight() {
     return this.height;
   }
 
@@ -69,7 +69,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   protected Layer getLayer() {
     Layer layer = super.getLayer();
     if (layer != null) {
-      layer.resize(getWidth(), getHeight());
+      layer.resize((int)getWidth(), (int)getHeight());
     }
     return layer;
   }

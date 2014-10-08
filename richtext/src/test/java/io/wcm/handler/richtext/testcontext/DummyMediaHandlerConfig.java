@@ -20,12 +20,12 @@
 package io.wcm.handler.richtext.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.media.AbstractMediaHandlerConfig;
-import io.wcm.handler.media.MediaHandlerConfig;
-import io.wcm.handler.media.MediaMarkupBuilder;
-import io.wcm.handler.media.MediaSource;
 import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 
 import java.util.List;
 
@@ -61,11 +61,6 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
   @Override
   public List<Class<? extends MediaMarkupBuilder>> getMediaMarkupBuilders() {
     return MEDIA_MARKUP_BUILDERS;
-  }
-
-  @Override
-  public String getMediaFormatsPath() {
-    return AppAemContext.MEDIAFORMATS_PATH;
   }
 
 }

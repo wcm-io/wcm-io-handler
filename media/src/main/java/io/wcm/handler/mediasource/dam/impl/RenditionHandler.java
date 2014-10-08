@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.MediaArgsType;
+import io.wcm.handler.media.args.MediaArgsType;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.

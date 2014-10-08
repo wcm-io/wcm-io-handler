@@ -33,11 +33,11 @@ import com.day.image.Layer;
  */
 class VirtualCropRenditionMetadata extends RenditionMetadata {
 
-  private final int width;
-  private final int height;
+  private final long width;
+  private final long height;
   private final CropDimension cropDimension;
 
-  public VirtualCropRenditionMetadata(Rendition rendition, int width, int height, CropDimension cropDimension) {
+  public VirtualCropRenditionMetadata(Rendition rendition, long width, long height, CropDimension cropDimension) {
     super(rendition);
     this.width = width;
     this.height = height;
@@ -51,12 +51,12 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public int getWidth() {
+  public long getWidth() {
     return this.width;
   }
 
   @Override
-  public int getHeight() {
+  public long getHeight() {
     return this.height;
   }
 
@@ -79,7 +79,7 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
     if (layer != null) {
       layer.crop(cropDimension.getRectangle());
       if (width <= layer.getWidth() && height <= layer.getHeight()) {
-        layer.resize(width, height);
+        layer.resize((int)width, (int)height);
       }
     }
     return layer;

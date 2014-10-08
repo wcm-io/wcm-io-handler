@@ -20,7 +20,7 @@
 package io.wcm.handler.link.processor;
 
 import io.wcm.handler.link.LinkMetadata;
-import io.wcm.handler.link.LinkMetadataProcessor;
+import io.wcm.handler.link.spi.LinkMetadataProcessor;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.url.UrlHandler;
 

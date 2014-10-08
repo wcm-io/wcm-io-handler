@@ -20,6 +20,7 @@
 package io.wcm.handler.link;
 
 import io.wcm.handler.commons.dom.Anchor;
+import io.wcm.handler.link.args.LinkArgsType;
 import io.wcm.handler.url.UrlMode;
 
 import org.apache.sling.api.resource.Resource;

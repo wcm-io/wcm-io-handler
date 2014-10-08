@@ -17,8 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.url;
+package io.wcm.handler.url.spi;
 
+import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.integrator.IntegratorMode;
 
 import java.util.Collection;

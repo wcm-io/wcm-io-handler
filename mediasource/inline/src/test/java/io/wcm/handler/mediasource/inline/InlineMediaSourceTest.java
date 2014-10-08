@@ -20,12 +20,23 @@
 package io.wcm.handler.mediasource.inline;
 
 import static io.wcm.handler.mediasource.inline.testcontext.AppAemContext.ROOTPATH_CONTENT;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_1COL;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_2COL;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_STANDARD;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.HOLZAUTO_BANNER;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.HOLZAUTO_CUTOUT_13PLUS;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_FLYOUT_FEATURE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaItem;
@@ -33,6 +44,7 @@ import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgs;
+import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.inline.testcontext.AppAemContext;
@@ -75,8 +87,6 @@ public class InlineMediaSourceTest {
 
   @Before
   public void setUp() throws Exception {
-
-    context.load().json("/mediaformat-sample.json", AppAemContext.MEDIAFORMATS_PATH);
 
     Page page = context.currentPage();
     Resource contentNode = page.getContentResource();
@@ -429,40 +439,40 @@ public class InlineMediaSourceTest {
     Rendition rendition;
 
     // test invalid resource
-    mediaMetadata = mediaHandler.getMediaMetadata(emptyResource, "mediaInline", MediaArgs.mediaFormat("showroom_controls"));
+    mediaMetadata = mediaHandler.getMediaMetadata(emptyResource, "mediaInline", MediaArgs.mediaFormat(SHOWROOM_CONTROLS));
     rendition = mediaMetadata.getRendition();
     assertFalse("media invalid", mediaMetadata.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, mediaMetadata.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats with invalid aspect ratio
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat("holzauto_banner"));
+    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(HOLZAUTO_BANNER));
     rendition = mediaMetadata.getRendition();
     assertFalse("media invalid", mediaMetadata.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat("holzauto_cutout_13plus"));
+    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(HOLZAUTO_CUTOUT_13PLUS));
     rendition = mediaMetadata.getRendition();
     assertFalse("media invalid", mediaMetadata.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats that are too big
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat("standard_image"));
+    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(EDITORIAL_STANDARD));
     rendition = mediaMetadata.getRendition();
     assertFalse("media invalid", mediaMetadata.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat("standard_2col"));
+    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(EDITORIAL_2COL));
     rendition = mediaMetadata.getRendition();
     assertFalse("media invalid", mediaMetadata.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media format exact fit
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat("standard_1col"));
+    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(EDITORIAL_1COL));
     rendition = mediaMetadata.getRendition();
     assertTrue("media valid", mediaMetadata.isValid());
     assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
@@ -471,7 +481,7 @@ public class InlineMediaSourceTest {
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline./sample_image_215x102.jpg", rendition.getMediaUrl());
 
     // test image resource with dimensions smaller
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat("showroom_flyout_feature"));
+    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(SHOWROOM_FLYOUT_FEATURE));
     rendition = mediaMetadata.getRendition();
     assertTrue("media valid", mediaMetadata.isValid());
     assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
@@ -479,7 +489,7 @@ public class InlineMediaSourceTest {
     assertEquals("height", 97, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".205.97.file/sample_image_215x102.jpg", rendition.getMediaUrl());
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat("showroom_controls_scale1"));
+    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1));
     rendition = mediaMetadata.getRendition();
     assertTrue("media valid", mediaMetadata.isValid());
     assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
@@ -489,7 +499,7 @@ public class InlineMediaSourceTest {
 
     // test image resource with dimensions only width
     mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat("showroom_controls_scale1_onlywidth"));
+        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH));
     rendition = mediaMetadata.getRendition();
     assertTrue("media valid", mediaMetadata.isValid());
     assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
@@ -499,7 +509,7 @@ public class InlineMediaSourceTest {
 
     // test image resource with dimensions only height
     mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat("showroom_controls_scale1_onlyheight"));
+        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT));
     rendition = mediaMetadata.getRendition();
     assertTrue("media valid", mediaMetadata.isValid());
     assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
@@ -509,7 +519,7 @@ public class InlineMediaSourceTest {
 
     // test image resource with dimensions only width, fitting ratio
     mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat("showroom_controls_scale1_onlywidth_ratio1"));
+        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1));
     rendition = mediaMetadata.getRendition();
     assertTrue("media valid", mediaMetadata.isValid());
     assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
@@ -519,7 +529,7 @@ public class InlineMediaSourceTest {
 
     // test image resource with dimensions only width, invalid ratio
     mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat("showroom_controls_scale1_onlywidth_ratio2"));
+        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2));
     rendition = mediaMetadata.getRendition();
     assertFalse("media invalid", mediaMetadata.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());

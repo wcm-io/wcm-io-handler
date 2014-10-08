@@ -20,11 +20,11 @@
 package io.wcm.handler.richtext.impl;
 
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkHandlerConfig;
 import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkType;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
 import io.wcm.handler.media.MediaHandler;

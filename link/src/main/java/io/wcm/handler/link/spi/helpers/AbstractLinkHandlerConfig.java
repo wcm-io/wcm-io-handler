@@ -17,9 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link;
+package io.wcm.handler.link.spi.helpers;
 
+import io.wcm.handler.link.LinkType;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.LinkMarkupBuilder;
+import io.wcm.handler.link.spi.LinkMetadataProcessor;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;

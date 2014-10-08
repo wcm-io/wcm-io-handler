@@ -17,27 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link;
+package io.wcm.handler.media.spi;
 
-import io.wcm.handler.commons.dom.Anchor;
+import io.wcm.handler.media.format.MediaFormat;
+
+import java.util.Set;
 
 /**
- * Builds XHTML markup for links
+ * Allows application to provide media formats for the media handler.
  */
-public interface LinkMarkupBuilder {
+public interface MediaFormatProvider {
 
   /**
-   * Checks whether this builder can generate markup for the given link.
-   * @param linkMetadata Link metadata
-   * @return true if this markup builder can handle the given link
+   * @return Media formats that the application defines
    */
-  boolean accepts(LinkMetadata linkMetadata);
-
-  /**
-   * Build link anchor markup
-   * @param linkMetadata Link metadata with resolved link information
-   * @return Anchor or null if link is invalid
-   */
-  Anchor build(LinkMetadata linkMetadata);
+  Set<MediaFormat> getMediaFormats();
 
 }

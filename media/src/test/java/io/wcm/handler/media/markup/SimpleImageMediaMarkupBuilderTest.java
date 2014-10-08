@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.markup;
 
+import static io.wcm.handler.media.format.MediaFormatBuilder.create;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -28,13 +29,14 @@ import static org.mockito.Mockito.when;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaReference;
-import io.wcm.handler.media.MediaSource;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgs;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -50,6 +52,8 @@ import org.mockito.runners.MockitoJUnitRunner;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleImageMediaMarkupBuilderTest {
+
+  private static final MediaFormat DUMMY_FORMAT = create("dummyformat", AppAemContext.APPLICATION_ID).build();
 
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
@@ -93,7 +97,7 @@ public class SimpleImageMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = new SimpleImageMediaMarkupBuilder();
 
     MediaReference mediaReference = new MediaReference("/media/dummy", new MediaArgs());
-    mediaReference.getMediaArgs().setMediaFormat("dummyformat");
+    mediaReference.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
     MediaMetadata mediaMetadata = new MediaMetadata(mediaReference, mediaReference, mediaSource);
 
     assertNull("no rendition", builder.build(mediaMetadata));
@@ -112,8 +116,8 @@ public class SimpleImageMediaMarkupBuilderTest {
     assertEquals("height", null, media.getAttributeValue("height"));
     assertEquals("alt", null, media.getAttributeValue("alt"));
 
-    when(rendition.getWidth()).thenReturn(100);
-    when(rendition.getHeight()).thenReturn(50);
+    when(rendition.getWidth()).thenReturn(100L);
+    when(rendition.getHeight()).thenReturn(50L);
     when(mediaItem.getAltText()).thenReturn("Der Jodelkaiser");
 
     media = builder.build(mediaMetadata);

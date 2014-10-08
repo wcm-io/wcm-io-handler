@@ -20,6 +20,7 @@
 package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.url.UrlMode;
 
 import org.apache.sling.api.resource.Resource;

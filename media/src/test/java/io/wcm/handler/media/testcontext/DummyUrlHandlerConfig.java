@@ -20,10 +20,10 @@
 package io.wcm.handler.media.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.url.AbstractUrlHandlerConfig;
-import io.wcm.handler.url.UrlHandlerConfig;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.handler.url.spi.helpers.AbstractUrlHandlerConfig;
 
 import java.util.List;
 

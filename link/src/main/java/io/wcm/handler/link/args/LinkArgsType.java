@@ -17,8 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link;
+package io.wcm.handler.link.args;
 
+import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.url.UrlMode;
 
 /**

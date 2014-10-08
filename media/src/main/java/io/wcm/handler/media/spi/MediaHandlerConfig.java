@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media;
+package io.wcm.handler.media.spi;
+
+import io.wcm.handler.media.MediaMetadataProcessor;
+import io.wcm.handler.media.format.MediaFormat;
 
 import java.util.List;
 import java.util.Set;
@@ -35,7 +38,7 @@ public interface MediaHandlerConfig {
   /**
    * @return Media format names for downloads that are allowed as target for links
    */
-  Set<String> getDownloadMediaFormats();
+  Set<MediaFormat> getDownloadMediaFormats();
 
   /**
    * @return Supported media sources
@@ -56,12 +59,6 @@ public interface MediaHandlerConfig {
    * @return List of media metadata post processors (optional). The processors are applied in list order.
    */
   List<Class<? extends MediaMetadataProcessor>> getMediaMetadataPostProcessors();
-
-  /**
-   * Get root path for media formats of application.
-   * @return Media format root path
-   */
-  String getMediaFormatsPath();
 
   /**
    * Get the default quality for images in this app generated with the Layer API.

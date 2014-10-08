@@ -20,12 +20,13 @@
 package io.wcm.handler.media.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.media.AbstractMediaHandlerConfig;
-import io.wcm.handler.media.MediaHandlerConfig;
-import io.wcm.handler.media.MediaMarkupBuilder;
-import io.wcm.handler.media.MediaSource;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 
 import java.util.List;
@@ -57,8 +58,8 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
           EditPlaceholderMediaMarkupBuilder.class
           );
 
-  private static final Set<String> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of(
-      "download"
+  private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of(
+      DummyMediaFormats.DOWNLOAD
       );
 
   @Override
@@ -72,13 +73,8 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
   }
 
   @Override
-  public Set<String> getDownloadMediaFormats() {
+  public Set<MediaFormat> getDownloadMediaFormats() {
     return DOWNLOAD_MEDIA_FORMATS;
-  }
-
-  @Override
-  public String getMediaFormatsPath() {
-    return AppAemContext.MEDIAFORMATS_PATH;
   }
 
 }

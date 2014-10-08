@@ -21,9 +21,9 @@ package io.wcm.handler.url.impl;
 
 import io.wcm.handler.url.UrlBuilder;
 import io.wcm.handler.url.UrlHandler;
-import io.wcm.handler.url.UrlHandlerConfig;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.integrator.IntegratorHandler;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.sling.models.annotations.AemObject;
 

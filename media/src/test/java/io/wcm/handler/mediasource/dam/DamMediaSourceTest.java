@@ -19,20 +19,25 @@
  */
 package io.wcm.handler.mediasource.dam;
 
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_TEASER_SCALE1;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgs;
+import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormatBuilder;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 
 import org.apache.sling.api.resource.Resource;
@@ -242,7 +247,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormat() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat("/apps/test/mediaformat/standard_2col");
+    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().getMedia(parStandardMediaRef, args);
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
@@ -254,7 +259,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormat_ShortFormat() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat("standard_2col");
+    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().getMedia(parStandardMediaRef, args);
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
@@ -266,7 +271,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormatCrop() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat("home_teaser_scale1");
+    MediaArgsType args = MediaArgs.mediaFormat(HOME_TEASER_SCALE1);
     HtmlElement img = mediaHandler().getMedia(parStandardMediaRefCrop, args);
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
@@ -278,7 +283,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormatCropInvalid() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat("standard_2col");
+    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().getMedia(parStandardMediaRefCrop, args);
     assertNull("returned html element?", img);
   }
@@ -286,7 +291,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageInvalidMediaFormat() {
     // create img element in a mediaFormat for which there is no rendition is available - returns any rendition
-    MediaArgsType args = MediaArgs.mediaFormat("/apps/test/mediaformat/someotherformat");
+    MediaArgsType args = MediaArgs.mediaFormat(MediaFormatBuilder.create("someotherformat", AppAemContext.APPLICATION_ID).build());
     HtmlElement img = mediaHandler().getMedia(parStandardMediaRef, args);
     assertNotNull("returned null?", img);
   }
@@ -309,7 +314,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     WCMMode.EDIT.toRequest(context.request());
 
     // dummy image is added only if a specific media format is requested
-    MediaArgsType args = MediaArgs.mediaFormat("standard_2col");
+    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().getMedia(parInvalidMediaRef, args);
 
     assertNotNull("returned element?", img);
@@ -326,7 +331,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     WCMMode.EDIT.toRequest(context.request());
 
     // if fixed dimensions are specified, the image must have exactly the specified size
-    MediaArgsType args = MediaArgs.mediaFormat("standard_2col");
+    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     args.setFixedDimensions(100, 100);
     HtmlElement img = mediaHandler().getMedia(parNullMediaRef, args);
 
@@ -392,7 +397,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testGetMediaItemInfoVideo() {
-    MediaMetadata mediaMetadata = mediaHandler().getMediaMetadata(MEDIAITEM_VIDEO, MediaArgs.mediaFormat("video_2col"));
+    MediaMetadata mediaMetadata = mediaHandler().getMediaMetadata(MEDIAITEM_VIDEO, MediaArgs.mediaFormat(VIDEO_2COL));
     assertTrue("valid", mediaMetadata.isValid());
     assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
 
@@ -405,7 +410,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testGetMediaItemInfoVideoAsImage() {
-    MediaMetadata mediaMetadata = mediaHandler().getMediaMetadata(MEDIAITEM_VIDEO, MediaArgs.mediaFormat("standard_2col"));
+    MediaMetadata mediaMetadata = mediaHandler().getMediaMetadata(MEDIAITEM_VIDEO, MediaArgs.mediaFormat(EDITORIAL_2COL));
     assertFalse("valid", mediaMetadata.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
 

@@ -22,10 +22,9 @@ package io.wcm.handler.mediasource.dam.markup;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Video;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
-import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -72,8 +71,6 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   @SlingObject
   private ResourceResolver resourceResolver;
-  @Self
-  private MediaFormatHandler mediaFormatHandler;
   @Self
   private UrlHandler urlHandler;
 
@@ -136,11 +133,11 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @return Media element
    */
   protected Video getVideoPlayerElement(MediaMetadata mediaMetadata) {
-    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(mediaMetadata, mediaFormatHandler);
+    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(mediaMetadata);
 
     Video video = new Video();
-    video.setWidth(dimension.getWidth());
-    video.setHeight(dimension.getHeight());
+    video.setWidth((int)dimension.getWidth());
+    video.setHeight((int)dimension.getHeight());
     video.setControls(true);
 
     // add video sources for each video profile
@@ -201,8 +198,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     HtmlElement object = new HtmlElement("object");
     object.setAttribute("type", ContentType.SWF);
     object.setAttribute("data", playerUrl);
-    object.setAttribute("width", Integer.toString(dimension.getWidth()));
-    object.setAttribute("height", Integer.toString(dimension.getHeight()));
+    object.setAttribute("width", Long.toString(dimension.getWidth()));
+    object.setAttribute("height", Long.toString(dimension.getHeight()));
 
     // get flashvars
     Map<String, String> flashvars = new HashMap<String, String>();

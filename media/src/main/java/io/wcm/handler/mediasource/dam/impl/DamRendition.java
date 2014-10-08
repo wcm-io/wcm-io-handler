@@ -20,8 +20,8 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.caching.ModificationDate;
@@ -56,10 +56,10 @@ class DamRendition extends SlingAdaptable implements Rendition {
     // resolve rendition from DAM assets
     RenditionHandler renditionHandler;
     if (cropDimension != null) {
-      renditionHandler = new CropRenditionHandler(asset, cropDimension, adaptable);
+      renditionHandler = new CropRenditionHandler(asset, cropDimension);
     }
     else {
-      renditionHandler = new DefaultRenditionHandler(asset, adaptable);
+      renditionHandler = new DefaultRenditionHandler(asset);
     }
     this.rendition = renditionHandler.getRendition(mediaArgs);
 
@@ -161,7 +161,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public int getWidth() {
+  public long getWidth() {
     if (this.rendition != null) {
       return this.rendition.getWidth();
     }
@@ -171,7 +171,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public int getHeight() {
+  public long getHeight() {
     if (this.rendition != null) {
       return this.rendition.getHeight();
     }

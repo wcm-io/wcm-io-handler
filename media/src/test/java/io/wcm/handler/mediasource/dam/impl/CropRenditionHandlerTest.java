@@ -44,7 +44,7 @@ public class CropRenditionHandlerTest extends AbstractDamTest {
     MediaMetadata mediaMetadata = mediaHandler().getMediaMetadata(MEDIAITEM_PATH_STANDARD);
     Asset asset = ((DamMediaItem)mediaMetadata.getMediaItem()).getDamAsset();
 
-    underTest = new CropRenditionHandler(asset, new CropDimension(0, 0, 960, 315), context.request());
+    underTest = new CropRenditionHandler(asset, new CropDimension(0, 0, 960, 315));
 
     originalRendition = new RenditionMetadata(asset.getRendition("original"));
     assertNotNull(originalRendition);

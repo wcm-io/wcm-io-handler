@@ -26,183 +26,144 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
-
-import com.day.cq.commons.jcr.JcrConstants;
 
 /**
  * Media format.
  */
-public final class MediaFormat {
+public final class MediaFormat implements Comparable<MediaFormat> {
 
-  /**
-   * Media format title
-   */
-  public static final String PN_TITLE = JcrConstants.JCR_TITLE;
+  private final String name;
+  private final String applicationId;
+  private final String label;
+  private final String description;
+  private final long width;
+  private final long minWidth;
+  private final long maxWidth;
+  private final long height;
+  private final long minHeight;
+  private final long maxHeight;
+  private final double ratio;
+  private final long ratioWidth;
+  private final long ratioHeight;
+  private final long fileSizeMax;
+  private final String[] extensions;
+  private final String renditionGroup;
+  private final boolean internal;
+  private final int ranking;
 
-  /**
-   * Media format description
-   */
-  public static final String PN_DESCRIPTION = JcrConstants.JCR_DESCRIPTION;
-
-  /**
-   * Image width (px)
-   */
-  public static final String PN_WIDTH = "width";
-
-  /**
-   * Min. image width (px)
-   */
-  public static final String PN_WIDTH_MIN = "widthMin";
-
-  /**
-   * Max. image width (px)
-   */
-  public static final String PN_WIDTH_MAX = "widthMax";
-
-  /**
-   * Image height (px)
-   */
-  public static final String PN_HEIGHT = "height";
-
-  /**
-   * Min. image height (px)
-   */
-  public static final String PN_HEIGHT_MIN = "heightMin";
-
-  /**
-   * Max. image height (px)
-   */
-  public static final String PN_HEIGHT_MAX = "heightMax";
-
-  /**
-   * Ratio (width/height)
-   */
-  public static final String PN_RATIO = "ratio";
-
-  /**
-   * Ratio width sample value (is used for calculating the ratio together with ratioHeight, and for display)
-   */
-  public static final String PN_RATIO_WIDTH = "ratioWidth";
-
-  /**
-   * Ratio height sample value (is used for calculating the ratio together with ratioWidth, and for display)
-   */
-  public static final String PN_RATIO_HEIGHT = "ratioHeight";
-
-  /**
-   * Max. file size (bytes)
-   */
-  public static final String PN_FILESIZE_MAX = "fileSizeMax";
-
-  /**
-   * Allowed file extensions
-   */
-  public static final String PN_EXTENSION = "extension";
-
-  /**
-   * Rendition group id
-   */
-  public static final String PN_RENDITIONGROUP = "renditionGroup";
-
-  /**
-   * For internal use only (not displayed for user)
-   */
-  public static final String PN_INTERNAL = "internal";
-
-  /**
-   * Ranking for auto-detection
-   */
-  public static final String PN_RANKING = "ranking";
-
-  private final String path;
-  private final ValueMap props;
+  private final String key;
   private String combinedTitle;
 
+  //CHECKSTYLE:OFF
+  MediaFormat(String name, String applicationId, String label, String description,
+      long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight,
+      double ratio, long ratioWidth, long ratioHeight, long fileSizeMax, String[] extensions,
+      String renditionGroup, boolean internal, int ranking) {
+    this.name = name;
+    this.applicationId = applicationId;
+    this.label = label;
+    this.description = description;
+    this.width = width;
+    this.minWidth = minWidth;
+    this.maxWidth = maxWidth;
+    this.height = height;
+    this.minHeight = minHeight;
+    this.maxHeight = maxHeight;
+    this.ratio = ratio;
+    this.ratioWidth = ratioWidth;
+    this.ratioHeight = ratioHeight;
+    this.fileSizeMax = fileSizeMax;
+    this.extensions = extensions;
+    this.renditionGroup = renditionGroup;
+    this.internal = internal;
+    this.ranking = ranking;
+
+    this.key = applicationId + ":" + name;
+  }
+  //CHECKSTYLE:ON
+
   /**
-   * @param resource Resource with media format definition from repository
+   * @return Media format name
    */
-  public MediaFormat(Resource resource) {
-    path = resource.getPath();
-    props = resource.getValueMap();
+  public String getName() {
+    return this.name;
   }
 
   /**
-   * @return Media format path (unique identifier)
+   * @return Application Id
    */
-  public String getPath() {
-    return path;
+  public String getApplicationId() {
+    return this.applicationId;
   }
 
   /**
-   * @return Media format title
+   * @return Media format label
    */
-  public String getTitle() {
-    return props.get(PN_TITLE, String.class);
+  public String getLabel() {
+    return StringUtils.defaultString(this.label, this.name);
   }
 
   /**
    * @return Media format description
    */
   public String getDescription() {
-    return props.get(PN_DESCRIPTION, String.class);
+    return this.description;
   }
 
   /**
    * @return Image width (px)
    */
   public long getWidth() {
-    return props.get(PN_WIDTH, 0L);
+    return this.width;
   }
 
   /**
    * @return Min. image width (px)
    */
-  public long getWidthMin() {
-    return props.get(PN_WIDTH_MIN, 0L);
+  public long getMinWidth() {
+    return this.minWidth;
   }
 
   /**
    * @return Max. image width (px)
    */
-  public long getWidthMax() {
-    return props.get(PN_WIDTH_MAX, 0L);
+  public long getMaxWidth() {
+    return this.maxWidth;
   }
 
   /**
    * @return Image height (px)
    */
   public long getHeight() {
-    return props.get(PN_HEIGHT, 0L);
+    return this.height;
   }
 
   /**
    * @return Min. image height (px)
    */
-  public long getHeightMin() {
-    return props.get(PN_HEIGHT_MIN, 0L);
+  public long getMinHeight() {
+    return this.minHeight;
   }
 
   /**
    * @return Max. image height (px)
    */
-  public long getHeightMax() {
-    return props.get(PN_HEIGHT_MAX, 0L);
+  public long getMaxHeight() {
+    return this.maxHeight;
   }
 
   /**
    * @return Ration width (px)
    */
   public long getRatioWidth() {
-    return props.get(PN_RATIO_WIDTH, 0L);
+    return this.ratioWidth;
   }
 
   /**
    * @return Ration height (px)
    */
   public long getRatioHeight() {
-    return props.get(PN_RATIO_HEIGHT, 0L);
+    return this.ratioHeight;
   }
 
   /**
@@ -214,24 +175,19 @@ public final class MediaFormat {
   public double getRatio() {
 
     // get ratio from media format definition
-    double ratio = props.get(PN_RATIO, 0d);
-    if (ratio > 0) {
-      return ratio;
+    if (this.ratio > 0) {
+      return this.ratio;
     }
 
     // get ratio from media format definition calculated from ratio sample/display values
-    long ratioWidth = props.get(PN_RATIO_WIDTH, 0L);
-    long ratioHeight = props.get(PN_RATIO_HEIGHT, 0L);
-    if (ratioWidth > 0 && ratioHeight > 0) {
-      return (double)ratioWidth / (double)ratioHeight;
+    if (this.ratioWidth > 0 && this.ratioHeight > 0) {
+      return (double)this.ratioWidth / (double)this.ratioHeight;
     }
 
-    // otherwise calcuate ratio
+    // otherwise calculate ratio
     if (isFixedDimension()) {
-      double width = getWidth();
-      double height = getHeight();
-      if (width > 0 && height > 0) {
-        return width / height;
+      if (this.width > 0 && this.height > 0) {
+        return (double)this.width / (double)this.height;
       }
     }
 
@@ -247,9 +203,7 @@ public final class MediaFormat {
       return null;
     }
 
-    long ratioWidth = props.get(PN_RATIO_WIDTH, 0L);
-    long ratioHeight = props.get(PN_RATIO_HEIGHT, 0L);
-    if (ratioWidth > 0 && ratioHeight > 0) {
+    if (this.ratioWidth > 0 && this.ratioHeight > 0) {
       return ratioWidth + ":" + ratioHeight;
     }
 
@@ -267,42 +221,42 @@ public final class MediaFormat {
    * @return Max. file size (bytes)
    */
   public long getFileSizeMax() {
-    return props.get(PN_FILESIZE_MAX, 0L);
+    return this.fileSizeMax;
   }
 
   /**
    * @return Allowed file extensions
    */
-  public String[] getExtension() {
-    return props.get(PN_EXTENSION, String[].class);
+  public String[] getExtensions() {
+    return this.extensions;
   }
 
   /**
    * @return Rendition group id
    */
   public String getRenditionGroup() {
-    return props.get(PN_RENDITIONGROUP, String.class);
+    return this.renditionGroup;
   }
 
   /**
    * @return For internal use only (not displayed for user)
    */
   public boolean isInternal() {
-    return props.get(PN_INTERNAL, false);
+    return this.internal;
   }
 
   /**
    * @return Ranking for auto-detection
    */
   public long getRanking() {
-    return props.get(PN_RANKING, 0L);
+    return this.ranking;
   }
 
   /**
    * @return Whether the format allows at least one image extension
    */
   public boolean isImage() {
-    for (String extension : getExtension()) {
+    for (String extension : getExtensions()) {
       if (FileExtension.isImage(extension)) {
         return true;
       }
@@ -315,7 +269,7 @@ public final class MediaFormat {
    * @return If the media format has a fixed dimension.
    */
   public boolean isFixedWidth() {
-    return getWidth() > 0 && getWidthMin() == 0 && getWidthMax() == 0;
+    return getWidth() > 0 && getMinWidth() == 0 && getMaxWidth() == 0;
   }
 
   /**
@@ -323,7 +277,7 @@ public final class MediaFormat {
    * @return If the media format has a fixed dimension.
    */
   public boolean isFixedHeight() {
-    return getHeight() > 0 && getHeightMin() == 0 && getHeightMax() == 0;
+    return getHeight() > 0 && getMinHeight() == 0 && getMaxHeight() == 0;
   }
 
   /**
@@ -337,8 +291,8 @@ public final class MediaFormat {
   /**
    * @return Effective min. image width (px). Takes widthMin and width into account.
    */
-  public long getEffectiveWidthMin() {
-    long widthMin = getWidthMin();
+  public long getEffectiveMinWidth() {
+    long widthMin = getMinWidth();
     if (widthMin == 0) {
       widthMin = getWidth();
     }
@@ -348,8 +302,8 @@ public final class MediaFormat {
   /**
    * @return Effective max. image width (px). Takes widthMax and width into account.
    */
-  public long getEffectiveWidthMax() {
-    long widthMax = getWidthMax();
+  public long getEffectiveMaxWidth() {
+    long widthMax = getMaxWidth();
     if (widthMax == 0) {
       widthMax = getWidth();
     }
@@ -359,8 +313,8 @@ public final class MediaFormat {
   /**
    * @return Effective min. image height (px). Takes heightMin and height into account.
    */
-  public long getEffectiveHeightMin() {
-    long heightMin = getHeightMin();
+  public long getEffectiveMinHeight() {
+    long heightMin = getMinHeight();
     if (heightMin == 0) {
       heightMin = getHeight();
     }
@@ -370,12 +324,38 @@ public final class MediaFormat {
   /**
    * @return Effective max. image height (px). Takes heightMax and height into account.
    */
-  public long getEffectiveHeightMax() {
-    long heightMax = getHeightMax();
+  public long getEffectiveMaxHeight() {
+    long heightMax = getMaxHeight();
     if (heightMax == 0) {
       heightMax = getHeight();
     }
     return heightMax;
+  }
+
+  /**
+   * Get minimum dimensions for media format. If only with or height is defined the missing dimensions
+   * is calculated from the ratio. If no ratio defined either only width or height dimension is returned.
+   * If neither width or height are defined null is returned.
+   * @return Min. dimensions or null
+   */
+  public Dimension getMinDimension() {
+    long effWithMin = getEffectiveMinWidth();
+    long effHeightMin = getEffectiveMinHeight();
+    double effRatio = getRatio();
+
+    if (effWithMin == 0 && effHeightMin > 0 && effRatio > 0) {
+      effWithMin = Math.round(effHeightMin * effRatio);
+    }
+    if (effWithMin > 0 && effHeightMin == 0 && effRatio > 0) {
+      effHeightMin = Math.round(effWithMin / effRatio);
+    }
+
+    if (effWithMin > 0 || effHeightMin > 0) {
+      return new Dimension(effWithMin, effHeightMin);
+    }
+    else {
+      return null;
+    }
   }
 
   /**
@@ -385,16 +365,15 @@ public final class MediaFormat {
     if (combinedTitle == null) {
       StringBuilder sb = new StringBuilder();
 
-      sb.append(getTitle());
+      sb.append(getLabel());
 
-      // list of display extensions for media format names
-      List<String> extParts = new ArrayList<String>();
+      List<String> extParts = new ArrayList<>();
 
       // with/height restrictions
-      long widthMin = getEffectiveWidthMin();
-      long widthMax = getEffectiveWidthMax();
-      long heightMin = getEffectiveHeightMin();
-      long heightMax = getEffectiveHeightMax();
+      long widthMin = getEffectiveMinWidth();
+      long widthMax = getEffectiveMaxWidth();
+      long heightMin = getEffectiveMinHeight();
+      long heightMax = getEffectiveMaxHeight();
       if (widthMin > 0 || widthMax > 0 || heightMin > 0 || heightMax > 0) {
         StringBuilder sbRestrictions = new StringBuilder();
         if (widthMin == widthMax) {
@@ -428,20 +407,20 @@ public final class MediaFormat {
 
       // display max. 6 extensions in combined title
       final int MAX_EXTENSIONS = 6;
-      StringBuilder extensions = new StringBuilder();
-      String[] extensionList = getExtension();
+      StringBuilder extensionsString = new StringBuilder();
+      String[] extensionList = getExtensions();
       if (extensionList != null) {
         for (int i = 0; i < extensionList.length && i < MAX_EXTENSIONS; i++) {
           if (i > 0) {
-            extensions.append(",");
+            extensionsString.append(",");
           }
-          extensions.append(extensionList[i]);
+          extensionsString.append(extensionList[i]);
         }
         if (extensionList.length > MAX_EXTENSIONS) {
-          extensions.append("...");
+          extensionsString.append("...");
         }
         if (extensionList.length > 0) {
-          extParts.add(extensions.toString());
+          extParts.add(extensionsString.toString());
         }
       }
 
@@ -458,32 +437,6 @@ public final class MediaFormat {
   }
 
   /**
-   * Get minimum dimensions for media format. If only with or height is defined the missing dimensions
-   * is calculated from the ratio. If no ratio defined either only width or height dimension is returned.
-   * If neither width or height are defined null is returned.
-   * @return Min. dimensions or null
-   */
-  public Dimension getMinDimension() {
-    int width = (int)getEffectiveWidthMin();
-    int height = (int)getEffectiveHeightMin();
-    double ratio = getRatio();
-
-    if (width == 0 && height > 0 && ratio > 0) {
-      width = (int)Math.round(height * ratio);
-    }
-    if (width > 0 && height == 0 && ratio > 0) {
-      height = (int)Math.round(width / ratio);
-    }
-
-    if (width > 0 || height > 0) {
-      return new Dimension(width, height);
-    }
-    else {
-      return null;
-    }
-  }
-
-  /**
    * @return User-friendly combined title of current media format name and dimension.
    */
   @Override
@@ -495,7 +448,7 @@ public final class MediaFormat {
   public boolean equals(Object pObj) {
     if (pObj instanceof MediaFormat) {
       MediaFormat other = (MediaFormat)pObj;
-      return path.equals(other.path);
+      return key.equals(other.key);
     }
     else {
       return false;
@@ -504,7 +457,12 @@ public final class MediaFormat {
 
   @Override
   public int hashCode() {
-    return path.hashCode();
+    return key.hashCode();
+  }
+
+  @Override
+  public int compareTo(MediaFormat o) {
+    return this.key.compareTo(o.key);
   }
 
 }

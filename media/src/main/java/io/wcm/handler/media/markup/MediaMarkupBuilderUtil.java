@@ -21,12 +21,11 @@ package io.wcm.handler.media.markup;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaArgsType;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.sling.commons.request.RequestParam;
 
 import org.apache.commons.lang3.StringUtils;
@@ -113,17 +112,17 @@ public final class MediaMarkupBuilderUtil {
    * @param mediaMetadata Media metadata
    * @return Dimension
    */
-  public static Dimension getMediaformatDimension(MediaMetadata mediaMetadata, MediaFormatHandler mediaFormatHandler) {
+  public static Dimension getMediaformatDimension(MediaMetadata mediaMetadata) {
     // Create dummy image element to be displayed in Edit mode as placeholder.
     MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
-    String[] mediaFormats = mediaArgs.getMediaFormats();
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
 
     // detect width/height - either from media args, or from first media format
-    int width = mediaArgs.getFixedWidth();
-    int height = mediaArgs.getFixedHeight();
+    long width = mediaArgs.getFixedWidth();
+    long height = mediaArgs.getFixedHeight();
     if ((width == 0 || height == 0) && mediaFormats != null && mediaFormats.length > 0) {
-      String firstMediaFormat = mediaArgs.getMediaFormats()[0];
-      Dimension dimension = getMinDimension(firstMediaFormat, mediaFormatHandler);
+      MediaFormat firstMediaFormat = mediaArgs.getMediaFormats()[0];
+      Dimension dimension = firstMediaFormat.getMinDimension();
       if (dimension != null) {
         width = dimension.getWidth();
         height = dimension.getHeight();
@@ -139,20 +138,6 @@ public final class MediaMarkupBuilderUtil {
     }
 
     return new Dimension(width, height);
-  }
-
-  /**
-   * Get minimum dimensions of given media format.
-   * @param mediaFormatName Media format
-   * @param mediaFormatHandler Media format handler
-   * @return Minimum dimensions
-   */
-  private static Dimension getMinDimension(String mediaFormatName, MediaFormatHandler mediaFormatHandler) {
-    MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
-    if (mediaFormat != null) {
-      return mediaFormat.getMinDimension();
-    }
-    return null;
   }
 
 }

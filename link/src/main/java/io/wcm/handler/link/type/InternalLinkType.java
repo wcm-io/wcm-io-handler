@@ -20,14 +20,14 @@
 package io.wcm.handler.link.type;
 
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkHandlerConfig;
 import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkReference;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.url.UrlHandler;
-import io.wcm.handler.url.UrlHandlerConfig;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;

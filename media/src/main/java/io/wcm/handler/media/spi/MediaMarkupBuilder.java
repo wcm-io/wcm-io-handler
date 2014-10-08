@@ -17,9 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media;
+package io.wcm.handler.media.spi;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.MediaMetadata;
 
 /**
  * Builds XHTML markup for media element

@@ -30,14 +30,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class Dimension {
 
-  private final int width;
-  private final int height;
+  private final long width;
+  private final long height;
 
   /**
    * @param width Width in pixels
    * @param height Height in pixels
    */
-  public Dimension(int width, int height) {
+  public Dimension(long width, long height) {
     this.width = width;
     this.height = height;
   }
@@ -45,14 +45,14 @@ public class Dimension {
   /**
    * @return Width in pixels
    */
-  public final int getWidth() {
+  public final long getWidth() {
     return this.width;
   }
 
   /**
    * @return Height in pixels
    */
-  public final int getHeight() {
+  public final long getHeight() {
     return this.height;
   }
 

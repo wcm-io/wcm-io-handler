@@ -22,6 +22,7 @@ package io.wcm.handler.url;
 import io.wcm.config.api.Configuration;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.util.RunMode;
 

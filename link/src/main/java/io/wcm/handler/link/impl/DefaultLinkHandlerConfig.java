@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.link.impl;
 
-import io.wcm.handler.link.AbstractLinkHandlerConfig;
-import io.wcm.handler.link.LinkHandlerConfig;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;

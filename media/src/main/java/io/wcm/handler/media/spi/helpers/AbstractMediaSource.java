@@ -17,12 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.source;
+package io.wcm.handler.media.spi.helpers;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaReference;
-import io.wcm.handler.media.MediaSource;
+import io.wcm.handler.media.spi.MediaSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;

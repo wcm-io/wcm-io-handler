@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.url;
 
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+
 import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;

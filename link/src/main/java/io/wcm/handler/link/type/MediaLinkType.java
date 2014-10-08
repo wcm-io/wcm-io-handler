@@ -23,11 +23,12 @@ import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkReference;
 import io.wcm.handler.link.SyntheticLinkResource;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaHandlerConfig;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.args.MediaArgs;
+import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +44,7 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 /**
  * Default implementation of {@link io.wcm.handler.link.LinkType} for media links.
  * Media links are links to media items from media sources
- * that implement the {@link io.wcm.handler.media.MediaSource} interface.
+ * that implement the {@link io.wcm.handler.media.spi.MediaSource} interface.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -94,10 +95,10 @@ public final class MediaLinkType extends AbstractLinkType {
     boolean isDownload = props.get(LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD, false);
 
     // only allow linking to "download" medialib formats
-    String[] downloadMediaFormats = null;
+    MediaFormat[] downloadMediaFormats = null;
     if (mediaHandlerConfig.getDownloadMediaFormats() != null) {
       downloadMediaFormats = mediaHandlerConfig.getDownloadMediaFormats().toArray(
-          new String[mediaHandlerConfig.getDownloadMediaFormats().size()]);
+          new MediaFormat[mediaHandlerConfig.getDownloadMediaFormats().size()]);
     }
     MediaArgsType mediaArgs = MediaArgs.mediaFormats(downloadMediaFormats);
     mediaArgs.setForceDownload(isDownload);

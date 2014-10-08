@@ -19,23 +19,28 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.format.MediaFormatBuilder.create;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import io.wcm.config.spi.annotations.Application;
+import static org.junit.Assert.assertNull;
 import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
-import io.wcm.handler.media.AbstractMediaHandlerConfig;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaHandlerConfig;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaMetadataProcessor;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaReference;
-import io.wcm.handler.media.MediaSource;
 import io.wcm.handler.media.args.MediaArgs;
-import io.wcm.handler.media.source.AbstractMediaSource;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
+import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
+import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -46,6 +51,8 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
@@ -60,7 +67,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class MediaHandlerImplTest {
 
-  static final String APP_ID = "mediaHandlerImplTestApp";
+  static final String APP_ID = "/apps/mediaHandlerImplTestApp";
 
   @Rule
   public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
@@ -68,6 +75,7 @@ public class MediaHandlerImplTest {
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
           ImmutableValueMap.of(Constants.SERVICE_RANKING, 1));
+      callbackContext.registerService(MediaFormatProvider.class, new TestMediaFormatProvider());
     }
   });
 
@@ -94,8 +102,34 @@ public class MediaHandlerImplTest {
     assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", mediaMetadata.getMediaUrl());
     assertNotNull(mediaMetadata.getMedia());
     assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", mediaMetadata.getMedia().getAttributeValue("src"));
-
   }
+
+  @Test
+  public void testMediaFormatResolving() {
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    MediaReference mediaReference = new MediaReference("/content/dummymedia/item1",
+        MediaArgs.mediaFormats("home_stage", "home_teaser"));
+    MediaMetadata metadata = mediaHandler.getMediaMetadata(mediaReference);
+
+    MediaFormat[] mediaFormats = metadata.getMediaReference().getMediaArgs().getMediaFormats();
+    String[] mediaFormatNames = metadata.getMediaReference().getMediaArgs().getMediaFormatNames();
+
+    assertEquals(2, mediaFormats.length);
+    assertEquals(TestMediaFormats.HOME_STAGE, mediaFormats[0]);
+    assertEquals(TestMediaFormats.HOME_TEASER, mediaFormats[1]);
+    assertNull(mediaFormatNames);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testFailedMediaFormatResolving() {
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    MediaReference mediaReference = new MediaReference("/content/dummymedia/item1",
+        MediaArgs.mediaFormats("invalid_media_format"));
+    mediaHandler.getMediaMetadata(mediaReference);
+  }
+
 
   public static class TestApplicationProvider implements ApplicationProvider {
     @Override
@@ -222,6 +256,41 @@ public class MediaHandlerImplTest {
       String mediaUrl = StringUtils.replace(mediaMetadata.getMediaUrl(), "/dummymedia/", "/dummymedia.post1/");
       mediaMetadata.setMediaUrl(mediaUrl);
       return mediaMetadata;
+    }
+
+  }
+
+  public static final class TestMediaFormats {
+
+    private TestMediaFormats() {
+      // constants only
+    }
+
+    /* home_stage */
+    public static final MediaFormat HOME_STAGE = create("home_stage", APP_ID)
+        .label("Home Stage")
+        .width(960)
+        .height(485)
+        .extensions("gif", "jpg", "png", "swf")
+        .build();
+
+    /* home_teaser */
+    public static final MediaFormat HOME_TEASER = create("home_teaser", APP_ID)
+        .label("Home Teaser")
+        .width(206)
+        .height(104)
+        .extensions("gif", "jpg", "png")
+        .renditionGroup("/apps/test/renditiongroup/home_teaser")
+        .build();
+
+  }
+
+  @Component(immediate = true)
+  @Service(MediaFormatProvider.class)
+  public static class TestMediaFormatProvider extends AbstractMediaFormatProvider {
+
+    public TestMediaFormatProvider() {
+      super(TestMediaFormats.class);
     }
 
   }

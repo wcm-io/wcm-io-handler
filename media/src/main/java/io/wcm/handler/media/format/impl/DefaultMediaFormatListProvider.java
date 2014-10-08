@@ -62,12 +62,12 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
         for (MediaFormat mediaFormat : mediaFormats) {
           if (!mediaFormat.isInternal()) {
             JSONObject mediaFormatItem = new JSONObject();
-            mediaFormatItem.put("value", mediaFormat.getPath());
+            mediaFormatItem.put("name", mediaFormat.getName());
             mediaFormatItem.put("text", mediaFormat.toString());
             mediaFormatItem.put("width", mediaFormat.getWidth());
             mediaFormatItem.put("height", mediaFormat.getHeight());
-            mediaFormatItem.put("widthMin", mediaFormat.getWidthMin());
-            mediaFormatItem.put("heightMin", mediaFormat.getHeightMin());
+            mediaFormatItem.put("widthMin", mediaFormat.getMinWidth());
+            mediaFormatItem.put("heightMin", mediaFormat.getMinHeight());
             mediaFormatItem.put("isImage", mediaFormat.isImage());
             mediaFormatItem.put("ratioWidth", mediaFormat.getRatioWidth());
             mediaFormatItem.put("ratioHeight", mediaFormat.getRatioHeight());

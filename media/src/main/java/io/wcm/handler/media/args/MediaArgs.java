@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.args;
 
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
 /**
@@ -28,20 +29,38 @@ public final class MediaArgs extends AbstractMediaArgs<MediaArgs> {
 
   /**
    * Shortcut for building {@link MediaArgs} with media format
-   * @param mediaFormat Absolute media format path or relative (without media format parent path).
+   * @param mediaFormat Media format
    * @return Media args
    */
-  public static MediaArgs mediaFormat(String mediaFormat) {
+  public static MediaArgs mediaFormat(MediaFormat mediaFormat) {
     return new MediaArgs().setMediaFormat(mediaFormat);
   }
 
   /**
    * Shortcut for building {@link MediaArgs} with media format
-   * @param mediaFormats Absolute media format paths or relative (without media format parent path).
+   * @param mediaFormats Media format
    * @return Media args
    */
-  public static MediaArgs mediaFormats(String... mediaFormats) {
+  public static MediaArgs mediaFormats(MediaFormat... mediaFormats) {
     return new MediaArgs().setMediaFormats(mediaFormats);
+  }
+
+  /**
+   * Shortcut for building {@link MediaArgs} with media format
+   * @param mediaFormatName Media format name
+   * @return Media args
+   */
+  public static MediaArgs mediaFormat(String mediaFormatName) {
+    return new MediaArgs().setMediaFormatName(mediaFormatName);
+  }
+
+  /**
+   * Shortcut for building {@link MediaArgs} with media format
+   * @param mediaFormatNames Media format names
+   * @return Media args
+   */
+  public static MediaArgs mediaFormats(String... mediaFormatNames) {
+    return new MediaArgs().setMediaFormatNames(mediaFormatNames);
   }
 
   /**

@@ -17,7 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link;
+package io.wcm.handler.link.spi;
+
+import io.wcm.handler.link.LinkType;
 
 import java.util.List;
 

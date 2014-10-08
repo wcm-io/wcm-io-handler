@@ -22,9 +22,9 @@ package io.wcm.handler.mediasource.inline;
 import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.impl.ImageFileServlet;
@@ -151,8 +151,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     boolean scaleHeight = (requestedDimension.getHeight() > 0
         && requestedDimension.getHeight() != originalDimension.getHeight());
     if (scaleWidth || scaleHeight) {
-      int requestedWidth = requestedDimension.getWidth();
-      int requestedHeight = requestedDimension.getHeight();
+      long requestedWidth = requestedDimension.getWidth();
+      long requestedHeight = requestedDimension.getHeight();
 
       // calculate missing width/height from ration if not specified
       double imageRatio = (double)originalDimension.getWidth() / (double)originalDimension.getHeight();
@@ -330,10 +330,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     }
 
     // check for dimensions from mediaformat (evaluate only first media format)
-    String[] mediaFormats = mediaArgs.getMediaFormats();
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     if (mediaFormats != null && mediaFormats.length > 0) {
-      MediaFormatHandler mediaFormatHandler = AdaptTo.notNull(this.adaptable, MediaFormatHandler.class);
-      Dimension dimension = getMinDimension(mediaFormats[0], mediaFormatHandler);
+      Dimension dimension = mediaFormats[0].getMinDimension();
       if (dimension != null) {
         return dimension;
       }
@@ -419,7 +418,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public int getWidth() {
+  public long getWidth() {
     if (this.imageDimension != null) {
       return this.imageDimension.getWidth();
     }
@@ -429,27 +428,13 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public int getHeight() {
+  public long getHeight() {
     if (this.imageDimension != null) {
       return this.imageDimension.getHeight();
     }
     else {
       return 0;
     }
-  }
-
-  /**
-   * Get minimum dimensions of given media format.
-   * @param mediaFormatName Media format
-   * @param mediaFormatHandler Media format handler
-   * @return Minimum dimensions
-   */
-  private static Dimension getMinDimension(String mediaFormatName, MediaFormatHandler mediaFormatHandler) {
-    MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
-    if (mediaFormat != null) {
-      return mediaFormat.getMinDimension();
-    }
-    return null;
   }
 
   @Override

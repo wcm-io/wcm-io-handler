@@ -23,7 +23,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaReference;
-import io.wcm.handler.media.source.AbstractMediaSource;
+import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;

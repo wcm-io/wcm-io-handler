@@ -20,16 +20,18 @@
 package io.wcm.handler.media.impl;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaHandlerConfig;
 import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaMarkupBuilder;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaMetadataProcessor;
 import io.wcm.handler.media.MediaReference;
-import io.wcm.handler.media.MediaSource;
 import io.wcm.handler.media.args.MediaArgs;
+import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
@@ -56,6 +58,8 @@ public final class MediaHandlerImpl implements MediaHandler {
   private Adaptable adaptable;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
+  @Self
+  private MediaFormatHandler mediaFormatHandler;
   @AemObject
   private Page currentPage;
 
@@ -161,6 +165,9 @@ public final class MediaHandlerImpl implements MediaHandler {
       mediaRef.setMediaArgs(new MediaArgs());
     }
 
+    // resolve media format names to media formats
+    resolveMediaFormats(mediaRef.getMediaArgs());
+
     // detect media source
     MediaSource mediaSource = null;
     List<Class<? extends MediaSource>> mediaTypes = mediaHandlerConfig.getMediaSources();
@@ -246,6 +253,32 @@ public final class MediaHandlerImpl implements MediaHandler {
     }
 
     return false;
+  }
+
+  /**
+   * Resolve media format names to media formats so all downstream logic has only to handle the resolved media formats.
+   * If resolving fails an exception is thrown.
+   * @param mediaArgs Media args
+   */
+  private void resolveMediaFormats(MediaArgsType mediaArgs) {
+    // resolved media formats already set? done.
+    if (mediaArgs.getMediaFormats() != null) {
+      return;
+    }
+    // no media format names present? done.
+    if (mediaArgs.getMediaFormatNames() == null) {
+      return;
+    }
+    String[] mediaFormatNames = mediaArgs.getMediaFormatNames();
+    MediaFormat[] mediaFormats = new MediaFormat[mediaFormatNames.length];
+    for (int i = 0; i < mediaFormatNames.length; i++) {
+      mediaFormats[i] = mediaFormatHandler.getMediaFormat(mediaFormatNames[i]);
+      if (mediaFormats[i] == null) {
+        throw new RuntimeException("Media format name '" + mediaFormatNames[i] + "' is invalid.");
+      }
+    }
+    mediaArgs.setMediaFormats(mediaFormats);
+    mediaArgs.setMediaFormatNames((String[])null);
   }
 
 }

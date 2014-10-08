@@ -20,7 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;

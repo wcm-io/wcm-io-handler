@@ -34,6 +34,13 @@ public interface MediaFormatHandler {
   double RATIO_TOLERANCE = 0.05d;
 
   /**
+   * Resolves media format name to media format object.
+   * @param mediaFormatName Media format name
+   * @return Media format or null if no match found
+   */
+  MediaFormat getMediaFormat(String mediaFormatName);
+
+  /**
    * Get media formats defined by a CMS application that is responsible for the given media library path.
    * @return Media formats sorted by combined title
    */
@@ -45,14 +52,6 @@ public interface MediaFormatHandler {
    * @return Media formats
    */
   SortedSet<MediaFormat> getMediaFormats(Comparator<MediaFormat> comparator);
-
-  /**
-   * Get media format by its path.
-   * @param path Media format definition path or media format name.
-   *          If only a name (without leading "/") is given the path is constructed by added the media formats path prefix.
-   * @return Media format instance or null if invalid
-   */
-  MediaFormat getMediaFormat(String path);
 
   /**
    * Get list of media formats that have the same (or bigger) resolution as the requested media format

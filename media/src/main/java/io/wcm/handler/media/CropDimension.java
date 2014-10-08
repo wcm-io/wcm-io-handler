@@ -34,8 +34,8 @@ import org.apache.commons.lang3.math.NumberUtils;
  */
 public final class CropDimension extends Dimension {
 
-  private final int left;
-  private final int top;
+  private final long left;
+  private final long top;
 
   /**
    * @param left Left in pixels
@@ -43,7 +43,7 @@ public final class CropDimension extends Dimension {
    * @param width Width in pixels
    * @param height Height in pixels
    */
-  public CropDimension(int left, int top, int width, int height) {
+  public CropDimension(long left, long top, long width, long height) {
     super(width, height);
     this.left = left;
     this.top = top;
@@ -52,28 +52,28 @@ public final class CropDimension extends Dimension {
   /**
    * @return Left in pixels
    */
-  public int getLeft() {
+  public long getLeft() {
     return this.left;
   }
 
   /**
    * @return Top in pixels
    */
-  public int getTop() {
+  public long getTop() {
     return this.top;
   }
 
   /**
    * @return Right in pixels
    */
-  public int getRight() {
+  public long getRight() {
     return getLeft() + getWidth();
   }
 
   /**
    * @return Bottom in pixels
    */
-  public int getBottom() {
+  public long getBottom() {
     return getTop() + getHeight();
   }
 
@@ -104,7 +104,7 @@ public final class CropDimension extends Dimension {
    * @return Rectangle
    */
   public Rectangle2D getRectangle() {
-    return new Rectangle(getLeft(), getTop(), getWidth(), getHeight());
+    return new Rectangle((int)getLeft(), (int)getTop(), (int)getWidth(), (int)getHeight());
   }
 
   /**
@@ -129,12 +129,12 @@ public final class CropDimension extends Dimension {
     if (parts.length != 4) {
       throw new IllegalArgumentException("Invalid crop string: '" + cropString + "'.");
     }
-    int x1 = NumberUtils.toInt(parts[0]);
-    int y1 = NumberUtils.toInt(parts[1]);
-    int x2 = NumberUtils.toInt(parts[2]);
-    int y2 = NumberUtils.toInt(parts[3]);
-    int width = x2 - x1;
-    int height = y2 - y1;
+    long x1 = NumberUtils.toLong(parts[0]);
+    long y1 = NumberUtils.toLong(parts[1]);
+    long x2 = NumberUtils.toLong(parts[2]);
+    long y2 = NumberUtils.toLong(parts[3]);
+    long width = x2 - x1;
+    long height = y2 - y1;
     if (x1 < 0 || y1 < 0 || width <= 0 || height <= 0) {
       throw new IllegalArgumentException("Invalid crop string: '" + cropString + "'.");
     }

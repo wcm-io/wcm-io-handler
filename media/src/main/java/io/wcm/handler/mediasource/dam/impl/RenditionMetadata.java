@@ -44,8 +44,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   private final Rendition rendition;
   private final String fileName;
   private final String fileExtension;
-  private final int width;
-  private final int height;
+  private final long width;
+  private final long height;
 
   /**
    * @param rendition DAM rendition
@@ -145,14 +145,14 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   /**
    * @return Image width
    */
-  public int getWidth() {
+  public long getWidth() {
     return this.width;
   }
 
   /**
    * @return Image height
    */
-  public int getHeight() {
+  public long getHeight() {
     return this.height;
   }
 
@@ -237,11 +237,11 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   @Override
   public int compareTo(RenditionMetadata obj) {
     // order by width, height, rendition path
-    Integer thisWidth = getWidth();
-    Integer otherWidth = obj.getWidth();
+    Long thisWidth = getWidth();
+    Long otherWidth = obj.getWidth();
     if (thisWidth.equals(otherWidth)) {
-      Integer thisHeight = getHeight();
-      Integer otherHeight = obj.getHeight();
+      Long thisHeight = getHeight();
+      Long otherHeight = obj.getHeight();
       if (thisHeight.equals(otherHeight)) {
         String thisPath = getRendition().getPath();
         String otherPath = obj.getRendition().getPath();

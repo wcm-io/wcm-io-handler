@@ -17,9 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media;
+package io.wcm.handler.media.spi;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.MediaReference;
 
 /**
  * Defines a media source supported by {@link MediaHandler}

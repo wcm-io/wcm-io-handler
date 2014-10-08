@@ -103,8 +103,6 @@ public abstract class AbstractDamTest {
     // simulate HTML requests for integrator mode
     context.requestPathInfo().setExtension(FileExtension.HTML);
 
-    // use the actual mediaformat definition used in the application for the tests
-    context.load().json("/mediasource/dam/mediaformat-sample.json", MEDIAFORMATS_PATH);
     // all test-content (test content and media-item-pages) are defined in json files in src/test/resources
     context.load().json("/mediasource/dam/damcontent-sample.json", ROOTPATH_DAM);
     context.load().json("/mediasource/dam/sitecontent-sample.json", ROOTPATH_CONTENT);

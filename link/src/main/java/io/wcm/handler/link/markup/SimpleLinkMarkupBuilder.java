@@ -21,9 +21,9 @@ package io.wcm.handler.link.markup;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMarkupBuilder;
 import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.spi.LinkMarkupBuilder;
 import io.wcm.sling.models.annotations.AemObject;
 
 import org.apache.commons.lang3.StringUtils;

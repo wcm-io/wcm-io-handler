@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media;
 
+import io.wcm.handler.media.args.MediaArgsType;
+
 import java.util.HashMap;
 
 import org.apache.sling.api.resource.Resource;

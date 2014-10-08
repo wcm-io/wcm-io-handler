@@ -19,11 +19,10 @@
  */
 package io.wcm.handler.media.args;
 
-import io.wcm.handler.media.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -37,7 +36,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @SuppressWarnings("unchecked")
 public abstract class AbstractMediaArgs<T extends MediaArgsType> implements MediaArgsType<T> {
 
-  private String[] mediaFormats;
+  private MediaFormat[] mediaFormats;
+  private String[] mediaFormatNames;
   private String[] fileExtensions;
   private UrlMode urlMode;
   private int fixedWidth;
@@ -48,23 +48,47 @@ public abstract class AbstractMediaArgs<T extends MediaArgsType> implements Medi
   private String dummyImageUrl;
 
   @Override
-  public final String[] getMediaFormats() {
+  public final MediaFormat[] getMediaFormats() {
     return this.mediaFormats;
   }
 
   @Override
-  public final T setMediaFormats(String... values) {
+  public final T setMediaFormats(MediaFormat... values) {
     this.mediaFormats = values;
     return (T)this;
   }
 
   @Override
-  public final T setMediaFormat(String value) {
-    if (StringUtils.isBlank(value)) {
+  public final T setMediaFormat(MediaFormat value) {
+    if (value == null) {
       this.mediaFormats = null;
     }
     else {
-      this.mediaFormats = new String[] {
+      this.mediaFormats = new MediaFormat[] {
+          value
+      };
+    }
+    return (T)this;
+  }
+
+  @Override
+  public final String[] getMediaFormatNames() {
+    return this.mediaFormatNames;
+  }
+
+  @Override
+  public final T setMediaFormatNames(String... values) {
+    this.mediaFormatNames = values;
+    return (T)this;
+  }
+
+  @Override
+  public final T setMediaFormatName(String value) {
+    if (value == null) {
+      this.mediaFormatNames = null;
+    }
+    else {
+      this.mediaFormatNames = new String[] {
           value
       };
     }

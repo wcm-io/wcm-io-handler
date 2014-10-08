@@ -22,6 +22,7 @@ package io.wcm.handler.richtext.testcontext;
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
+import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -43,11 +44,6 @@ public final class AppAemContext {
    * Appliation ID
    */
   public static final String APPLICATION_ID = "/apps/test";
-
-  /**
-   * Media formats path
-   */
-  public static final String MEDIAFORMATS_PATH = "/apps/test/mediaformat";
 
   /**
    * DAM root path
@@ -104,6 +100,9 @@ public final class AppAemContext {
 
       // wcm.io configuration
       MockConfig.setUp(context);
+
+      // media formats
+      context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.url");

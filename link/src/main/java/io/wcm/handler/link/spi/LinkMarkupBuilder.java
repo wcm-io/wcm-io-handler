@@ -17,18 +17,28 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link;
+package io.wcm.handler.link.spi;
+
+import io.wcm.handler.commons.dom.Anchor;
+import io.wcm.handler.link.LinkMetadata;
 
 /**
- * Processes link metadata before or after link resolving
+ * Builds XHTML markup for links
  */
-public interface LinkMetadataProcessor {
+public interface LinkMarkupBuilder {
 
   /**
-   * Process link metadata
+   * Checks whether this builder can generate markup for the given link.
    * @param linkMetadata Link metadata
-   * @return Processed link metadata (never null)
+   * @return true if this markup builder can handle the given link
    */
-  LinkMetadata process(LinkMetadata linkMetadata);
+  boolean accepts(LinkMetadata linkMetadata);
+
+  /**
+   * Build link anchor markup
+   * @param linkMetadata Link metadata with resolved link information
+   * @return Anchor or null if link is invalid
+   */
+  Anchor build(LinkMetadata linkMetadata);
 
 }

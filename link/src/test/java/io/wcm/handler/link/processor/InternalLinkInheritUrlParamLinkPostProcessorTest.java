@@ -22,7 +22,7 @@ package io.wcm.handler.link.processor;
 import static org.junit.Assert.assertEquals;
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.LinkMetadata;
-import io.wcm.handler.link.LinkMetadataProcessor;
+import io.wcm.handler.link.spi.LinkMetadataProcessor;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;

@@ -21,13 +21,13 @@ package io.wcm.handler.mediasource.dam;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.editcontext.DropTargetImpl;
-import io.wcm.handler.media.MediaArgsType;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaItem;
 import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaReference;
-import io.wcm.handler.media.source.AbstractMediaSource;
+import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamMediaItem;
 import io.wcm.sling.models.annotations.AemObject;
 

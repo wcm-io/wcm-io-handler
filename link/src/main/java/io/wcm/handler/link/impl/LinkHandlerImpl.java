@@ -20,15 +20,15 @@
 package io.wcm.handler.link.impl;
 
 import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.LinkArgsType;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkHandlerConfig;
-import io.wcm.handler.link.LinkMarkupBuilder;
 import io.wcm.handler.link.LinkMetadata;
-import io.wcm.handler.link.LinkMetadataProcessor;
 import io.wcm.handler.link.LinkReference;
 import io.wcm.handler.link.LinkType;
 import io.wcm.handler.link.args.LinkArgs;
+import io.wcm.handler.link.args.LinkArgsType;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.LinkMarkupBuilder;
+import io.wcm.handler.link.spi.LinkMetadataProcessor;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
