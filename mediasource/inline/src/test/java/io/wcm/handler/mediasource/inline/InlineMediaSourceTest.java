@@ -289,7 +289,7 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineSampleImage/mediaInline", rendition.getPath());
     assertEquals("rendition.filename", "sample_image_215x102.jpg", rendition.getFileName());
     assertEquals("rendition.fileextension", "jpg", rendition.getFileExtension());
-    assertEquals("rendition.filesize", 8124, rendition.getFileSize());
+    assertEquals("rendition.filesize", 25918, rendition.getFileSize());
     assertEquals("rendition.width", 215, rendition.getWidth());
     assertEquals("rendition.height", 102, rendition.getHeight());
   }
