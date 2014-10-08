@@ -118,11 +118,11 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
       if (rendition != null) {
         long height = rendition.getHeight();
         if (height > 0) {
-          img.setHeight((int)height);
+          img.setHeight(height);
         }
         long width = rendition.getWidth();
         if (width > 0) {
-          img.setWidth((int)width);
+          img.setWidth(width);
         }
       }
     }

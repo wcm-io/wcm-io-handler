@@ -83,7 +83,7 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
     dummyImageUrl = urlHandler.url(dummyImageUrl)
         .urlMode(mediaMetadata.getMediaReference().getMediaArgs().getUrlMode())
         .externalizeResource().build();
-    Image image = new Image(dummyImageUrl, (int)dimension.getWidth(), (int)dimension.getHeight())
+    Image image = new Image(dummyImageUrl, dimension.getWidth(), dimension.getHeight())
     .addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
 
     // enable drag&drop for media source - if none is specified use first one defined in config

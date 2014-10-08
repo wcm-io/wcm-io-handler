@@ -68,7 +68,7 @@ public final class Image extends HtmlElement<Image> {
    * @param width Html "width" attribute.
    * @param height Html "height" attribute.
    */
-  public Image(String src, int width, int height) {
+  public Image(String src, long width, long height) {
     this();
     setSrc(src);
     setWidth(width);
@@ -82,7 +82,7 @@ public final class Image extends HtmlElement<Image> {
    * @param width Html "width" attribute.
    * @param height Html "height" attribute.
    */
-  public Image(String src, String alt, int width, int height) {
+  public Image(String src, String alt, long width, long height) {
     this();
     setSrc(src);
     setAlt(alt);
@@ -130,8 +130,8 @@ public final class Image extends HtmlElement<Image> {
    * Html "width" attribute.
    * @return Value of attribute
    */
-  public int getWidth() {
-    return getAttributeValueAsInteger(ATTRIBUTE_WIDTH);
+  public long getWidth() {
+    return getAttributeValueAsLong(ATTRIBUTE_WIDTH);
   }
 
   /**
@@ -139,8 +139,8 @@ public final class Image extends HtmlElement<Image> {
    * @param value Value of attribute
    * @return Self reference
    */
-  public Image setWidth(int value) {
-    setAttributeValueAsInteger(ATTRIBUTE_WIDTH, value);
+  public Image setWidth(long value) {
+    setAttributeValueAsLong(ATTRIBUTE_WIDTH, value);
     return this;
   }
 
@@ -148,8 +148,8 @@ public final class Image extends HtmlElement<Image> {
    * Html "height" attribute.
    * @return Value of attribute
    */
-  public int getHeight() {
-    return getAttributeValueAsInteger(ATTRIBUTE_HEIGHT);
+  public long getHeight() {
+    return getAttributeValueAsLong(ATTRIBUTE_HEIGHT);
   }
 
   /**
@@ -157,8 +157,8 @@ public final class Image extends HtmlElement<Image> {
    * @param value Value of attribute
    * @return Self reference
    */
-  public Image setHeight(int value) {
-    setAttributeValueAsInteger(ATTRIBUTE_HEIGHT, value);
+  public Image setHeight(long value) {
+    setAttributeValueAsLong(ATTRIBUTE_HEIGHT, value);
     return this;
   }
 

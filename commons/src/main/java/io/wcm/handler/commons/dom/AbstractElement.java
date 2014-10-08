@@ -82,6 +82,37 @@ public abstract class AbstractElement<T extends AbstractElement> extends org.jdo
   }
 
   /**
+   * Sets attribute value as long.
+   * @param name Attribute name
+   * @param value Attribute value as long
+   * @return Self reference
+   */
+  public final T setAttributeValueAsLong(String name, long value) {
+    setAttribute(name, Long.toString(value));
+    return (T)this;
+  }
+
+  /**
+   * Gets attribute value as long.
+   * @param attributeName Attribute name
+   * @return Attribute value as long or 0 if not set.
+   */
+  public final long getAttributeValueAsLong(String attributeName) {
+    Attribute attribute = getAttribute(attributeName);
+    if (attribute == null) {
+      return 0;
+    }
+    else {
+      try {
+        return attribute.getLongValue();
+      }
+      catch (DataConversionException ex) {
+        return 0;
+      }
+    }
+  }
+
+  /**
    * Sets attribute value as integer.
    * @param name Attribute name
    * @param value Attribute value as integer
