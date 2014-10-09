@@ -20,10 +20,10 @@
 package io.wcm.handler.media.impl;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
@@ -73,6 +73,11 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
+  public MediaBuilder get(Resource resource, MediaFormat... mediaFormats) {
+    return get(resource).mediaFormat(mediaFormats);
+  }
+
+  @Override
   public MediaBuilder get(String mediaRef) {
     return new MediaBuilderImpl(mediaRef, this);
   }
@@ -80,6 +85,11 @@ public final class MediaHandlerImpl implements MediaHandler {
   @Override
   public MediaBuilder get(String mediaRef, MediaArgsType mediaArgs) {
     return get(mediaRef).args(mediaArgs);
+  }
+
+  @Override
+  public MediaBuilder get(String mediaRef, MediaFormat... mediaFormats) {
+    return get(mediaRef).mediaFormat(mediaFormats);
   }
 
   @Override

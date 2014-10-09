@@ -21,6 +21,7 @@ package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
 /**
@@ -34,6 +35,14 @@ public interface MediaBuilder {
    * @return Media builder
    */
   MediaBuilder args(MediaArgsType mediaArgs);
+
+  /**
+   * Set media format(s).
+   * It is not allowed to set both media args and Media formats at the same time.
+   * @param mediaFormats Media format(s)
+   * @return Media builder
+   */
+  MediaBuilder mediaFormat(MediaFormat... mediaFormats);
 
   /**
    * Sets the name of the property from which the media request is read, or node name for inline media.

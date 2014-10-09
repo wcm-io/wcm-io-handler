@@ -20,11 +20,12 @@
 package io.wcm.handler.media.impl;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.args.MediaArgs;
 import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
 import org.apache.sling.api.resource.Resource;
@@ -40,6 +41,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private final String mediaRef;
 
   private MediaArgsType mediaArgs;
+  private MediaFormat[] mediaFormats;
   private String refProperty;
   private String cropProperty;
   private UrlMode urlMode;
@@ -75,6 +77,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public MediaBuilder mediaFormat(MediaFormat... value) {
+    this.mediaFormats = value;
+    return this;
+  }
+
+  @Override
   public MediaBuilder refProperty(String value) {
     this.refProperty = value;
     return this;
@@ -94,13 +102,15 @@ final class MediaBuilderImpl implements MediaBuilder {
 
   @Override
   public Media build() {
-    if (this.mediaArgs != null && this.urlMode != null) {
-      throw new IllegalArgumentException("Please set media arguments or URL mode, not both.");
+    if (this.mediaArgs != null && (this.urlMode != null || this.mediaFormats != null)) {
+      throw new IllegalArgumentException("Please set media arguments or URL/media formats mode, not both.");
     }
-    if (this.urlMode != null) {
-      this.mediaArgs = MediaArgs.urlMode(this.urlMode);
+    if (this.mediaArgs == null) {
+      this.mediaArgs = new MediaArgs();
+      this.mediaArgs.setMediaFormats(this.mediaFormats);
+      this.mediaArgs.setUrlMode(this.urlMode);
     }
-    if (this.mediaArgs != null) {
+    else {
       // clone media args to make sure the original object is not modified
       try {
         this.mediaArgs = (MediaArgsType)this.mediaArgs.clone();

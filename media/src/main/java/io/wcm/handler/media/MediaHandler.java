@@ -21,6 +21,7 @@ package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
 
 import org.apache.sling.api.resource.Resource;
 
@@ -49,6 +50,16 @@ public interface MediaHandler {
   MediaBuilder get(Resource resource, MediaArgsType mediaArgs);
 
   /**
+   * Build media which is referenced in the resource (as property or inline binary data).
+   * @param resource Resource containing reference to media asset and optionally futher properties like alt. text,
+   *          cropping information etc. Alternatively it can contain an inline binary asset uploaded directly to the
+   *          resource.
+   * @param mediaFormats Media format(s)
+   * @return Media builder
+   */
+  MediaBuilder get(Resource resource, MediaFormat... mediaFormats);
+
+  /**
    * Build media which is referenced via its string address.
    * @param mediaRef Reference to media item (in most cases a repository path to the DAM asset).
    * @return Media builder
@@ -62,6 +73,14 @@ public interface MediaHandler {
    * @return Media builder
    */
   MediaBuilder get(String mediaRef, MediaArgsType mediaArgs);
+
+  /**
+   * Build media which is referenced via its string address.
+   * @param mediaRef Reference to media item (in most cases a repository path to the DAM asset).
+   * @param mediaFormats Media format(s)
+   * @return Media builder
+   */
+  MediaBuilder get(String mediaRef, MediaFormat... mediaFormats);
 
   /**
    * Build media for the given request holding all further request properties.
