@@ -20,7 +20,7 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.Assert.assertNotNull;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 import org.junit.Assert;
@@ -41,8 +41,8 @@ public class RenditionMetadataTest extends AbstractDamTest {
 
   @Before
   public void setUp() throws Exception {
-    MediaMetadata mediaMetadata = mediaHandler().getMediaMetadata(MEDIAITEM_PATH_STANDARD);
-    Asset asset = ((DamMediaItem)mediaMetadata.getMediaItem()).getDamAsset();
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
+    Asset asset = ((DamAsset)media.getAsset()).getDamAsset();
 
     originalRendition = new RenditionMetadata(asset.getRendition("original"));
     assertNotNull(originalRendition);

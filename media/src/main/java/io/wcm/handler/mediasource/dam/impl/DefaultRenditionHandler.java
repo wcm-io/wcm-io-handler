@@ -309,8 +309,8 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // get from fixed with/height
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
-      int destWidth = mediaArgs.getFixedWidth();
-      int destHeight = mediaArgs.getFixedHeight();
+      long destWidth = mediaArgs.getFixedWidth();
+      long destHeight = mediaArgs.getFixedHeight();
       double destRatio = 0;
       if (destWidth > 0 && destHeight > 0) {
         destRatio = (double)destWidth / (double)destHeight;
@@ -342,7 +342,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @return Rendition or null
    */
   private RenditionMetadata getVirtualRendition(Set<RenditionMetadata> candidates,
-      int destWidth, int destHeight, double destRatio) {
+      long destWidth, long destHeight, double destRatio) {
 
     // if ratio is defined get first rendition with matching ratio and same or bigger size
     if (destRatio > 0) {
@@ -373,10 +373,10 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param ratioValue Ratio
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(RenditionMetadata rendition, int widthValue, int heightValue, double ratioValue) {
+  private RenditionMetadata getVirtualRendition(RenditionMetadata rendition, long widthValue, long heightValue, double ratioValue) {
 
-    int width = widthValue;
-    int height = heightValue;
+    long width = widthValue;
+    long height = heightValue;
     double ratio = ratioValue;
 
     // if ratio is missing: calculate from given rendition

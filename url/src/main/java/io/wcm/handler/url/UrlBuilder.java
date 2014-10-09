@@ -24,35 +24,35 @@ import java.util.Set;
 import com.day.cq.wcm.api.Page;
 
 /**
- * Building URLs using Builder pattern.
+ * Define URL handling requests using builder pattern.
  */
 public interface UrlBuilder {
 
   /**
    * Set selectors
    * @param selectors Selector string
-   * @return Url Builder
+   * @return URL builder
    */
   UrlBuilder selectors(String selectors);
 
   /**
    * Set file extension
    * @param extension file extension
-   * @return Url Builder
+   * @return URL builder
    */
   UrlBuilder extension(String extension);
 
   /**
    * Set suffix
    * @param suffix Suffix string
-   * @return Url Builder
+   * @return URL builder
    */
   UrlBuilder suffix(String suffix);
 
   /**
    * Set query parameters string
    * @param queryString Query parameters string (properly url-encoded)
-   * @return Url Builder
+   * @return URL builder
    */
   UrlBuilder queryString(String queryString);
 
@@ -60,34 +60,21 @@ public interface UrlBuilder {
    * Set query parameters string
    * @param queryString Query parameters string (properly url-encoded)
    * @param inheritableParameterNames Names of query string parameters that should be inherited from the current request
-   * @return Url Builder
+   * @return URL builder
    */
   UrlBuilder queryString(String queryString, Set<String> inheritableParameterNames);
 
   /**
    * Set fragment identifier
    * @param fragment Fragment identifier
-   * @return Url Builder
+   * @return URL builder
    */
   UrlBuilder fragment(String fragment);
 
   /**
-   * Externalize as link to a content page.
-   * @param targetPage Target page of internal link (e.g. for checking secure mode)
-   * @return Url Builder
-   */
-  UrlBuilder externalizeLink(Page targetPage);
-
-  /**
-   * Externalize as resource (e.g. image, CSS or JavaScript reference).
-   * @return Url Builder
-   */
-  UrlBuilder externalizeResource();
-
-  /**
    * Set URL mode for externalizing the URL
    * @param urlMode URL mode. If null, default URL mode is used.
-   * @return Url Builder
+   * @return URL builder
    */
   UrlBuilder urlMode(UrlMode urlMode);
 
@@ -96,5 +83,18 @@ public interface UrlBuilder {
    * @return URL
    */
   String build();
+
+  /**
+   * Build externalized URL that links to a content page.
+   * @param targetPage Target page of internal link (e.g. for checking secure mode)
+   * @return URL
+   */
+  String buildExternalLinkUrl(Page targetPage);
+
+  /**
+   * Build externalized URL that links to a resource (e.g. image, CSS or JavaScript reference).
+   * @return URL
+   */
+  String buildExternalResourceUrl();
 
 }

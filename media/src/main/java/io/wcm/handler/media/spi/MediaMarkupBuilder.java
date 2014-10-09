@@ -20,7 +20,7 @@
 package io.wcm.handler.media.spi;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 
 /**
  * Builds XHTML markup for media element
@@ -39,17 +39,17 @@ public interface MediaMarkupBuilder {
 
   /**
    * Checks whether this builder can generate markup for the given media.
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @return true if this markup builder can handle the given media
    */
-  boolean accepts(MediaMetadata mediaMetadata);
+  boolean accepts(Media media);
 
   /**
    * Build media element markup
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @return Media element or null if media is invalid
    */
-  HtmlElement<?> build(MediaMetadata mediaMetadata);
+  HtmlElement<?> build(Media media);
 
   /**
    * Checks if the given HTML element is valid.

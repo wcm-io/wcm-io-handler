@@ -42,9 +42,6 @@ final class UrlBuilderImpl implements UrlBuilder {
   private String queryString;
   private Set<String> inheritableParameterNames;
   private String fragment;
-  private boolean externalizeLink;
-  private Page externalizeLinkTargetPage;
-  private boolean externalizeResource;
   private UrlMode urlMode;
 
   /**
@@ -95,19 +92,6 @@ final class UrlBuilderImpl implements UrlBuilder {
   }
 
   @Override
-  public UrlBuilder externalizeLink(Page page) {
-    this.externalizeLink = true;
-    this.externalizeLinkTargetPage = page;
-    return this;
-  }
-
-  @Override
-  public UrlBuilder externalizeResource() {
-    this.externalizeResource = true;
-    return this;
-  }
-
-  @Override
   public UrlBuilder urlMode(UrlMode value) {
     this.urlMode = value;
     return this;
@@ -115,9 +99,6 @@ final class UrlBuilderImpl implements UrlBuilder {
 
   @Override
   public String build() {
-    if (externalizeLink && externalizeResource) {
-      throw new IllegalArgumentException("Not possible to externalize for link and resource at the same time.");
-    }
     String url = urlHandler.buildUrl(path, selectors, extension, suffix);
     if (StringUtils.isNotEmpty(queryString) || inheritableParameterNames != null) {
       url = urlHandler.appendQueryString(url, queryString, inheritableParameterNames);
@@ -125,13 +106,19 @@ final class UrlBuilderImpl implements UrlBuilder {
     if (StringUtils.isNotEmpty(fragment)) {
       url = urlHandler.setFragment(url, fragment);
     }
-    if (externalizeLink) {
-      url = urlHandler.externalizeLinkUrl(url, externalizeLinkTargetPage, urlMode);
-    }
-    else if (externalizeResource) {
-      url = urlHandler.externalizeResourceUrl(url, urlMode);
-    }
     return url;
+  }
+
+  @Override
+  public String buildExternalLinkUrl(Page targetPage) {
+    String url = build();
+    return urlHandler.externalizeLinkUrl(url, targetPage, urlMode);
+  }
+
+  @Override
+  public String buildExternalResourceUrl() {
+    String url = build();
+    return urlHandler.externalizeResourceUrl(url, urlMode);
   }
 
 }

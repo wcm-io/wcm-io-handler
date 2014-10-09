@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 import org.junit.Before;
@@ -41,8 +41,8 @@ public class CropRenditionHandlerTest extends AbstractDamTest {
 
   @Before
   public void setUp() throws Exception {
-    MediaMetadata mediaMetadata = mediaHandler().getMediaMetadata(MEDIAITEM_PATH_STANDARD);
-    Asset asset = ((DamMediaItem)mediaMetadata.getMediaItem()).getDamAsset();
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
+    Asset asset = ((DamAsset)media.getAsset()).getDamAsset();
 
     underTest = new CropRenditionHandler(asset, new CropDimension(0, 0, 960, 315));
 

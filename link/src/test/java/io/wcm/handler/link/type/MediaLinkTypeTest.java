@@ -24,8 +24,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.testcontext.AppAemContext;
@@ -55,12 +55,12 @@ public class MediaLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertFalse("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -73,12 +73,12 @@ public class MediaLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/invalid/media/link")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertTrue("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -93,13 +93,13 @@ public class MediaLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/invalid/media/link")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertTrue("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
-    assertEquals("anchor.href", LinkHandler.INVALID_LINK, linkMetadata.getAnchor().getHRef());
+    assertFalse("link valid", link.isValid());
+    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
+    assertNull("link url", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
+    assertEquals("anchor.href", LinkHandler.INVALID_LINK, link.getAnchor().getHRef());
   }
 
   // --> does not work because dummy implementation does not support download media format detection
@@ -112,11 +112,11 @@ public class MediaLinkTypeTest {
   // .put(LinkNameConstants.PN_LINK_TYPE, DefaultMediaLinkType.ID);
   // .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dummymedia/image1");
   //
-  // LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+  // Link link = linkHandler.get(linkResource).build();
   //
-  // assertFalse("link invalid", linkMetadata.isValid());
-  // assertNull("link url", linkMetadata.getLinkUrl());
-  // assertNull("anchor", linkMetadata.getAnchor());
+  // assertFalse("link invalid", link.isValid());
+  // assertNull("link url", link.getLinkUrl());
+  // assertNull("anchor", link.getAnchor());
   // }
 
   @Test
@@ -129,11 +129,11 @@ public class MediaLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dummymedia/pdf1")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "/content/dummymedia/pdf1.pdf", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "/content/dummymedia/pdf1.pdf", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
 }

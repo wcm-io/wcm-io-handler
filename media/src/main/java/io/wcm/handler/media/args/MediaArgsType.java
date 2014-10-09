@@ -96,27 +96,27 @@ public interface MediaArgsType<T extends MediaArgsType> extends Cloneable {
    * Use fixed width instead of width from media format or original image
    * @return Fixed width
    */
-  int getFixedWidth();
+  long getFixedWidth();
 
   /**
    * Use fixed width instead of width from media format or original image
    * @param fixedWidth Fixed width
    * @return this
    */
-  T setFixedWidth(int fixedWidth);
+  T setFixedWidth(long fixedWidth);
 
   /**
    * Use fixed height instead of width from media format or original image
    * @return Fixed height
    */
-  int getFixedHeight();
+  long getFixedHeight();
 
   /**
    * Use fixed height instead of width from media format or original image
    * @param fixedHeight Fixed height
    * @return this
    */
-  T setFixedHeight(int fixedHeight);
+  T setFixedHeight(long fixedHeight);
 
   /**
    * Use fixed dimensions instead of width from media format or original image
@@ -124,7 +124,7 @@ public interface MediaArgsType<T extends MediaArgsType> extends Cloneable {
    * @param fixedHeight Fixed height
    * @return this
    */
-  T setFixedDimensions(int fixedWidth, int fixedHeight);
+  T setFixedDimensions(long fixedWidth, long fixedHeight);
 
   /**
    * @return Whether to set a "Content-Disposition" header for forcing a "Save as" dialog on the client

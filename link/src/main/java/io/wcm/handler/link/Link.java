@@ -20,7 +20,8 @@
 package io.wcm.handler.link;
 
 import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.media.MediaItem;
+import io.wcm.handler.link.spi.LinkType;
+import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Rendition;
 
 import java.util.HashMap;
@@ -32,43 +33,26 @@ import org.jdom2.Attribute;
 import com.day.cq.wcm.api.Page;
 
 /**
- * Holds information about a link processed and resolved by {@link LinkHandler}
+ * Holds information about a link processed and resolved by {@link LinkHandler}.
  */
-public final class LinkMetadata {
+public final class Link {
 
-  private final LinkReference originalLinkReference;
-  private final LinkReference linkReference;
   private final LinkType linkType;
+  private LinkRequest linkRequest;
   private boolean linkReferenceInvalid;
   private Anchor anchor;
-  private String linkUrl;
+  private String url;
   private Page targetPage;
-  private MediaItem targetMediaItem;
+  private Asset targetAsset;
   private Rendition targetRendition;
 
   /**
-   * @param originalLinkReference Original link reference
-   * @param linkReference Processed link reference
    * @param linkType Link type
+   * @param linkRequest Processed link reference
    */
-  public LinkMetadata(LinkReference originalLinkReference, LinkReference linkReference, LinkType linkType) {
-    this.originalLinkReference = originalLinkReference;
-    this.linkReference = linkReference;
+  public Link(LinkType linkType, LinkRequest linkRequest) {
+    this.linkRequest = linkRequest;
     this.linkType = linkType;
-  }
-
-  /**
-   * @return Original link reference
-   */
-  public LinkReference getOriginalLinkReference() {
-    return this.originalLinkReference;
-  }
-
-  /**
-   * @return Processed link reference
-   */
-  public LinkReference getLinkReference() {
-    return this.linkReference;
   }
 
   /**
@@ -76,6 +60,20 @@ public final class LinkMetadata {
    */
   public LinkType getLinkType() {
     return this.linkType;
+  }
+
+  /**
+   * @return Link request
+   */
+  public LinkRequest getLinkRequest() {
+    return this.linkRequest;
+  }
+
+  /**
+   * @param linkRequest Link request
+   */
+  public void setLinkRequest(LinkRequest linkRequest) {
+    this.linkRequest = linkRequest;
   }
 
   /**
@@ -122,17 +120,29 @@ public final class LinkMetadata {
   }
 
   /**
-   * @return Link URL
+   * @return Link markup (only the opening anchor tag) or null if resolving was not successful.
    */
-  public String getLinkUrl() {
-    return this.linkUrl;
+  public String getMarkup() {
+    if (this.anchor != null) {
+      return StringUtils.removeEnd(this.anchor.toString(), "</a>");
+    }
+    else {
+      return null;
+    }
   }
 
   /**
-   * @param linkUrl Link URL
+   * @return Link URL
    */
-  public void setLinkUrl(String linkUrl) {
-    this.linkUrl = linkUrl;
+  public String getUrl() {
+    return this.url;
+  }
+
+  /**
+   * @param url Link URL
+   */
+  public void setUrl(String url) {
+    this.url = url;
   }
 
   /**
@@ -152,15 +162,15 @@ public final class LinkMetadata {
   /**
    * @return Target media item (applies only for media links)
    */
-  public MediaItem getTargetMediaItem() {
-    return this.targetMediaItem;
+  public Asset getTargetAsset() {
+    return this.targetAsset;
   }
 
   /**
-   * @param targetMediaItem Target media item (applies only for media links)
+   * @param targetAsset Target media item (applies only for media links)
    */
-  public void setTargetMediaItem(MediaItem targetMediaItem) {
-    this.targetMediaItem = targetMediaItem;
+  public void setTargetAsset(Asset targetAsset) {
+    this.targetAsset = targetAsset;
   }
 
   /**
@@ -182,13 +192,13 @@ public final class LinkMetadata {
    */
   public boolean isValid() {
     return getLinkType() != null
-        && getLinkUrl() != null
-        && !StringUtils.equals(getLinkUrl(), LinkHandler.INVALID_LINK);
+        && getUrl() != null
+        && !StringUtils.equals(getUrl(), LinkHandler.INVALID_LINK);
   }
 
   @Override
   public String toString() {
-    return this.linkUrl;
+    return this.url;
   }
 
 }

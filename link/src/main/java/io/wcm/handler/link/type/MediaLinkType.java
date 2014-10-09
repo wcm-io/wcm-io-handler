@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.link.type;
 
-import io.wcm.handler.link.LinkMetadata;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkReference;
+import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.args.MediaArgs;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
@@ -42,7 +42,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 
 /**
- * Default implementation of {@link io.wcm.handler.link.LinkType} for media links.
+ * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for media links.
  * Media links are links to media items from media sources
  * that implement the {@link io.wcm.handler.media.spi.MediaSource} interface.
  */
@@ -86,9 +86,9 @@ public final class MediaLinkType extends AbstractLinkType {
   }
 
   @Override
-  public LinkMetadata resolveLink(LinkMetadata linkMetadata) {
-    LinkReference linkReference = linkMetadata.getLinkReference();
-    ValueMap props = linkReference.getResourceProperties();
+  public Link resolveLink(Link link) {
+    LinkRequest linkRequest = link.getLinkRequest();
+    ValueMap props = linkRequest.getResourceProperties();
 
     // get properties
     String mediaRef = props.get(LinkNameConstants.PN_LINK_MEDIA_REF, String.class);
@@ -102,26 +102,26 @@ public final class MediaLinkType extends AbstractLinkType {
     }
     MediaArgsType mediaArgs = MediaArgs.mediaFormats(downloadMediaFormats);
     mediaArgs.setForceDownload(isDownload);
-    mediaArgs.setUrlMode(linkReference.getLinkArgs().getUrlMode());
+    mediaArgs.setUrlMode(linkRequest.getUrlMode());
 
     // resolve media library reference
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(mediaRef, mediaArgs);
+    Media media = mediaHandler.get(mediaRef, mediaArgs).build();
 
-    if (mediaMetadata != null) {
+    if (media != null) {
       // set resovled media references information in link metadata
-      linkMetadata.setLinkUrl(mediaMetadata.getMediaUrl());
-      linkMetadata.setTargetMediaItem(mediaMetadata.getMediaItem());
-      linkMetadata.setTargetRendition(mediaMetadata.getRendition());
+      link.setUrl(media.getUrl());
+      link.setTargetAsset(media.getAsset());
+      link.setTargetRendition(media.getRendition());
     }
 
-    if (linkMetadata.getLinkUrl() == null) {
+    if (link.getUrl() == null) {
       // mark link as invalid if a reference was set that could not be resolved
       if (StringUtils.isNotEmpty(mediaRef)) {
-        linkMetadata.setLinkReferenceInvalid(true);
+        link.setLinkReferenceInvalid(true);
       }
     }
 
-    return linkMetadata;
+    return link;
   }
 
   /**

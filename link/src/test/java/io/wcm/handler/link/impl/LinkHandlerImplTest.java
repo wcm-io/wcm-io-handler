@@ -21,17 +21,16 @@ package io.wcm.handler.link.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import io.wcm.config.spi.annotations.Application;
 import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.config.spi.annotations.Application;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkReference;
-import io.wcm.handler.link.LinkType;
+import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
-import io.wcm.handler.link.args.LinkArgs;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
-import io.wcm.handler.link.spi.LinkMetadataProcessor;
+import io.wcm.handler.link.spi.LinkProcessor;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.AbstractLinkType;
@@ -71,7 +70,7 @@ public class LinkHandlerImplTest {
   });
 
   /**
-   * Test LinkHandler.processLinkReference pipelining implementation
+   * Test LinkHandler.processLinkRequest pipelining implementation
    */
   @Test
   public void testPipelining() {
@@ -83,26 +82,23 @@ public class LinkHandlerImplTest {
         .put(LinkNameConstants.PN_LINK_TYPE, "dummy")
         .put("dummyLinkRef", "/path1")
         .build());
-    LinkReference linkReference = new LinkReference(linkResource, LinkArgs.urlMode(UrlModes.DEFAULT));
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkReference);
+    LinkRequest linkRequest = new LinkRequest(linkResource, null, UrlModes.DEFAULT);
+    Link link = linkHandler.get(linkRequest).build();
 
     // make sure initial link reference is unmodified
-    assertEquals("dummy", linkReference.getResourceProperties().get(LinkNameConstants.PN_LINK_TYPE, String.class));
-    assertEquals("/path1", linkReference.getResourceProperties().get("dummyLinkRef", String.class));
-    assertEquals(UrlModes.DEFAULT, linkReference.getLinkArgs().getUrlMode());
-    assertEquals("dummy", linkMetadata.getOriginalLinkReference().getResourceProperties().get(LinkNameConstants.PN_LINK_TYPE, String.class));
-    assertEquals("/path1", linkMetadata.getOriginalLinkReference().getResourceProperties().get("dummyLinkRef", String.class));
-    assertEquals(UrlModes.DEFAULT, linkMetadata.getOriginalLinkReference().getLinkArgs().getUrlMode());
+    assertEquals("dummy", linkRequest.getResourceProperties().get(LinkNameConstants.PN_LINK_TYPE, String.class));
+    assertEquals("/path1", linkRequest.getResourceProperties().get("dummyLinkRef", String.class));
+    assertEquals(UrlModes.DEFAULT, linkRequest.getUrlMode());
 
     // check preprocessed link reference
-    assertEquals("/path1/pre1", linkMetadata.getLinkReference().getResourceProperties().get("dummyLinkRef", String.class));
-    assertEquals(UrlModes.FULL_URL, linkMetadata.getLinkReference().getLinkArgs().getUrlMode());
+    assertEquals("/path1/pre1", link.getLinkRequest().getResourceProperties().get("dummyLinkRef", String.class));
+    assertEquals(UrlModes.FULL_URL, link.getLinkRequest().getUrlMode());
 
     // check final link url and html element
-    assertEquals(true, linkMetadata.isValid());
-    assertEquals("http://xyz/path1/pre1/post1", linkMetadata.getLinkUrl());
-    assertNotNull(linkMetadata.getAnchor());
-    assertEquals("http://xyz/path1/pre1", linkMetadata.getAnchor().getHRef());
+    assertEquals(true, link.isValid());
+    assertEquals("http://xyz/path1/pre1/post1", link.getUrl());
+    assertNotNull(link.getAnchor());
+    assertEquals("http://xyz/path1/pre1", link.getAnchor().getHRef());
 
   }
 
@@ -137,13 +133,13 @@ public class LinkHandlerImplTest {
     }
 
     @Override
-    public List<Class<? extends LinkMetadataProcessor>> getLinkMetadataPreProcessors() {
-      return ImmutableList.<Class<? extends LinkMetadataProcessor>>of(TestLinkMetadataPreProcessor.class);
+    public List<Class<? extends LinkProcessor>> getPreProcessors() {
+      return ImmutableList.<Class<? extends LinkProcessor>>of(TestLinkPreProcessor.class);
     }
 
     @Override
-    public List<Class<? extends LinkMetadataProcessor>> getLinkMetadataPostProcessors() {
-      return ImmutableList.<Class<? extends LinkMetadataProcessor>>of(TestLinkMetadataPostProcessor.class);
+    public List<Class<? extends LinkProcessor>> getPostProcessors() {
+      return ImmutableList.<Class<? extends LinkProcessor>>of(TestLinkPostProcessor.class);
     }
 
   };
@@ -151,15 +147,22 @@ public class LinkHandlerImplTest {
   @Model(adaptables = {
       SlingHttpServletRequest.class, Resource.class
   })
-  public static class TestLinkMetadataPreProcessor implements LinkMetadataProcessor {
+  public static class TestLinkPreProcessor implements LinkProcessor {
     @Override
-    public LinkMetadata process(LinkMetadata pLinkMetadata) {
+    public Link process(Link link) {
+      LinkRequest linkRequest = link.getLinkRequest();
       // add path part "/pre1" to content ref
-      String contentRef = pLinkMetadata.getLinkReference().getResourceProperties().get("dummyLinkRef", String.class);
+      String contentRef = linkRequest.getResourceProperties().get("dummyLinkRef", String.class);
       contentRef = StringUtils.defaultString(contentRef) + "/pre1";
-      pLinkMetadata.getLinkReference().getResourceProperties().put("dummyLinkRef", contentRef);
-      pLinkMetadata.getLinkReference().getLinkArgs().setUrlMode(UrlModes.FULL_URL);
-      return pLinkMetadata;
+
+      LinkRequest newLinkRequest = new LinkRequest(
+          linkRequest.getResource(),
+          linkRequest.getPage(),
+          UrlModes.FULL_URL
+          );
+      newLinkRequest.getResourceProperties().put("dummyLinkRef", contentRef);
+      link.setLinkRequest(newLinkRequest);
+      return link;
     }
   }
 
@@ -184,10 +187,10 @@ public class LinkHandlerImplTest {
     }
 
     @Override
-    public LinkMetadata resolveLink(LinkMetadata pLinkMetadata) {
-      String contentRef = pLinkMetadata.getLinkReference().getResourceProperties().get("dummyLinkRef", String.class);
-      pLinkMetadata.setLinkUrl("http://xyz" + contentRef);
-      return pLinkMetadata;
+    public Link resolveLink(Link link) {
+      String contentRef = link.getLinkRequest().getResourceProperties().get("dummyLinkRef", String.class);
+      link.setUrl("http://xyz" + contentRef);
+      return link;
     }
 
   }
@@ -195,12 +198,12 @@ public class LinkHandlerImplTest {
   @Model(adaptables = {
       SlingHttpServletRequest.class, Resource.class
   })
-  public static class TestLinkMetadataPostProcessor implements LinkMetadataProcessor {
+  public static class TestLinkPostProcessor implements LinkProcessor {
     @Override
-    public LinkMetadata process(LinkMetadata pLinkMetadata) {
-      String linkUrl = StringUtils.defaultString(pLinkMetadata.getLinkUrl()) + "/post1";
-      pLinkMetadata.setLinkUrl(linkUrl);
-      return pLinkMetadata;
+    public Link process(Link link) {
+      String linkUrl = StringUtils.defaultString(link.getUrl()) + "/post1";
+      link.setUrl(linkUrl);
+      return link;
     }
   }
 

@@ -28,15 +28,16 @@ import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaMetadata;
-import io.wcm.handler.media.MediaMetadataProcessor;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaReference;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.args.MediaArgs;
+import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
 import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
@@ -84,36 +85,34 @@ public class MediaHandlerImplTest {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     // test pipelining and resolve link
-    MediaReference mediaReference = new MediaReference("/content/dummymedia/item1", MediaArgs.urlMode(UrlModes.DEFAULT));
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(mediaReference);
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1", MediaArgs.urlMode(UrlModes.DEFAULT));
+    Media media = mediaHandler.get(mediaRequest).build();
 
-    // make sure initial media reference is unmodified
-    assertEquals("/content/dummymedia/item1", mediaReference.getMediaRef());
-    assertEquals(UrlModes.DEFAULT, mediaReference.getMediaArgs().getUrlMode());
-    assertEquals("/content/dummymedia/item1", mediaMetadata.getOriginalMediaReference().getMediaRef());
-    assertEquals(UrlModes.DEFAULT, mediaMetadata.getOriginalMediaReference().getMediaArgs().getUrlMode());
+    // make sure initial media request is unmodified
+    assertEquals("/content/dummymedia/item1", mediaRequest.getMediaRef());
+    assertEquals(UrlModes.DEFAULT, mediaRequest.getMediaArgs().getUrlMode());
 
     // check preprocessed link reference
-    assertEquals("/content/dummymedia/item1/pre1", mediaMetadata.getMediaReference().getMediaRef());
-    assertEquals(UrlModes.FULL_URL, mediaMetadata.getMediaReference().getMediaArgs().getUrlMode());
+    assertEquals("/content/dummymedia/item1/pre1", media.getMediaRequest().getMediaRef());
+    assertEquals(UrlModes.FULL_URL, media.getMediaRequest().getMediaArgs().getUrlMode());
 
     // check final link url and html element
-    assertEquals(true, mediaMetadata.isValid());
-    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", mediaMetadata.getMediaUrl());
-    assertNotNull(mediaMetadata.getMedia());
-    assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", mediaMetadata.getMedia().getAttributeValue("src"));
+    assertEquals(true, media.isValid());
+    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.getUrl());
+    assertNotNull(media.getElement());
+    assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", media.getElement().getAttributeValue("src"));
   }
 
   @Test
   public void testMediaFormatResolving() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaReference mediaReference = new MediaReference("/content/dummymedia/item1",
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
         MediaArgs.mediaFormats("home_stage", "home_teaser"));
-    MediaMetadata metadata = mediaHandler.getMediaMetadata(mediaReference);
+    Media metadata = mediaHandler.get(mediaRequest).build();
 
-    MediaFormat[] mediaFormats = metadata.getMediaReference().getMediaArgs().getMediaFormats();
-    String[] mediaFormatNames = metadata.getMediaReference().getMediaArgs().getMediaFormatNames();
+    MediaFormat[] mediaFormats = metadata.getMediaRequest().getMediaArgs().getMediaFormats();
+    String[] mediaFormatNames = metadata.getMediaRequest().getMediaArgs().getMediaFormatNames();
 
     assertEquals(2, mediaFormats.length);
     assertEquals(TestMediaFormats.HOME_STAGE, mediaFormats[0]);
@@ -125,9 +124,9 @@ public class MediaHandlerImplTest {
   public void testFailedMediaFormatResolving() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaReference mediaReference = new MediaReference("/content/dummymedia/item1",
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
         MediaArgs.mediaFormats("invalid_media_format"));
-    mediaHandler.getMediaMetadata(mediaReference);
+    mediaHandler.get(mediaRequest).build();
   }
 
 
@@ -153,23 +152,23 @@ public class MediaHandlerImplTest {
   public static class TestMediaHandlerConfig extends AbstractMediaHandlerConfig {
 
     @Override
-    public List<Class<? extends MediaMetadataProcessor>> getMediaMetadataPreProcessors() {
-      return ImmutableList.<Class<? extends MediaMetadataProcessor>>of(TestMediaMetadataPreProcessor.class);
+    public List<Class<? extends MediaProcessor>> getPreProcessors() {
+      return ImmutableList.<Class<? extends MediaProcessor>>of(TestPreProcessor.class);
     }
 
     @Override
-    public List<Class<? extends MediaSource>> getMediaSources() {
+    public List<Class<? extends MediaSource>> getSources() {
       return ImmutableList.<Class<? extends MediaSource>>of(TestMediaSource.class);
     }
 
     @Override
-    public List<Class<? extends MediaMarkupBuilder>> getMediaMarkupBuilders() {
+    public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
       return ImmutableList.<Class<? extends MediaMarkupBuilder>>of(TestMediaMarkupBuilder.class);
     }
 
     @Override
-    public List<Class<? extends MediaMetadataProcessor>> getMediaMetadataPostProcessors() {
-      return ImmutableList.<Class<? extends MediaMetadataProcessor>>of(TestMediaMetadataPostProcessor.class);
+    public List<Class<? extends MediaProcessor>> getPostProcessors() {
+      return ImmutableList.<Class<? extends MediaProcessor>>of(TestPostProcessor.class);
     }
 
   };
@@ -178,14 +177,21 @@ public class MediaHandlerImplTest {
   @Model(adaptables = {
       SlingHttpServletRequest.class, Resource.class
   })
-  public static class TestMediaMetadataPreProcessor implements MediaMetadataProcessor {
+  public static class TestPreProcessor implements MediaProcessor {
 
     @Override
-    public MediaMetadata process(MediaMetadata mediaMetadata) {
-      String mediaRef = mediaMetadata.getMediaReference().getMediaRef() + "/pre1";
-      mediaMetadata.getMediaReference().setMediaRef(mediaRef);
-      mediaMetadata.getMediaReference().getMediaArgs().setUrlMode(UrlModes.FULL_URL);
-      return mediaMetadata;
+    public Media process(Media media) {
+      MediaRequest request = media.getMediaRequest();
+      String mediaRef = request.getMediaRef() + "/pre1";
+      MediaArgsType mediaArgs = request.getMediaArgs().setUrlMode(UrlModes.FULL_URL);
+      media.setMediaRequest(new MediaRequest(
+          request.getResource(),
+          mediaRef,
+          mediaArgs,
+          request.getRefProperty(),
+          request.getCropProperty()
+          ));
+      return media;
     }
 
   }
@@ -211,14 +217,14 @@ public class MediaHandlerImplTest {
     }
 
     @Override
-    public MediaMetadata resolveMedia(MediaMetadata mediaMetadata) {
-      String mediaUrl = mediaMetadata.getMediaReference().getMediaRef();
-      mediaMetadata.setMediaUrl("http://xyz" + mediaUrl + ".gif");
-      return mediaMetadata;
+    public Media resolveMedia(Media media) {
+      String mediaUrl = media.getMediaRequest().getMediaRef();
+      media.setUrl("http://xyz" + mediaUrl + ".gif");
+      return media;
     }
 
     @Override
-    public void enableMediaDrop(HtmlElement<?> element, MediaReference mediaReference) {
+    public void enableMediaDrop(HtmlElement<?> element, MediaRequest mediaRequest) {
       // not supported
     }
 
@@ -230,13 +236,13 @@ public class MediaHandlerImplTest {
   public static class TestMediaMarkupBuilder implements MediaMarkupBuilder {
 
     @Override
-    public boolean accepts(MediaMetadata mediaMetadata) {
-      return StringUtils.endsWith(mediaMetadata.getMediaUrl(), ".gif");
+    public boolean accepts(Media media) {
+      return StringUtils.endsWith(media.getUrl(), ".gif");
     }
 
     @Override
-    public HtmlElement<?> build(MediaMetadata mediaMetadata) {
-      return new Image(mediaMetadata.getMediaUrl());
+    public HtmlElement<?> build(Media media) {
+      return new Image(media.getUrl());
     }
 
     @Override
@@ -249,13 +255,13 @@ public class MediaHandlerImplTest {
   @Model(adaptables = {
       SlingHttpServletRequest.class, Resource.class
   })
-  public static class TestMediaMetadataPostProcessor implements MediaMetadataProcessor {
+  public static class TestPostProcessor implements MediaProcessor {
 
     @Override
-    public MediaMetadata process(MediaMetadata mediaMetadata) {
-      String mediaUrl = StringUtils.replace(mediaMetadata.getMediaUrl(), "/dummymedia/", "/dummymedia.post1/");
-      mediaMetadata.setMediaUrl(mediaUrl);
-      return mediaMetadata;
+    public Media process(Media media) {
+      String mediaUrl = StringUtils.replace(media.getUrl(), "/dummymedia/", "/dummymedia.post1/");
+      media.setUrl(mediaUrl);
+      return media;
     }
 
   }

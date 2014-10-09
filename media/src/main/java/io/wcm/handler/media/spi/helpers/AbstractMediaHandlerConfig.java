@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.media.spi.helpers;
 
-import io.wcm.handler.media.MediaMetadataProcessor;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 
@@ -56,23 +56,23 @@ public abstract class AbstractMediaHandlerConfig implements MediaHandlerConfig {
           );
 
   @Override
-  public List<Class<? extends MediaSource>> getMediaSources() {
+  public List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
   }
 
   @Override
-  public List<Class<? extends MediaMarkupBuilder>> getMediaMarkupBuilders() {
+  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
     return MEDIA_MARKUP_BUILDERS;
   }
 
   @Override
-  public List<Class<? extends MediaMetadataProcessor>> getMediaMetadataPreProcessors() {
+  public List<Class<? extends MediaProcessor>> getPreProcessors() {
     // no processors
     return ImmutableList.of();
   }
 
   @Override
-  public List<Class<? extends MediaMetadataProcessor>> getMediaMetadataPostProcessors() {
+  public List<Class<? extends MediaProcessor>> getPostProcessors() {
     // no processors
     return ImmutableList.of();
   }

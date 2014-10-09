@@ -21,8 +21,8 @@ package io.wcm.handler.media.markup;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
-import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
@@ -50,30 +50,30 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
   private SlingHttpServletRequest request;
 
   @Override
-  public final boolean accepts(MediaMetadata mediaMetadata) {
+  public final boolean accepts(Media media) {
     // accept if rendition is an image rendition
-    return mediaMetadata.getRendition() != null && mediaMetadata.getRendition().isImage();
+    return media.getRendition() != null && media.getRendition().isImage();
   }
 
   @Override
-  public final HtmlElement<?> build(MediaMetadata pMediaMetadata) {
+  public final HtmlElement<?> build(Media media) {
 
     // render media element for rendition
-    HtmlElement<?> mediaElement = getImageElement(pMediaMetadata);
+    HtmlElement<?> mediaElement = getImageElement(media);
 
     // further processing in edit or preview mode
-    Resource resource = pMediaMetadata.getMediaReference().getResource();
+    Resource resource = media.getMediaRequest().getResource();
     if (mediaElement != null && resource != null) {
 
       switch (wcmMode) {
         case EDIT:
           // enable drag&drop from content finder
-          pMediaMetadata.getMediaSource().enableMediaDrop(mediaElement, pMediaMetadata.getMediaReference());
+          media.getMediaSource().enableMediaDrop(mediaElement, media.getMediaRequest());
           break;
 
         case PREVIEW:
           // add diff decoration
-          String refProperty = StringUtils.defaultString(pMediaMetadata.getMediaReference().getRefProperty(), MediaNameConstants.PN_MEDIA_REF);
+          String refProperty = StringUtils.defaultString(media.getMediaRequest().getRefProperty(), MediaNameConstants.PN_MEDIA_REF);
           MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request);
           break;
 
@@ -88,18 +88,18 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
   /**
    * Create an IMG tag that displays the given rendition image.
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @return IMG tag with properties or null if media metadata is invalid
    */
-  protected HtmlElement<?> getImageElement(MediaMetadata mediaMetadata) {
+  protected HtmlElement<?> getImageElement(Media media) {
     Image img = null;
 
-    MediaItem mediaItem = mediaMetadata.getMediaItem();
-    Rendition rendition = mediaMetadata.getRendition();
+    Asset asset = media.getAsset();
+    Rendition rendition = media.getRendition();
 
     String url = null;
     if (rendition != null) {
-      url = rendition.getMediaUrl();
+      url = rendition.getUrl();
     }
 
     if (url != null) {
@@ -107,8 +107,8 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
       // Alternative text
       String altText = null;
-      if (mediaItem != null) {
-        altText = mediaItem.getAltText();
+      if (asset != null) {
+        altText = asset.getAltText();
       }
       if (StringUtils.isNotEmpty(altText)) {
         img.setAlt(altText);

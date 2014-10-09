@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.link.spi;
 
-import io.wcm.handler.link.LinkType;
-
 import java.util.List;
 
 import com.day.cq.wcm.api.Page;
@@ -38,17 +36,17 @@ public interface LinkHandlerConfig {
   /**
    * @return Available link markup builders
    */
-  List<Class<? extends LinkMarkupBuilder>> getLinkMarkupBuilders();
+  List<Class<? extends LinkMarkupBuilder>> getMarkupBuilders();
 
   /**
    * @return List of link metadata pre processors (optional). The processors are applied in list order.
    */
-  List<Class<? extends LinkMetadataProcessor>> getLinkMetadataPreProcessors();
+  List<Class<? extends LinkProcessor>> getPreProcessors();
 
   /**
    * @return List of link metadata post processors (optional). The processors are applied in list order.
    */
-  List<Class<? extends LinkMetadataProcessor>> getLinkMetadataPostProcessors();
+  List<Class<? extends LinkProcessor>> getPostProcessors();
 
   /**
    * Detected if page is acceptable as link target.

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.jdom2.Content;
 import org.jdom2.Element;
+import org.jdom2.Text;
 
 /**
  * Helper interface for rewriteContent method.
@@ -39,5 +40,15 @@ public interface RewriteContentHandler {
    *         Return list with other content to replace element with new content.
    */
   List<Content> rewriteElement(Element element);
+
+  /**
+   * Checks if the given text node has to be rewritten.
+   * Is called for every text node found as parent of given to rewriteContent method.
+   * @param text Text node
+   * @return null if nothing is to do with this element.
+   *         Return empty list to remove the element.
+   *         Return list with other content to replace element with new content.
+   */
+  List<Content> rewriteText(Text text);
 
 }

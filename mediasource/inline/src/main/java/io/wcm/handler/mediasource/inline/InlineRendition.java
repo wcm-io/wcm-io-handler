@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.inline;
 import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
@@ -59,11 +59,11 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   private final Adaptable adaptable;
   private final Resource resource;
-  private final MediaMetadata mediaMetadata;
+  private final Media media;
   private final MediaArgsType defaultMediaArgs;
   private final String fileName;
   private final Dimension imageDimension;
-  private final String mediaUrl;
+  private final String url;
 
   /**
    * Special dimension instance that marks "scaling is required but not possible"
@@ -72,13 +72,13 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   /**
    * @param resource Binary resource
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @param mediaArgs Media args
    * @param fileName File name
    */
-  InlineRendition(Resource resource, MediaMetadata mediaMetadata, MediaArgsType mediaArgs, String fileName, Adaptable adaptable) {
+  InlineRendition(Resource resource, Media media, MediaArgsType mediaArgs, String fileName, Adaptable adaptable) {
     this.resource = resource;
-    this.mediaMetadata = mediaMetadata;
+    this.media = media;
     this.defaultMediaArgs = mediaArgs;
     this.adaptable = adaptable;
 
@@ -110,7 +110,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.imageDimension = dimension;
 
     // build media url (it is null if no rendition is available for the given media args)
-    this.mediaUrl = buildMediaUrl(scaledDimension, mediaArgs);
+    this.url = buildMediaUrl(scaledDimension, mediaArgs);
   }
 
   /**
@@ -121,8 +121,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     Dimension dimension = null;
 
     // check for cropping dimension
-    if (this.mediaMetadata.getCropDimension() != null) {
-      dimension = this.mediaMetadata.getCropDimension();
+    if (this.media.getCropDimension() != null) {
+      dimension = this.media.getCropDimension();
     }
     else {
       // if binary is image try to calculcate dimensions by loading it into a layer
@@ -203,12 +203,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       }
 
       // otherwise generate scaled image URL
-      return buildScaledMediaUrl(scaledDimension, this.mediaMetadata.getCropDimension());
+      return buildScaledMediaUrl(scaledDimension, this.media.getCropDimension());
     }
 
     // if no scaling but cropping required builid scaled image URL
-    if (this.mediaMetadata.getCropDimension() != null) {
-      return buildScaledMediaUrl(this.mediaMetadata.getCropDimension(), this.mediaMetadata.getCropDimension());
+    if (this.media.getCropDimension() != null) {
+      return buildScaledMediaUrl(this.media.getCropDimension(), this.media.getCropDimension());
     }
 
     if (mediaArgs.isForceDownload()) {
@@ -246,7 +246,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.url(path).externalizeResource().urlMode(this.defaultMediaArgs.getUrlMode()).build();
+    return urlHandler.get(path).urlMode(this.defaultMediaArgs.getUrlMode()).buildExternalResourceUrl();
   }
 
   /**
@@ -273,7 +273,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.url(path).externalizeResource().urlMode(this.defaultMediaArgs.getUrlMode()).build();
+    return urlHandler.get(path).urlMode(this.defaultMediaArgs.getUrlMode()).buildExternalResourceUrl();
   }
 
   /**
@@ -296,7 +296,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.url(path).externalizeResource().urlMode(this.defaultMediaArgs.getUrlMode()).build();
+    return urlHandler.get(path).urlMode(this.defaultMediaArgs.getUrlMode()).buildExternalResourceUrl();
   }
 
   /**
@@ -343,8 +343,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public String getMediaUrl() {
-    return this.mediaUrl;
+  public String getUrl() {
+    return this.url;
   }
 
   @Override

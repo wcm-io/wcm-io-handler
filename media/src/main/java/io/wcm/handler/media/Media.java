@@ -23,44 +23,27 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.spi.MediaSource;
 
 /**
- * Holds information about a media reference processed and resolved by {@link MediaHandler}
+ * Holds information about a media request processed and resolved by {@link MediaHandler}.
  */
-public final class MediaMetadata {
+public final class Media {
 
-  private final MediaReference originalMediaReference;
-  private final MediaReference mediaReference;
   private final MediaSource mediaSource;
-  private HtmlElement<?> media;
-  private String mediaUrl;
-  private MediaItem mediaItem;
+  private MediaRequest mediaRequest;
+  private HtmlElement<?> element;
+  private String url;
+  private Asset asset;
   private Rendition rendition;
   private Rendition fallbackRendition;
   private CropDimension cropDimension;
   private MediaInvalidReason mediaInvalidReason;
 
   /**
-   * @param originalMediaReference Original media reference
-   * @param mediaReference Processed media reference
    * @param mediaSource Media source
+   * @param mediaRequest Processed media request
    */
-  public MediaMetadata(MediaReference originalMediaReference, MediaReference mediaReference, MediaSource mediaSource) {
-    this.originalMediaReference = originalMediaReference;
-    this.mediaReference = mediaReference;
+  public Media(MediaSource mediaSource, MediaRequest mediaRequest) {
     this.mediaSource = mediaSource;
-  }
-
-  /**
-   * @return Original media reference
-   */
-  public MediaReference getOriginalMediaReference() {
-    return this.originalMediaReference;
-  }
-
-  /**
-   * @return Processed media reference
-   */
-  public MediaReference getMediaReference() {
-    return this.mediaReference;
+    this.mediaRequest = mediaRequest;
   }
 
   /**
@@ -71,57 +54,71 @@ public final class MediaMetadata {
   }
 
   /**
+   * @return Media handling request
+   */
+  public MediaRequest getMediaRequest() {
+    return this.mediaRequest;
+  }
+
+  /**
+   * @param mediaRequest Media handling request
+   */
+  public void setMediaRequest(MediaRequest mediaRequest) {
+    this.mediaRequest = mediaRequest;
+  }
+
+  /**
    * @return Html element
    */
-  public HtmlElement<?> getMedia() {
-    return this.media;
+  public HtmlElement<?> getElement() {
+    return this.element;
   }
 
   /**
    * @return Media HTML element serialized to string. Returns null if media element is null.
    */
-  public String getMediaMarkup() {
-    if (this.media == null) {
+  public String getMarkup() {
+    if (this.element == null) {
       return null;
     }
-    return this.media.toString();
+    return this.element.toString();
   }
 
   /**
-   * @param media Html element
+   * @param value Html element
    */
-  public void setMedia(HtmlElement<?> media) {
-    this.media = media;
+  public void setElement(HtmlElement<?> value) {
+    this.element = value;
   }
 
   /**
    * @return Media URL
    */
-  public String getMediaUrl() {
-    return this.mediaUrl;
+  public String getUrl() {
+    return this.url;
   }
 
   /**
-   * @param mediaUrl Media URL
+   * @param value Media URL
    */
-  public void setMediaUrl(String mediaUrl) {
-    this.mediaUrl = mediaUrl;
+  public void setUrl(String value) {
+    this.url = value;
   }
 
   /**
    * Get media item info that was resolved during media handler processing
    * @return Media item
    */
-  public MediaItem getMediaItem() {
-    return this.mediaItem;
+  public Asset getAsset() {
+    return this.asset;
   }
 
   /**
    * Set media item that was resolved during media handler processing
-   * @param mediaItem Media item
+   * @param asset Media item
    */
-  public void setMediaItem(MediaItem mediaItem) {
-    this.mediaItem = mediaItem;
+  public void setAsset(Asset asset) {
+    this.asset = asset;
   }
 
   /**
@@ -174,7 +171,7 @@ public final class MediaMetadata {
    * @return true if link is valid and was resolved successfully
    */
   public boolean isValid() {
-    return getMediaUrl() != null;
+    return getUrl() != null;
   }
 
   /**
@@ -193,7 +190,7 @@ public final class MediaMetadata {
 
   @Override
   public String toString() {
-    return this.mediaUrl;
+    return this.url;
   }
 
 }

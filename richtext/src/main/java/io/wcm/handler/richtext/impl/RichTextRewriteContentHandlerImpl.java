@@ -19,17 +19,17 @@
  */
 package io.wcm.handler.richtext.impl;
 
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkType;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaMetadata;
-import io.wcm.handler.richtext.RichTextRewriteContentHandler;
+import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
@@ -56,6 +56,7 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
+import org.jdom2.Text;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.google.common.collect.ImmutableMap;
@@ -66,8 +67,8 @@ import com.google.common.collect.ImmutableSet;
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
-}, adapters = RichTextRewriteContentHandler.class)
-public final class RichTextRewriteContentHandlerImpl implements RichTextRewriteContentHandler {
+}, adapters = RewriteContentHandler.class)
+public final class RichTextRewriteContentHandlerImpl implements RewriteContentHandler {
 
   @Self
   private Adaptable adaptable;
@@ -168,10 +169,10 @@ public final class RichTextRewriteContentHandlerImpl implements RichTextRewriteC
     }
 
     // resolve link metadata from DOM element
-    LinkMetadata linkMetadata = getAnchorLinkMetadata(element);
+    Link link = getAnchorLink(element);
 
     // build anchor for link metadata
-    Element anchorElement = buildAnchorElement(linkMetadata, element);
+    Element anchorElement = buildAnchorElement(link, element);
 
     // Replace anchor tag or remove anchor tag if invalid - add any sub-content in every case
     List<Content> content = new ArrayList<Content>();
@@ -186,11 +187,11 @@ public final class RichTextRewriteContentHandlerImpl implements RichTextRewriteC
   }
 
   /**
-   * Extracts link metadata from the DOM elements attributes and resolves them to a {@link LinkMetadata} object.
+   * Extracts link metadata from the DOM elements attributes and resolves them to a {@link Link} object.
    * @param element DOM element
    * @return Link metadata
    */
-  protected LinkMetadata getAnchorLinkMetadata(Element element) {
+  protected Link getAnchorLink(Element element) {
     SyntheticLinkResource resource = new SyntheticLinkResource(resourceResolver);
     ValueMap resourceProps = resource.getValueMap();
 
@@ -206,17 +207,17 @@ public final class RichTextRewriteContentHandlerImpl implements RichTextRewriteC
     }
 
     // build anchor via linkhandler
-    return linkHandler.getLinkMetadata(resource);
+    return linkHandler.get(resource).build();
   }
 
   /**
    * Builds anchor element for given link metadata.
-   * @param pLinkMetadata Link metadata
+   * @param pLink Link metadata
    * @param element Original element
    * @return Anchor element or null if link is invalid
    */
-  protected Element buildAnchorElement(LinkMetadata pLinkMetadata, Element element) {
-    return pLinkMetadata.getAnchor();
+  protected Element buildAnchorElement(Link pLink, Element element) {
+    return pLink.getAnchor();
   }
 
   /**
@@ -393,10 +394,10 @@ public final class RichTextRewriteContentHandlerImpl implements RichTextRewriteC
   protected List<Content> rewriteImage(Element element) {
 
     // resolve media metadata from DOM element
-    MediaMetadata mediaMetadata = getImageMediaMetadata(element);
+    Media media = getImageMedia(element);
 
     // build image for media metadata
-    Element imageElement = buildImageElement(mediaMetadata, element);
+    Element imageElement = buildImageElement(media, element);
 
     // return modified element
     List<Content> content = new ArrayList<Content>();
@@ -407,27 +408,27 @@ public final class RichTextRewriteContentHandlerImpl implements RichTextRewriteC
   }
 
   /**
-   * Extracts media metadata from the DOM element attributes and resolves them to a {@link MediaMetadata} object.
+   * Extracts media metadata from the DOM element attributes and resolves them to a {@link Media} object.
    * @param element DOM element
    * @return Media metadata
    */
-  protected MediaMetadata getImageMediaMetadata(Element element) {
+  protected Media getImageMedia(Element element) {
     String ref = element.getAttributeValue("src");
     if (StringUtils.isNotEmpty(ref)) {
       ref = unexternalizeImageRef(ref);
     }
-    return mediaHandler.getMediaMetadata(ref);
+    return mediaHandler.get(ref).build();
   }
 
   /**
    * Builds image element for given media metadata.
-   * @param pMediaMetadata Media metadata
+   * @param pMedia Media metadata
    * @param element Original element
    * @return Image element or null if media reference is invalid
    */
-  protected Element buildImageElement(MediaMetadata pMediaMetadata, Element element) {
-    if (pMediaMetadata.isValid()) {
-      element.setAttribute("src", pMediaMetadata.getMediaUrl());
+  protected Element buildImageElement(Media pMedia, Element element) {
+    if (pMedia.isValid()) {
+      element.setAttribute("src", pMedia.getUrl());
     }
     return element;
   }
@@ -485,6 +486,12 @@ public final class RichTextRewriteContentHandlerImpl implements RichTextRewriteC
     else {
       return property;
     }
+  }
+
+  @Override
+  public List<Content> rewriteText(Text text) {
+    // nothing to do with text element
+    return null;
   }
 
 }

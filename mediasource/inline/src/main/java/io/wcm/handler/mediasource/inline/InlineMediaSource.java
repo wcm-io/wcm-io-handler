@@ -21,11 +21,11 @@ package io.wcm.handler.mediasource.inline;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.jcr.JcrBinary;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaReference;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
@@ -67,15 +67,15 @@ public final class InlineMediaSource extends AbstractMediaSource {
   }
 
   @Override
-  public boolean accepts(MediaReference mediaReference) {
+  public boolean accepts(MediaRequest mediaRequest) {
     // if no media source id is defined fallback to auto-detection of inline media object in resource
-    String mediaSourceId = mediaReference.getResourceProperties().get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
+    String mediaSourceId = mediaRequest.getResourceProperties().get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
     if (StringUtils.isEmpty(mediaSourceId)) {
       // accept for inline media if "mediaInline" child node is present
-      return getMediaInlineResource(mediaReference) != null;
+      return getMediaInlineResource(mediaRequest) != null;
     }
     else {
-      return super.accepts(mediaReference);
+      return super.accepts(mediaRequest);
     }
   }
 
@@ -92,16 +92,16 @@ public final class InlineMediaSource extends AbstractMediaSource {
   }
 
   @Override
-  public MediaMetadata resolveMedia(MediaMetadata mediaMetadata) {
-    MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
+  public Media resolveMedia(Media media) {
+    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // the resource that was references originally (and may contain additional attributes)
-    Resource referencedResource = mediaMetadata.getMediaReference().getResource();
+    Resource referencedResource = media.getMediaRequest().getResource();
     Resource ntFileResource = null;
     Resource ntResourceResource = null;
 
     // get and check resource holding binary data (with primary node type nt:resource)
-    Resource mediaInlineResource = getMediaInlineResource(mediaMetadata.getMediaReference());
+    Resource mediaInlineResource = getMediaInlineResource(media.getMediaRequest());
     if (mediaInlineResource != null) {
       if (JcrBinary.isNtFile(mediaInlineResource)) {
         ntFileResource = mediaInlineResource;
@@ -114,8 +114,8 @@ public final class InlineMediaSource extends AbstractMediaSource {
 
     // skip further processing if nor binary resource found
     if (ntResourceResource == null) {
-      mediaMetadata.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
-      return mediaMetadata;
+      media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
+      return media;
     }
 
     // Alternative text - if there is a custom alt text specified in the media args then use that one
@@ -126,38 +126,38 @@ public final class InlineMediaSource extends AbstractMediaSource {
     }
 
     // Check for crop dimensions
-    mediaMetadata.setCropDimension(getMediaCropDimension(mediaMetadata.getMediaReference()));
+    media.setCropDimension(getMediaCropDimension(media.getMediaRequest()));
 
     // detect and clean up file name
     String fileName = detectFileName(referencedResource, ntFileResource, ntResourceResource);
     fileName = cleanupFileName(fileName);
 
     // generate media item and rendition for inline media
-    MediaItem mediaItem = getInlineMediaItem(ntResourceResource, mediaMetadata, fileName);
-    Rendition rendition = mediaItem.getRendition(mediaArgs);
-    mediaMetadata.setMediaItem(mediaItem);
-    mediaMetadata.setRendition(rendition);
-    if (mediaMetadata.getRendition() != null) {
-      mediaMetadata.setMediaUrl(rendition.getMediaUrl());
+    Asset asset = getInlineAsset(ntResourceResource, media, fileName);
+    Rendition rendition = asset.getRendition(mediaArgs);
+    media.setAsset(asset);
+    media.setRendition(rendition);
+    if (media.getRendition() != null) {
+      media.setUrl(rendition.getUrl());
     }
 
     // set media invalid reason
-    if (StringUtils.isEmpty(mediaMetadata.getMediaUrl())) {
-      mediaMetadata.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
+    if (StringUtils.isEmpty(media.getUrl())) {
+      media.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
     }
 
-    return mediaMetadata;
+    return media;
   }
 
   /**
    * Get implementation of inline media item
    * @param ntResourceResource nt:resource node
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @param fileName File name
    * @return Inline media item instance
    */
-  private MediaItem getInlineMediaItem(Resource ntResourceResource, MediaMetadata mediaMetadata, String fileName) {
-    return new InlineMediaItem(ntResourceResource, mediaMetadata, fileName, adaptable);
+  private Asset getInlineAsset(Resource ntResourceResource, Media media, String fileName) {
+    return new InlineAsset(ntResourceResource, media, fileName, adaptable);
   }
 
   /**
@@ -232,11 +232,11 @@ public final class InlineMediaSource extends AbstractMediaSource {
 
   /**
    * Get resource with media inline data (nt:file node).
-   * @param mediaReference Media reference
+   * @param mediaRequest Media reference
    * @return Resource or null if not present
    */
-  private Resource getMediaInlineResource(MediaReference mediaReference) {
-    Resource resource = mediaReference.getResource();
+  private Resource getMediaInlineResource(MediaRequest mediaRequest) {
+    Resource resource = mediaRequest.getResource();
     if (resource == null) {
       return null;
     }
@@ -247,7 +247,7 @@ public final class InlineMediaSource extends AbstractMediaSource {
     }
 
     // check if child node exists which is a nt:file node
-    String refProperty = StringUtils.defaultString(mediaReference.getRefProperty(), MediaNameConstants.NN_MEDIA_INLINE);
+    String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), MediaNameConstants.NN_MEDIA_INLINE);
     Resource mediaInlineResource = resource.getChild(refProperty);
     if (JcrBinary.isNtFileOrResource(mediaInlineResource)) {
       return mediaInlineResource;
@@ -258,7 +258,7 @@ public final class InlineMediaSource extends AbstractMediaSource {
   }
 
   @Override
-  public void enableMediaDrop(HtmlElement element, MediaReference mediaReference) {
+  public void enableMediaDrop(HtmlElement element, MediaRequest mediaRequest) {
     // not supported
   }
 

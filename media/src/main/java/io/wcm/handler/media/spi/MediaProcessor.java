@@ -17,18 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media;
+package io.wcm.handler.media.spi;
+
+import io.wcm.handler.media.Media;
 
 /**
  * Processes media metadata before or after media resolving
  */
-public interface MediaMetadataProcessor {
+public interface MediaProcessor {
 
   /**
    * Process media metadata
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @return Processed media metadata (never null)
    */
-  MediaMetadata process(MediaMetadata mediaMetadata);
+  Media process(Media media);
 
 }

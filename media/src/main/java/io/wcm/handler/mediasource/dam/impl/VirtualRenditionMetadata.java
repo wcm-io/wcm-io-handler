@@ -35,7 +35,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   private final long width;
   private final long height;
 
-  public VirtualRenditionMetadata(Rendition rendition, int width, int height) {
+  public VirtualRenditionMetadata(Rendition rendition, long width, long height) {
     super(rendition);
     this.width = width;
     this.height = height;

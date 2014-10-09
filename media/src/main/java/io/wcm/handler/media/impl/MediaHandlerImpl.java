@@ -20,19 +20,18 @@
 package io.wcm.handler.media.impl;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaMetadata;
-import io.wcm.handler.media.MediaMetadataProcessor;
-import io.wcm.handler.media.MediaReference;
-import io.wcm.handler.media.args.MediaArgs;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.url.UrlMode;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
 
@@ -64,177 +63,107 @@ public final class MediaHandlerImpl implements MediaHandler {
   private Page currentPage;
 
   @Override
-  public HtmlElement<?> getMedia(String mediaRef) {
-    return getMediaMetadata(new MediaReference(mediaRef, null)).getMedia();
+  public MediaBuilder get(Resource resource) {
+    return new MediaBuilderImpl(resource, this);
   }
 
   @Override
-  public HtmlElement<?> getMedia(String mediaRef, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(mediaRef, mediaArgs)).getMedia();
+  public MediaBuilder get(Resource resource, MediaArgsType mediaArgs) {
+    return get(resource).args(mediaArgs);
   }
 
   @Override
-  public HtmlElement<?> getMedia(Resource pResource, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(pResource, null, mediaArgs)).getMedia();
+  public MediaBuilder get(String mediaRef) {
+    return new MediaBuilderImpl(mediaRef, this);
   }
 
   @Override
-  public HtmlElement<?> getMedia(Resource pResource, String refProperty, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(pResource, refProperty, mediaArgs)).getMedia();
+  public MediaBuilder get(String mediaRef, MediaArgsType mediaArgs) {
+    return get(mediaRef).args(mediaArgs);
   }
 
   @Override
-  public String getMediaUrl(String mediaRef) {
-    return getMediaMetadata(new MediaReference(mediaRef, null)).getMediaUrl();
-  }
-
-  @Override
-  public String getMediaUrl(String mediaRef, UrlMode pUrlMode) {
-    return getMediaMetadata(new MediaReference(mediaRef, MediaArgs.urlMode(pUrlMode))).getMediaUrl();
-  }
-
-  @Override
-  public String getMediaUrl(String mediaRef, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(mediaRef, mediaArgs)).getMediaUrl();
-  }
-
-  @Override
-  public String getMediaUrl(Resource pResource, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(pResource, null, mediaArgs)).getMediaUrl();
-  }
-
-  @Override
-  public String getMediaUrl(Resource pResource, String refProperty, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(pResource, refProperty, mediaArgs)).getMediaUrl();
-  }
-
-  @Override
-  public MediaMetadata getMediaMetadata(String mediaRef) {
-    return getMediaMetadata(new MediaReference(mediaRef, null));
-  }
-
-  @Override
-  public MediaMetadata getMediaMetadata(String mediaRef, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(mediaRef, mediaArgs));
-  }
-
-  @Override
-  public MediaMetadata getMediaMetadata(Resource pResource) {
-    return getMediaMetadata(new MediaReference(pResource, null, null));
-  }
-
-  @Override
-  public MediaMetadata getMediaMetadata(Resource pResource, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(pResource, null, mediaArgs));
-  }
-
-  @Override
-  public MediaMetadata getMediaMetadata(Resource pResource, String refProperty) {
-    return getMediaMetadata(new MediaReference(pResource, refProperty, null));
-  }
-
-  @Override
-  public MediaMetadata getMediaMetadata(Resource pResource, String refProperty, MediaArgsType mediaArgs) {
-    return getMediaMetadata(new MediaReference(pResource, refProperty, mediaArgs));
-  }
-
-  @Override
-  public MediaMetadata getMediaMetadata(MediaReference mediaReference) {
-    return processMedia(mediaReference);
+  public MediaBuilder get(MediaRequest mediaRequest) {
+    return new MediaBuilderImpl(mediaRequest, this);
   }
 
   /**
-   * Resolves the media reference
-   * @param mediaReference Media reference
+   * Resolves the media request
+   * @param mediaRequest Media request
    * @return Media metadata (never null)
    */
-  protected MediaMetadata processMedia(MediaReference mediaReference) {
-    MediaReference originalMediaReference = mediaReference;
-
-    // clone media reference to allow modifications on further processing without changing input parameters
-    MediaReference mediaRef;
-    try {
-      mediaRef = (MediaReference)originalMediaReference.clone();
-    }
-    catch (CloneNotSupportedException ex) {
-      throw new RuntimeException("Unable to clone MediaArgs instance.", ex);
-    }
-
-    // make sure mediaargs is not null
-    if (mediaRef.getMediaArgs() == null) {
-      mediaRef.setMediaArgs(new MediaArgs());
-    }
+  Media processRequest(final MediaRequest mediaRequest) {
 
     // resolve media format names to media formats
-    resolveMediaFormats(mediaRef.getMediaArgs());
+    resolveMediaFormats(mediaRequest.getMediaArgs());
 
     // detect media source
     MediaSource mediaSource = null;
-    List<Class<? extends MediaSource>> mediaTypes = mediaHandlerConfig.getMediaSources();
+    List<Class<? extends MediaSource>> mediaTypes = mediaHandlerConfig.getSources();
     if (mediaTypes == null || mediaTypes.size() == 0) {
       throw new RuntimeException("No media sources defined.");
     }
     for (Class<? extends MediaSource> candidateMediaSourceClass : mediaTypes) {
       MediaSource candidateMediaSource = AdaptTo.notNull(adaptable, candidateMediaSourceClass);
-      if (candidateMediaSource.accepts(mediaRef)) {
+      if (candidateMediaSource.accepts(mediaRequest)) {
         mediaSource = candidateMediaSource;
         break;
       }
     }
-    MediaMetadata mediaMetadata = new MediaMetadata(originalMediaReference, mediaRef, mediaSource);
+    Media media = new Media(mediaSource, mediaRequest);
 
-    // preprocess media reference before resolving
-    List<Class<? extends MediaMetadataProcessor>> mediaPreProcessors = mediaHandlerConfig.getMediaMetadataPreProcessors();
+    // preprocess media request before resolving
+    List<Class<? extends MediaProcessor>> mediaPreProcessors = mediaHandlerConfig.getPreProcessors();
     if (mediaPreProcessors != null) {
-      for (Class<? extends MediaMetadataProcessor> processorClass : mediaPreProcessors) {
-        MediaMetadataProcessor processor = AdaptTo.notNull(adaptable, processorClass);
-        mediaMetadata = processor.process(mediaMetadata);
-        if (mediaMetadata == null) {
+      for (Class<? extends MediaProcessor> processorClass : mediaPreProcessors) {
+        MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
+        media = processor.process(media);
+        if (media == null) {
           throw new RuntimeException("MediaPreProcessor '" + processor + "' returned null, page '" + currentPage.getPath() + "'.");
         }
       }
     }
 
-    // resolve media reference
+    // resolve media request
     if (mediaSource != null) {
-      mediaMetadata = mediaSource.resolveMedia(mediaMetadata);
-      if (mediaMetadata == null) {
+      media = mediaSource.resolveMedia(media);
+      if (media == null) {
         throw new RuntimeException("MediaType '" + mediaSource + "' returned null, page '" + currentPage.getPath() + "'.");
       }
     }
     else {
-      mediaMetadata.setMediaInvalidReason(MediaInvalidReason.NO_MEDIA_SOURCE);
+      media.setMediaInvalidReason(MediaInvalidReason.NO_MEDIA_SOURCE);
     }
 
     // generate markup (if markup builder is available) - first accepting wins
-    List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMediaMarkupBuilders();
+    List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMarkupBuilders();
     if (mediaMarkupBuilders != null) {
       for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
         MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
-        if (mediaMarkupBuilder.accepts(mediaMetadata)) {
-          mediaMetadata.setMedia(mediaMarkupBuilder.build(mediaMetadata));
+        if (mediaMarkupBuilder.accepts(media)) {
+          media.setElement(mediaMarkupBuilder.build(media));
           break;
         }
       }
     }
 
-    // postprocess media reference after resolving
-    List<Class<? extends MediaMetadataProcessor>> mediaPostProcessors = mediaHandlerConfig.getMediaMetadataPostProcessors();
+    // postprocess media request after resolving
+    List<Class<? extends MediaProcessor>> mediaPostProcessors = mediaHandlerConfig.getPostProcessors();
     if (mediaPostProcessors != null) {
-      for (Class<? extends MediaMetadataProcessor> processorClass : mediaPostProcessors) {
-        MediaMetadataProcessor processor = AdaptTo.notNull(adaptable, processorClass);
-        mediaMetadata = processor.process(mediaMetadata);
-        if (mediaMetadata == null) {
+      for (Class<? extends MediaProcessor> processorClass : mediaPostProcessors) {
+        MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
+        media = processor.process(media);
+        if (media == null) {
           throw new RuntimeException("MediaPostProcessor '" + processor + "' returned null, page '" + currentPage.getPath() + "'.");
         }
       }
     }
 
-    return mediaMetadata;
+    return media;
   }
 
   @Override
-  public boolean isValidMedia(HtmlElement<?> element) {
+  public boolean isValidElement(HtmlElement<?> element) {
 
     // it it is null it is always invalid
     if (element == null) {
@@ -242,7 +171,7 @@ public final class MediaHandlerImpl implements MediaHandler {
     }
 
     // otherwise check if any media markup builder is available that rates this html element valid
-    List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMediaMarkupBuilders();
+    List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMarkupBuilders();
     if (mediaMarkupBuilders != null) {
       for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
         MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);

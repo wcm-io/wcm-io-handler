@@ -21,176 +21,54 @@ package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.args.MediaArgsType;
-import io.wcm.handler.url.UrlMode;
 
 import org.apache.sling.api.resource.Resource;
 
 /**
- * Manages media item resolving and markup generation.
- * General usage: <li>getMedia: Get media markup element. This HTML element can be either a IMG element, or a multimedia
- * markup element like OBJECT or VIDEO, or a custom DIV element containing metadata for frontend progressive
- * enhancement.</li> <li>getMediaUrl: Get URL to directly reference the media item/rendition.</li> <li>getMediaMetadata:
- * Returns both media markup element and URL and additional media resolving metadata.</li>
+ * Manages media resolving and markup generation.
  */
 public interface MediaHandler {
 
   /**
-   * Get media markup element (IMG, DIV or other multimedia markup element) for first rendition.
-   * @param mediaRef Path to media library item
-   * @return Html element or null if media reference is invalid
+   * Build media which is referenced in the resource (as property or inline binary data).
+   * @param resource Resource containing reference to media asset and optionally futher properties like alt. text,
+   *          cropping information etc. Alternatively it can contain an inline binary asset uploaded directly to the
+   *          resource.
+   * @return Media builder
    */
-  HtmlElement<?> getMedia(String mediaRef);
+  MediaBuilder get(Resource resource);
 
   /**
-   * Get media markup element (IMG, DIV or other multimedia markup element) for best matching rendition.
-   * @param mediaRef Path to media library item
-   * @param mediaArgs Affects rendition selection, media URL and markup generation
-   * @return Html element or null if media reference is invalid
+   * Build media which is referenced in the resource (as property or inline binary data).
+   * @param resource Resource containing reference to media asset and optionally futher properties like alt. text,
+   *          cropping information etc. Alternatively it can contain an inline binary asset uploaded directly to the
+   *          resource.
+   * @param mediaArgs Additional arguments affecting media resolving
+   * @return Media builder
    */
-  HtmlElement<?> getMedia(String mediaRef, MediaArgsType mediaArgs);
+  MediaBuilder get(Resource resource, MediaArgsType mediaArgs);
 
   /**
-   * Get media markup element (IMG, DIV or other multimedia markup element) for best matching rendition.
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text.
-   *          The media references is is read from a property named "mediaRef".
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @param mediaArgs Affects rendition selection, media URL and markup generation
-   * @return Html element or null if media reference is invalid
+   * Build media which is referenced via its string address.
+   * @param mediaRef Reference to media item (in most cases a repository path to the DAM asset).
+   * @return Media builder
    */
-  HtmlElement<?> getMedia(Resource resource, MediaArgsType mediaArgs);
+  MediaBuilder get(String mediaRef);
 
   /**
-   * Get media markup element (IMG, DIV or other multimedia markup element) for best matching rendition.
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @param refProperty Defines the name of the property from which the media reference is read, or node name for
-   *          inline media.
-   * @param mediaArgs Affects rendition selection, media URL and markup generation
-   * @return Html element or null if media reference is invalid
+   * Build media which is referenced via its string address.
+   * @param mediaRef Reference to media item (in most cases a repository path to the DAM asset).
+   * @param mediaArgs Additional arguments affecting media resolving
+   * @return Media builder
    */
-  HtmlElement<?> getMedia(Resource resource, String refProperty, MediaArgsType mediaArgs);
+  MediaBuilder get(String mediaRef, MediaArgsType mediaArgs);
 
   /**
-   * Get externalized media URL of first rendition.
-   * @param mediaRef Path to media library item
-   * @return Media URL or null if the media reference is invalid
+   * Build media for the given request holding all further request properties.
+   * @param mediaRequest Media handling request
+   * @return Media builder
    */
-  String getMediaUrl(String mediaRef);
-
-  /**
-   * Get externalized media URL of best matching rendition.
-   * @param mediaRef Path to media library item
-   * @param pUrlMode Controls how the media URL is build
-   * @return Media URL or null if the media reference is invalid
-   */
-  String getMediaUrl(String mediaRef, UrlMode pUrlMode);
-
-  /**
-   * Get externalized media URL of best matching rendition.
-   * @param mediaRef Path to media library item
-   * @param mediaArgs Affects rendition selection and media URL generation
-   * @return Media URL or null if the media reference is invalid
-   */
-  String getMediaUrl(String mediaRef, MediaArgsType mediaArgs);
-
-  /**
-   * Get externalized media URL of best matching rendition.
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text.
-   *          The media references is is read from a property named "mediaRef".
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @param mediaArgs Affects rendition selection and media URL generation
-   * @return Media URL or null if the media reference is invalid
-   */
-  String getMediaUrl(Resource resource, MediaArgsType mediaArgs);
-
-  /**
-   * Get externalized media URL of best matching rendition.
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @param refProperty Defines the name of the property from which the media reference is read, or node name for
-   *          inline media.
-   * @param mediaArgs Affects rendition selection and media URL generation
-   * @return Media URL or null if the media reference is invalid
-   */
-  String getMediaUrl(Resource resource, String refProperty, MediaArgsType mediaArgs);
-
-  /**
-   * Get all metadata that can be resolved for this media (first rendition).
-   * @param mediaRef Path to media library item
-   * @return Resolved media and rendition metadata. Never null.
-   */
-  MediaMetadata getMediaMetadata(String mediaRef);
-
-  /**
-   * Get all metadata that can be resolved for this media (best matching rendition).
-   * @param mediaRef Path to media library item
-   * @param mediaArgs Affects rendition selection and media URL generation
-   * @return Resolved media and rendition metadata. Never null.
-   */
-  MediaMetadata getMediaMetadata(String mediaRef, MediaArgsType mediaArgs);
-
-  /**
-   * Get all metadata that can be resolved for this media (best matching rendition).
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text.
-   *          The media references is is read from a property named "mediaRef".
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @return Resolved media and rendition metadata. Never null.
-   */
-  MediaMetadata getMediaMetadata(Resource resource);
-
-  /**
-   * Get all metadata that can be resolved for this media (best matching rendition).
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text.
-   *          The media references is is read from a property named "mediaRef".
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @param mediaArgs Affects rendition selection and media URL generation
-   * @return Resolved media and rendition metadata. Never null.
-   */
-  MediaMetadata getMediaMetadata(Resource resource, MediaArgsType mediaArgs);
-
-  /**
-   * Get all metadata that can be resolved for this media (best matching rendition).
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @param refProperty Defines the name of the property from which the media reference is read, or node name for
-   *          inline media.
-   * @return Resolved media and rendition metadata. Never null.
-   */
-  MediaMetadata getMediaMetadata(Resource resource, String refProperty);
-
-  /**
-   * Get all metadata that can be resolved for this media (best matching rendition).
-   * @param resource Resource containing reference to media library item and optionally further properties like Alt.
-   *          text
-   *          If the resource contains an inline media element directly within the page this is used instead of a media
-   *          reference.
-   * @param refProperty Defines the name of the property from which the media reference is read, or node name for
-   *          inline media.
-   * @param mediaArgs Affects rendition selection and media URL generation
-   * @return Resolved media and rendition metadata. Never null.
-   */
-  MediaMetadata getMediaMetadata(Resource resource, String refProperty, MediaArgsType mediaArgs);
-
-  /**
-   * Get all metadata that can be resolved for this media (best matching rendition).
-   * @param mediaReference Media reference
-   * @return Resolved media and rendition metadata. Never null.
-   */
-  MediaMetadata getMediaMetadata(MediaReference mediaReference);
+  MediaBuilder get(MediaRequest mediaRequest);
 
   /**
    * Checks if the given HTML element is valid.
@@ -198,6 +76,6 @@ public interface MediaHandler {
    * @param element Media markup element.
    * @return true if media element is invalid
    */
-  boolean isValidMedia(HtmlElement<?> element);
+  boolean isValidElement(HtmlElement<?> element);
 
 }

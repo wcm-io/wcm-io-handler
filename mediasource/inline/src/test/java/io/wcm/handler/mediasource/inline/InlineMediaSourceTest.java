@@ -37,10 +37,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgs;
@@ -142,10 +142,10 @@ public class InlineMediaSourceTest {
   public void testInvalid() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(emptyResource, new MediaArgs());
+    Media media = mediaHandler.get(emptyResource).build();
 
-    assertFalse("media invalid", mediaMetadata.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, mediaMetadata.getMediaInvalidReason());
+    assertFalse("media invalid", media.isValid());
+    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
   }
 
   /**
@@ -155,21 +155,21 @@ public class InlineMediaSourceTest {
   public void testNtFile() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(ntFileResource, new MediaArgs());
+    Media media = mediaHandler.get(ntFileResource).build();
 
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
-    assertEquals("media url", ROOTPATH_CONTENT + "/_jcr_content/filedata.bin", mediaMetadata.getMediaUrl());
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertEquals("media url", ROOTPATH_CONTENT + "/_jcr_content/filedata.bin", media.getUrl());
 
-    MediaItem mediaItem = mediaMetadata.getMediaItem();
-    assertNotNull("mediaitem", mediaItem);
-    assertEquals("mediaitem.title", "filedata.bin", mediaItem.getTitle());
-    assertNull("mediaitem.altText", mediaItem.getAltText());
-    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/filedata.bin/jcr:content", mediaItem.getPath());
+    Asset asset = media.getAsset();
+    assertNotNull("mediaitem", asset);
+    assertEquals("mediaitem.title", "filedata.bin", asset.getTitle());
+    assertNull("mediaitem.altText", asset.getAltText());
+    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/filedata.bin/jcr:content", asset.getPath());
 
-    Rendition rendition = mediaMetadata.getRendition();
+    Rendition rendition = media.getRendition();
     assertNotNull("rendition", rendition);
-    assertEquals("rendition.mediaurl", ROOTPATH_CONTENT + "/_jcr_content/filedata.bin", rendition.getMediaUrl());
+    assertEquals("rendition.mediaurl", ROOTPATH_CONTENT + "/_jcr_content/filedata.bin", rendition.getUrl());
     assertEquals("rendition.path", ROOTPATH_CONTENT + "/jcr:content/filedata.bin/jcr:content", rendition.getPath());
     assertEquals("rendition.filename", "filedata.bin", rendition.getFileName());
     assertEquals("rendition.fileextension", "bin", rendition.getFileExtension());
@@ -185,21 +185,21 @@ public class InlineMediaSourceTest {
   public void testNtResource() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(ntResourceResource, new MediaArgs());
+    Media media = mediaHandler.get(ntResourceResource).build();
 
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
-    assertEquals("media url", ROOTPATH_CONTENT + "/_jcr_content/resource/data./file.bin", mediaMetadata.getMediaUrl());
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertEquals("media url", ROOTPATH_CONTENT + "/_jcr_content/resource/data./file.bin", media.getUrl());
 
-    MediaItem mediaItem = mediaMetadata.getMediaItem();
-    assertNotNull("mediaitem", mediaItem);
-    assertEquals("mediaitem.title", "file.bin", mediaItem.getTitle());
-    assertNull("mediaitem.altText", mediaItem.getAltText());
-    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resource/data", mediaItem.getPath());
+    Asset asset = media.getAsset();
+    assertNotNull("mediaitem", asset);
+    assertEquals("mediaitem.title", "file.bin", asset.getTitle());
+    assertNull("mediaitem.altText", asset.getAltText());
+    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resource/data", asset.getPath());
 
-    Rendition rendition = mediaMetadata.getRendition();
+    Rendition rendition = media.getRendition();
     assertNotNull("rendition", rendition);
-    assertEquals("rendition.mediaurl", ROOTPATH_CONTENT + "/_jcr_content/resource/data./file.bin", rendition.getMediaUrl());
+    assertEquals("rendition.mediaurl", ROOTPATH_CONTENT + "/_jcr_content/resource/data./file.bin", rendition.getUrl());
     assertEquals("rendition.path", ROOTPATH_CONTENT + "/jcr:content/resource/data", rendition.getPath());
     assertEquals("rendition.filename", "file.bin", rendition.getFileName());
     assertEquals("rendition.fileextension", "bin", rendition.getFileExtension());
@@ -215,23 +215,23 @@ public class InlineMediaSourceTest {
   public void testMediaInline() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineResource, new MediaArgs());
+    Media media = mediaHandler.get(mediaInlineResource).build();
 
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("media url", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInline/mediaInline./mediainlinedata.bin",
-        mediaMetadata.getMediaUrl());
+        media.getUrl());
 
-    MediaItem mediaItem = mediaMetadata.getMediaItem();
-    assertNotNull("mediaitem", mediaItem);
-    assertEquals("mediaitem.title", "mediainlinedata.bin", mediaItem.getTitle());
-    assertEquals("mediaitem.altText", "Inline Media Alt. Text", mediaItem.getAltText());
-    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInline/mediaInline", mediaItem.getPath());
+    Asset asset = media.getAsset();
+    assertNotNull("mediaitem", asset);
+    assertEquals("mediaitem.title", "mediainlinedata.bin", asset.getTitle());
+    assertEquals("mediaitem.altText", "Inline Media Alt. Text", asset.getAltText());
+    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInline/mediaInline", asset.getPath());
 
-    Rendition rendition = mediaMetadata.getRendition();
+    Rendition rendition = media.getRendition();
     assertNotNull("rendition", rendition);
     assertEquals("rendition.mediaurl", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInline/mediaInline./mediainlinedata.bin",
-        rendition.getMediaUrl());
+        rendition.getUrl());
     assertEquals("rendition.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInline/mediaInline", rendition.getPath());
     assertEquals("rendition.filename", "mediainlinedata.bin", rendition.getFileName());
     assertEquals("rendition.fileextension", "bin", rendition.getFileExtension());
@@ -247,23 +247,23 @@ public class InlineMediaSourceTest {
   public void testMediaInlineWithFile() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineWithFileResource, new MediaArgs());
+    Media media = mediaHandler.get(mediaInlineWithFileResource).build();
 
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("media url", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineWithFile/mediaInline./mediainlinedata2.bin",
-        mediaMetadata.getMediaUrl());
+        media.getUrl());
 
-    MediaItem mediaItem = mediaMetadata.getMediaItem();
-    assertNotNull("mediaitem", mediaItem);
-    assertEquals("mediaitem.title", "mediainlinedata2.bin", mediaItem.getTitle());
-    assertEquals("mediaitem.altText", "Inline Media Alt. Text 2", mediaItem.getAltText());
-    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineWithFile/mediaInline/jcr:content", mediaItem.getPath());
+    Asset asset = media.getAsset();
+    assertNotNull("mediaitem", asset);
+    assertEquals("mediaitem.title", "mediainlinedata2.bin", asset.getTitle());
+    assertEquals("mediaitem.altText", "Inline Media Alt. Text 2", asset.getAltText());
+    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineWithFile/mediaInline/jcr:content", asset.getPath());
 
-    Rendition rendition = mediaMetadata.getRendition();
+    Rendition rendition = media.getRendition();
     assertNotNull("rendition", rendition);
     assertEquals("rendition.mediaurl", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineWithFile/mediaInline./mediainlinedata2.bin",
-        rendition.getMediaUrl());
+        rendition.getUrl());
     assertEquals("rendition.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineWithFile/mediaInline/jcr:content", rendition.getPath());
     assertEquals("rendition.filename", "mediainlinedata2.bin", rendition.getFileName());
     assertEquals("rendition.fileextension", "bin", rendition.getFileExtension());
@@ -279,23 +279,23 @@ public class InlineMediaSourceTest {
   public void testMediaInlineSampleImage() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, new MediaArgs());
+    Media media = mediaHandler.get(mediaInlineSampleImageResource).build();
 
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("media url", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage/mediaInline./sample_image_215x102.jpg",
-        mediaMetadata.getMediaUrl());
+        media.getUrl());
 
-    MediaItem mediaItem = mediaMetadata.getMediaItem();
-    assertNotNull("mediaitem", mediaItem);
-    assertEquals("mediaitem.title", "sample_image_215x102.jpg", mediaItem.getTitle());
-    assertNull("mediaitem.altText", mediaItem.getAltText());
-    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineSampleImage/mediaInline", mediaItem.getPath());
+    Asset asset = media.getAsset();
+    assertNotNull("mediaitem", asset);
+    assertEquals("mediaitem.title", "sample_image_215x102.jpg", asset.getTitle());
+    assertNull("mediaitem.altText", asset.getAltText());
+    assertEquals("mediaitem.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineSampleImage/mediaInline", asset.getPath());
 
-    Rendition rendition = mediaMetadata.getRendition();
+    Rendition rendition = media.getRendition();
     assertNotNull("rendition", rendition);
     assertEquals("rendition.mediaurl", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage/mediaInline./sample_image_215x102.jpg",
-        rendition.getMediaUrl());
+        rendition.getUrl());
     assertEquals("rendition.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineSampleImage/mediaInline", rendition.getPath());
     assertEquals("rendition.filename", "sample_image_215x102.jpg", rendition.getFileName());
     assertEquals("rendition.fileextension", "jpg", rendition.getFileExtension());
@@ -310,25 +310,25 @@ public class InlineMediaSourceTest {
   @Test
   public void testWithAltText() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaMetadata mediaMetadata;
+    Media media;
 
     MediaArgsType mediaArgs = new MediaArgs();
     mediaArgs.setAltText("Der Jodelkaiser");
 
-    mediaMetadata = mediaHandler.getMediaMetadata(ntFileResource, mediaArgs);
-    assertEquals("Der Jodelkaiser", mediaMetadata.getMediaItem().getAltText());
+    media = mediaHandler.get(ntFileResource, mediaArgs).build();
+    assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
 
-    mediaMetadata = mediaHandler.getMediaMetadata(ntResourceResource, mediaArgs);
-    assertEquals("Der Jodelkaiser", mediaMetadata.getMediaItem().getAltText());
+    media = mediaHandler.get(ntResourceResource, mediaArgs).build();
+    assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineResource, mediaArgs);
-    assertEquals("Der Jodelkaiser", mediaMetadata.getMediaItem().getAltText());
+    media = mediaHandler.get(mediaInlineResource, mediaArgs).build();
+    assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineWithFileResource, mediaArgs);
-    assertEquals("Der Jodelkaiser", mediaMetadata.getMediaItem().getAltText());
+    media = mediaHandler.get(mediaInlineWithFileResource, mediaArgs).build();
+    assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, mediaArgs);
-    assertEquals("Der Jodelkaiser", mediaMetadata.getMediaItem().getAltText());
+    media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
 
   }
 
@@ -342,16 +342,16 @@ public class InlineMediaSourceTest {
     MediaArgsType mediaArgs = MediaArgs.urlMode(UrlModes.FULL_URL);
 
     assertEquals("http://www.dummysite.org" + ROOTPATH_CONTENT + "/_jcr_content/filedata.bin",
-        mediaHandler.getMediaUrl(ntFileResource, mediaArgs));
+        mediaHandler.get(ntFileResource, mediaArgs).buildUrl());
     assertEquals("http://www.dummysite.org" + ROOTPATH_CONTENT + "/_jcr_content/resource/data./file.bin",
-        mediaHandler.getMediaUrl(ntResourceResource, mediaArgs));
+        mediaHandler.get(ntResourceResource, mediaArgs).buildUrl());
     assertEquals("http://www.dummysite.org" + ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInline/mediaInline./mediainlinedata.bin",
-        mediaHandler.getMediaUrl(mediaInlineResource, mediaArgs));
+        mediaHandler.get(mediaInlineResource, mediaArgs).buildUrl());
     assertEquals("http://www.dummysite.org" + ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineWithFile/mediaInline./mediainlinedata2.bin",
-        mediaHandler.getMediaUrl(mediaInlineWithFileResource, mediaArgs));
+        mediaHandler.get(mediaInlineWithFileResource, mediaArgs).buildUrl());
     assertEquals("http://www.dummysite.org" + ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage/mediaInline./sample_image_215x102.jpg",
-        mediaHandler.getMediaUrl(mediaInlineSampleImageResource, mediaArgs));
-    assertNull(mediaHandler.getMediaUrl(emptyResource, mediaArgs));
+        mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).buildUrl());
+    assertNull(mediaHandler.get(emptyResource, mediaArgs).buildUrl());
 
   }
 
@@ -364,68 +364,68 @@ public class InlineMediaSourceTest {
     Rendition rendition;
 
     // test invalid resource
-    rendition = mediaHandler.getMediaMetadata(emptyResource, MediaArgs.fixedDimension(10, 10)).getRendition();
+    rendition = mediaHandler.get(emptyResource, MediaArgs.fixedDimension(10, 10)).build().getRendition();
     assertNull("rendition invalid", rendition);
 
     // test non-image resource - dimensions have no effect
-    rendition = mediaHandler.getMediaMetadata(mediaInlineResource, MediaArgs.fixedDimension(10, 10)).getRendition();
+    rendition = mediaHandler.get(mediaInlineResource, MediaArgs.fixedDimension(10, 10)).build().getRendition();
     assertEquals("width", 0, rendition.getWidth());
     assertEquals("height", 0, rendition.getHeight());
-    assertEquals("url", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInline/mediaInline./mediainlinedata.bin", rendition.getMediaUrl());
+    assertEquals("url", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInline/mediaInline./mediainlinedata.bin", rendition.getUrl());
 
     // test image resource with invalid aspect ratio
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(10, 10)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(10, 10)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(20, 10)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(20, 10)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
     // test image resource with dimensions that are too big
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(430, 204)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(430, 204)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(430, 0)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(430, 0)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(0, 204)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(0, 204)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
     // test image resource with dimensions exact fit
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(215, 102)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(215, 102)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 215, rendition.getWidth());
     assertEquals("height", 102, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline./sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline./sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions smaller
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(108, 51)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(108, 51)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 108, rendition.getWidth());
     assertEquals("height", 51, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".108.51.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".108.51.file/sample_image_215x102.jpg", rendition.getUrl());
 
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(42, 20)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(42, 20)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(42, 0)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(42, 0)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only height
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(0, 20)).getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(0, 20)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test with force download
-    rendition = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.fixedDimension(0, 20).setForceDownload(true))
-        .getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(0, 20).setForceDownload(true))
+        .refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.download_attachment.file/sample_image_215x102.jpg",
-        rendition.getMediaUrl());
+        rendition.getUrl());
 
   }
 
@@ -435,124 +435,121 @@ public class InlineMediaSourceTest {
   @Test
   public void testWithMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaMetadata mediaMetadata;
+    Media media;
     Rendition rendition;
 
     // test invalid resource
-    mediaMetadata = mediaHandler.getMediaMetadata(emptyResource, "mediaInline", MediaArgs.mediaFormat(SHOWROOM_CONTROLS));
-    rendition = mediaMetadata.getRendition();
-    assertFalse("media invalid", mediaMetadata.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(emptyResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertFalse("media invalid", media.isValid());
+    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats with invalid aspect ratio
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(HOLZAUTO_BANNER));
-    rendition = mediaMetadata.getRendition();
-    assertFalse("media invalid", mediaMetadata.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(HOLZAUTO_BANNER)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertFalse("media invalid", media.isValid());
+    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(HOLZAUTO_CUTOUT_13PLUS));
-    rendition = mediaMetadata.getRendition();
-    assertFalse("media invalid", mediaMetadata.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(HOLZAUTO_CUTOUT_13PLUS)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertFalse("media invalid", media.isValid());
+    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats that are too big
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(EDITORIAL_STANDARD));
-    rendition = mediaMetadata.getRendition();
-    assertFalse("media invalid", mediaMetadata.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(EDITORIAL_STANDARD)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertFalse("media invalid", media.isValid());
+    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(EDITORIAL_2COL));
-    rendition = mediaMetadata.getRendition();
-    assertFalse("media invalid", mediaMetadata.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(EDITORIAL_2COL)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertFalse("media invalid", media.isValid());
+    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media format exact fit
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(EDITORIAL_1COL));
-    rendition = mediaMetadata.getRendition();
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(EDITORIAL_1COL)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("width", 215, rendition.getWidth());
     assertEquals("height", 102, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline./sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline./sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions smaller
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(SHOWROOM_FLYOUT_FEATURE));
-    rendition = mediaMetadata.getRendition();
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_FLYOUT_FEATURE)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("width", 205, rendition.getWidth());
     assertEquals("height", 97, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".205.97.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".205.97.file/sample_image_215x102.jpg", rendition.getUrl());
 
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline", MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1));
-    rendition = mediaMetadata.getRendition();
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1)).refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("width", 64, rendition.getWidth());
     assertEquals("height", 30, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH));
-    rendition = mediaMetadata.getRendition();
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH)).refProperty("mediaInline")
+        .build();
+    rendition = media.getRendition();
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("width", 64, rendition.getWidth());
     assertEquals("height", 30, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only height
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT));
-    rendition = mediaMetadata.getRendition();
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT)).refProperty("mediaInline")
+        .build();
+    rendition = media.getRendition();
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("width", 63, rendition.getWidth());
     assertEquals("height", 30, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".63.30.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".63.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width, fitting ratio
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1));
-    rendition = mediaMetadata.getRendition();
-    assertTrue("media valid", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1))
+        .refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertTrue("media valid", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
     assertEquals("width", 64, rendition.getWidth());
     assertEquals("height", 30, rendition.getHeight());
-    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getMediaUrl());
+    assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width, invalid ratio
-    mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, "mediaInline",
-        MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2));
-    rendition = mediaMetadata.getRendition();
-    assertFalse("media invalid", mediaMetadata.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, mediaMetadata.getMediaInvalidReason());
+    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2))
+        .refProperty("mediaInline").build();
+    rendition = media.getRendition();
+    assertFalse("media invalid", media.isValid());
+    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
   }
 
-  /**
-   * Test method for {@link MediaHandler#getMediaMetadata(Resource, MediaArgsType)}
-   */
   @Test
   public void testDownloadMediaElement() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
     MediaArgsType mediaArgs = new MediaArgs().setForceDownload(true);
-    MediaMetadata mediaMetadata = mediaHandler.getMediaMetadata(mediaInlineSampleImageResource, mediaArgs);
-    assertTrue("valid?", mediaMetadata.isValid());
-    assertNull("no invalid reason", mediaMetadata.getMediaInvalidReason());
-    assertNotNull("mediaItem?", mediaMetadata.getMediaItem());
-    assertNotNull("rendition?", mediaMetadata.getRendition());
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue("valid?", media.isValid());
+    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertNotNull("asset?", media.getAsset());
+    assertNotNull("rendition?", media.getRendition());
     assertEquals("rendition.mediaUrl",
         ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage/mediaInline."
             + MediaFileServlet.SELECTOR + "." + MediaFileServlet.SELECTOR_DOWNLOAD + ".file/sample_image_215x102.jpg",
-            mediaMetadata.getRendition().getMediaUrl());
+            media.getRendition().getUrl());
   }
 
 }

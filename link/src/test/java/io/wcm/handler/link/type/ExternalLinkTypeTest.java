@@ -24,8 +24,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.testcontext.AppAemContext;
@@ -54,11 +54,11 @@ public class ExternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
 
   }
 
@@ -72,11 +72,11 @@ public class ExternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/abc")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "http://xyz/abc", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "http://xyz/abc", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
 
   }
 

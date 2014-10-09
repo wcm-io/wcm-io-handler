@@ -28,10 +28,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
-import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaReference;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
@@ -61,7 +61,7 @@ public class SimpleImageMediaMarkupBuilderTest {
   @Mock
   private MediaSource mediaSource;
   @Mock
-  private MediaItem mediaItem;
+  private Asset asset;
   @Mock
   private Rendition rendition;
 
@@ -69,26 +69,26 @@ public class SimpleImageMediaMarkupBuilderTest {
   public void testAccepts() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
-    MediaReference mediaReference = new MediaReference("/media/dummy", new MediaArgs());
-    MediaMetadata mediaMetadata = new MediaMetadata(mediaReference, mediaReference, mediaSource);
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    Media media = new Media(mediaSource, mediaRequest);
     when(rendition.isImage()).thenReturn(false);
 
-    assertFalse("no rendition", builder.accepts(mediaMetadata));
+    assertFalse("no rendition", builder.accepts(media));
 
-    mediaMetadata.setMediaItem(mediaItem);
-    mediaMetadata.setRendition(rendition);
+    media.setAsset(asset);
+    media.setRendition(rendition);
 
-    assertFalse("invalid rendition", builder.accepts(mediaMetadata));
+    assertFalse("invalid rendition", builder.accepts(media));
 
     when(rendition.getFileName()).thenReturn("movie.swf");
     when(rendition.isImage()).thenReturn(false);
 
-    assertFalse("non-image rendition", builder.accepts(mediaMetadata));
+    assertFalse("non-image rendition", builder.accepts(media));
 
     when(rendition.getFileName()).thenReturn("image.gif");
     when(rendition.isImage()).thenReturn(true);
 
-    assertTrue("image rendition", builder.accepts(mediaMetadata));
+    assertTrue("image rendition", builder.accepts(media));
 
   }
 
@@ -96,36 +96,36 @@ public class SimpleImageMediaMarkupBuilderTest {
   public void testBuild() {
     MediaMarkupBuilder builder = new SimpleImageMediaMarkupBuilder();
 
-    MediaReference mediaReference = new MediaReference("/media/dummy", new MediaArgs());
-    mediaReference.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
-    MediaMetadata mediaMetadata = new MediaMetadata(mediaReference, mediaReference, mediaSource);
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    Media media = new Media(mediaSource, mediaRequest);
 
-    assertNull("no rendition", builder.build(mediaMetadata));
+    assertNull("no rendition", builder.build(media));
 
-    mediaMetadata.setMediaItem(mediaItem);
-    mediaMetadata.setRendition(rendition);
+    media.setAsset(asset);
+    media.setRendition(rendition);
 
-    assertNull("invalid rendition", builder.build(mediaMetadata));
+    assertNull("invalid rendition", builder.build(media));
 
-    when(rendition.getMediaUrl()).thenReturn("/mediay/dummy.gif");
+    when(rendition.getUrl()).thenReturn("/mediay/dummy.gif");
 
-    HtmlElement<?> media = builder.build(mediaMetadata);
-    assertNotNull("valid rendition", media);
-    assertEquals("src", "/mediay/dummy.gif", media.getAttributeValue("src"));
-    assertEquals("width", null, media.getAttributeValue("width"));
-    assertEquals("height", null, media.getAttributeValue("height"));
-    assertEquals("alt", null, media.getAttributeValue("alt"));
+    HtmlElement<?> element = builder.build(media);
+    assertNotNull("valid rendition", element);
+    assertEquals("src", "/mediay/dummy.gif", element.getAttributeValue("src"));
+    assertEquals("width", null, element.getAttributeValue("width"));
+    assertEquals("height", null, element.getAttributeValue("height"));
+    assertEquals("alt", null, element.getAttributeValue("alt"));
 
     when(rendition.getWidth()).thenReturn(100L);
     when(rendition.getHeight()).thenReturn(50L);
-    when(mediaItem.getAltText()).thenReturn("Der Jodelkaiser");
+    when(asset.getAltText()).thenReturn("Der Jodelkaiser");
 
-    media = builder.build(mediaMetadata);
-    assertNotNull("valid rendition with additional attributes", media);
-    assertEquals("src", "/mediay/dummy.gif", media.getAttributeValue("src"));
-    assertEquals("width", 100, media.getAttributeValueAsInteger("width"));
-    assertEquals("height", 50, media.getAttributeValueAsInteger("height"));
-    assertEquals("alt", "Der Jodelkaiser", media.getAttributeValue("alt"));
+    element = builder.build(media);
+    assertNotNull("valid rendition with additional attributes", element);
+    assertEquals("src", "/mediay/dummy.gif", element.getAttributeValue("src"));
+    assertEquals("width", 100, element.getAttributeValueAsInteger("width"));
+    assertEquals("height", 50, element.getAttributeValueAsInteger("height"));
+    assertEquals("alt", "Der Jodelkaiser", element.getAttributeValue("alt"));
 
   }
 

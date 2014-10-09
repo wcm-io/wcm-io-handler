@@ -21,7 +21,7 @@ package io.wcm.handler.link.markup;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMetadata;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
 import io.wcm.sling.models.annotations.AemObject;
@@ -46,19 +46,19 @@ public final class SimpleLinkMarkupBuilder implements LinkMarkupBuilder {
   private WCMMode wcmMode;
 
   @Override
-  public boolean accepts(LinkMetadata linkMetadata) {
+  public boolean accepts(Link link) {
     // can generate markup for all links - even if link url is null
     return true;
   }
 
   @Override
-  public Anchor build(LinkMetadata linkMetadata) {
-    ValueMap props = linkMetadata.getLinkReference().getResourceProperties();
+  public Anchor build(Link link) {
+    ValueMap props = link.getLinkRequest().getResourceProperties();
 
     // If link reference is invalid - special handling in edit mode:
     // use invalid content reference for anchor to allow CQ default handling to mark link as invalid
-    String linkUrl = linkMetadata.getLinkUrl();
-    if (linkMetadata.isLinkReferenceInvalid() && wcmMode == WCMMode.EDIT) {
+    String linkUrl = link.getUrl();
+    if (link.isLinkReferenceInvalid() && wcmMode == WCMMode.EDIT) {
       linkUrl = LinkHandler.INVALID_LINK;
     }
 

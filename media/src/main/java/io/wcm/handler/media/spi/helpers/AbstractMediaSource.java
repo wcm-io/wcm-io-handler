@@ -21,7 +21,7 @@ package io.wcm.handler.media.spi.helpers;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaReference;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.spi.MediaSource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,13 +33,13 @@ import org.apache.sling.api.resource.ValueMap;
 public abstract class AbstractMediaSource implements MediaSource {
 
   @Override
-  public boolean accepts(MediaReference mediaReference) {
-    // if an explicit media reference is set check this first
-    if (StringUtils.isNotEmpty(mediaReference.getMediaRef())) {
-      return accepts(mediaReference.getMediaRef());
+  public boolean accepts(MediaRequest mediaRequest) {
+    // if an explicit media request is set check this first
+    if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
+      return accepts(mediaRequest.getMediaRef());
     }
-    // otherwise check resource which contains media reference properties
-    ValueMap props = mediaReference.getResourceProperties();
+    // otherwise check resource which contains media request properties
+    ValueMap props = mediaRequest.getResourceProperties();
     // check for matching media source ID in link resource
     String mediaSourceId = props.get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
     if (StringUtils.isNotEmpty(mediaSourceId)) {
@@ -47,24 +47,24 @@ public abstract class AbstractMediaSource implements MediaSource {
     }
     // if not link type is set at all check if link ref attribute contains a valid link
     else {
-      String refProperty = StringUtils.defaultString(mediaReference.getRefProperty(), getPrimaryMediaRefProperty());
+      String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), getPrimaryMediaRefProperty());
       String mediaRef = props.get(refProperty, String.class);
       return accepts(mediaRef);
     }
   }
 
   /**
-   * Get media reference path to media library
-   * @param mediaReference Media reference
+   * Get media request path to media library
+   * @param mediaRequest Media request
    * @return Path or null if not present
    */
-  protected final String getMediaRef(MediaReference mediaReference) {
-    if (StringUtils.isNotEmpty(mediaReference.getMediaRef())) {
-      return mediaReference.getMediaRef();
+  protected final String getMediaRef(MediaRequest mediaRequest) {
+    if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
+      return mediaRequest.getMediaRef();
     }
-    else if (mediaReference.getResource() != null) {
-      String refProperty = getMediaRefProperty(mediaReference);
-      return mediaReference.getResource().getValueMap().get(refProperty, String.class);
+    else if (mediaRequest.getResource() != null) {
+      String refProperty = getMediaRefProperty(mediaRequest);
+      return mediaRequest.getResource().getValueMap().get(refProperty, String.class);
     }
     else {
       return null;
@@ -72,12 +72,12 @@ public abstract class AbstractMediaSource implements MediaSource {
   }
 
   /**
-   * Get property name containing the media reference path
-   * @param mediaReference Media reference
+   * Get property name containing the media request path
+   * @param mediaRequest Media request
    * @return Property name
    */
-  protected final String getMediaRefProperty(MediaReference mediaReference) {
-    String refProperty = mediaReference.getRefProperty();
+  protected final String getMediaRefProperty(MediaRequest mediaRequest) {
+    String refProperty = mediaRequest.getRefProperty();
     if (StringUtils.isEmpty(refProperty)) {
       refProperty = MediaNameConstants.PN_MEDIA_REF;
     }
@@ -86,13 +86,13 @@ public abstract class AbstractMediaSource implements MediaSource {
 
   /**
    * Get (optional) crop dimensions form resource
-   * @param mediaReference Media reference
+   * @param mediaRequest Media request
    * @return Crop dimension or null if not set or invalid
    */
-  protected final CropDimension getMediaCropDimension(MediaReference mediaReference) {
-    if (mediaReference.getResource() != null) {
-      String cropProperty = getMediaCropProperty(mediaReference);
-      String cropString = mediaReference.getResource().getValueMap().get(cropProperty, String.class);
+  protected final CropDimension getMediaCropDimension(MediaRequest mediaRequest) {
+    if (mediaRequest.getResource() != null) {
+      String cropProperty = getMediaCropProperty(mediaRequest);
+      String cropString = mediaRequest.getResource().getValueMap().get(cropProperty, String.class);
       if (StringUtils.isNotEmpty(cropString)) {
         try {
           return CropDimension.fromCropString(cropString);
@@ -107,11 +107,11 @@ public abstract class AbstractMediaSource implements MediaSource {
 
   /**
    * Get property name containing the cropping parameters
-   * @param mediaReference Media reference
+   * @param mediaRequest Media request
    * @return Property name
    */
-  protected final String getMediaCropProperty(MediaReference mediaReference) {
-    String cropProperty = mediaReference.getCropProperty();
+  protected final String getMediaCropProperty(MediaRequest mediaRequest) {
+    String cropProperty = mediaRequest.getCropProperty();
     if (StringUtils.isEmpty(cropProperty)) {
       cropProperty = MediaNameConstants.PN_MEDIA_CROP;
     }

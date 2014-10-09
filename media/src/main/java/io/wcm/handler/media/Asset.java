@@ -25,10 +25,10 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 
 /**
- * Represents a media item that is referenced via a {@link MediaReference} and resolved via {@link MediaHandler}.
+ * Represents a media item that is referenced via a {@link MediaRequest} and resolved via {@link MediaHandler}.
  * It cannot be rendered directly, but contains references to renditions depending on {@link MediaArgsType}.
  */
-public interface MediaItem extends Adaptable {
+public interface Asset extends Adaptable {
 
   /**
    * @return Title of media item

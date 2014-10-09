@@ -20,18 +20,14 @@
 package io.wcm.handler.richtext.impl;
 
 import static org.junit.Assert.assertEquals;
-import io.wcm.handler.commons.dom.Div;
+import static org.junit.Assert.assertNull;
+import io.wcm.handler.richtext.RichText;
 import io.wcm.handler.richtext.RichTextHandler;
+import io.wcm.handler.richtext.TextMode;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
-import java.util.List;
-
-import org.jdom2.Content;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.output.XMLOutputter;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -66,82 +62,45 @@ public class RichTextHandlerImplTest {
       + "ist wieder daheim.</p>";
 
   @Test
-  public void testAddContentNull() throws JDOMException {
+  public void testNull() {
     RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    Div dummy = new Div();
-    richTextHandler.addContent(null, dummy);
-    assertEquals("<div></div>", dummy.toString());
-  }
-
-  @Test(expected = JDOMException.class)
-  public void testAddContentIllegal() throws JDOMException {
-    RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    Div dummy = new Div();
-    richTextHandler.addContent("<wurst", dummy);
+    RichText richText = richTextHandler.get((String)null).build();
+    assertNull(richText.getMarkup());
   }
 
   @Test
-  public void testAddContentIllegalSuppress() {
+  public void testContentIllegal() {
     RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    Div dummy = new Div();
-    richTextHandler.addContent("<wurst", dummy, true);
-    assertEquals("<div></div>", dummy.toString());
+    RichText richText = richTextHandler.get("<wurst").build();
+    assertNull(richText.getMarkup());
   }
 
   @Test
-  public void testAddContent() throws JDOMException {
+  public void testContent() {
     RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    Div dummy = new Div();
-    richTextHandler.addContent(RICHTEXT_FRAGMENT, dummy);
-    assertEquals("<div>" + RICHTEXT_FRAGMENT_REWRITTEN + "</div>", dummy.toString());
+    RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT).build();
+    assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
   }
 
   @Test
-  public void testGetContent() throws JDOMException {
+  public void testContent_LegacyData() {
     RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    List<Content> content = richTextHandler.getContent(RICHTEXT_FRAGMENT);
-    assertEquals(1, content.size());
-    assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, new XMLOutputter().outputString((Element)content.get(0)));
+    RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT_LEGACY_DATA).build();
+    assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
   }
 
   @Test
-  public void testAddContent_LegacyData() throws JDOMException {
+  public void testContent_LegacyRel() {
     RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    Div dummy = new Div();
-    richTextHandler.addContent(RICHTEXT_FRAGMENT_LEGACY_DATA, dummy);
-    assertEquals("<div>" + RICHTEXT_FRAGMENT_REWRITTEN + "</div>", dummy.toString());
+    RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT_LEGACY_REL).build();
+    assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
   }
 
   @Test
-  public void testGetContent_LegacyData() throws JDOMException {
+  public void testPlainTextContent() {
     RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    List<Content> content = richTextHandler.getContent(RICHTEXT_FRAGMENT_LEGACY_DATA);
-    assertEquals(1, content.size());
-    assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, new XMLOutputter().outputString((Element)content.get(0)));
-  }
-
-  @Test
-  public void testAddContent_LegacyRel() throws JDOMException {
-    RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    Div dummy = new Div();
-    richTextHandler.addContent(RICHTEXT_FRAGMENT_LEGACY_REL, dummy);
-    assertEquals("<div>" + RICHTEXT_FRAGMENT_REWRITTEN + "</div>", dummy.toString());
-  }
-
-  @Test
-  public void testGetContent_LegacyRel() throws JDOMException {
-    RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    List<Content> content = richTextHandler.getContent(RICHTEXT_FRAGMENT_LEGACY_REL);
-    assertEquals(1, content.size());
-    assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, new XMLOutputter().outputString((Element)content.get(0)));
-  }
-
-  @Test
-  public void testAddPlaintextContent() {
-    RichTextHandler richTextHandler = AdaptTo.notNull(context.request(), RichTextHandler.class);
-    Div dummy = new Div();
-    richTextHandler.addPlaintextContent("Der Jodelkaiser\naus dem Ötztal\nist wieder daheim.", dummy);
-    assertEquals("<div>Der Jodelkaiser<br />aus dem Ötztal<br />ist wieder daheim.</div>", dummy.toString());
+    RichText richText = richTextHandler.get("Der Jodelkaiser\naus dem Ötztal\nist wieder daheim.").textMode(TextMode.PLAIN).build();
+    assertEquals("Der Jodelkaiser<br />aus dem Ötztal<br />ist wieder daheim.", richText.getMarkup());
   }
 
 }

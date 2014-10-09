@@ -20,7 +20,7 @@
 package io.wcm.handler.link.spi;
 
 import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.LinkMetadata;
+import io.wcm.handler.link.Link;
 
 /**
  * Builds XHTML markup for links
@@ -29,16 +29,16 @@ public interface LinkMarkupBuilder {
 
   /**
    * Checks whether this builder can generate markup for the given link.
-   * @param linkMetadata Link metadata
+   * @param link Link metadata
    * @return true if this markup builder can handle the given link
    */
-  boolean accepts(LinkMetadata linkMetadata);
+  boolean accepts(Link link);
 
   /**
    * Build link anchor markup
-   * @param linkMetadata Link metadata with resolved link information
+   * @param link Link metadata with resolved link information
    * @return Anchor or null if link is invalid
    */
-  Anchor build(LinkMetadata linkMetadata);
+  Anchor build(Link link);
 
 }

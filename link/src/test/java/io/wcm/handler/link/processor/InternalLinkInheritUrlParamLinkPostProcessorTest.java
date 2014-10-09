@@ -21,8 +21,8 @@ package io.wcm.handler.link.processor;
 
 import static org.junit.Assert.assertEquals;
 import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.LinkMetadata;
-import io.wcm.handler.link.spi.LinkMetadataProcessor;
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
@@ -47,59 +47,59 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
 
   @Test
   public void testInternalLinkWithDefaultParameterList() {
-    LinkMetadataProcessor postProcessor = AdaptTo.notNull(context.request(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+    LinkProcessor postProcessor = AdaptTo.notNull(context.request(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
-    LinkMetadata linkMetadata = new LinkMetadata(null, null, new InternalLinkType());
-    linkMetadata.setLinkUrl("/sample.html");
-    linkMetadata.setAnchor(new Anchor().setHRef("/sample.html"));
+    Link link = new Link(new InternalLinkType(), null);
+    link.setUrl("/sample.html");
+    link.setAnchor(new Anchor().setHRef("/sample.html"));
 
     // test without url parameters
-    postProcessor.process(linkMetadata);
-    assertEquals("/sample.html", linkMetadata.getLinkUrl());
+    postProcessor.process(link);
+    assertEquals("/sample.html", link.getUrl());
 
     // test with url parameters
     context.request().setQueryString("debugClientLibs=true&abc=123");
 
-    postProcessor.process(linkMetadata);
-    assertEquals("/sample.html?debugClientLibs=true", linkMetadata.getLinkUrl());
+    postProcessor.process(link);
+    assertEquals("/sample.html?debugClientLibs=true", link.getUrl());
   }
 
   @Test
   public void testInternalLinkWithCustomParameterList() {
-    LinkMetadataProcessor postProcessor = AdaptTo.notNull(context.request(), AbcInternalLinkInheritUrlParamLinkPostProcessor.class);
+    LinkProcessor postProcessor = AdaptTo.notNull(context.request(), AbcInternalLinkInheritUrlParamLinkPostProcessor.class);
 
-    LinkMetadata linkMetadata = new LinkMetadata(null, null, new InternalLinkType());
-    linkMetadata.setLinkUrl("/sample.html");
-    linkMetadata.setAnchor(new Anchor().setHRef("/sample.html"));
+    Link link = new Link(new InternalLinkType(), null);
+    link.setUrl("/sample.html");
+    link.setAnchor(new Anchor().setHRef("/sample.html"));
 
     // test without url parameters
-    postProcessor.process(linkMetadata);
-    assertEquals("/sample.html", linkMetadata.getLinkUrl());
+    postProcessor.process(link);
+    assertEquals("/sample.html", link.getUrl());
 
     // test with url parameters
     context.request().setQueryString("debugClientLibs=true&abc=123");
 
-    postProcessor.process(linkMetadata);
-    assertEquals("/sample.html?abc=123", linkMetadata.getLinkUrl());
+    postProcessor.process(link);
+    assertEquals("/sample.html?abc=123", link.getUrl());
   }
 
   @Test
   public void testExternalLinkWithDefaultParameterList() {
-    LinkMetadataProcessor postProcessor = AdaptTo.notNull(context.request(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+    LinkProcessor postProcessor = AdaptTo.notNull(context.request(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
-    LinkMetadata linkMetadata = new LinkMetadata(null, null, new ExternalLinkType());
-    linkMetadata.setLinkUrl("/sample.html");
-    linkMetadata.setAnchor(new Anchor().setHRef("/sample.html"));
+    Link link = new Link(new ExternalLinkType(), null);
+    link.setUrl("/sample.html");
+    link.setAnchor(new Anchor().setHRef("/sample.html"));
 
     // test without url parameters
-    postProcessor.process(linkMetadata);
-    assertEquals("/sample.html", linkMetadata.getLinkUrl());
+    postProcessor.process(link);
+    assertEquals("/sample.html", link.getUrl());
 
     // test with url parameters
     context.request().setQueryString("debugClientLibs=true&abc=123");
 
-    postProcessor.process(linkMetadata);
-    assertEquals("/sample.html", linkMetadata.getLinkUrl());
+    postProcessor.process(link);
+    assertEquals("/sample.html", link.getUrl());
   }
 
 

@@ -581,45 +581,37 @@ public class UrlHandlerImplTest {
 
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testWithExternalizeLinkAndExternalizeResource() {
-    Page targetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page2",
-        DummyAppTemplate.CONTENT.getTemplatePath());
-    UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
-    urlHandler.url("/the/path").externalizeLink(targetPage).externalizeResource().build();
-  }
-
   private static String externalizeLinkUrl(UrlHandler urlHandler, String url, Page targetPage) {
-    return urlHandler.url(url).externalizeLink(targetPage).build();
+    return urlHandler.get(url).buildExternalLinkUrl(targetPage);
   }
 
   private static String externalizeLinkUrl(UrlHandler urlHandler, String url, Page targetPage, UrlMode urlMode) {
-    return urlHandler.url(url).externalizeLink(targetPage).urlMode(urlMode).build();
+    return urlHandler.get(url).urlMode(urlMode).buildExternalLinkUrl(targetPage);
   }
 
   private static String externalizeResourceUrl(UrlHandler urlHandler, String url) {
-    return urlHandler.url(url).externalizeResource().build();
+    return urlHandler.get(url).buildExternalResourceUrl();
   }
 
   private static String externalizeResourceUrl(UrlHandler urlHandler, String url, UrlMode urlMode) {
-    return urlHandler.url(url).externalizeResource().urlMode(urlMode).build();
+    return urlHandler.get(url).urlMode(urlMode).buildExternalResourceUrl();
   }
 
   private static String buildUrl(UrlHandler urlHandler, String path, String selectors, String extension, String suffix) {
-    return urlHandler.url(path).selectors(selectors).extension(extension).suffix(suffix).build();
+    return urlHandler.get(path).selectors(selectors).extension(extension).suffix(suffix).build();
   }
 
   private static String appendQueryString(UrlHandler urlHandler, String path, String queryString) {
-    return urlHandler.url(path).queryString(queryString).build();
+    return urlHandler.get(path).queryString(queryString).build();
   }
 
   private static String appendQueryString(UrlHandler urlHandler, String path, String queryString,
       Set<String> inheritableParameterNames) {
-    return urlHandler.url(path).queryString(queryString, inheritableParameterNames).build();
+    return urlHandler.get(path).queryString(queryString, inheritableParameterNames).build();
   }
 
   private static String setFragment(UrlHandler urlHandler, String path, String fragment) {
-    return urlHandler.url(path).fragment(fragment).build();
+    return urlHandler.get(path).fragment(fragment).build();
   }
 
   /**

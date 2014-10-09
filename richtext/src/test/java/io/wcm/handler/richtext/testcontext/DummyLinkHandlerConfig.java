@@ -20,10 +20,10 @@
 package io.wcm.handler.richtext.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.link.LinkType;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
@@ -62,7 +62,7 @@ public class DummyLinkHandlerConfig extends AbstractLinkHandlerConfig {
   }
 
   @Override
-  public List<Class<? extends LinkMarkupBuilder>> getLinkMarkupBuilders() {
+  public List<Class<? extends LinkMarkupBuilder>> getMarkupBuilders() {
     return LINK_MARKUP_BUILDERS;
   }
 

@@ -20,13 +20,12 @@
 package io.wcm.handler.link.type;
 
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMetadata;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkReference;
+import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.url.UrlHandler;
-import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -50,7 +49,7 @@ import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMMode;
 
 /**
- * Default implementation of {@link io.wcm.handler.link.LinkType} for internal links.
+ * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for internal links.
  * Internal links are links to content pages inside the CMS.
  */
 @Model(adaptables = {
@@ -99,25 +98,25 @@ public final class InternalLinkType extends AbstractLinkType {
   }
 
   @Override
-  public boolean accepts(LinkReference linkReference) {
-    if (acceptPage(linkReference.getPage())) {
+  public boolean accepts(LinkRequest linkRequest) {
+    if (acceptPage(linkRequest.getPage())) {
       // support direct links to pages
       return true;
     }
     // check for matching link type ID in link resource
-    return super.accepts(linkReference);
+    return super.accepts(linkRequest);
   }
 
   @Override
-  public LinkMetadata resolveLink(LinkMetadata linkMetadata) {
-    LinkReference linkReference = linkMetadata.getLinkReference();
-    ValueMap props = linkReference.getResourceProperties();
+  public Link resolveLink(Link link) {
+    LinkRequest linkRequest = link.getLinkRequest();
+    ValueMap props = linkRequest.getResourceProperties();
 
     // flag to indicate whether any link reference parameter set
     boolean referenceSet = false;
 
     // first try to get direct link target page
-    Page targetPage = linkMetadata.getLinkReference().getPage();
+    Page targetPage = link.getLinkRequest().getPage();
     if (targetPage != null) {
       referenceSet = true;
     }
@@ -136,70 +135,71 @@ public final class InternalLinkType extends AbstractLinkType {
     if (targetPage != null
         && (linkHandlerConfig.isRedirect(targetPage) || urlHandlerConfig.isIntegrator(targetPage))
         && wcmMode != WCMMode.EDIT) {
-      return recursiveResolveLink(targetPage, linkMetadata);
+      return recursiveResolveLink(targetPage, link);
     }
 
     // build link url
     String linkUrl = null;
     if (targetPage != null) {
-      linkMetadata.setTargetPage(targetPage);
+      link.setTargetPage(targetPage);
 
-      String selector = null;
-      String fileExtension = FileExtension.HTML;
-      String suffix = null;
-      String queryParam = null;
-      String fragment = null;
-      if (linkReference.getLinkArgs() != null) {
-        selector = linkReference.getLinkArgs().getSelectors();
-        fileExtension = StringUtils.defaultIfEmpty(linkReference.getLinkArgs().getFileExtension(), FileExtension.HTML);
-        suffix = linkReference.getLinkArgs().getSuffix();
-        queryParam = linkReference.getLinkArgs().getQueryString();
-        fragment = linkReference.getLinkArgs().getFragment();
-      }
+      String selectors = linkRequest.getSelectors();
+      String fileExtension = StringUtils.defaultString(linkRequest.getExtension(), FileExtension.HTML);
+      String suffix = linkRequest.getSuffix();
+      String queryString = linkRequest.getQueryString();
+      String fragment = linkRequest.getFragement();
 
       // optionally override query parameters and fragment from link resource
-      queryParam = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, queryParam);
+      queryString = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, queryString);
       fragment = props.get(LinkNameConstants.PN_LINK_ANCHOR_NAME, fragment);
 
       // build url
-      linkUrl = urlHandler.url(targetPage.getPath())
-          .selectors(selector).extension(fileExtension).suffix(suffix)
-          .queryString(queryParam).fragment(fragment).build();
+      linkUrl = urlHandler.get(targetPage.getPath())
+          .selectors(selectors)
+          .extension(fileExtension)
+          .suffix(suffix)
+          .queryString(queryString)
+          .fragment(fragment).build();
 
       // externalize url
-      UrlMode urlMode = null;
-      if (linkReference.getLinkArgs() != null) {
-        urlMode = linkReference.getLinkArgs().getUrlMode();
-      }
-      linkUrl = urlHandler.url(linkUrl).externalizeLink(targetPage).urlMode(urlMode).build();
+      linkUrl = urlHandler.get(linkUrl)
+          .urlMode(linkRequest.getUrlMode())
+          .buildExternalLinkUrl(targetPage);
     }
 
     if (linkUrl == null) {
       // mark link as invalid if a reference was set that could not be resolved
       if (referenceSet) {
-        linkMetadata.setLinkReferenceInvalid(true);
+        link.setLinkReferenceInvalid(true);
       }
     }
 
     // set link url
-    linkMetadata.setLinkUrl(linkUrl);
+    link.setUrl(linkUrl);
 
-    return linkMetadata;
+    return link;
   }
 
   /**
    * Resolves link of redirect or integrator page. Those pages contain the link reference information in their
    * content resource (jcr:content node). This information is used to resolve the link.
    * @param redirectPage Redirect or integrator page
-   * @param linkMetadata Link metadata
+   * @param link Link metadata
    * @return Link metadata
    */
-  private LinkMetadata recursiveResolveLink(Page redirectPage, LinkMetadata linkMetadata) {
+  private Link recursiveResolveLink(Page redirectPage, Link link) {
 
     // set link reference to content resource of redirect page, keep other parameters
-    LinkReference linkReference = linkMetadata.getLinkReference();
-    linkReference.setResource(redirectPage.getContentResource());
-    linkReference.setPage(null);
+    LinkRequest linkRequest = link.getLinkRequest();
+    LinkRequest redirectLinkRequest = new LinkRequest(
+        redirectPage.getContentResource(),
+        null,
+        linkRequest.getUrlMode(),
+        linkRequest.getSelectors(),
+        linkRequest.getExtension(),
+        linkRequest.getSuffix(),
+        linkRequest.getQueryString(),
+        linkRequest.getFragement());
 
     // check of maximum recursive calls via threadlocal to avoid endless loops, return invalid link if one is detected
     LinkResolveCounter linkResolveCounter = LinkResolveCounter.get();
@@ -212,12 +212,12 @@ public final class InternalLinkType extends AbstractLinkType {
 
       if (linkResolveCounter.isMaximumReached()) {
         // endless loop detected - set link to invalid link
-        linkMetadata.setLinkUrl(null);
-        return linkMetadata;
+        link.setUrl(null);
+        return link;
       }
 
       // resolve link by recursive call to link handler, track recursion count
-      return linkHandler.getLinkMetadata(linkReference);
+      return linkHandler.get(redirectLinkRequest).build();
     }
     finally {
       linkResolveCounter.decreaseCount();

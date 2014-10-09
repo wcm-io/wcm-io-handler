@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgsType;
 
@@ -32,36 +32,35 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 
-import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 
 /**
- * {@link MediaItem} implementation for DAM assets.
+ * {@link Asset} implementation for DAM assets.
  */
-public final class DamMediaItem extends SlingAdaptable implements MediaItem {
+public final class DamAsset extends SlingAdaptable implements Asset {
 
   private final Adaptable adaptable;
-  private final Asset asset;
+  private final com.day.cq.dam.api.Asset damAsset;
   private final CropDimension cropDimension;
   private final MediaArgsType defaultMediaArgs;
   private final ValueMap properties;
 
   /**
-   * @param asset DAM asset
-   * @param mediaMetadata Media metadata
+   * @param damAsset DAM asset
+   * @param media Media metadata
    */
-  public DamMediaItem(Asset asset, MediaMetadata mediaMetadata, Adaptable adaptable) {
-    this.asset = asset;
-    this.cropDimension = mediaMetadata.getCropDimension();
-    this.defaultMediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
-    this.properties = new ValueMapDecorator(asset.getMetadata());
+  public DamAsset(com.day.cq.dam.api.Asset damAsset, Media media, Adaptable adaptable) {
+    this.damAsset = damAsset;
+    this.cropDimension = media.getCropDimension();
+    this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
+    this.properties = new ValueMapDecorator(damAsset.getMetadata());
     this.adaptable = adaptable;
   }
 
   @Override
   public String getTitle() {
     // default title is the asset name
-    String title = this.asset.getName();
+    String title = this.damAsset.getName();
 
     Object titleObj = this.properties.get(DamConstants.DC_TITLE);
     if (titleObj != null) {
@@ -92,7 +91,7 @@ public final class DamMediaItem extends SlingAdaptable implements MediaItem {
 
   @Override
   public String getPath() {
-    return this.asset.getPath();
+    return this.damAsset.getPath();
   }
 
   @Override
@@ -110,7 +109,7 @@ public final class DamMediaItem extends SlingAdaptable implements MediaItem {
     Rendition rendition = getDamRendition(mediaArgs);
 
     // check if rendition is valid - otherwise return null
-    if (StringUtils.isEmpty(rendition.getMediaUrl())) {
+    if (StringUtils.isEmpty(rendition.getUrl())) {
       rendition = null;
     }
 
@@ -153,8 +152,8 @@ public final class DamMediaItem extends SlingAdaptable implements MediaItem {
   /**
    * @return DAM asset
    */
-  public Asset getDamAsset() {
-    return this.asset;
+  public com.day.cq.dam.api.Asset getDamAsset() {
+    return this.damAsset;
   }
 
   /**
@@ -163,17 +162,17 @@ public final class DamMediaItem extends SlingAdaptable implements MediaItem {
    * @return DAM rendition instance (may be invalid rendition)
    */
   protected Rendition getDamRendition(MediaArgsType mediaArgs) {
-    return new DamRendition(this.asset, this.cropDimension, mediaArgs, adaptable);
+    return new DamRendition(this.damAsset, this.cropDimension, mediaArgs, adaptable);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == Asset.class) {
-      return (AdapterType)this.asset;
+      return (AdapterType)this.damAsset;
     }
     if (type == Resource.class) {
-      return (AdapterType)this.asset.adaptTo(Resource.class);
+      return (AdapterType)this.damAsset.adaptTo(Resource.class);
     }
     return super.adaptTo(type);
   }

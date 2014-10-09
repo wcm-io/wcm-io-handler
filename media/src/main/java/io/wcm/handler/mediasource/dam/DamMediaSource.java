@@ -21,14 +21,14 @@ package io.wcm.handler.mediasource.dam;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.editcontext.DropTargetImpl;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMetadata;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaReference;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
-import io.wcm.handler.mediasource.dam.impl.DamMediaItem;
+import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.sling.models.annotations.AemObject;
 
 import java.util.HashMap;
@@ -44,7 +44,6 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
-import com.day.cq.dam.api.Asset;
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -53,7 +52,7 @@ import com.day.cq.wcm.commons.WCMUtils;
 import com.day.text.Text;
 
 /**
- * Default implementation for media references to media items stored in CQ5 DAM.
+ * Default implementation for media requests to media items stored in CQ5 DAM.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -92,71 +91,71 @@ public final class DamMediaSource extends AbstractMediaSource {
   }
 
   @Override
-  public MediaMetadata resolveMedia(MediaMetadata mediaMetadata) {
-    String mediaRef = getMediaRef(mediaMetadata.getMediaReference());
-    MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
+  public Media resolveMedia(Media media) {
+    String mediaRef = getMediaRef(media.getMediaRequest());
+    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
 
     if (StringUtils.isNotBlank(mediaRef)) {
 
       // Check if there is a custom altText specified in the component's properties
       if (StringUtils.isEmpty(mediaArgs.getAltText())
-          && mediaMetadata.getMediaReference().getResource() != null) {
-        ValueMap props = mediaMetadata.getMediaReference().getResource().getValueMap();
+          && media.getMediaRequest().getResource() != null) {
+        ValueMap props = media.getMediaRequest().getResource().getValueMap();
         mediaArgs.setAltText(props.get(MediaNameConstants.PN_MEDIA_ALTTEXT, String.class));
       }
 
       // Check for crop dimensions
-      mediaMetadata.setCropDimension(getMediaCropDimension(mediaMetadata.getMediaReference()));
+      media.setCropDimension(getMediaCropDimension(media.getMediaRequest()));
 
       // get DAM Asset to check for available renditions
-      Asset asset = null;
+      com.day.cq.dam.api.Asset damAsset = null;
       Resource assetResource = resourceResolver.getResource(mediaRef);
       if (assetResource != null) {
-        asset = assetResource.adaptTo(Asset.class);
+        damAsset = assetResource.adaptTo(com.day.cq.dam.api.Asset.class);
       }
-      if (asset != null) {
-        MediaItem mediaItem = new DamMediaItem(asset, mediaMetadata, adaptable);
-        mediaMetadata.setMediaItem(mediaItem);
+      if (damAsset != null) {
+        Asset asset = new DamAsset(damAsset, media, adaptable);
+        media.setAsset(asset);
 
         // resolve rendition
-        mediaMetadata.setRendition(mediaItem.getRendition(mediaArgs));
+        media.setRendition(asset.getRendition(mediaArgs));
       }
 
       // set media url
-      if (mediaMetadata.getRendition() != null) {
-        mediaMetadata.setMediaUrl(mediaMetadata.getRendition().getMediaUrl());
+      if (media.getRendition() != null) {
+        media.setUrl(media.getRendition().getUrl());
       }
 
     }
 
     // set media invalid reason
-    if (StringUtils.isEmpty(mediaMetadata.getMediaUrl())) {
-      if (mediaMetadata.getMediaItem() != null) {
-        mediaMetadata.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
+    if (StringUtils.isEmpty(media.getUrl())) {
+      if (media.getAsset() != null) {
+        media.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
       }
       else if (StringUtils.isNotEmpty(mediaRef)) {
-        mediaMetadata.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
+        media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
       }
       else {
-        mediaMetadata.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_MISSING);
+        media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_MISSING);
       }
     }
 
-    return mediaMetadata;
+    return media;
   }
 
   @Override
-  public void enableMediaDrop(HtmlElement element, MediaReference mediaReference) {
+  public void enableMediaDrop(HtmlElement element, MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED) {
       return;
     }
 
-    String refProperty = getMediaRefProperty(mediaReference);
+    String refProperty = getMediaRefProperty(mediaRequest);
     if (!StringUtils.startsWith(refProperty, "./")) {
       refProperty = "./" + refProperty;
     }
 
-    String cropProperty = getMediaCropProperty(mediaReference);
+    String cropProperty = getMediaCropProperty(mediaRequest);
     if (!StringUtils.startsWith(cropProperty, "./")) {
       cropProperty = "./" + cropProperty;
     }

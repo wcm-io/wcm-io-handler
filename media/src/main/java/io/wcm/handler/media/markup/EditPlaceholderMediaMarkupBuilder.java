@@ -22,7 +22,7 @@ package io.wcm.handler.media.markup;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
@@ -60,40 +60,40 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
   private WCMMode wcmMode;
 
   @Override
-  public boolean accepts(MediaMetadata mediaMetadata) {
+  public boolean accepts(Media media) {
     // accept if not rendition was found and in edit mode
     // and at least one media format is given, and dummy image is not suppressed
-    MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
+    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    return mediaMetadata.getRendition() == null
+    return media.getRendition() == null
         && wcmMode == WCMMode.EDIT
         && (mediaFormats != null && mediaFormats.length > 0)
         && !mediaArgs.isNoDummyImage();
   }
 
   @Override
-  public HtmlElement<?> build(MediaMetadata mediaMetadata) {
+  public HtmlElement<?> build(Media media) {
 
     // Create dummy image element to be displayed in Edit mode as placeholder.
-    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(mediaMetadata);
-    MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
+    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
+    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // create dummy image
     String dummyImageUrl = StringUtils.defaultString(mediaArgs.getDummyImageUrl(), DUMMY_IMAGE);
-    dummyImageUrl = urlHandler.url(dummyImageUrl)
-        .urlMode(mediaMetadata.getMediaReference().getMediaArgs().getUrlMode())
-        .externalizeResource().build();
+    dummyImageUrl = urlHandler.get(dummyImageUrl)
+        .urlMode(media.getMediaRequest().getMediaArgs().getUrlMode())
+        .buildExternalResourceUrl();
     Image image = new Image(dummyImageUrl, dimension.getWidth(), dimension.getHeight())
     .addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
 
     // enable drag&drop for media source - if none is specified use first one defined in config
-    MediaSource mediaSource = mediaMetadata.getMediaSource();
-    if (mediaSource == null && !mediaHandlerConfig.getMediaSources().isEmpty()) {
-      Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getMediaSources().iterator().next();
+    MediaSource mediaSource = media.getMediaSource();
+    if (mediaSource == null && !mediaHandlerConfig.getSources().isEmpty()) {
+      Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().iterator().next();
       mediaSource = AdaptTo.notNull(adaptable, mediaSourceClass);
     }
     if (mediaSource != null) {
-      mediaSource.enableMediaDrop(image, mediaMetadata.getMediaReference());
+      mediaSource.enableMediaDrop(image, media.getMediaRequest());
     }
 
     return image;

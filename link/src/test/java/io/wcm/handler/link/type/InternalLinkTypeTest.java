@@ -24,12 +24,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkMetadata;
 import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkReference;
 import io.wcm.handler.link.SyntheticLinkResource;
-import io.wcm.handler.link.args.LinkArgs;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.testcontext.DummyAppTemplate;
 import io.wcm.handler.url.UrlModes;
@@ -47,7 +45,6 @@ import org.junit.Test;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.WCMMode;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Test {@link InternalLinkType} methods.
@@ -81,12 +78,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertFalse("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -100,12 +97,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertFalse("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -118,12 +115,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/content/path")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertTrue("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -138,13 +135,13 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/content/path")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertTrue("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
-    assertEquals("anchor.href", LinkHandler.INVALID_LINK, linkMetadata.getAnchor().getHRef());
+    assertFalse("link valid", link.isValid());
+    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
+    assertNull("link url", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
+    assertEquals("anchor.href", LinkHandler.INVALID_LINK, link.getAnchor().getHRef());
   }
 
   @Test
@@ -157,12 +154,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertFalse("link ref invalid", linkMetadata.isLinkReferenceInvalid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
+    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -172,11 +169,11 @@ public class InternalLinkTypeTest {
     Page structureElementPage = context.create().page("/content/unittest/de_test/brand/de/section/structureElement",
         DummyAppTemplate.STRUCTURE_ELEMENT.getTemplatePath());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(structureElementPage);
+    Link link = linkHandler.get(structureElementPage).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -186,11 +183,11 @@ public class InternalLinkTypeTest {
     Page secureTargetPage = context.create().page("/content/unittest/de_test/brand/de/section/contentSecure",
         DummyAppTemplate.CONTENT_SECURE.getTemplatePath());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(secureTargetPage);
+    Link link = linkHandler.get(secureTargetPage).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "https://www.dummysite.org/content/unittest/de_test/brand/de/section/contentSecure.html", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "https://www.dummysite.org/content/unittest/de_test/brand/de/section/contentSecure.html", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -203,11 +200,11 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(redirectInternalPage);
+    Link link = linkHandler.get(redirectInternalPage).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -221,11 +218,11 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(redirectInternalPage);
+    Link link = linkHandler.get(redirectInternalPage).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/redirectInternal.html", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/redirectInternal.html", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -244,11 +241,11 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalPage.getPath())
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(redirectRedirectInternalPage);
+    Link link = linkHandler.get(redirectRedirectInternalPage).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -261,11 +258,11 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/abc")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(redirectExternalPage);
+    Link link = linkHandler.get(redirectExternalPage).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "http://xyz/abc", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "http://xyz/abc", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -286,17 +283,17 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalCyclic1Path)
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(redirectInternalCyclic1Page);
+    Link link = linkHandler.get(redirectInternalCyclic1Page).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
 
-    linkMetadata = linkHandler.getLinkMetadata(redirectInternalCyclic2Page);
+    link = linkHandler.get(redirectInternalCyclic2Page).build();
 
-    assertFalse("link valid", linkMetadata.isValid());
-    assertNull("link url", linkMetadata.getLinkUrl());
-    assertNull("anchor", linkMetadata.getAnchor());
+    assertFalse("link valid", link.isValid());
+    assertNull("link url", link.getUrl());
+    assertNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -311,11 +308,11 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/app")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(integratorPage);
+    Link link = linkHandler.get(integratorPage).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "http://xyz/app", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "http://xyz/app", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -331,11 +328,11 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/app")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(integratorPage);
+    Link link = linkHandler.get(integratorPage).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/integrator.html", linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+    assertTrue("link valid", link.isValid());
+    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/integrator.html", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -348,12 +345,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
+    assertTrue("link valid", link.isValid());
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html",
-        linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+        link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -361,17 +358,22 @@ public class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
 
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html",
-        linkHandler.getLinkUrl(targetPage));
+        linkHandler.get(targetPage).buildUrl());
+
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.sel1.html",
-        linkHandler.getLinkUrl(targetPage, "sel1"));
+        linkHandler.get(targetPage).selectors("sel1").buildUrl());
+
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.htx",
-        linkHandler.getLinkUrl(targetPage, null, FileExtension.HTML_UNCACHED));
+        linkHandler.get(targetPage).extension(FileExtension.HTML_UNCACHED).buildUrl());
+
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.sel1.htx",
-        linkHandler.getLinkUrl(targetPage, "sel1", FileExtension.HTML_UNCACHED));
+        linkHandler.get(targetPage).selectors("sel1").extension(FileExtension.HTML_UNCACHED).buildUrl());
+
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.sel1.suffix.htx/suf1/suf2.htx",
-        linkHandler.getLinkUrl(targetPage, "sel1", FileExtension.HTML_UNCACHED, "suf1/suf2"));
+        linkHandler.get(targetPage).selectors("sel1").extension(FileExtension.HTML_UNCACHED).suffix("suf1/suf2").buildUrl());
+
     assertEquals("/content/unittest/de_test/brand/de/section/content.sel1.suffix.htx/suf1/suf2.htx",
-        linkHandler.getLinkUrl(targetPage, "sel1", FileExtension.HTML_UNCACHED, "suf1/suf2", UrlModes.NO_HOSTNAME));
+        linkHandler.get(targetPage).selectors("sel1").extension(FileExtension.HTML_UNCACHED).suffix("suf1/suf2").urlMode(UrlModes.NO_HOSTNAME).buildUrl());
   }
 
   @Test
@@ -385,12 +387,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
+    assertTrue("link valid", link.isValid());
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def",
-        linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+        link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -404,12 +406,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_ANCHOR_NAME, "anchor1")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
+    assertTrue("link valid", link.isValid());
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html#anchor1",
-        linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+        link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -424,12 +426,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_ANCHOR_NAME, "anchor1")
         .build());
 
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkResource);
+    Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", linkMetadata.isValid());
+    assertTrue("link valid", link.isValid());
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def#anchor1",
-        linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+        link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -442,14 +444,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
         .build());
 
-    LinkReference linkRef = new LinkReference(linkResource,
-        new LinkArgs().setQueryString("p5=abc&p6=xyz").setFragment("anchor2"));
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkRef);
+    Link link = linkHandler.get(linkResource).queryString("p5=abc&p6=xyz").fragment("anchor2").build();
 
-    assertTrue("link valid", linkMetadata.isValid());
+    assertTrue("link valid", link.isValid());
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p5=abc&p6=xyz#anchor2",
-        linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+        link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
@@ -464,14 +464,12 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_ANCHOR_NAME, "anchor1")
         .build());
 
-    LinkReference linkRef = new LinkReference(linkResource,
-        new LinkArgs().setQueryString("p5=abc&p6=xyz").setFragment("anchor2"));
-    LinkMetadata linkMetadata = linkHandler.getLinkMetadata(linkRef);
+    Link link = linkHandler.get(linkResource).queryString("p5=abc&p6=xyz").fragment("anchor2").build();
 
-    assertTrue("link valid", linkMetadata.isValid());
+    assertTrue("link valid", link.isValid());
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def#anchor1",
-        linkMetadata.getLinkUrl());
-    assertNotNull("anchor", linkMetadata.getAnchor());
+        link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
 }

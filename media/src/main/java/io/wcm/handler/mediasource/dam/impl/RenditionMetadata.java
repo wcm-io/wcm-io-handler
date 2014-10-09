@@ -177,7 +177,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param checkHeight Height
    * @return true if matches
    */
-  public boolean matches(int checkWidth, int checkHeight) {
+  public boolean matches(long checkWidth, long checkHeight) {
     if (checkWidth != 0 && checkWidth != getWidth()) {
       return false;
     }
@@ -196,7 +196,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param ratio Ratio
    * @return true if matches
    */
-  public boolean matches(int minWidth, int minHeight, int maxWidth, int maxHeight, double ratio) {
+  public boolean matches(long minWidth, long minHeight, long maxWidth, long maxHeight, double ratio) {
     if (minWidth > 0 && getWidth() < minWidth) {
       return false;
     }

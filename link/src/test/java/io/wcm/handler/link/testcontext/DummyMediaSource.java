@@ -20,9 +20,9 @@
 package io.wcm.handler.link.testcontext;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaReference;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,8 +54,8 @@ public class DummyMediaSource extends AbstractMediaSource {
   }
 
   @Override
-  public MediaMetadata resolveMedia(MediaMetadata mediaMetadata) {
-    String mediaUrl = mediaMetadata.getMediaReference().getMediaRef();
+  public Media resolveMedia(Media media) {
+    String mediaUrl = media.getMediaRequest().getMediaRef();
     if (StringUtils.contains(mediaUrl, "image")) {
       mediaUrl += ".gif";
     }
@@ -65,12 +65,12 @@ public class DummyMediaSource extends AbstractMediaSource {
     else {
       mediaUrl = null;
     }
-    mediaMetadata.setMediaUrl(mediaUrl);
-    return mediaMetadata;
+    media.setUrl(mediaUrl);
+    return media;
   }
 
   @Override
-  public void enableMediaDrop(HtmlElement element, MediaReference mediaReference) {
+  public void enableMediaDrop(HtmlElement element, MediaRequest mediaRequest) {
     // not supported
   }
 

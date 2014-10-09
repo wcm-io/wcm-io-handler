@@ -19,18 +19,18 @@
  */
 package io.wcm.handler.link.spi;
 
-import io.wcm.handler.link.LinkMetadata;
+import io.wcm.handler.link.Link;
 
 /**
  * Processes link metadata before or after link resolving
  */
-public interface LinkMetadataProcessor {
+public interface LinkProcessor {
 
   /**
    * Process link metadata
-   * @param linkMetadata Link metadata
+   * @param link Link metadata
    * @return Processed link metadata (never null)
    */
-  LinkMetadata process(LinkMetadata linkMetadata);
+  Link process(Link link);
 
 }

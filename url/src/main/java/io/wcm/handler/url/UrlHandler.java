@@ -35,7 +35,7 @@ public interface UrlHandler {
    * @param path Content path
    * @return URL builder which allows to chain further optional parameters before building the URL string.
    */
-  UrlBuilder url(String path);
+  UrlBuilder get(String path);
 
   /**
    * Rewrites given path to current site or context.

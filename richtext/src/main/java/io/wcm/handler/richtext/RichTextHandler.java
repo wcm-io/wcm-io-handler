@@ -19,51 +19,26 @@
  */
 package io.wcm.handler.richtext;
 
-import java.util.List;
-
-import org.jdom2.Content;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Manages XHTML rich text fragment formatting.
- * The rich text fragments are produced with CQ5 Rich Edit control.
  */
 public interface RichTextHandler {
 
   /**
-   * Adds rich text content to given HTML element.
-   * @param text XHTML text string (root element not needed)
-   * @param parent Parent HTML element
-   * @throws JDOMException Is thrown if the text could not be parsed as XHTML
+   * Build formatted text from content resource using default property names.
+   * @param resource Resource
+   * @return Rich text builder
    */
-  void addContent(String text, Element parent) throws JDOMException;
+  RichTextBuilder get(Resource resource);
 
   /**
-   * Adds rich text content to given HTML element.
-   * @param text XHTML text string (root element not needed)
-   * @param parent Parent HTML element
-   * @param supressParsingError If set to true, parsing errors (JDOMExceptions) are suppressed, and logged only in
-   *          debug mode. Otherwise the JDOMException is wrapped in a {@link IllegalArgumentException} and thrown again.
-   * @throws IllegalArgumentException Is thrown if the text cannot be parsed, and pSuppressParsingError is not set to
-   *           true
+   * Build formatter text from given raw text string.
+   * @param text Raw text
+   * @return Rich text builder
    */
-  void addContent(String text, Element parent, boolean supressParsingError);
-
-  /**
-   * Add multi line plain text to parent element. Splits text by \n and inserts a HTML break for each newline.
-   * @param text Multiline text
-   * @param parent Parent HTML element
-   */
-  void addPlaintextContent(String text, Element parent);
-
-  /**
-   * Gets rich text content as DOM elements.
-   * @param text XHTML text string (root element not needed)
-   * @return List of content DOM elements
-   * @throws JDOMException Is thrown if the text could not be parsed as XHTML
-   */
-  List<Content> getContent(String text) throws JDOMException;
+  RichTextBuilder get(String text);
 
   /**
    * Check if the given formatted text block is empty. A text block containing only one paragraph element and

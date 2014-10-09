@@ -20,8 +20,8 @@
 package io.wcm.handler.link.type;
 
 import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkReference;
-import io.wcm.handler.link.LinkType;
+import io.wcm.handler.link.LinkRequest;
+import io.wcm.handler.link.spi.LinkType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
@@ -32,8 +32,8 @@ import org.apache.sling.api.resource.ValueMap;
 public abstract class AbstractLinkType implements LinkType {
 
   @Override
-  public boolean accepts(LinkReference linkReference) {
-    ValueMap props = linkReference.getResourceProperties();
+  public boolean accepts(LinkRequest linkRequest) {
+    ValueMap props = linkRequest.getResourceProperties();
     // check for matching link type ID in link resource
     String linkTypeId = props.get(LinkNameConstants.PN_LINK_TYPE, String.class);
     if (StringUtils.isNotEmpty(linkTypeId)) {

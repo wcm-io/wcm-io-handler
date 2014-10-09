@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.link.processor;
 
-import io.wcm.handler.link.LinkMetadata;
-import io.wcm.handler.link.spi.LinkMetadataProcessor;
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.url.UrlHandler;
 
@@ -31,7 +31,7 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 /**
  * Linkhandler postprocessor to inherit URL parametres to internal links.
  */
-public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor implements LinkMetadataProcessor {
+public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor implements LinkProcessor {
 
   @Self
   private UrlHandler urlHandler;
@@ -46,18 +46,18 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
   }
 
   @Override
-  public final LinkMetadata process(LinkMetadata linkMetadata) {
+  public final Link process(Link link) {
 
-    if (linkMetadata.isValid() && linkMetadata.getLinkType().getId() == InternalLinkType.ID) {
-      String url = linkMetadata.getLinkUrl();
-      url = urlHandler.url(url).queryString(null, this.inheritUrlParameterNames).build();
-      linkMetadata.setLinkUrl(url);
-      if (linkMetadata.getAnchor() != null) {
-        linkMetadata.getAnchor().setAttribute("href", url);
+    if (link.isValid() && link.getLinkType().getId() == InternalLinkType.ID) {
+      String url = link.getUrl();
+      url = urlHandler.get(url).queryString(null, this.inheritUrlParameterNames).build();
+      link.setUrl(url);
+      if (link.getAnchor() != null) {
+        link.getAnchor().setAttribute("href", url);
       }
     }
 
-    return linkMetadata;
+    return link;
   }
 
 }

@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.media.spi;
 
-import io.wcm.handler.media.MediaMetadataProcessor;
 import io.wcm.handler.media.format.MediaFormat;
 
 import java.util.List;
@@ -43,22 +42,22 @@ public interface MediaHandlerConfig {
   /**
    * @return Supported media sources
    */
-  List<Class<? extends MediaSource>> getMediaSources();
+  List<Class<? extends MediaSource>> getSources();
 
   /**
    * @return Available media markup builders
    */
-  List<Class<? extends MediaMarkupBuilder>> getMediaMarkupBuilders();
+  List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders();
 
   /**
    * @return List of media metadata pre processors (optional). The processors are applied in list order.
    */
-  List<Class<? extends MediaMetadataProcessor>> getMediaMetadataPreProcessors();
+  List<Class<? extends MediaProcessor>> getPreProcessors();
 
   /**
    * @return List of media metadata post processors (optional). The processors are applied in list order.
    */
-  List<Class<? extends MediaMetadataProcessor>> getMediaMetadataPostProcessors();
+  List<Class<? extends MediaProcessor>> getPostProcessors();
 
   /**
    * Get the default quality for images in this app generated with the Layer API.

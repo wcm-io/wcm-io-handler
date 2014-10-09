@@ -17,7 +17,11 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link;
+package io.wcm.handler.link.spi;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkHandler;
+import io.wcm.handler.link.LinkRequest;
 
 /**
  * Defines a link type supported by {@link LinkHandler}
@@ -36,10 +40,10 @@ public interface LinkType {
 
   /**
    * Checks whether a link reference can be handled by this link type
-   * @param linkReference Link reference
+   * @param linkRequest Link reference
    * @return true if this link type can handle the given link reference
    */
-  boolean accepts(LinkReference linkReference);
+  boolean accepts(LinkRequest linkRequest);
 
   /**
    * Checks whether a link reference string can be handled by this link type
@@ -50,9 +54,9 @@ public interface LinkType {
 
   /**
    * Resolves a link
-   * @param linkMetadata Link metadata
+   * @param link Link metadata
    * @return Resolved link metadata. Never null.
    */
-  LinkMetadata resolveLink(LinkMetadata linkMetadata);
+  Link resolveLink(Link link);
 
 }

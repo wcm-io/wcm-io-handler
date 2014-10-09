@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.mediasource.inline;
 
-import io.wcm.handler.media.MediaItem;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgsType;
 
@@ -31,25 +31,25 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
 /**
- * {@link MediaItem} implementation for inline media objects stored in a node in a content page.
+ * {@link Asset} implementation for inline media objects stored in a node in a content page.
  */
-class InlineMediaItem extends SlingAdaptable implements MediaItem {
+class InlineAsset extends SlingAdaptable implements Asset {
 
   private final Adaptable adaptable;
   private final Resource resource;
-  private final MediaMetadata mediaMetadata;
+  private final Media media;
   private final MediaArgsType defaultMediaArgs;
   private final String fileName;
 
   /**
    * @param resource Binary resource
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @param fileName File name
    */
-  InlineMediaItem(Resource resource, MediaMetadata mediaMetadata, String fileName, Adaptable adaptable) {
+  InlineAsset(Resource resource, Media media, String fileName, Adaptable adaptable) {
     this.resource = resource;
-    this.mediaMetadata = mediaMetadata;
-    this.defaultMediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
+    this.media = media;
+    this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
     this.fileName = fileName;
     this.adaptable = adaptable;
   }
@@ -90,7 +90,7 @@ class InlineMediaItem extends SlingAdaptable implements MediaItem {
     Rendition rendition = getInlineRendition(mediaArgs);
 
     // check if rendition is valid - otherwise return null
-    if (StringUtils.isEmpty(rendition.getMediaUrl())) {
+    if (StringUtils.isEmpty(rendition.getUrl())) {
       rendition = null;
     }
 
@@ -136,7 +136,7 @@ class InlineMediaItem extends SlingAdaptable implements MediaItem {
    * @return Inline rendition instance (may be invalid rendition)
    */
   private Rendition getInlineRendition(MediaArgsType mediaArgs) {
-    return new InlineRendition(this.resource, this.mediaMetadata, mediaArgs, this.fileName, this.adaptable);
+    return new InlineRendition(this.resource, this.media, mediaArgs, this.fileName, this.adaptable);
   }
 
   @Override

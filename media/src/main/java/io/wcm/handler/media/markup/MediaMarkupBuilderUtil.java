@@ -21,7 +21,7 @@ package io.wcm.handler.media.markup;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
@@ -109,12 +109,12 @@ public final class MediaMarkupBuilderUtil {
 
   /**
    * Get dimension from first media format defined in media args. Fall back to dummy min. dimension if none specified.
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @return Dimension
    */
-  public static Dimension getMediaformatDimension(MediaMetadata mediaMetadata) {
+  public static Dimension getMediaformatDimension(Media media) {
     // Create dummy image element to be displayed in Edit mode as placeholder.
-    MediaArgsType mediaArgs = mediaMetadata.getMediaReference().getMediaArgs();
+    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
 
     // detect width/height - either from media args, or from first media format

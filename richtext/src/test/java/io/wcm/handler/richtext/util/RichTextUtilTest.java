@@ -35,14 +35,8 @@ import org.jdom2.Text;
 import org.jdom2.output.XMLOutputter;
 import org.junit.Test;
 
-/**
- * Testcase for VersionUtil class.
- */
 public class RichTextUtilTest {
 
-  /**
-   * Tests isEmpty
-   */
   @Test
   public void testIsEmpty() {
 
@@ -70,10 +64,6 @@ public class RichTextUtilTest {
 
   }
 
-  /**
-   * Tests parseText
-   * @throws Exception
-   */
   @Test
   public void testParseText() throws Exception {
 
@@ -112,10 +102,6 @@ public class RichTextUtilTest {
 
   }
 
-  /**
-   * Tests rewrite content
-   * @throws Exception
-   */
   @Test
   public void testRewriteContent() throws Exception {
 
@@ -159,10 +145,6 @@ public class RichTextUtilTest {
 
   }
 
-  /**
-   * Tests rewrite content with special once replacement
-   * @throws Exception
-   */
   @Test
   public void testRewriteContentOnce() throws Exception {
 
@@ -176,8 +158,8 @@ public class RichTextUtilTest {
 
   }
 
-  private String rewriteContent(String pInput) throws Exception {
-    Element root = RichTextUtil.parseText(pInput);
+  private String rewriteContent(String input) throws Exception {
+    Element root = RichTextUtil.parseText(input);
     RichTextUtil.rewriteContent(root, new TestRewriteContentHandler());
     return toStringContentOnly(root);
   }
@@ -186,10 +168,10 @@ public class RichTextUtilTest {
    * Serializes all content/children of this element.
    * @return Serialized content.
    */
-  private String toStringContentOnly(Element pElement) {
+  private String toStringContentOnly(Element element) {
     StringBuilder sb = new StringBuilder();
     XMLOutputter xmlOutputter = new XMLOutputter();
-    for (Object content : pElement.getContent()) {
+    for (Object content : element.getContent()) {
       if (content instanceof org.jdom2.Element) {
         sb.append(xmlOutputter.outputString((org.jdom2.Element)content));
       }
@@ -209,48 +191,48 @@ public class RichTextUtilTest {
     return sb.toString();
   }
 
-  class TestRewriteContentHandler implements RewriteContentHandler {
+  static class TestRewriteContentHandler implements RewriteContentHandler {
 
     private boolean mReplaceOnce;
 
     @Override
-    public List<Content> rewriteElement(Element pElement) {
+    public List<Content> rewriteElement(Element element) {
 
-      if (StringUtils.equals(pElement.getName(), "to-remove")) {
+      if (StringUtils.equals(element.getName(), "to-remove")) {
         List<Content> content = new ArrayList<Content>();
         return content;
       }
 
-      else if (StringUtils.equals(pElement.getName(), "to-keep")) {
+      else if (StringUtils.equals(element.getName(), "to-keep")) {
         List<Content> content = new ArrayList<Content>();
-        content.add(pElement);
+        content.add(element);
         return content;
       }
 
-      else if (StringUtils.equals(pElement.getName(), "to-keep-attribute")) {
+      else if (StringUtils.equals(element.getName(), "to-keep-attribute")) {
         List<Content> content = new ArrayList<Content>();
-        pElement.setAttribute("attr", "testx");
-        content.add(pElement);
+        element.setAttribute("attr", "testx");
+        content.add(element);
         return content;
       }
 
-      else if (StringUtils.equals(pElement.getName(), "to-replace-single")) {
+      else if (StringUtils.equals(element.getName(), "to-replace-single")) {
         List<Content> content = new ArrayList<Content>();
-        content.add(new Element("replaced-element").addContent(pElement.cloneContent()));
+        content.add(new Element("replaced-element").addContent(element.cloneContent()));
         return content;
       }
 
-      else if (StringUtils.equals(pElement.getName(), "to-replace-multiple")) {
+      else if (StringUtils.equals(element.getName(), "to-replace-multiple")) {
         List<Content> content = new ArrayList<Content>();
         content.add(new Element("replaced-element-1"));
         content.add(new Element("replaced-element-2"));
         return content;
       }
 
-      else if (StringUtils.equals(pElement.getName(), "to-replace-once")) {
+      else if (StringUtils.equals(element.getName(), "to-replace-once")) {
         if (!mReplaceOnce) {
           List<Content> content = new ArrayList<Content>();
-          content.add(new Element("replaced-element-once").addContent(pElement.cloneContent()));
+          content.add(new Element("replaced-element-once").addContent(element.cloneContent()));
           mReplaceOnce = true;
           return content;
         }
@@ -262,12 +244,14 @@ public class RichTextUtilTest {
       return null;
     }
 
+    @Override
+    public List<Content> rewriteText(Text text) {
+      // noting to do
+      return null;
+    }
+
   }
 
-  /**
-   * Test XHTML Parsing with XHTML Entities
-   * @throws Exception
-   */
   @Test
   public void testXhtmlEntities() throws Exception {
 

@@ -25,7 +25,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 
 /**
- * Represents a rendition contained in a {@link MediaItem} which can be rendered.
+ * Represents a rendition contained in a {@link Asset} which can be rendered.
  * A rendition can be pointing to a binary file stored in the repository, or a virtual rendition that is
  * rendered on the fly if required.
  */
@@ -35,7 +35,7 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    * Get externalized URL pointing to the rendition.
    * @return Rendition URL
    */
-  String getMediaUrl();
+  String getUrl();
 
   /**
    * Returns the internal path of the rendition if stored within the JCR repository. If the rendition is a virtual

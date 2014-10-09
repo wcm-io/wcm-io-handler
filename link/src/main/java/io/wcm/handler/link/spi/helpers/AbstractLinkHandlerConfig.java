@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.link.spi.helpers;
 
-import io.wcm.handler.link.LinkType;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
-import io.wcm.handler.link.spi.LinkMetadataProcessor;
+import io.wcm.handler.link.spi.LinkProcessor;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
@@ -54,18 +54,18 @@ public abstract class AbstractLinkHandlerConfig implements LinkHandlerConfig {
   }
 
   @Override
-  public List<Class<? extends LinkMarkupBuilder>> getLinkMarkupBuilders() {
+  public List<Class<? extends LinkMarkupBuilder>> getMarkupBuilders() {
     return LINK_MARKUP_BUILDERS;
   }
 
   @Override
-  public List<Class<? extends LinkMetadataProcessor>> getLinkMetadataPreProcessors() {
+  public List<Class<? extends LinkProcessor>> getPreProcessors() {
     // no processors
     return ImmutableList.of();
   }
 
   @Override
-  public List<Class<? extends LinkMetadataProcessor>> getLinkMetadataPostProcessors() {
+  public List<Class<? extends LinkProcessor>> getPostProcessors() {
     // no processors
     return ImmutableList.of();
   }

@@ -19,14 +19,19 @@
  */
 package io.wcm.handler.richtext;
 
-import io.wcm.handler.richtext.util.RewriteContentHandler;
-
 /**
- * Implementation of {@link RewriteContentHandler} to rewrite link and media references
- * using {@link io.wcm.handler.link.LinkHandler} and {@link io.wcm.handler.media.MediaHandler}.
+ * Mode for interpreting text for rendering.
  */
-public interface RichTextRewriteContentHandler extends RewriteContentHandler {
+public enum TextMode {
 
-  // inherit all methods from {@link RewriteContentHandler}
+  /**
+   * Text is valid XHTML rich text.
+   */
+  XHTML,
+
+  /**
+   * Test is plain text, only convert line breaks to <code>&lt;br/&gt;</code elements.
+   */
+  PLAIN
 
 }

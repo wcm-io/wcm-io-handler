@@ -160,24 +160,9 @@ public final class RichTextUtil {
    * Rewrites all children/sub-tree of the given parent element.
    * For rewrite operations the given rewrite content handler is called.
    * @param parent Parent element
-   * @param pRewriteContentTextHandler Rewrite content text handler
+   * @param rewriteContentHandler Rewrite content handler
    */
-  public static void rewriteContent(Element parent, RewriteContentTextHandler pRewriteContentTextHandler) {
-    rewriteContent(parent, (RewriteContentHandler)pRewriteContentTextHandler);
-  }
-
-  /**
-   * Rewrites all children/sub-tree of the given parent element.
-   * For rewrite operations the given rewrite content handler is called.
-   * @param parent Parent element
-   * @param pRewriteContentHandler Rewrite content handler
-   */
-  public static void rewriteContent(Element parent, RewriteContentHandler pRewriteContentHandler) {
-
-    RewriteContentTextHandler rewriteContentTextHandler = null;
-    if (pRewriteContentHandler instanceof RewriteContentTextHandler) {
-      rewriteContentTextHandler = (RewriteContentTextHandler)pRewriteContentHandler;
-    }
+  public static void rewriteContent(Element parent, RewriteContentHandler rewriteContentHandler) {
 
     // iterate through content list and build new content list
     List<Content> originalContent = parent.getContent();
@@ -189,7 +174,7 @@ public final class RichTextUtil {
         Element element = (Element)contentElement;
 
         // check if rewrite is needed for element
-        List<Content> rewriteContent = pRewriteContentHandler.rewriteElement(element);
+        List<Content> rewriteContent = rewriteContentHandler.rewriteElement(element);
         if (rewriteContent != null) {
           // element was removed
           if (rewriteContent.isEmpty()) {
@@ -198,7 +183,7 @@ public final class RichTextUtil {
 
           // element is the same - rewrite child elements
           else if (rewriteContent.size() == 1 && rewriteContent.get(0) == element) {
-            rewriteContent(element, pRewriteContentHandler);
+            rewriteContent(element, rewriteContentHandler);
             newContent.add(element);
           }
 
@@ -207,7 +192,7 @@ public final class RichTextUtil {
             for (Content newContentItem : rewriteContent) {
               if (newContentItem instanceof Element) {
                 Element newElement = (Element)newContentItem;
-                rewriteContent(newElement, pRewriteContentHandler);
+                rewriteContent(newElement, rewriteContentHandler);
               }
               newContent.add(newContentItem.clone());
             }
@@ -216,18 +201,18 @@ public final class RichTextUtil {
 
         // nothing to rewrite - do nothing, but rewrite child element
         else {
-          rewriteContent(element, pRewriteContentHandler);
+          rewriteContent(element, rewriteContentHandler);
           newContent.add(element);
         }
 
       }
 
       // handle text node
-      else if (contentElement instanceof Text && rewriteContentTextHandler != null) {
+      else if (contentElement instanceof Text) {
         Text text = (Text)contentElement;
 
         // check if rewrite is needed for text node
-        List<Content> rewriteContent = rewriteContentTextHandler.rewriteText(text);
+        List<Content> rewriteContent = rewriteContentHandler.rewriteText(text);
         if (rewriteContent != null) {
           // element was removed
           if (rewriteContent.isEmpty()) {

@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.link.type;
 
-import io.wcm.handler.link.LinkMetadata;
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.SyntheticLinkResource;
 
@@ -34,7 +34,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 
 /**
- * Default implementation of {@link io.wcm.handler.link.LinkType} for external links.
+ * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for external links.
  * External links are links to destinations outside the CMS.
  */
 @Model(adaptables = {
@@ -67,8 +67,8 @@ public final class ExternalLinkType extends AbstractLinkType {
   }
 
   @Override
-  public LinkMetadata resolveLink(LinkMetadata linkMetadata) {
-    ValueMap props = linkMetadata.getLinkReference().getResourceProperties();
+  public Link resolveLink(Link link) {
+    ValueMap props = link.getLinkRequest().getResourceProperties();
 
     // get external URL from link properties
     String linkUrl = props.get(LinkNameConstants.PN_LINK_EXTERNAL_REF, String.class);
@@ -79,9 +79,9 @@ public final class ExternalLinkType extends AbstractLinkType {
     }
 
     // set link url
-    linkMetadata.setLinkUrl(linkUrl);
+    link.setUrl(linkUrl);
 
-    return linkMetadata;
+    return link;
   }
 
   /**

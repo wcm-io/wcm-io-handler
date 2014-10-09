@@ -40,8 +40,8 @@ public abstract class AbstractMediaArgs<T extends MediaArgsType> implements Medi
   private String[] mediaFormatNames;
   private String[] fileExtensions;
   private UrlMode urlMode;
-  private int fixedWidth;
-  private int fixedHeight;
+  private long fixedWidth;
+  private long fixedHeight;
   private boolean forceDownload;
   private String altText;
   private boolean noDummyImage;
@@ -126,29 +126,29 @@ public abstract class AbstractMediaArgs<T extends MediaArgsType> implements Medi
   }
 
   @Override
-  public final int getFixedWidth() {
+  public final long getFixedWidth() {
     return this.fixedWidth;
   }
 
   @Override
-  public final T setFixedWidth(int value) {
+  public final T setFixedWidth(long value) {
     this.fixedWidth = value;
     return (T)this;
   }
 
   @Override
-  public final int getFixedHeight() {
+  public final long getFixedHeight() {
     return this.fixedHeight;
   }
 
   @Override
-  public final T setFixedHeight(int value) {
+  public final T setFixedHeight(long value) {
     this.fixedHeight = value;
     return (T)this;
   }
 
   @Override
-  public final T setFixedDimensions(int widthValue, int heightValue) {
+  public final T setFixedDimensions(long widthValue, long heightValue) {
     this.fixedWidth = widthValue;
     this.fixedHeight = heightValue;
     return (T)this;

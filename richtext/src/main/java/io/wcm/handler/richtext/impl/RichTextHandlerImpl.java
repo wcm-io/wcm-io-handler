@@ -19,11 +19,19 @@
  */
 package io.wcm.handler.richtext.impl;
 
+import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.richtext.RichText;
+import io.wcm.handler.richtext.RichTextBuilder;
 import io.wcm.handler.richtext.RichTextHandler;
-import io.wcm.handler.richtext.RichTextRewriteContentHandler;
+import io.wcm.handler.richtext.RichTextNameConstants;
+import io.wcm.handler.richtext.RichTextRequest;
+import io.wcm.handler.richtext.TextMode;
+import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.handler.richtext.util.RichTextUtil;
+import io.wcm.handler.url.UrlMode;
 import io.wcm.sling.models.annotations.AemObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,13 +42,15 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
+import org.jdom2.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
 
 /**
- * Default implementation of {@link RichTextHandler}
+ * Default implementation of {@link RichTextHandler}.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -50,75 +60,99 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   static final Logger log = LoggerFactory.getLogger(RichTextHandlerImpl.class);
 
   @Self
-  private RichTextRewriteContentHandler rewriteContentHandler;
+  private RewriteContentHandler rewriteContentHandler;
   @AemObject
   private Page currentPage;
 
   @Override
-  public void addContent(String text, Element parent, boolean supressParsingError) {
+  public RichTextBuilder get(Resource resource) {
+    return new RichTextBuilderImpl(resource, this);
+  }
+
+  @Override
+  public RichTextBuilder get(String text) {
+    return new RichTextBuilderImpl(text, this);
+  }
+
+  RichText processRequest(RichTextRequest richTextRequest) {
+    String text = getRawText(richTextRequest);
+    TextMode textMode = getTextMode(richTextRequest);
+
+    List<Content> content;
+    if (textMode == TextMode.XHTML) {
+      content = processRichText(text, richTextRequest.getUrlMode(), richTextRequest.getMediaArgs());
+    }
+    else {
+      content = processPlainText(text);
+    }
+
+    return new RichText(richTextRequest, content);
+  }
+
+  private String getRawText(RichTextRequest richTextRequest) {
+    if (richTextRequest.getResource() != null) {
+      return richTextRequest.getResourceProperties().get(RichTextNameConstants.PN_TEXT, String.class);
+    }
+    else {
+      return richTextRequest.getText();
+    }
+  }
+
+  private TextMode getTextMode(RichTextRequest richTextRequest) {
+    if (richTextRequest.getTextMode() != null) {
+      return richTextRequest.getTextMode();
+    }
+    else if (richTextRequest.getResource() != null) {
+      boolean textIsRich = richTextRequest.getResourceProperties().get(RichTextNameConstants.PN_TEXT_IS_RICH, true);
+      return textIsRich ? TextMode.XHTML : TextMode.PLAIN;
+    }
+    else {
+      return TextMode.XHTML;
+    }
+  }
+
+  private List<Content> processRichText(String text, UrlMode urlMode, MediaArgsType mediaArgs) {
+    if (isEmpty(text)) {
+      return ImmutableList.of();
+    }
+
+    // Parse text
     try {
-      addContent(text, parent);
+      Element contentParent = RichTextUtil.parseText(text, true);
+
+      // Rewrite content (e.g. anchor tags)
+      RichTextUtil.rewriteContent(contentParent, rewriteContentHandler);
+
+      // return xhtml elements
+      return ImmutableList.copyOf(contentParent.cloneContent());
     }
     catch (JDOMException ex) {
-      // suppress error, log in debug mode
-      if (supressParsingError) {
-        log.debug("Unable to parse XHTML text."
-            + (currentPage != null ? " Current page is " + currentPage.getPath() + "." : ""), ex);
-      }
-      else {
-        throw new IllegalArgumentException("Unable to parse XHTML text.", ex);
-      }
+      log.debug("Unable to parse XHTML text."
+          + (currentPage != null ? " Current page is " + currentPage.getPath() + "." : ""), ex);
+      return ImmutableList.of();
     }
   }
 
-  @Override
-  public void addContent(String text, Element parent) throws JDOMException {
-    // ignore empty text blocks
-    if (isEmpty(text)) {
-      return;
+  private List<Content> processPlainText(String text) {
+    if (StringUtils.isBlank(text)) {
+      return ImmutableList.of();
     }
-    // Add xhtml elements to parent
-    parent.addContent(getContent(text));
-  }
 
-  @Override
-  public void addPlaintextContent(String text, Element parent) {
-    if (StringUtils.isEmpty(text)) {
-      return;
-    }
+    List<Content> content = new ArrayList<>();
     String[] lines = StringUtils.splitByWholeSeparatorPreserveAllTokens(text, "\n");
     for (int i = 0; i < lines.length; i++) {
       if (i > 0) {
-        parent.addContent(new Element("br"));
+        content.add(new Element("br"));
       }
-      parent.addContent(lines[i]);
+      content.add(new Text(lines[i]));
     }
-  }
 
-  @Override
-  public List<Content> getContent(String text) throws JDOMException {
-
-    // Parse text
-    Element contentParent = RichTextUtil.parseText(text, true);
-
-    // Rewrite content (e.g. anchor tags)
-    rewriteContent(contentParent);
-
-    // return xhtml elements
-    return contentParent.cloneContent();
+    return ImmutableList.copyOf(content);
   }
 
   @Override
   public boolean isEmpty(String text) {
     return RichTextUtil.isEmpty(text);
-  }
-
-  /**
-   * Rewrites special elements like anchors and images in content.
-   * @param parent Parent element
-   */
-  private void rewriteContent(Element parent) {
-    RichTextUtil.rewriteContent(parent, rewriteContentHandler);
   }
 
 }

@@ -70,7 +70,7 @@ public final class UrlHandlerImpl implements UrlHandler {
   private Page currentPage;
 
   @Override
-  public UrlBuilder url(String path) {
+  public UrlBuilder get(String path) {
     return new UrlBuilderImpl(path, this);
   }
 

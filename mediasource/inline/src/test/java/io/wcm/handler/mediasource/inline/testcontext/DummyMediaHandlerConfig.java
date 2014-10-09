@@ -54,12 +54,12 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
       );
 
   @Override
-  public List<Class<? extends MediaSource>> getMediaSources() {
+  public List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
   }
 
   @Override
-  public List<Class<? extends MediaMarkupBuilder>> getMediaMarkupBuilders() {
+  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
     return MEDIA_MARKUP_BUILDERS;
   }
 

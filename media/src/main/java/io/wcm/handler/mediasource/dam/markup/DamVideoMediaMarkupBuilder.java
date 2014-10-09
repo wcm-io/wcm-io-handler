@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.dam.markup;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Video;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaMetadata;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.url.UrlHandler;
@@ -75,8 +75,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   private UrlHandler urlHandler;
 
   @Override
-  public final boolean accepts(MediaMetadata mediaMetadata) {
-    Asset asset = getDamAsset(mediaMetadata);
+  public final boolean accepts(Media media) {
+    Asset asset = getDamAsset(media);
     if (asset != null) {
       return asset.getRendition(new PrefixRenditionPicker(VideoConstants.RENDITION_PREFIX)) != null;
     }
@@ -115,25 +115,25 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   /**
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @return DAM asset or null
    */
-  protected Asset getDamAsset(MediaMetadata mediaMetadata) {
-    return mediaMetadata.getMediaItem().adaptTo(Asset.class);
+  protected Asset getDamAsset(Media media) {
+    return media.getAsset().adaptTo(Asset.class);
   }
 
   @Override
-  public final HtmlElement<?> build(MediaMetadata mediaMetadata) {
-    return getVideoPlayerElement(mediaMetadata);
+  public final HtmlElement<?> build(Media media) {
+    return getVideoPlayerElement(media);
   }
 
   /**
    * Build HTML5 video player element
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @return Media element
    */
-  protected Video getVideoPlayerElement(MediaMetadata mediaMetadata) {
-    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(mediaMetadata);
+  protected Video getVideoPlayerElement(Media media) {
+    Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
 
     Video video = new Video();
     video.setWidth((int)dimension.getWidth());
@@ -141,10 +141,10 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     video.setControls(true);
 
     // add video sources for each video profile
-    addSources(video, mediaMetadata);
+    addSources(video, media);
 
     // add flash player as fallback
-    video.addContent(getFlashPlayerElement(mediaMetadata, dimension));
+    video.addContent(getFlashPlayerElement(media, dimension));
 
     return video;
   }
@@ -152,10 +152,10 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   /**
    * Add sources for HTML5 video player
    * @param video Video
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    */
-  protected void addSources(Video video, MediaMetadata mediaMetadata) {
-    Asset asset = getDamAsset(mediaMetadata);
+  protected void addSources(Video video, Media media) {
+    Asset asset = getDamAsset(media);
     if (asset == null) {
       return;
     }
@@ -164,19 +164,19 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
       com.day.cq.dam.api.Rendition rendition = profile.getRendition(asset);
       if (rendition != null) {
         video.createSource().setType(profile.getHtmlType())
-        .setSrc(urlHandler.url(rendition.getPath()).externalizeResource().build());
+        .setSrc(urlHandler.get(rendition.getPath()).buildExternalResourceUrl());
       }
     }
   }
 
   /**
    * Build flash player element
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @param dimension Dimension
    * @return Media element
    */
-  protected HtmlElement getFlashPlayerElement(MediaMetadata mediaMetadata, Dimension dimension) {
-    Asset asset = getDamAsset(mediaMetadata);
+  protected HtmlElement getFlashPlayerElement(Media media, Dimension dimension) {
+    Asset asset = getDamAsset(media);
     if (asset == null) {
       return null;
     }
@@ -186,8 +186,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
       return null;
     }
 
-    String playerUrl = urlHandler.url("/etc/clientlibs/foundation/video/swf/StrobeMediaPlayback.swf")
-        .externalizeResource().build();
+    String playerUrl = urlHandler.get("/etc/clientlibs/foundation/video/swf/StrobeMediaPlayback.swf")
+        .buildExternalResourceUrl();
 
     // strobe specialty: path must be relative to swf file
     String renditionUrl = "../../../../.." + rendition.getPath();
@@ -204,13 +204,13 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     // get flashvars
     Map<String, String> flashvars = new HashMap<String, String>();
     flashvars.put("src", renditionUrl);
-    flashvars.putAll(getAdditionalFlashPlayerFlashVars(mediaMetadata, dimension));
+    flashvars.putAll(getAdditionalFlashPlayerFlashVars(media, dimension));
 
     // get flash parameters
     Map<String, String> parameters = new HashMap<String, String>();
     parameters.put("movie", playerUrl);
     parameters.put("flashvars", buildFlashVarsString(flashvars));
-    parameters.putAll(getAdditionalFlashPlayerParameters(mediaMetadata, dimension));
+    parameters.putAll(getAdditionalFlashPlayerParameters(media, dimension));
 
     // set parameters on object element
     for (Map.Entry<String, String> entry : parameters.entrySet()) {
@@ -249,11 +249,11 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   /**
    * Get additional parameters to be set as &lt;param&gt; elements on html object element for flash player.
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @param dimension Dimension
    * @return Set of key/value pairs
    */
-  protected Map<String, String> getAdditionalFlashPlayerParameters(MediaMetadata mediaMetadata, Dimension dimension) {
+  protected Map<String, String> getAdditionalFlashPlayerParameters(Media media, Dimension dimension) {
     Map<String, String> parameters = new HashMap<String, String>();
 
     parameters.put("allowFullScreen", "true");
@@ -264,11 +264,11 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   /**
    * Get additional parameters to be set as flashvars parameter on html object element for flash player.
-   * @param mediaMetadata Media metadata
+   * @param media Media metadata
    * @param dimension Dimension
    * @return Set of key/value pairs
    */
-  protected Map<String, String> getAdditionalFlashPlayerFlashVars(MediaMetadata mediaMetadata, Dimension dimension) {
+  protected Map<String, String> getAdditionalFlashPlayerFlashVars(Media media, Dimension dimension) {
     Map<String, String> flashvars = new HashMap<String, String>();
 
     flashvars.put("autoPlay", "false");

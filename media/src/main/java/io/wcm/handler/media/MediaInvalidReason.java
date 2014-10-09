@@ -25,12 +25,12 @@ package io.wcm.handler.media;
 public enum MediaInvalidReason {
 
   /**
-   * The media reference was empty.
+   * The media request was empty.
    */
   MEDIA_REFERENCE_MISSING,
 
   /**
-   * Media item not found: that means the media reference path is invalid or the user has no read access.
+   * Media item not found: that means the media request path is invalid or the user has no read access.
    */
   MEDIA_REFERENCE_INVALID,
 
@@ -40,7 +40,7 @@ public enum MediaInvalidReason {
   NO_MATCHING_RENDITION,
 
   /**
-   * No media source found for handling the given (or empty) media reference
+   * No media source found for handling the given (or empty) media request
    */
   NO_MEDIA_SOURCE
 

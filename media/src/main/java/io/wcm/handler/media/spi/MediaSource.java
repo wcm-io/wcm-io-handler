@@ -21,8 +21,8 @@ package io.wcm.handler.media.spi;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaMetadata;
-import io.wcm.handler.media.MediaReference;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaRequest;
 
 /**
  * Defines a media source supported by {@link MediaHandler}
@@ -35,37 +35,37 @@ public interface MediaSource {
   String getId();
 
   /**
-   * @return Name of the property in which the primary media reference is stored
+   * @return Name of the property in which the primary media request is stored
    */
   String getPrimaryMediaRefProperty();
 
   /**
-   * Checks whether a media reference can be handled by this media source
-   * @param mediaReference Media reference
-   * @return true if this media source can handle the given media reference
+   * Checks whether a media request can be handled by this media source
+   * @param mediaRequest Media request
+   * @return true if this media source can handle the given media request
    */
-  boolean accepts(MediaReference mediaReference);
+  boolean accepts(MediaRequest mediaRequest);
 
   /**
-   * Checks whether a media reference string can be handled by this media source
-   * @param mediaRef Media reference string
-   * @return true if this media source can handle the given media reference
+   * Checks whether a media request string can be handled by this media source
+   * @param mediaRef Media request string
+   * @return true if this media source can handle the given media request
    */
   boolean accepts(String mediaRef);
 
   /**
-   * Resolves a media reference
-   * @param mediaMetadata Media metadata
+   * Resolves a media request
+   * @param media Media metadata
    * @return Resolved media metadata. Never null.
    */
-  MediaMetadata resolveMedia(MediaMetadata mediaMetadata);
+  Media resolveMedia(Media media);
 
   /**
    * Create a ExtJS drop area for given HTML element to enable drag&drop of media library items
    * from content finder to this element.
    * @param element Html element
-   * @param mediaReference Media reference to detect media args and property names
+   * @param mediaRequest Media request to detect media args and property names
    */
-  void enableMediaDrop(HtmlElement<?> element, MediaReference mediaReference);
+  void enableMediaDrop(HtmlElement<?> element, MediaRequest mediaRequest);
 
 }
