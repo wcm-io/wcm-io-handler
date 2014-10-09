@@ -27,8 +27,8 @@ import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
-import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.args.MediaArgs;
@@ -101,6 +101,9 @@ public class MediaHandlerImplTest {
     assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.getUrl());
     assertNotNull(media.getElement());
     assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", media.getElement().getAttributeValue("src"));
+
+    assertEquals("<img src=\"http://xyz/content/dummymedia/item1/pre1.gif\" />", media.getMarkup());
+    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.toString());
   }
 
   @Test

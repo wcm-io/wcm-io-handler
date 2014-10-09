@@ -76,4 +76,9 @@ public final class RichText {
     return new XMLOutputter(JDOM_FORMAT).outputString(this.content);
   }
 
+  @Override
+  public String toString() {
+    return getMarkup();
+  }
+
 }

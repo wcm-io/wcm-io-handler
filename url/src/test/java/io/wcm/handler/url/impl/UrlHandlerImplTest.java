@@ -312,6 +312,12 @@ public class UrlHandlerImplTest {
     assertEquals("/content/unittest/de_test/brand/de/section2/page3.html",
         externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", secureTargetPage, UrlModes.NO_HOSTNAME));
 
+    // test with query params and fragment
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html?param=1",
+        externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html?param=1", null));
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html#hash",
+        externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html#hash", null));
+
     if (context.request() != null) {
       // externalization with context path and mapping
       MockSlingHttpServletRequest request = applySimpleMapping(context.request());
@@ -396,6 +402,12 @@ public class UrlHandlerImplTest {
         externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png"));
     assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
         externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png", UrlModes.FULL_URL));
+
+    // with query parameter or fragment
+    assertEquals("/apps/testapp/docroot/img.png?param=1",
+        externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png?param=1"));
+    assertEquals("/apps/testapp/docroot/img.png#hash",
+        externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png#hash"));
 
     if (context.request() != null) {
 

@@ -54,6 +54,11 @@ public final class RichTextRequest {
     this.urlMode = urlMode;
     this.textMode = textMode;
     this.mediaArgs = mediaArgs;
+
+    // validate parameters
+    if (this.resource != null && this.text != null) {
+      throw new IllegalArgumentException("Set resource or text, not both.");
+    }
   }
 
   /**

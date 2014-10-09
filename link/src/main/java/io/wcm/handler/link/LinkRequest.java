@@ -65,6 +65,11 @@ public final class LinkRequest {
     this.queryString = queryString;
     this.fragement = fragement;
     this.urlMode = urlMode;
+
+    // validate parameters
+    if (this.resource != null && this.page != null) {
+      throw new IllegalArgumentException("Set resource or page, not both.");
+    }
   }
 
   /**

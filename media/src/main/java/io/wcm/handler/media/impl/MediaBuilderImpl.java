@@ -77,7 +77,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public MediaBuilder mediaFormat(MediaFormat... value) {
+  public MediaBuilder mediaFormats(MediaFormat... value) {
     this.mediaFormats = value;
     return this;
   }

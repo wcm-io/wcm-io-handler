@@ -37,7 +37,7 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import com.day.cq.wcm.api.WCMMode;
 
 /**
- * Very basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
+ * Basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class

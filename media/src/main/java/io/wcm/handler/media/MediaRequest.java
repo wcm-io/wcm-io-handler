@@ -74,7 +74,7 @@ public final class MediaRequest {
 
     // validate parameters
     if (this.resource != null && this.mediaRef != null) {
-      throw new IllegalArgumentException("Set resource or media request, not both.");
+      throw new IllegalArgumentException("Set resource or media ref, not both.");
     }
   }
 

@@ -39,7 +39,7 @@ import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 
 /**
- * Very basic implementation of {@link MediaMarkupBuilder} for images.
+ * Helper methods for {@link MediaMarkupBuilder} implementations.
  */
 public final class MediaMarkupBuilderUtil {
 

@@ -28,8 +28,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
-import io.wcm.handler.media.Media;
 import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
@@ -39,6 +39,7 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 import org.junit.Before;
@@ -77,7 +78,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   public void testAccepts_DISABLED() {
     WCMMode.DISABLED.toRequest(context.request());
 
-    MediaMarkupBuilder builder = context.request().adaptTo(EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
@@ -107,7 +108,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   public void testAccepts_PREVIEW() {
     WCMMode.PREVIEW.toRequest(context.request());
 
-    MediaMarkupBuilder builder = context.request().adaptTo(EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
@@ -137,7 +138,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   public void testAccepts_EDIT() {
     WCMMode.EDIT.toRequest(context.request());
 
-    MediaMarkupBuilder builder = context.request().adaptTo(EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
@@ -165,7 +166,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
 
   @Test
   public void testBuild() {
-    MediaMarkupBuilder builder = context.request().adaptTo(EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs());
     mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
@@ -183,7 +184,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
 
   @Test
   public void testBuildWithUrlMode() {
-    MediaMarkupBuilder builder = context.request().adaptTo(EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", MediaArgs.urlMode(UrlModes.FULL_URL));
     mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
@@ -201,7 +202,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
 
   @Test
   public void testIsValidMedia() {
-    MediaMarkupBuilder builder = context.request().adaptTo(EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     assertFalse(builder.isValidMedia(null));
     assertFalse(builder.isValidMedia(new Image()));
@@ -213,7 +214,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   @Test
   public void testWithMediaFormat() {
 
-    MediaMarkupBuilder builder = context.request().adaptTo(EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs());
     mediaRequest.getMediaArgs().setMediaFormat(EDITORIAL_1COL);

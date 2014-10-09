@@ -108,9 +108,14 @@ public abstract class AbstractMediaArgs<T extends MediaArgsType> implements Medi
 
   @Override
   public final T setFileExtension(String value) {
-    this.fileExtensions = new String[] {
-        value
-    };
+    if (value == null) {
+      this.fileExtensions = null;
+    }
+    else {
+      this.fileExtensions = new String[] {
+          value
+      };
+    }
     return (T)this;
   }
 

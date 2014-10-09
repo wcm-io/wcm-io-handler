@@ -74,7 +74,7 @@ public final class MediaHandlerImpl implements MediaHandler {
 
   @Override
   public MediaBuilder get(Resource resource, MediaFormat... mediaFormats) {
-    return get(resource).mediaFormat(mediaFormats);
+    return get(resource).mediaFormats(mediaFormats);
   }
 
   @Override
@@ -89,7 +89,7 @@ public final class MediaHandlerImpl implements MediaHandler {
 
   @Override
   public MediaBuilder get(String mediaRef, MediaFormat... mediaFormats) {
-    return get(mediaRef).mediaFormat(mediaFormats);
+    return get(mediaRef).mediaFormats(mediaFormats);
   }
 
   @Override

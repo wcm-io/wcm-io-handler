@@ -42,7 +42,7 @@ public interface MediaBuilder {
    * @param mediaFormats Media format(s)
    * @return Media builder
    */
-  MediaBuilder mediaFormat(MediaFormat... mediaFormats);
+  MediaBuilder mediaFormats(MediaFormat... mediaFormats);
 
   /**
    * Sets the name of the property from which the media request is read, or node name for inline media.
