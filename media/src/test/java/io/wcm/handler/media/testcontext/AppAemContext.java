@@ -29,7 +29,6 @@ import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.sling.ResourceResolverType;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
 
 import java.io.IOException;
@@ -62,11 +61,11 @@ public final class AppAemContext {
   }
 
   public static AemContext newAemContext() {
-    return new AemContext(new SetUpCallback(null), ResourceResolverType.RESOURCERESOLVER_MOCK);
+    return new AemContext(new SetUpCallback(null));
   }
 
   public static AemContext newAemContext(AemContextCallback callback) {
-    return new AemContext(new SetUpCallback(callback), ResourceResolverType.RESOURCERESOLVER_MOCK);
+    return new AemContext(new SetUpCallback(callback));
   }
 
   /**

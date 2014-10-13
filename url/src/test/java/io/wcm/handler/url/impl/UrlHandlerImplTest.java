@@ -33,7 +33,7 @@ import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.sling.servlet.MockSlingHttpServletRequest;
+import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

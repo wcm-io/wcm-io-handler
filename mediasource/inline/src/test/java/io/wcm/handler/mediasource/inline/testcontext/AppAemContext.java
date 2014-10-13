@@ -29,7 +29,7 @@ import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.sling.ResourceResolverType;
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
 
 import java.io.IOException;

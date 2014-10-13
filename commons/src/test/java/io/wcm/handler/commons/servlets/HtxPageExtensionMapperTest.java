@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.osgi.MockOsgi;
+import org.apache.sling.testing.mock.osgi.MockOsgi;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletResponse;
