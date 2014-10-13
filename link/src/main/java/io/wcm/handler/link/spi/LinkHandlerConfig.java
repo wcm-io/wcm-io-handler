@@ -21,11 +21,14 @@ package io.wcm.handler.link.spi;
 
 import java.util.List;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
  * Provides application-specific configuration information required for link handling.
  */
+@ConsumerType
 public interface LinkHandlerConfig {
 
   /**

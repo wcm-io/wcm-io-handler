@@ -24,11 +24,14 @@ import io.wcm.wcm.commons.caching.ModificationDateProvider;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Represents a rendition contained in a {@link Asset} which can be rendered.
  * A rendition can be pointing to a binary file stored in the repository, or a virtual rendition that is
  * rendered on the fly if required.
  */
+@ProviderType
 public interface Rendition extends Adaptable, ModificationDateProvider {
 
   /**

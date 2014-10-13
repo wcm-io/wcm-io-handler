@@ -21,10 +21,12 @@ package io.wcm.handler.media.spi;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Builds XHTML markup for media element
  */
+@ConsumerType
 public interface MediaMarkupBuilder {
 
   /**

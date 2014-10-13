@@ -21,11 +21,14 @@ package io.wcm.handler.url;
 
 import java.util.Set;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
  * Define URL handling requests using builder pattern.
  */
+@ProviderType
 public interface UrlBuilder {
 
   /**

@@ -22,10 +22,12 @@ package io.wcm.handler.link.spi;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkRequest;
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Defines a link type supported by {@link LinkHandler}
  */
+@ConsumerType
 public interface LinkType {
 
   /**

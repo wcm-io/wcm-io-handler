@@ -47,6 +47,8 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.commons.util.PrefixRenditionPicker;
@@ -59,6 +61,7 @@ import com.day.cq.dam.video.VideoProfile;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ConsumerType
 public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   private static final String H264_PROFILE = "hq";

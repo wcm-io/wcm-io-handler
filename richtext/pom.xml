@@ -89,7 +89,7 @@
         <configuration>
           <instructions>
             <Export-Package>
-              io.wcm.handler.richtext;version=${project.version}
+              io.wcm.handler.richtext
             </Export-Package>
             <Sling-Model-Packages>
               io.wcm.handler.richtext

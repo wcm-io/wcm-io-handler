@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.link;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Names used for link handling.
  * <p>
@@ -32,6 +34,7 @@ package io.wcm.handler.link;
  * <li>RA_ prefix stands for "request attribute"</li>
  * </ul>
  */
+@ProviderType
 public final class LinkNameConstants {
 
   private LinkNameConstants() {

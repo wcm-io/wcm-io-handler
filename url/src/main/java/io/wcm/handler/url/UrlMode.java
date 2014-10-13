@@ -25,11 +25,14 @@ import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
  * Controls building of Urls.
  */
+@ProviderType
 public interface UrlMode {
 
   /**

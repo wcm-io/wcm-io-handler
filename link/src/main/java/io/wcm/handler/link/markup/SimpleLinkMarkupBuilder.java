@@ -20,8 +20,8 @@
 package io.wcm.handler.link.markup;
 
 import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
 import io.wcm.sling.models.annotations.AemObject;
@@ -32,6 +32,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.WCMMode;
 
 /**
@@ -40,6 +42,7 @@ import com.day.cq.wcm.api.WCMMode;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ProviderType
 public final class SimpleLinkMarkupBuilder implements LinkMarkupBuilder {
 
   @AemObject

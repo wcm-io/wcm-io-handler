@@ -41,6 +41,8 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for media links.
  * Media links are links to media items from media sources
@@ -49,6 +51,7 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ProviderType
 public final class MediaLinkType extends AbstractLinkType {
 
   /**

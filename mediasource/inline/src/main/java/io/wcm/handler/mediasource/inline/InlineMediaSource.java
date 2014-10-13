@@ -41,6 +41,8 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.commons.jcr.JcrConstants;
 
 /**
@@ -49,6 +51,7 @@ import com.day.cq.commons.jcr.JcrConstants;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ProviderType
 public final class InlineMediaSource extends AbstractMediaSource {
 
   @Self

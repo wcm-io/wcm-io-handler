@@ -24,6 +24,8 @@ import org.jdom2.CDATA;
 import org.jdom2.Element;
 import org.jdom2.Text;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html script element.
  * This script block is initialized by default for "text/javascript" type.
@@ -38,6 +40,7 @@ import org.jdom2.Text;
  * &lt;/script&gt;
  * </pre>
  */
+@ProviderType
 public final class Script extends AbstractNonSelfClosingHtmlElement<Script> {
   private static final long serialVersionUID = 1L;
 

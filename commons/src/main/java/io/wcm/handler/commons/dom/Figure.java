@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html figure (figure) element.
  */
+@ProviderType
 public final class Figure extends AbstractNonSelfClosingHtmlElement<Figure> {
   private static final long serialVersionUID = 1L;
 

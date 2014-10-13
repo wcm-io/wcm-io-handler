@@ -22,9 +22,12 @@ package io.wcm.handler.media.format;
 import java.util.Comparator;
 import java.util.SortedSet;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Media format handling.
  */
+@ProviderType
 public interface MediaFormatHandler {
 
   /**

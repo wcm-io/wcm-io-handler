@@ -30,12 +30,15 @@ import io.wcm.handler.link.type.MediaLinkType;
 
 import java.util.List;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
 /**
  * Default implementation of configuration options of {@link LinkHandlerConfig} interface.
  */
+@ConsumerType
 public abstract class AbstractLinkHandlerConfig implements LinkHandlerConfig {
 
   private static final List<Class<? extends LinkType>> LINK_TYPES = ImmutableList.<Class<? extends LinkType>>of(

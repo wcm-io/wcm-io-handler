@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.url.integrator;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * How an integrator template sohuld behave when externalizing URLs.
  */
+@ProviderType
 public interface IntegratorMode {
 
   /**

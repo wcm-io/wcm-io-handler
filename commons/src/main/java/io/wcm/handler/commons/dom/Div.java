@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html div element.
  */
+@ProviderType
 public final class Div extends AbstractNonSelfClosingHtmlElement<Div> {
   private static final long serialVersionUID = 1L;
 

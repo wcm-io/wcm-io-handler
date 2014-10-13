@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html figure caption (figcaption) element.
  */
+@ProviderType
 public final class FigCaption extends AbstractNonSelfClosingHtmlElement<FigCaption> {
   private static final long serialVersionUID = 1L;
 

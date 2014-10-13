@@ -19,11 +19,14 @@
  */
 package io.wcm.handler.url.integrator;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
  * Manages detection of integrator template context.
  */
+@ProviderType
 public interface IntegratorHandler {
 
   /**

@@ -33,6 +33,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -40,6 +42,7 @@ import com.google.common.collect.ImmutableSet;
  * Default implementation of configuration options of {@link MediaHandlerConfig} interface.
  * Subclasses may decide to override only some of the methods.
  */
+@ConsumerType
 public abstract class AbstractMediaHandlerConfig implements MediaHandlerConfig {
 
   private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of();

@@ -22,11 +22,14 @@ package io.wcm.handler.commons.jcr;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.commons.jcr.JcrConstants;
 
 /**
  * Utility methods for handling nt:resource and nt:file data in JCR.
  */
+@ProviderType
 public final class JcrBinary {
 
   private JcrBinary() {

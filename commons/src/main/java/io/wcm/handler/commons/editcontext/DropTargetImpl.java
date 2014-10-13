@@ -24,13 +24,16 @@ import java.util.Map;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.io.JSONWriter;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.components.DropTarget;
 import com.google.common.collect.ImmutableMap;
 
 /**
  * {@link DropTarget} implementation.
  */
-public class DropTargetImpl implements DropTarget {
+@ProviderType
+public final class DropTargetImpl implements DropTarget {
 
   private final String name;
   private final String id;

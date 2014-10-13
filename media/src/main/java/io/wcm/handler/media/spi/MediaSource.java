@@ -20,13 +20,15 @@
 package io.wcm.handler.media.spi;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaRequest;
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Defines a media source supported by {@link MediaHandler}
  */
+@ConsumerType
 public interface MediaSource {
 
   /**

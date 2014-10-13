@@ -27,11 +27,14 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
  * Holds all properties that are part of a link handling request.
  */
+@ProviderType
 public final class LinkRequest {
 
   private final Resource resource;

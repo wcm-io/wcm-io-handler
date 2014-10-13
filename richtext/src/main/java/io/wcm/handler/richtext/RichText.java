@@ -27,9 +27,12 @@ import org.jdom2.output.Format;
 import org.jdom2.output.Format.TextMode;
 import org.jdom2.output.XMLOutputter;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Holds information about a rich text processed and resolved by {@link RichTextHandler}.
  */
+@ProviderType
 public final class RichText {
 
   private static final Format JDOM_FORMAT = Format.getCompactFormat().setTextMode(TextMode.PRESERVE);

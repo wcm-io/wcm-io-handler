@@ -21,10 +21,12 @@ package io.wcm.handler.link.spi;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Builds XHTML markup for links
  */
+@ConsumerType
 public interface LinkMarkupBuilder {
 
   /**

@@ -44,6 +44,8 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -57,6 +59,7 @@ import com.day.text.Text;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ProviderType
 public final class DamMediaSource extends AbstractMediaSource {
 
   @Self

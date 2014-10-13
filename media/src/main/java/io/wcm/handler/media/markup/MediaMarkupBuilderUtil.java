@@ -33,6 +33,8 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.commons.DiffInfo;
 import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
@@ -41,6 +43,7 @@ import com.day.cq.wcm.api.PageManager;
 /**
  * Helper methods for {@link MediaMarkupBuilder} implementations.
  */
+@ProviderType
 public final class MediaMarkupBuilderUtil {
 
   private MediaMarkupBuilderUtil() {

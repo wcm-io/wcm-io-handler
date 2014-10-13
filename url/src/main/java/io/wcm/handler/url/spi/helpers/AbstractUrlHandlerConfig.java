@@ -26,6 +26,8 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 
 import java.util.List;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
@@ -33,6 +35,7 @@ import com.google.common.collect.ImmutableList;
  * Default implementation of configuration options of {@link UrlHandlerConfig} interface.
  * Subclasses may decide to override only some of the methods.
  */
+@ConsumerType
 public abstract class AbstractUrlHandlerConfig implements UrlHandlerConfig {
 
   @Override

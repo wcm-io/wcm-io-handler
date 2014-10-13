@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html source (source) element.
  */
+@ProviderType
 public class Source extends AbstractNonSelfClosingHtmlElement<Source> {
   private static final long serialVersionUID = 1L;
 

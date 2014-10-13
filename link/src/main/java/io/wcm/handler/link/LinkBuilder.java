@@ -21,10 +21,12 @@ package io.wcm.handler.link;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.url.UrlMode;
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Define link handling request using builder pattern.
  */
+@ProviderType
 public interface LinkBuilder {
 
   /**

@@ -23,10 +23,12 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Define media handling request using builder pattern.
  */
+@ProviderType
 public interface MediaBuilder {
 
   /**

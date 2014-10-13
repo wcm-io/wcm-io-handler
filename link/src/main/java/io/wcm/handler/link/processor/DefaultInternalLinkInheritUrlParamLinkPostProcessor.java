@@ -25,6 +25,8 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -34,6 +36,7 @@ import com.google.common.collect.ImmutableSet;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ProviderType
 public final class DefaultInternalLinkInheritUrlParamLinkPostProcessor extends AbstractInternalLinkInheritUrlParamLinkPostProcessor {
 
   /**

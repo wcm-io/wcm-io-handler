@@ -27,9 +27,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Media format.
  */
+@ProviderType
 public final class MediaFormat implements Comparable<MediaFormat> {
 
   private final String name;

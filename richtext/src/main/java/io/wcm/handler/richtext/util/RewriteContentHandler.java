@@ -25,10 +25,13 @@ import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Helper interface for rewriteContent method.
  * Handles rewrite operations for single elements.
  */
+@ConsumerType
 public interface RewriteContentHandler {
 
   /**

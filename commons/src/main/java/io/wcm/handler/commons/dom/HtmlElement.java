@@ -24,12 +24,15 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Html element wrapper object.
  * This element class is an extension of JDOM Element.
  * @param <T> Class derived from HtmlElement
  */
 @SuppressWarnings("unchecked")
+@ConsumerType
 public class HtmlElement<T extends HtmlElement> extends AbstractHtmlElementFactory<T> {
   private static final long serialVersionUID = 1L;
 

@@ -28,12 +28,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Abstract value object for passing multiple optional arguments to {@link io.wcm.handler.media.MediaHandler} class
  * for filtering media library item renditions and controlling markup rendering.
  * @param <T> Subclass implementation to support "builder pattern" with correct return type
  */
 @SuppressWarnings("unchecked")
+@ConsumerType
 public abstract class AbstractMediaArgs<T extends MediaArgsType> implements MediaArgsType<T> {
 
   private MediaFormat[] mediaFormats;

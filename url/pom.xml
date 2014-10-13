@@ -83,10 +83,10 @@
         <configuration>
           <instructions>
             <Export-Package>
-              io.wcm.handler.url;version=${project.version},
-              io.wcm.handler.url.integrator;version=${project.version},
-              io.wcm.handler.url.spi;version=${project.version},
-              io.wcm.handler.url.spi.helpers;version=${project.version}
+              io.wcm.handler.url,
+              io.wcm.handler.url.integrator,
+              io.wcm.handler.url.spi,
+              io.wcm.handler.url.spi.helpers
             </Export-Package>
             <Sling-Model-Packages>
               io.wcm.handler.url

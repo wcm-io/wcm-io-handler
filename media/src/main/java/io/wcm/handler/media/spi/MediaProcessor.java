@@ -20,10 +20,12 @@
 package io.wcm.handler.media.spi;
 
 import io.wcm.handler.media.Media;
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Processes media metadata before or after media resolving
  */
+@ConsumerType
 public interface MediaProcessor {
 
   /**

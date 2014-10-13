@@ -32,9 +32,12 @@ import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Utility methods for handling XHTML rich text fragments i.e. used for FCKEditor.
  */
+@ProviderType
 public final class RichTextUtil {
 
   private RichTextUtil() {

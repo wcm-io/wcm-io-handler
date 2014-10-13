@@ -19,11 +19,14 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Html element wrapper tags that must not rendered self-closing to avoid problems in certain browsers.
  * Mosf of the elements that extend from this class are block-level elements, but not all of them.
  * @param <T> Class derived from HtmlElement
  */
+@ConsumerType
 public abstract class AbstractNonSelfClosingHtmlElement<T extends HtmlElement> extends HtmlElement<T> {
   private static final long serialVersionUID = 1L;
 

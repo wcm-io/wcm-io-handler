@@ -19,12 +19,15 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ConsumerType;
+
 
 /**
  * Contains factory methods for creating and adding Html elements and specialized types.
  * This class cannot be instanciated directly, but provides factory methods for HtmlElement-based classes.
  * @param <T> Class derived from HtmlElement
  */
+@ConsumerType
 public abstract class AbstractHtmlElementFactory<T extends HtmlElement> extends AbstractElement<T> {
   private static final long serialVersionUID = 1L;
 

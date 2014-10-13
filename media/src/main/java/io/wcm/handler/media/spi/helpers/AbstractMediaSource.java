@@ -27,9 +27,12 @@ import io.wcm.handler.media.spi.MediaSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Common media source functionality
  */
+@ConsumerType
 public abstract class AbstractMediaSource implements MediaSource {
 
   @Override

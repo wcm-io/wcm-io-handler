@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Names used for media handling.
  * <p>
@@ -33,6 +35,7 @@ package io.wcm.handler.media;
  * <li>CSS_ prefix stands for "CSS class"</li>
  * </ul>
  */
+@ProviderType
 public final class MediaNameConstants {
 
   private MediaNameConstants() {

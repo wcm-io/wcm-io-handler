@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html image (img) element.
  */
+@ProviderType
 public final class Image extends HtmlElement<Image> {
   private static final long serialVersionUID = 1L;
 

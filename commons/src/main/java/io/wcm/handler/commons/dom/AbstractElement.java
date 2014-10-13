@@ -29,12 +29,15 @@ import org.jdom2.DataConversionException;
 import org.jdom2.Namespace;
 import org.jdom2.output.XMLOutputter;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Generic DOM element.
  * This element implementation is derived from JDOM element implementation.
  * @param <T> Class extending Element
  */
 @SuppressWarnings("unchecked")
+@ConsumerType
 public abstract class AbstractElement<T extends AbstractElement> extends org.jdom2.Element {
   private static final long serialVersionUID = 1L;
 

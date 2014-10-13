@@ -24,9 +24,12 @@ import io.wcm.handler.media.format.MediaFormat;
 import java.util.List;
 import java.util.Set;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Provides application-specific configuration information required for media handling.
  */
+@ConsumerType
 public interface MediaHandlerConfig {
 
   /**

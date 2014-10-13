@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html anchor (a) element.
  */
+@ProviderType
 public final class Anchor extends AbstractNonSelfClosingHtmlElement<Anchor> {
   private static final long serialVersionUID = 1L;
 

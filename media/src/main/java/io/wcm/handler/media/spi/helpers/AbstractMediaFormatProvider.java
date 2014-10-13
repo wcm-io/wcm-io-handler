@@ -26,12 +26,15 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.google.common.collect.ImmutableSet;
 
 /**
  * Abstract implementation of {@link MediaFormatProvider} providing list of media formats either from given
  * media format set, or from reading all public static fields from a given class definition.
  */
+@ConsumerType
 public abstract class AbstractMediaFormatProvider implements MediaFormatProvider {
 
   private final Set<MediaFormat> mediaFormats;

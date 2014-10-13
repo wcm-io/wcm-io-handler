@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html span element.
  */
+@ProviderType
 public final class Span extends AbstractNonSelfClosingHtmlElement<Span> {
   private static final long serialVersionUID = 1L;
 

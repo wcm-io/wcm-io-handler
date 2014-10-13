@@ -22,12 +22,14 @@ package io.wcm.handler.media.args;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Interface for value object for passing multiple optional arguments to {@link MediaHandler} class
  * for filtering media library item renditions and controlling markup rendering.
  * @param <T> Subclass implementation to support "builder pattern" with correct return type
  */
+@ConsumerType
 public interface MediaArgsType<T extends MediaArgsType> extends Cloneable {
 
   /**

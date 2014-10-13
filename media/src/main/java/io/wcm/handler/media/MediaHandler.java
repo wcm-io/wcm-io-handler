@@ -25,9 +25,12 @@ import io.wcm.handler.media.format.MediaFormat;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Manages media resolving and markup generation.
  */
+@ProviderType
 public interface MediaHandler {
 
   /**

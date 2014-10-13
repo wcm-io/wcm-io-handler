@@ -20,10 +20,12 @@
 package io.wcm.handler.link.spi;
 
 import io.wcm.handler.link.Link;
+import aQute.bnd.annotation.ConsumerType;
 
 /**
  * Processes link metadata before or after link resolving
  */
+@ConsumerType
 public interface LinkProcessor {
 
   /**

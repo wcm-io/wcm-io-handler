@@ -34,6 +34,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.day.cq.wcm.api.WCMMode;
 
 /**
@@ -42,6 +44,7 @@ import com.day.cq.wcm.api.WCMMode;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ConsumerType
 public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
   @AemObject

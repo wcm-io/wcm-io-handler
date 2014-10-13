@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.url;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Rewrites and builds URLs for links to content pages and resources.
  */
+@ProviderType
 public interface UrlHandler {
 
   /**

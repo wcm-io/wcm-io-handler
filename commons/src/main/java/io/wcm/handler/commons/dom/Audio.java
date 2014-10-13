@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html audio (audio) element.
  */
+@ProviderType
 public final class Audio extends AbstractNonSelfClosingHtmlElement<Audio> {
   private static final long serialVersionUID = 1L;
 

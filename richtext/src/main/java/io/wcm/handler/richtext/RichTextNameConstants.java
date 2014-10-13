@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.richtext;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Names used for rich text handling.
  * <p>
@@ -33,6 +35,7 @@ package io.wcm.handler.richtext;
  * <li>CSS_ prefix stands for "CSS class"</li>
  * </ul>
  */
+@ProviderType
 public final class RichTextNameConstants {
 
   private RichTextNameConstants() {

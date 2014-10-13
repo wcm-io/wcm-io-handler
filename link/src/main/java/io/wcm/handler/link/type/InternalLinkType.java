@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.link.type;
 
-import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
@@ -44,6 +44,8 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.settings.SlingSettingsService;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMMode;
@@ -55,6 +57,7 @@ import com.day.cq.wcm.api.WCMMode;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ProviderType
 public final class InternalLinkType extends AbstractLinkType {
 
   /**

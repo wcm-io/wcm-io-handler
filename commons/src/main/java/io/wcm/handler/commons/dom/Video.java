@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html video (video) element.
  */
+@ProviderType
 public final class Video extends AbstractNonSelfClosingHtmlElement<Video> {
   private static final long serialVersionUID = 1L;
 

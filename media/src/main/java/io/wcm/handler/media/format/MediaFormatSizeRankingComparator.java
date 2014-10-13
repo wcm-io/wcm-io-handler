@@ -22,9 +22,12 @@ package io.wcm.handler.media.format;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Sorts media formats by size (biggest first), ranking and name.
  */
+@ProviderType
 public final class MediaFormatSizeRankingComparator implements Comparator<MediaFormat>, Serializable {
 
   private static final long serialVersionUID = 1L;

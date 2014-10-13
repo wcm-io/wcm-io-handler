@@ -21,9 +21,12 @@ package io.wcm.handler.richtext;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Manages XHTML rich text fragment formatting.
  */
+@ProviderType
 public interface RichTextHandler {
 
   /**

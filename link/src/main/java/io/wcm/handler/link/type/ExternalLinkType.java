@@ -33,6 +33,8 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for external links.
  * External links are links to destinations outside the CMS.
@@ -40,6 +42,7 @@ import org.apache.sling.models.annotations.Model;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@ProviderType
 public final class ExternalLinkType extends AbstractLinkType {
 
   /**

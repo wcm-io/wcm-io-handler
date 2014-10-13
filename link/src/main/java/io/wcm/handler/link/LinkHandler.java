@@ -21,11 +21,14 @@ package io.wcm.handler.link;
 
 import org.apache.sling.api.resource.Resource;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
  * Manages link resolving and markup generation.
  */
+@ProviderType
 public interface LinkHandler {
 
   /**

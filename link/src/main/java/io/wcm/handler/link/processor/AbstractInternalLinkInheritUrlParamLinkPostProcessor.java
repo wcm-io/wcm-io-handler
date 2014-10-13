@@ -28,9 +28,12 @@ import java.util.Set;
 
 import org.apache.sling.models.annotations.injectorspecific.Self;
 
+import aQute.bnd.annotation.ConsumerType;
+
 /**
  * Linkhandler postprocessor to inherit URL parametres to internal links.
  */
+@ConsumerType
 public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor implements LinkProcessor {
 
   @Self

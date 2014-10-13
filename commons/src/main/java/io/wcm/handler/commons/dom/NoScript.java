@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.commons.dom;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html noscript element.
  */
+@ProviderType
 public final class NoScript extends AbstractNonSelfClosingHtmlElement<NoScript> {
 
   private static final long serialVersionUID = 1L;

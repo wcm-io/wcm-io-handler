@@ -107,12 +107,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.adobe.aem</groupId>
       <artifactId>aem-api</artifactId>
       <scope>compile</scope>

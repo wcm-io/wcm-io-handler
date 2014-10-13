@@ -26,9 +26,12 @@ import java.util.Collection;
 
 import org.jdom2.Content;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Define rich text handling request using builder pattern.
  */
+@ProviderType
 public interface RichTextBuilder {
 
   /**

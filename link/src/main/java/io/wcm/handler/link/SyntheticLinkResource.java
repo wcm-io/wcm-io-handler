@@ -27,10 +27,13 @@ import org.apache.sling.api.resource.SyntheticResource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Synthetic resource for building links via {@link LinkHandler}.
  * Use properties with names provided by {@link LinkNameConstants}.
  */
+@ProviderType
 public final class SyntheticLinkResource extends SyntheticResource {
 
   private static final String PATH = "/apps/wcm-io/handler/link/synthetic/resource";

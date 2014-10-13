@@ -96,15 +96,15 @@
           <instructions>
 
             <Export-Package>
-              io.wcm.handler.media;version=${project.version},
-              io.wcm.handler.media.args;version=${project.version},
-              io.wcm.handler.media.format;version=${project.version},
-              io.wcm.handler.media.markup;version=${project.version},
-              io.wcm.handler.media.source;version=${project.version},
-              io.wcm.handler.media.spi;version=${project.version},
-              io.wcm.handler.media.spi.helpers;version=${project.version},
-              io.wcm.handler.mediasource.dam;version=${project.version},
-              io.wcm.handler.mediasource.dam.video;version=${project.version}
+              io.wcm.handler.media,
+              io.wcm.handler.media.args,
+              io.wcm.handler.media.format,
+              io.wcm.handler.media.markup,
+              io.wcm.handler.media.source,
+              io.wcm.handler.media.spi,
+              io.wcm.handler.media.spi.helpers,
+              io.wcm.handler.mediasource.dam,
+              io.wcm.handler.mediasource.dam.video
             </Export-Package>
 
             <Sling-Model-Packages>

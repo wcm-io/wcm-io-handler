@@ -29,9 +29,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Crop dimension with left, top, width and height as integer.
  */
+@ProviderType
 public final class CropDimension extends Dimension {
 
   private final long left;

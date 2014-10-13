@@ -40,6 +40,8 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Virtually maps an *.htx request to a cq:Page resource to a *.html request internally (because components
  * and JSPs are normally only registered to *.html extension). Mapping can be enabled or disabled.
@@ -50,6 +52,7 @@ extensions = FileExtension.HTML_UNCACHED,
 label = "wcm.io htx Page Extension Mapper",
 description = "Mapps all *.htx requests on Pages to *.html view.",
 metatype = true)
+@ProviderType
 public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

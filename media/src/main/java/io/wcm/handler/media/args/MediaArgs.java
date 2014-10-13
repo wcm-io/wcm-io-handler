@@ -21,10 +21,12 @@ package io.wcm.handler.media.args;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
+import aQute.bnd.annotation.ProviderType;
 
 /**
  * Default implementation of media arguments
  */
+@ProviderType
 public final class MediaArgs extends AbstractMediaArgs<MediaArgs> {
 
   /**

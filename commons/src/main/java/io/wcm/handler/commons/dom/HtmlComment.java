@@ -22,9 +22,12 @@ package io.wcm.handler.commons.dom;
 import org.jdom2.Comment;
 import org.jdom2.output.XMLOutputter;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Html comment.
  */
+@ProviderType
 public final class HtmlComment extends Comment {
   private static final long serialVersionUID = 1L;
 

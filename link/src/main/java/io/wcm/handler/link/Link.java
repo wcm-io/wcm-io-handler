@@ -30,11 +30,14 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Attribute;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
  * Holds information about a link processed and resolved by {@link LinkHandler}.
  */
+@ProviderType
 public final class Link {
 
   private final LinkType linkType;

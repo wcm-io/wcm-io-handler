@@ -24,6 +24,8 @@ import io.wcm.handler.url.integrator.IntegratorMode;
 
 import java.util.Collection;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import com.day.cq.wcm.api.Page;
 
 /**
@@ -32,6 +34,7 @@ import com.day.cq.wcm.api.Page;
  * the adaptables should be {@link org.apache.sling.api.resource.Resource} and
  * {@link org.apache.sling.api.SlingHttpServletRequest}.
  */
+@ConsumerType
 public interface UrlHandlerConfig {
 
   /**

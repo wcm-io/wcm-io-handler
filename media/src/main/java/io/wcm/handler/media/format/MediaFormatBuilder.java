@@ -23,9 +23,12 @@ import io.wcm.config.spi.ApplicationProvider;
 
 import java.util.regex.Pattern;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Fluent API for building media format definitions.
  */
+@ProviderType
 public final class MediaFormatBuilder {
 
   private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\-\\_]+$");

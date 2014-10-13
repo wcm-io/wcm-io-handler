@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.url.integrator;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Names used for integrator handling.
  * <p>
@@ -32,6 +34,7 @@ package io.wcm.handler.url.integrator;
  * <li>RA_ prefix stands for "request attribute"</li>
  * </ul>
  */
+@ProviderType
 public final class IntegratorNameConstants {
 
   private IntegratorNameConstants() {

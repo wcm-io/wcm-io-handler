@@ -28,9 +28,12 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Holds all properties that are part of a rich text handling request.
  */
+@ProviderType
 public final class RichTextRequest {
 
   private final Resource resource;

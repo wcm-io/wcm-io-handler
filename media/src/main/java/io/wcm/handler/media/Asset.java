@@ -24,10 +24,13 @@ import io.wcm.handler.media.args.MediaArgsType;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * Represents a media item that is referenced via a {@link MediaRequest} and resolved via {@link MediaHandler}.
  * It cannot be rendered directly, but contains references to renditions depending on {@link MediaArgsType}.
  */
+@ProviderType
 public interface Asset extends Adaptable {
 
   /**
