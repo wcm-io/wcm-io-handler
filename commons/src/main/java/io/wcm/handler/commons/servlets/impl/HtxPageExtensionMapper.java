@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.servlets;
+package io.wcm.handler.commons.servlets.impl;
 
 import io.wcm.wcm.commons.contenttype.FileExtension;
 

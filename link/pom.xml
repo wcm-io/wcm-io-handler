@@ -88,15 +88,6 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Export-Package>
-              io.wcm.handler.link,
-              io.wcm.handler.link.args,
-              io.wcm.handler.link.markup,
-              io.wcm.handler.link.processor,
-              io.wcm.handler.link.spi,
-              io.wcm.handler.link.spi.helpers,
-              io.wcm.handler.link.type
-            </Export-Package>
             <Sling-Model-Packages>
               io.wcm.handler.link
             </Sling-Model-Packages>

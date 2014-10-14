@@ -17,14 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.servlets;
+package io.wcm.handler.commons.servlets.impl;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import org.apache.sling.testing.mock.osgi.MockOsgi;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.request.RequestPathInfo;
+import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

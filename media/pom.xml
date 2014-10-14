@@ -95,18 +95,6 @@
         <configuration>
           <instructions>
 
-            <Export-Package>
-              io.wcm.handler.media,
-              io.wcm.handler.media.args,
-              io.wcm.handler.media.format,
-              io.wcm.handler.media.markup,
-              io.wcm.handler.media.source,
-              io.wcm.handler.media.spi,
-              io.wcm.handler.media.spi.helpers,
-              io.wcm.handler.mediasource.dam,
-              io.wcm.handler.mediasource.dam.video
-            </Export-Package>
-
             <Sling-Model-Packages>
               io.wcm.handler.media,
               io.wcm.handler.mediasource.dam

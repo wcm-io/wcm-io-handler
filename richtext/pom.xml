@@ -88,9 +88,6 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Export-Package>
-              io.wcm.handler.richtext
-            </Export-Package>
             <Sling-Model-Packages>
               io.wcm.handler.richtext
             </Sling-Model-Packages>
