@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.commons.dom;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Html video (video) element.

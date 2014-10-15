@@ -22,7 +22,8 @@ package io.wcm.handler.media.args;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
-import aQute.bnd.annotation.ConsumerType;
+
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Interface for value object for passing multiple optional arguments to {@link MediaHandler} class

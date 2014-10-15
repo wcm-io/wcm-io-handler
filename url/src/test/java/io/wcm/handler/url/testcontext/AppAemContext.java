@@ -28,12 +28,12 @@ import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
 
 import java.io.IOException;
 
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.

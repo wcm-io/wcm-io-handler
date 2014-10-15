@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.link;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Names used for link handling.

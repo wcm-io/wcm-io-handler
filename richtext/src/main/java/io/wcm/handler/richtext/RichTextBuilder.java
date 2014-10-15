@@ -25,8 +25,7 @@ import io.wcm.handler.url.UrlMode;
 import java.util.Collection;
 
 import org.jdom2.Content;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Define rich text handling request using builder pattern.

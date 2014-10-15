@@ -26,8 +26,7 @@ import org.jdom2.Content;
 import org.jdom2.output.Format;
 import org.jdom2.output.Format.TextMode;
 import org.jdom2.output.XMLOutputter;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Holds information about a rich text processed and resolved by {@link RichTextHandler}.

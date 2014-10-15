@@ -20,7 +20,8 @@
 package io.wcm.handler.media.spi;
 
 import io.wcm.handler.media.Media;
-import aQute.bnd.annotation.ConsumerType;
+
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Processes media metadata before or after media resolving

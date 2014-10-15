@@ -28,8 +28,7 @@ import org.jdom2.Content;
 import org.jdom2.DataConversionException;
 import org.jdom2.Namespace;
 import org.jdom2.output.XMLOutputter;
-
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Generic DOM element.

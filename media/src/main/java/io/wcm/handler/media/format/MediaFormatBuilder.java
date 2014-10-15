@@ -23,7 +23,7 @@ import io.wcm.config.spi.ApplicationProvider;
 
 import java.util.regex.Pattern;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Fluent API for building media format definitions.

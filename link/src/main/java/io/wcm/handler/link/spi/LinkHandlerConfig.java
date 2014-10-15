@@ -21,7 +21,7 @@ package io.wcm.handler.link.spi;
 
 import java.util.List;
 
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
 

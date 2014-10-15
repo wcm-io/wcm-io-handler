@@ -21,7 +21,8 @@ package io.wcm.handler.link.spi;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
-import aQute.bnd.annotation.ConsumerType;
+
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Builds XHTML markup for links

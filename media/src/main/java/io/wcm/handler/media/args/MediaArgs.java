@@ -21,7 +21,8 @@ package io.wcm.handler.media.args;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
-import aQute.bnd.annotation.ProviderType;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Default implementation of media arguments

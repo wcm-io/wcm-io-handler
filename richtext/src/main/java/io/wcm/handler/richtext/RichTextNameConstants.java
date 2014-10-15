@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.richtext;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Names used for rich text handling.

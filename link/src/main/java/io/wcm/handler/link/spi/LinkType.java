@@ -22,7 +22,8 @@ package io.wcm.handler.link.spi;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkRequest;
-import aQute.bnd.annotation.ConsumerType;
+
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Defines a link type supported by {@link LinkHandler}

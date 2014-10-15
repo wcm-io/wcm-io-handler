@@ -21,7 +21,8 @@ package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.spi.MediaSource;
-import aQute.bnd.annotation.ProviderType;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Holds information about a media request processed and resolved by {@link MediaHandler}.

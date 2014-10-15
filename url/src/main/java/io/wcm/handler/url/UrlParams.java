@@ -27,7 +27,8 @@ import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_ID;
 import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_LABEL;
 import io.wcm.config.api.Parameter;
 import io.wcm.config.editor.WidgetTypes;
-import aQute.bnd.annotation.ProviderType;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Configuration parameters for URL handler.

@@ -23,8 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 import org.jdom2.Text;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Html script element.

@@ -21,8 +21,7 @@ package io.wcm.handler.commons.dom;
 
 import org.jdom2.Comment;
 import org.jdom2.output.XMLOutputter;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Html comment.

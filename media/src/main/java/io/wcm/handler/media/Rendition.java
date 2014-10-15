@@ -23,8 +23,7 @@ import io.wcm.wcm.commons.caching.ModificationDateProvider;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Represents a rendition contained in a {@link Asset} which can be rendered.

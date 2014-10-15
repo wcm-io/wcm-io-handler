@@ -23,7 +23,7 @@ import io.wcm.handler.media.format.MediaFormat;
 
 import java.util.Set;
 
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Allows application to provide media formats for the media handler.

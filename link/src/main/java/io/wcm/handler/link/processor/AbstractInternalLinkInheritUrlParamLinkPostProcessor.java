@@ -27,8 +27,7 @@ import io.wcm.handler.url.UrlHandler;
 import java.util.Set;
 
 import org.apache.sling.models.annotations.injectorspecific.Self;
-
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Linkhandler postprocessor to inherit URL parametres to internal links.

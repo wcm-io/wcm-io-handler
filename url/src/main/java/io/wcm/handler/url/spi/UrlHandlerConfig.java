@@ -24,7 +24,7 @@ import io.wcm.handler.url.integrator.IntegratorMode;
 
 import java.util.Collection;
 
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
 

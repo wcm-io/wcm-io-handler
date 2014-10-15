@@ -23,8 +23,7 @@ import java.util.Map;
 
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.io.JSONWriter;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.components.DropTarget;
 import com.google.common.collect.ImmutableMap;

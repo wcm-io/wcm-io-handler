@@ -24,8 +24,7 @@ import java.util.List;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
-
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Helper interface for rewriteContent method.

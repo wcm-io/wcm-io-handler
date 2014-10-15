@@ -23,8 +23,7 @@ import io.wcm.handler.media.args.MediaArgsType;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Represents a media item that is referenced via a {@link MediaRequest} and resolved via {@link MediaHandler}.

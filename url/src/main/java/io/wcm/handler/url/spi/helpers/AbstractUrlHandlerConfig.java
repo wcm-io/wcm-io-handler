@@ -26,7 +26,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 
 import java.util.List;
 
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;

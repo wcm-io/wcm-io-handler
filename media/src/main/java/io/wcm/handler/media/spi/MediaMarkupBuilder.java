@@ -21,7 +21,8 @@ package io.wcm.handler.media.spi;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
-import aQute.bnd.annotation.ConsumerType;
+
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Builds XHTML markup for media element

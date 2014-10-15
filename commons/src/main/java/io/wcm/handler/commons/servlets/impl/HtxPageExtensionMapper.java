@@ -36,11 +36,10 @@ import org.apache.sling.api.request.RequestPathInfo;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.commons.osgi.PropertiesUtil;
+import org.osgi.annotation.versioning.ProviderType;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import aQute.bnd.annotation.ProviderType;
 
 /**
  * Virtually maps an *.htx request to a cq:Page resource to a *.html request internally (because components

@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.url;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Rewrites and builds URLs for links to content pages and resources.

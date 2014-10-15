@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.commons.dom;
 
-import aQute.bnd.annotation.ConsumerType;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Html element wrapper tags that must not rendered self-closing to avoid problems in certain browsers.

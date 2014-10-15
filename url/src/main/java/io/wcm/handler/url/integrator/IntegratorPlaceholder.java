@@ -20,8 +20,7 @@
 package io.wcm.handler.url.integrator;
 
 import org.apache.commons.lang3.StringUtils;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Placeholders used in integrator template markup that has to be replaced by integrating applications.

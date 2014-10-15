@@ -20,8 +20,7 @@
 package io.wcm.handler.richtext;
 
 import org.apache.sling.api.resource.Resource;
-
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Manages XHTML rich text fragment formatting.

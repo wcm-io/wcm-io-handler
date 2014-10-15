@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.url.integrator;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Names used for integrator handling.

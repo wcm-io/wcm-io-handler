@@ -22,7 +22,7 @@ package io.wcm.handler.media.format;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Sorts media formats by combined title.
