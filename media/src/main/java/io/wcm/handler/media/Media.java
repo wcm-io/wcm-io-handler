@@ -22,7 +22,11 @@ package io.wcm.handler.media;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.spi.MediaSource;
 
+import java.util.Collection;
+
 import org.osgi.annotation.versioning.ProviderType;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Holds information about a media request processed and resolved by {@link MediaHandler}.
@@ -35,8 +39,7 @@ public final class Media {
   private HtmlElement<?> element;
   private String url;
   private Asset asset;
-  private Rendition rendition;
-  private Rendition fallbackRendition;
+  private Collection<Rendition> renditions;
   private CropDimension cropDimension;
   private MediaInvalidReason mediaInvalidReason;
 
@@ -125,35 +128,35 @@ public final class Media {
   }
 
   /**
-   * Get rendition that was resolved during media handler processing
+   * Get first (and best-match) rendition that was resolved during media handler processing
    * @return Rendition
    */
   public Rendition getRendition() {
-    return this.rendition;
+    if (this.renditions == null || this.renditions.isEmpty()) {
+      return null;
+    }
+    return this.renditions.iterator().next();
   }
 
   /**
-   * Set rendition that was resolved during media handler processing
-   * @param rendition Rendition
+   * Get all renditions that were resolved during media handler processing
+   * @return Renditions
    */
-  public void setRendition(Rendition rendition) {
-    this.rendition = rendition;
+  public Collection<Rendition> getRenditions() {
+    if (this.renditions == null) {
+      return ImmutableList.<Rendition>of();
+    }
+    else {
+      return this.renditions;
+    }
   }
 
   /**
-   * Get fallback rendition info that was resolved during media handler processing
-   * @return Fallback rendition
+   * Set all renditions that was resolved during media handler processing
+   * @param renditions Renditions
    */
-  public Rendition getFallbackRendition() {
-    return this.fallbackRendition;
-  }
-
-  /**
-   * Set fallback rendition info that was resolved during media handler processing
-   * @param fallbackRendition Fallback rendition
-   */
-  public void setFallbackRendition(Rendition fallbackRendition) {
-    this.fallbackRendition = fallbackRendition;
+  public void setRenditions(Collection<Rendition> renditions) {
+    this.renditions = renditions;
   }
 
   /**
@@ -174,7 +177,7 @@ public final class Media {
    * @return true if link is valid and was resolved successfully
    */
   public boolean isValid() {
-    return getUrl() != null;
+    return (mediaInvalidReason == null);
   }
 
   /**

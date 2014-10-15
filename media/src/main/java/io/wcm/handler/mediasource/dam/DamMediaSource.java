@@ -97,6 +97,7 @@ public final class DamMediaSource extends AbstractMediaSource {
     String mediaRef = getMediaRef(media.getMediaRequest());
     MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
 
+    boolean renditionsResolved = false;
     if (StringUtils.isNotBlank(mediaRef)) {
 
       // Check if there is a custom altText specified in the component's properties
@@ -119,21 +120,21 @@ public final class DamMediaSource extends AbstractMediaSource {
         Asset asset = new DamAsset(damAsset, media, adaptable);
         media.setAsset(asset);
 
-        // resolve rendition
-        media.setRendition(asset.getRendition(mediaArgs));
-      }
-
-      // set media url
-      if (media.getRendition() != null) {
-        media.setUrl(media.getRendition().getUrl());
+        // resolve rendition(s)
+        renditionsResolved = resolveRenditions(media, asset, mediaArgs);
       }
 
     }
 
     // set media invalid reason
-    if (StringUtils.isEmpty(media.getUrl())) {
+    if (!renditionsResolved) {
       if (media.getAsset() != null) {
-        media.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
+        if (media.getRenditions().isEmpty()) {
+          media.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
+        }
+        else {
+          media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
+        }
       }
       else if (StringUtils.isNotEmpty(mediaRef)) {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);

@@ -19,7 +19,9 @@
  */
 package io.wcm.handler.mediasource.dam;
 
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_TEASER_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
 import static org.junit.Assert.assertEquals;
@@ -40,12 +42,15 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 
+import java.util.List;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Test;
 
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.wcm.api.WCMMode;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link DamMediaSource}
@@ -305,7 +310,6 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertNotNull("rendition?", media.getRendition());
     assertEquals("rendition.mediaUrl", "/content/dam/test/flashWithoutFallback.swf/_jcr_content/renditions/original./flashWithoutFallback.swf",
         media.getRendition().getUrl());
-    assertNull("fallbackRendition?", media.getFallbackRendition());
   }
 
   @Test
@@ -428,6 +432,54 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("rendition.mediaUrl",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/original.media_file.download_attachment.file/standard.jpg",
         media.getRendition().getUrl());
+  }
+
+  @Test
+  public void testMultipleMediaMediaFormats() {
+    MediaArgsType mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 1, media.getRenditions().size());
+    assertEquals("rendition.mediaUrl",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
+        media.getUrl());
+  }
+
+  @Test
+  public void testMultipleMandatoryMediaFormats() {
+    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 3, media.getRenditions().size());
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals("rendition.mediaUrl.1",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
+        renditions.get(0).getUrl());
+    assertEquals("rendition.mediaUrl.2",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
+        renditions.get(1).getUrl());
+    assertEquals("rendition.mediaUrl.3",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
+        renditions.get(2).getUrl());
+  }
+
+  @Test
+  public void testMultipleMandatoryMediaFormatsNotAllMatch() {
+    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(VIDEO_2COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertFalse("valid?", media.isValid());
+    assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 2, media.getRenditions().size());
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals("rendition.mediaUrl.1",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
+        renditions.get(0).getUrl());
+    assertEquals("rendition.mediaUrl.2",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
+        renditions.get(1).getUrl());
   }
 
 }

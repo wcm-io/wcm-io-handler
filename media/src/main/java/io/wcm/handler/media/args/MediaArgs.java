@@ -31,7 +31,7 @@ import org.osgi.annotation.versioning.ProviderType;
 public final class MediaArgs extends AbstractMediaArgs<MediaArgs> {
 
   /**
-   * Shortcut for building {@link MediaArgs} with media format
+   * Shortcut for building {@link MediaArgs} with media format.
    * @param mediaFormat Media format
    * @return Media args
    */
@@ -40,8 +40,8 @@ public final class MediaArgs extends AbstractMediaArgs<MediaArgs> {
   }
 
   /**
-   * Shortcut for building {@link MediaArgs} with media format
-   * @param mediaFormats Media format
+   * Shortcut for building {@link MediaArgs} with media formats.
+   * @param mediaFormats Media formats
    * @return Media args
    */
   public static MediaArgs mediaFormats(MediaFormat... mediaFormats) {
@@ -49,7 +49,17 @@ public final class MediaArgs extends AbstractMediaArgs<MediaArgs> {
   }
 
   /**
-   * Shortcut for building {@link MediaArgs} with media format
+   * Shortcut for building {@link MediaArgs} with media formats.
+   * Additionally {@link MediaArgsType#isMediaFormatsMandatory()} is set to true.
+   * @param mediaFormats Media format
+   * @return Media args
+   */
+  public static MediaArgs mandatoryMediaFormats(MediaFormat... mediaFormats) {
+    return new MediaArgs().setMediaFormats(mediaFormats).setMediaFormatsMandatory(true);
+  }
+
+  /**
+   * Shortcut for building {@link MediaArgs} with media format.
    * @param mediaFormatName Media format name
    * @return Media args
    */
@@ -58,12 +68,22 @@ public final class MediaArgs extends AbstractMediaArgs<MediaArgs> {
   }
 
   /**
-   * Shortcut for building {@link MediaArgs} with media format
+   * Shortcut for building {@link MediaArgs} with media formats.
    * @param mediaFormatNames Media format names
    * @return Media args
    */
   public static MediaArgs mediaFormats(String... mediaFormatNames) {
     return new MediaArgs().setMediaFormatNames(mediaFormatNames);
+  }
+
+  /**
+   * Shortcut for building {@link MediaArgs} with media formats.
+   * Additionally {@link MediaArgsType#isMediaFormatsMandatory()} is set to true.
+   * @param mediaFormatNames Media format names
+   * @return Media args
+   */
+  public static MediaArgs mandatoryMediaFormats(String... mediaFormatNames) {
+    return new MediaArgs().setMediaFormatNames(mediaFormatNames).setMediaFormatsMandatory(true);
   }
 
   /**

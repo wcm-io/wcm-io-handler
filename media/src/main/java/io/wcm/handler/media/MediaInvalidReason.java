@@ -40,6 +40,12 @@ public enum MediaInvalidReason {
   NO_MATCHING_RENDITION,
 
   /**
+   * Not enough matching renditions: The media item exists and some renditions could be resolved, but not for all
+   * mandatory media formats requested.
+   */
+  NOT_ENOUGH_MATCHING_RENDITIONS,
+
+  /**
    * No media source found for handling the given (or empty) media request
    */
   NO_MEDIA_SOURCE

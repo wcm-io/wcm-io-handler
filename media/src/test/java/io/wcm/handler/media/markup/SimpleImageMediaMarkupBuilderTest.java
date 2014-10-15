@@ -51,6 +51,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.day.cq.wcm.api.WCMMode;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link SimpleImageMediaMarkupBuilder}
@@ -83,7 +84,7 @@ public class SimpleImageMediaMarkupBuilderTest {
     assertFalse("no rendition", builder.accepts(media));
 
     media.setAsset(asset);
-    media.setRendition(rendition);
+    media.setRenditions(ImmutableList.of(rendition));
 
     assertFalse("invalid rendition", builder.accepts(media));
 
@@ -110,7 +111,7 @@ public class SimpleImageMediaMarkupBuilderTest {
     assertNull("no rendition", builder.build(media));
 
     media.setAsset(asset);
-    media.setRendition(rendition);
+    media.setRenditions(ImmutableList.of(rendition));
 
     assertNull("invalid rendition", builder.build(media));
 
@@ -147,7 +148,7 @@ public class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRendition(rendition);
+    media.setRenditions(ImmutableList.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     HtmlElement<?> element = builder.build(media);
@@ -165,7 +166,7 @@ public class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRendition(rendition);
+    media.setRenditions(ImmutableList.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     builder.build(media);

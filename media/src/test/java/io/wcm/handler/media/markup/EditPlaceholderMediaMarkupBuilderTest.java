@@ -50,6 +50,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.day.cq.wcm.api.WCMMode;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link EditPlaceholderMediaMarkupBuilder}
@@ -99,7 +100,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     // test with wcm modes, with rendition, with mediaformat, no suppress
     mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(false);
     media.setAsset(asset);
-    media.setRendition(rendition);
+    media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
 
   }
@@ -129,7 +130,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     // test with wcm modes, with rendition, with mediaformat, no suppress
     mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(false);
     media.setAsset(asset);
-    media.setRendition(rendition);
+    media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
 
   }
@@ -159,7 +160,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     // test with wcm modes, with rendition, with mediaformat, no suppress
     mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(false);
     media.setAsset(asset);
-    media.setRendition(rendition);
+    media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
 
   }

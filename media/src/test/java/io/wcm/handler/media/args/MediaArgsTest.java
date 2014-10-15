@@ -31,24 +31,55 @@ import io.wcm.handler.url.UrlModes;
 
 import org.junit.Test;
 
-
 public class MediaArgsTest {
 
   @Test
   public void testMediaFormats() {
+    MediaArgs mediaArgs;
+
+    mediaArgs = MediaArgs.mediaFormat(EDITORIAL_1COL);
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL
-    }, MediaArgs.mediaFormat(EDITORIAL_1COL).getMediaFormats());
+    }, mediaArgs.getMediaFormats());
+    assertFalse(mediaArgs.isMediaFormatsMandatory());
+
+    mediaArgs = MediaArgs.mediaFormat("editorial_1col");
     assertArrayEquals(new String[] {
         "editorial_1col"
-    }, MediaArgs.mediaFormat("editorial_1col").getMediaFormatNames());
+    }, mediaArgs.getMediaFormatNames());
+    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
+    mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL, EDITORIAL_2COL
-    }, MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL).getMediaFormats());
+    }, mediaArgs.getMediaFormats());
+    assertFalse(mediaArgs.isMediaFormatsMandatory());
+
+    mediaArgs = MediaArgs.mediaFormats("editorial_1col", "editorial_2col");
     assertArrayEquals(new String[] {
         "editorial_1col", "editorial_2col"
-    }, MediaArgs.mediaFormats("editorial_1col", "editorial_2col").getMediaFormatNames());
+    }, mediaArgs.getMediaFormatNames());
+    assertFalse(mediaArgs.isMediaFormatsMandatory());
+
+    assertNull(MediaArgs.mediaFormat((MediaFormat)null).getMediaFormats());
+    assertNull(MediaArgs.mediaFormat((String)null).getMediaFormatNames());
+  }
+
+  @Test
+  public void testMediaFormatsMandatory() {
+    MediaArgs mediaArgs;
+
+    mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
+    assertArrayEquals(new MediaFormat[] {
+        EDITORIAL_1COL, EDITORIAL_2COL
+    }, mediaArgs.getMediaFormats());
+    assertTrue(mediaArgs.isMediaFormatsMandatory());
+
+    mediaArgs = MediaArgs.mandatoryMediaFormats("editorial_1col", "editorial_2col");
+    assertArrayEquals(new String[] {
+        "editorial_1col", "editorial_2col"
+    }, mediaArgs.getMediaFormatNames());
+    assertTrue(mediaArgs.isMediaFormatsMandatory());
 
     assertNull(MediaArgs.mediaFormat((MediaFormat)null).getMediaFormats());
     assertNull(MediaArgs.mediaFormat((String)null).getMediaFormatNames());

@@ -40,6 +40,7 @@ public abstract class AbstractMediaArgs<T extends MediaArgsType> implements Medi
 
   private MediaFormat[] mediaFormats;
   private String[] mediaFormatNames;
+  private boolean mediaFormatsMandatory;
   private String[] fileExtensions;
   private UrlMode urlMode;
   private long fixedWidth;
@@ -70,6 +71,17 @@ public abstract class AbstractMediaArgs<T extends MediaArgsType> implements Medi
           value
       };
     }
+    return (T)this;
+  }
+
+  @Override
+  public boolean isMediaFormatsMandatory() {
+    return this.mediaFormatsMandatory;
+  }
+
+  @Override
+  public T setMediaFormatsMandatory(boolean value) {
+    this.mediaFormatsMandatory = value;
     return (T)this;
   }
 
@@ -226,6 +238,7 @@ public abstract class AbstractMediaArgs<T extends MediaArgsType> implements Medi
 
     // explicitly copy all array fields (primitive properties are properly cloned by super.clone()
     clone.setMediaFormats(ArrayUtils.clone(this.mediaFormats));
+    clone.setMediaFormatNames(ArrayUtils.clone(this.mediaFormatNames));
     clone.setFileExtensions(ArrayUtils.clone(this.fileExtensions));
 
     return clone;

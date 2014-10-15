@@ -34,35 +34,58 @@ import org.osgi.annotation.versioning.ConsumerType;
 public interface MediaArgsType<T extends MediaArgsType> extends Cloneable {
 
   /**
-   * @return Absolute media format paths or relative (without media format parent path)
+   * Returns list of media formats to resolve to. If {@link #isMediaFormatsMandatory()} is false,
+   * the first rendition that matches any of the given media format is returned. If it is set to true,
+   * for each media format given a rendition has to be resolved and returned. If not all renditions
+   * could be resolved the media is marked as invalid (but the partial resolved renditions are returned anyway).
+   * @return Media formats
    */
   MediaFormat[] getMediaFormats();
 
   /**
-   * @param mediaFormats Absolute media format paths or relative (without media format parent path)
+   * Sets list of media formats to resolve to.
+   * @param mediaFormats Media formats
    * @return this
    */
   T setMediaFormats(MediaFormat... mediaFormats);
 
   /**
-   * @param mediaFormat Absolute media format path or relative (without media format parent path)
+   * Sets a single media format to resolve to.
+   * @param mediaFormat Media format
    * @return this
    */
   T setMediaFormat(MediaFormat mediaFormat);
 
   /**
-   * @return Absolute media format paths or relative (without media format parent path)
+   * If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
+   * @return Resolving of all media formats is mandatory.
+   */
+  boolean isMediaFormatsMandatory();
+
+  /**
+   * If set to true, media handler never returns a dummy image. Otherwise this can happen
+   * in edit mode.
+   * @param mediaFormatsMandatory Resolving of all media formats is mandatory.
+   * @return this
+   */
+  T setMediaFormatsMandatory(boolean mediaFormatsMandatory);
+
+  /**
+   * Returns list of media formats to resolve to. See {@link #getMediaFormatNames()} for details.
+   * @return Media format names
    */
   String[] getMediaFormatNames();
 
   /**
-   * @param mediaFormatNames Absolute media format paths or relative (without media format parent path)
+   * Sets list of media formats to resolve to.
+   * @param mediaFormatNames Media format names.
    * @return this
    */
   T setMediaFormatNames(String... mediaFormatNames);
 
   /**
-   * @param mediaFormatName Absolute media format path or relative (without media format parent path)
+   * Sets a single media format to resolve to.
+   * @param mediaFormatName Media format name
    * @return this
    */
   T setMediaFormatName(String mediaFormatName);
@@ -175,7 +198,7 @@ public interface MediaArgsType<T extends MediaArgsType> extends Cloneable {
   T setDummyImageUrl(String dummyImageUrl);
 
   /**
-   * custom clone-method for {@link MediaArgsType}
+   * Custom clone-method for {@link MediaArgsType}
    * @return the cloned {@link MediaArgsType}
    * @throws CloneNotSupportedException
    */

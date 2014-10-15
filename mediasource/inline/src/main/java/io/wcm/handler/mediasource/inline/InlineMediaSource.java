@@ -26,7 +26,6 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.sling.commons.util.Escape;
@@ -136,16 +135,19 @@ public final class InlineMediaSource extends AbstractMediaSource {
 
     // generate media item and rendition for inline media
     Asset asset = getInlineAsset(ntResourceResource, media, fileName);
-    Rendition rendition = asset.getRendition(mediaArgs);
     media.setAsset(asset);
-    media.setRendition(rendition);
-    if (media.getRendition() != null) {
-      media.setUrl(rendition.getUrl());
-    }
+
+    // resolve rendition
+    boolean renditionsResolved = resolveRenditions(media, asset, mediaArgs);
 
     // set media invalid reason
-    if (StringUtils.isEmpty(media.getUrl())) {
-      media.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
+    if (!renditionsResolved) {
+      if (media.getRenditions().isEmpty()) {
+        media.setMediaInvalidReason(MediaInvalidReason.NO_MATCHING_RENDITION);
+      }
+      else {
+        media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
+      }
     }
 
     return media;

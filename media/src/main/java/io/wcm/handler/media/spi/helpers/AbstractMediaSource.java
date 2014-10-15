@@ -19,14 +19,24 @@
  */
 package io.wcm.handler.media.spi.helpers;
 
+import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ConsumerType;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Common media source functionality
@@ -118,6 +128,77 @@ public abstract class AbstractMediaSource implements MediaSource {
       cropProperty = MediaNameConstants.PN_MEDIA_CROP;
     }
     return cropProperty;
+  }
+
+  /**
+   * Resolves single rendition (or multiple renditions if {@link MediaArgsType#isMediaFormatsMandatory()} is true
+   * and sets the resolved rendition and the URL of the first (best-matching) rendition in the media object.
+   * @param media Media object
+   * @param asset Asset
+   * @param mediaArgs Media args
+   * @return true if all requested renditions could be resolved (at least one or all if
+   *         {@link MediaArgsType#isMediaFormatsMandatory()} was set to true)
+   */
+  protected final boolean resolveRenditions(Media media, Asset asset, MediaArgsType mediaArgs) {
+    if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1 && mediaArgs.isMediaFormatsMandatory()) {
+      return resolveAllMandatoryRenditions(media, asset, mediaArgs);
+    }
+    else {
+      return resolveFirstMatchRenditions(media, asset, mediaArgs);
+    }
+  }
+
+  /**
+   * Check if a matching rendition is found for any of the provided media formats and other media args.
+   * The first match is returned.
+   * @param media Media
+   * @param asset Asset
+   * @param mediaArgs Media args
+   * @return true if a rendition was found
+   */
+  private boolean resolveFirstMatchRenditions(Media media, Asset asset, MediaArgsType mediaArgs) {
+    Rendition rendition = asset.getRendition(mediaArgs);
+    if (rendition != null) {
+      media.setRenditions(ImmutableList.of(rendition));
+      media.setUrl(rendition.getUrl());
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Iterates over all defined media format and tries to find a matching rendition for each of them
+   * in combination with the other media args.
+   * @param media Media
+   * @param asset Asset
+   * @param mediaArgs Media args
+   * @return true if for *all* media formats a rendition could be found.
+   */
+  private boolean resolveAllMandatoryRenditions(Media media, Asset asset, MediaArgsType mediaArgs) {
+    boolean allResolved = true;
+    List<Rendition> resolvedRenditions = new ArrayList<>();
+    for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
+      try {
+        MediaArgsType renditionMediaArgs = (MediaArgsType)mediaArgs.clone();
+        renditionMediaArgs.setMediaFormat(mediaFormat);
+        renditionMediaArgs.setMediaFormatsMandatory(false);
+        Rendition rendition = asset.getRendition(renditionMediaArgs);
+        if (rendition != null) {
+          resolvedRenditions.add(rendition);
+        }
+        else {
+          allResolved = false;
+        }
+      }
+      catch (CloneNotSupportedException ex) {
+        throw new RuntimeException("Failed to clone media args.", ex);
+      }
+    }
+    media.setRenditions(resolvedRenditions);
+    if (!resolvedRenditions.isEmpty()) {
+      media.setUrl(resolvedRenditions.get(0).getUrl());
+    }
+    return allResolved;
   }
 
 }

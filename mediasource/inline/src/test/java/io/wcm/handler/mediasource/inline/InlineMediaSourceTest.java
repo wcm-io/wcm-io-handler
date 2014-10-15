@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.inline;
 import static io.wcm.handler.mediasource.inline.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_2COL;
+import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_STANDARD;
 import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.HOLZAUTO_BANNER;
 import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.HOLZAUTO_CUTOUT_13PLUS;
@@ -55,6 +56,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -63,6 +65,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link InlineMediaSource}
@@ -550,6 +553,57 @@ public class InlineMediaSourceTest {
         ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage/mediaInline."
             + MediaFileServlet.SELECTOR + "." + MediaFileServlet.SELECTOR_DOWNLOAD + ".file/sample_image_215x102.jpg",
             media.getRendition().getUrl());
+  }
+
+  @Test
+  public void testMultipleMediaMediaFormats() {
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaArgsType mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 1, media.getRenditions().size());
+    assertEquals("rendition.mediaUrl",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline./sample_image_215x102.jpg",
+        media.getUrl());
+  }
+
+  @Test
+  public void testMultipleMandatoryMediaFormats() {
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 3, media.getRenditions().size());
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals("rendition.mediaUrl.1",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline./sample_image_215x102.jpg",
+        renditions.get(0).getUrl());
+    assertEquals("rendition.mediaUrl.2",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.205.97.file/sample_image_215x102.jpg",
+        renditions.get(1).getUrl());
+    assertEquals("rendition.mediaUrl.3",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.file/sample_image_215x102.jpg",
+        renditions.get(2).getUrl());
+  }
+
+  @Test
+  public void testMultipleMandatoryMediaFormatsNotAllMatch() {
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_2COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertFalse("valid?", media.isValid());
+    assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 2, media.getRenditions().size());
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals("rendition.mediaUrl.1",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.205.97.file/sample_image_215x102.jpg",
+        renditions.get(0).getUrl());
+    assertEquals("rendition.mediaUrl.2",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.file/sample_image_215x102.jpg",
+        renditions.get(1).getUrl());
   }
 
 }
