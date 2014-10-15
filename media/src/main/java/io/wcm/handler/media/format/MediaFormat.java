@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -52,6 +53,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private final String renditionGroup;
   private final boolean internal;
   private final int ranking;
+  private final ValueMap properties;
 
   private final String key;
   private String combinedTitle;
@@ -60,7 +62,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   MediaFormat(String name, String applicationId, String label, String description,
       long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight,
       double ratio, long ratioWidth, long ratioHeight, long fileSizeMax, String[] extensions,
-      String renditionGroup, boolean internal, int ranking) {
+      String renditionGroup, boolean internal, int ranking, ValueMap properties) {
     this.name = name;
     this.applicationId = applicationId;
     this.label = label;
@@ -79,6 +81,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
     this.renditionGroup = renditionGroup;
     this.internal = internal;
     this.ranking = ranking;
+    this.properties = properties;
 
     this.key = applicationId + ":" + name;
   }
@@ -436,6 +439,13 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       combinedTitle = sb.toString();
     }
     return combinedTitle;
+  }
+
+  /**
+   * @return Custom properties that my be used by application-specific markup builders or processors.
+   */
+  public ValueMap getProperties() {
+    return this.properties;
   }
 
   /**

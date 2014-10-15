@@ -25,7 +25,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 public class MediaFormatBuilderTest {
 
@@ -155,6 +159,22 @@ public class MediaFormatBuilderTest {
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalApplicationId() {
     MediaFormatBuilder.create("mf1", "illegal app id").build();
+  }
+
+  @Test
+  public void testProperties() {
+    Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
+
+    MediaFormat mf = MediaFormatBuilder.create("name1", APP_ID)
+        .property("prop3", "value3")
+        .properties(props)
+        .property("prop2", "value2")
+        .build();
+
+    assertEquals(3, mf.getProperties().size());
+    assertEquals("value1", mf.getProperties().get("prop1", String.class));
+    assertEquals("value2", mf.getProperties().get("prop2", String.class));
+    assertEquals("value3", mf.getProperties().get("prop3", String.class));
   }
 
 }

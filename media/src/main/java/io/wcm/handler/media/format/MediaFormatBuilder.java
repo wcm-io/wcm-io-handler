@@ -20,7 +20,10 @@
 package io.wcm.handler.media.format;
 
 import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -51,6 +54,7 @@ public final class MediaFormatBuilder {
   private String renditionGroup;
   private boolean internal;
   private int ranking;
+  private final Map<String, Object> properties = new HashMap<>();
 
   private MediaFormatBuilder() {
     // private constructor
@@ -272,6 +276,33 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Custom properties that my be used by application-specific markup builders or processors.
+   * @param map Property map. Is merged with properties already set in builder.
+   * @return this
+   */
+  public MediaFormatBuilder properties(Map<String, Object> map) {
+    if (map == null) {
+      throw new IllegalArgumentException("Map argument must not be null.");
+    }
+    this.properties.putAll(map);
+    return this;
+  }
+
+  /**
+   * Custom properties that my be used by application-specific markup builders or processors.
+   * @param key Property key
+   * @param value Property value
+   * @return this
+   */
+  public MediaFormatBuilder property(String key, Object value) {
+    if (key == null) {
+      throw new IllegalArgumentException("Key argument must not be null.");
+    }
+    this.properties.put(key, value);
+    return this;
+  }
+
+  /**
    * Builds the media format definition.
    * @return Media format definition
    */
@@ -297,10 +328,20 @@ public final class MediaFormatBuilder {
         ratioWidth,
         ratioHeight,
         fileSizeMax,
-        extensions == null ? new String[0] : extensions,
-            renditionGroup,
-            internal,
-            ranking);
+        nonNullArray(extensions),
+        renditionGroup,
+        internal,
+        ranking,
+        ImmutableValueMap.copyOf(properties));
+  }
+
+  private static String[] nonNullArray(String[] value) {
+    if (value == null) {
+      return new String[0];
+    }
+    else {
+      return value;
+    }
   }
 
 }
