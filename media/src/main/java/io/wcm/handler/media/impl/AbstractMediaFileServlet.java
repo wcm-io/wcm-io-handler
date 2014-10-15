@@ -53,7 +53,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
   /**
    * Content disposition header
    */
-  private static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+  public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
   @Override
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
@@ -62,6 +62,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
     Resource resource = getBinaryDataResource(request);
     if (resource == null) {
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
     }
 
     // check if the resource was modified since last request

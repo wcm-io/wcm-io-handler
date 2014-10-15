@@ -29,6 +29,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
@@ -344,7 +345,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("height set?", 100, img.getAttributeValueAsInteger("height"));
   }
 
-  // TESTS FOR FUNCTIONS THAT DELEGATE TO MediaLibHandler (WHERE THEY ARE TESTED IN MORE DETAIL)
+  // TESTS FOR FUNCTIONS THAT DELEGATE TO MediaHandler (WHERE THEY ARE TESTED IN MORE DETAIL)
 
   @Test
   public void testGetMediaUrlStandard() {
@@ -432,6 +433,22 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("rendition.mediaUrl",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/original.media_file.download_attachment.file/standard.jpg",
         media.getRendition().getUrl());
+  }
+
+  @Test
+  public void testGetMediaMarkup() {
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
+    assertEquals(
+        "<img src=\"/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg\" alt=\"Editorial Standard 1\" height=\"102\" width=\"215\" />",
+        media.getMarkup());
+  }
+
+  @Test
+  public void testIsValidElement() {
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
+    assertTrue(mediaHandler().isValidElement(media.getElement()));
+    assertFalse(mediaHandler().isValidElement(new Div()));
+    assertFalse(mediaHandler().isValidElement(null));
   }
 
   @Test
