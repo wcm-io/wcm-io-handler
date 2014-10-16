@@ -34,6 +34,7 @@ import io.wcm.testing.mock.wcmio.config.MockConfig;
 import java.io.IOException;
 
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -61,6 +62,10 @@ public final class MediaSourceDamAppAemContext {
 
   public static AemContext newAemContext() {
     return new AemContext(new SetUpCallback());
+  }
+
+  public static AemContext newAemContext(ResourceResolverType resourceResolverType) {
+    return new AemContext(new SetUpCallback(), resourceResolverType);
   }
 
   /**

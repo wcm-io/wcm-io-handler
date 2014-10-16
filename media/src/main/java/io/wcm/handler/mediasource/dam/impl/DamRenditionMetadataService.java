@@ -56,7 +56,6 @@ import com.day.text.Text;
 
 /**
  * Background service that extracts additional metadata like width and height for DAM renditions.
- * TODO: migrate JCR logic to Sling CRUD - remove JCR dependency in POM then as well
  */
 @Component(immediate = true, metatype = true,
 label = "wcm.io DAM Rendition Metadata Service",
