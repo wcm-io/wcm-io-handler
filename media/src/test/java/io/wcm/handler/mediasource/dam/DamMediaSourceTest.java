@@ -253,36 +253,42 @@ public class DamMediaSourceTest extends AbstractDamTest {
   public void testGetMediaElementImageSpecificMediaFormat() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(EDITORIAL_2COL);
-    HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
+    Media media = mediaHandler().get(parStandardMediaRef, args).build();
+    HtmlElement img = media.getElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
     // check that this is the requested mediaformat via width/height-attributes of the img-tag
     assertEquals("width set?", 450, img.getAttributeValueAsInteger("width"));
     assertEquals("height set?", 213, img.getAttributeValueAsInteger("height"));
+    assertEquals(EDITORIAL_2COL, media.getRendition().getMediaFormat());
   }
 
   @Test
   public void testGetMediaElementImageSpecificMediaFormat_ShortFormat() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(EDITORIAL_2COL);
-    HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
+    Media media = mediaHandler().get(parStandardMediaRef, args).build();
+    HtmlElement img = media.getElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
     // check that this is the requested mediaformat via width/height-attributes of the img-tag
     assertEquals("width set?", 450, img.getAttributeValueAsInteger("width"));
     assertEquals("height set?", 213, img.getAttributeValueAsInteger("height"));
+    assertEquals(EDITORIAL_2COL, media.getRendition().getMediaFormat());
   }
 
   @Test
   public void testGetMediaElementImageSpecificMediaFormatCrop() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(HOME_TEASER_SCALE1);
-    HtmlElement img = mediaHandler().get(parStandardMediaRefCrop, args).buildElement();
+    Media media = mediaHandler().get(parStandardMediaRefCrop, args).build();
+    HtmlElement img = media.getElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
     // check that this is the requested mediaformat via width/height-attributes of the img-tag
     assertEquals("width set?", 158, img.getAttributeValueAsInteger("width"));
     assertEquals("height set?", 80, img.getAttributeValueAsInteger("height"));
+    assertEquals(HOME_TEASER_SCALE1, media.getRendition().getMediaFormat());
   }
 
   @Test
@@ -460,6 +466,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("rendition.mediaUrl",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
         media.getUrl());
+    assertEquals(EDITORIAL_1COL, media.getRendition().getMediaFormat());
   }
 
   @Test
@@ -470,15 +477,21 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertNotNull("asset?", media.getAsset());
     assertEquals("renditions", 3, media.getRenditions().size());
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
     assertEquals("rendition.mediaUrl.1",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
         renditions.get(0).getUrl());
+    assertEquals(EDITORIAL_1COL, renditions.get(0).getMediaFormat());
+
     assertEquals("rendition.mediaUrl.2",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
         renditions.get(1).getUrl());
+    assertEquals(EDITORIAL_2COL, renditions.get(1).getMediaFormat());
+
     assertEquals("rendition.mediaUrl.3",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
         renditions.get(2).getUrl());
+    assertEquals(EDITORIAL_3COL, renditions.get(2).getMediaFormat());
   }
 
   @Test
@@ -490,12 +503,16 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertNotNull("asset?", media.getAsset());
     assertEquals("renditions", 2, media.getRenditions().size());
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
     assertEquals("rendition.mediaUrl.1",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
         renditions.get(0).getUrl());
+    assertEquals(EDITORIAL_2COL, renditions.get(0).getMediaFormat());
+
     assertEquals("rendition.mediaUrl.2",
         "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
         renditions.get(1).getUrl());
+    assertEquals(EDITORIAL_3COL, renditions.get(1).getMediaFormat());
   }
 
 }

@@ -60,10 +60,11 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final Adaptable adaptable;
   private final Resource resource;
   private final Media media;
-  private final MediaArgs defaultMediaArgs;
+  private final MediaArgs mediaArgs;
   private final String fileName;
   private final Dimension imageDimension;
   private final String url;
+  private MediaFormat resolvedMediaFormat;
 
   /**
    * Special dimension instance that marks "scaling is required but not possible"
@@ -79,7 +80,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   InlineRendition(Resource resource, Media media, MediaArgs mediaArgs, String fileName, Adaptable adaptable) {
     this.resource = resource;
     this.media = media;
-    this.defaultMediaArgs = mediaArgs;
+    this.mediaArgs = mediaArgs;
     this.adaptable = adaptable;
 
     // detect image dimension
@@ -96,7 +97,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       dimension = getImageDimension();
 
       // check if scaling is required
-      scaledDimension = getScaledDimension(dimension, mediaArgs);
+      scaledDimension = getScaledDimension(dimension);
       if (scaledDimension != null) {
         if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
           // overwrite image dimension of {@link Rendition} instance with scaled dimensions
@@ -110,7 +111,13 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.imageDimension = dimension;
 
     // build media url (it is null if no rendition is available for the given media args)
-    this.url = buildMediaUrl(scaledDimension, mediaArgs);
+    this.url = buildMediaUrl(scaledDimension);
+
+    // set first media format as resolved format - because only the first is supported
+    if (url != null && mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
+      this.resolvedMediaFormat = mediaArgs.getMediaFormats()[0];
+    }
+
   }
 
   /**
@@ -137,15 +144,14 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   /**
    * Checks if the current binary is an image and has to be scaled. In this case the destination dimension is returned.
-   * @param mediaArgs Media args
    * @return Scaled destination or null if no scaling is required. If a destination object with both
    *         width and height set to -1 is returned, a scaling is required but not possible with the given source
    *         object.
    */
-  private Dimension getScaledDimension(Dimension originalDimension, MediaArgs mediaArgs) {
+  private Dimension getScaledDimension(Dimension originalDimension) {
 
     // check if image has to be rescaled
-    Dimension requestedDimension = getRequestedDimension(mediaArgs);
+    Dimension requestedDimension = getRequestedDimension();
     boolean scaleWidth = (requestedDimension.getWidth() > 0
         && requestedDimension.getWidth() != originalDimension.getWidth());
     boolean scaleHeight = (requestedDimension.getHeight() > 0
@@ -184,13 +190,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   /**
    * Build media URL for this rendition - either "native" URL to repository or virtual url to rescaled version.
-   * @param mediaArgs Media args
    * @return Media URL - null if no rendition is available
    */
-  private String buildMediaUrl(Dimension scaledDimension, MediaArgs mediaArgs) {
+  private String buildMediaUrl(Dimension scaledDimension) {
 
     // check for file extension filtering
-    if (!isMatchingFileExtension(mediaArgs)) {
+    if (!isMatchingFileExtension()) {
       return null;
     }
 
@@ -246,7 +251,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.get(path).urlMode(this.defaultMediaArgs.getUrlMode()).buildExternalResourceUrl();
+    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl();
   }
 
   /**
@@ -266,14 +271,14 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     String path = resourcePath + "." + ImageFileServlet.SELECTOR
         + "." + dimension.getWidth() + "." + dimension.getHeight()
         + (cropDimension != null ? "." + cropDimension.getCropString() : "")
-        + (this.defaultMediaArgs.isForceDownload() ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
+        + (this.mediaArgs.isForceDownload() ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
         + "." + MediaFileServlet.EXTENSION + "/"
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + ImageFileServlet.getImageFileName(getFileName());
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.get(path).urlMode(this.defaultMediaArgs.getUrlMode()).buildExternalResourceUrl();
+    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl();
   }
 
   /**
@@ -296,15 +301,14 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.get(path).urlMode(this.defaultMediaArgs.getUrlMode()).buildExternalResourceUrl();
+    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl();
   }
 
   /**
    * Checks if the file extension of the current binary matches with the requested extensions from the media args.
-   * @param mediaArgs Media args
    * @return true if file extension matches
    */
-  private boolean isMatchingFileExtension(MediaArgs mediaArgs) {
+  private boolean isMatchingFileExtension() {
     String[] fileExtensions = mediaArgs.getFileExtensions();
     if (fileExtensions == null || fileExtensions.length == 0) {
       return true;
@@ -319,10 +323,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   /**
    * Requested dimensions either from media format or fixed dimensions from media args.
-   * @param mediaArgs Media arguments
    * @return Requested dimensions
    */
-  private Dimension getRequestedDimension(MediaArgs mediaArgs) {
+  private Dimension getRequestedDimension() {
 
     // check for fixed dimensions from media args
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
@@ -392,9 +395,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public String getMediaFormat() {
-    // not supported
-    return null;
+  public MediaFormat getMediaFormat() {
+    return resolvedMediaFormat;
   }
 
   @Override

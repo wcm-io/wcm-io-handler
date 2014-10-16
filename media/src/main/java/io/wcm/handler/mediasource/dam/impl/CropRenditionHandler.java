@@ -75,7 +75,7 @@ class CropRenditionHandler extends DefaultRenditionHandler implements RenditionH
     boolean isImage = FileExtension.isImage(originalFileExtension);
 
     // check if original image is not an image because otherwise cropping is not possible
-    this.renditions = new TreeSet<RenditionMetadata>();
+    this.renditions = new TreeSet<>();
     if (isImage) {
       // check if original image is big enough because otherwise cropping is not possible
       if (sourceRendition.getWidth() >= this.cropDimension.getRight()

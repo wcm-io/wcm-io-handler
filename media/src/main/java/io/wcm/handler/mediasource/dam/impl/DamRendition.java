@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.caching.ModificationDate;
@@ -130,9 +131,13 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public String getMediaFormat() {
-    // not supported
-    return null;
+  public MediaFormat getMediaFormat() {
+    if (this.rendition != null) {
+      return this.rendition.getMediaFormat();
+    }
+    else {
+      return null;
+    }
   }
 
   @Override

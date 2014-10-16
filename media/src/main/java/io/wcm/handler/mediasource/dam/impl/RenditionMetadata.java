@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -46,6 +47,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   private final String fileExtension;
   private final long width;
   private final long height;
+  private MediaFormat mediaFormat;
 
   /**
    * @param rendition DAM rendition
@@ -154,6 +156,21 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    */
   public long getHeight() {
     return this.height;
+  }
+
+  /**
+   * @return Media format that matches with the resolved rendition. Null if no media format was specified for resolving.
+   */
+  public MediaFormat getMediaFormat() {
+    return this.mediaFormat;
+  }
+
+  /**
+   * @param mediaFormat Media format that matches with the resolved rendition. Null if no media format was specified for
+   *          resolving.
+   */
+  public void setMediaFormat(MediaFormat mediaFormat) {
+    this.mediaFormat = mediaFormat;
   }
 
   /**

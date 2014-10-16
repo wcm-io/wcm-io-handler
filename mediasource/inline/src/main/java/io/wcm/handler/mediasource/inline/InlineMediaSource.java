@@ -96,7 +96,7 @@ public final class InlineMediaSource extends AbstractMediaSource {
   public Media resolveMedia(Media media) {
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
-    // the resource that was references originally (and may contain additional attributes)
+    // the resource that was referenced originally (and may contain additional attributes)
     Resource referencedResource = media.getMediaRequest().getResource();
     Resource ntFileResource = null;
     Resource ntResourceResource = null;

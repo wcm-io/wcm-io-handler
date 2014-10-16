@@ -123,7 +123,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     // get rendition candidates matching for file extensions
     Set<RenditionMetadata> candidates = getRendtionsMatchingFileExtensions(requestedFileExtensions);
 
-    // if request dos not contain any size restrictions return original image or first by filename matching rendition
+    // if request does not contain any size restrictions return original image or first by filename matching rendition
     if (!isSizeMatchingRequest) {
       return getOriginalOrFirstRendition(candidates);
     }
@@ -162,15 +162,13 @@ class DefaultRenditionHandler implements RenditionHandler {
     // get file extensions from media formats
     final Set<String> mediaFormatFileExtensions = new HashSet<String>();
     visitMediaFormats(mediaArgs, new MediaFormatVisitor<Object>() {
-
       @Override
-      public Object visit(MediaFormat pMediaFormat) {
-        if (pMediaFormat.getExtensions() != null && pMediaFormat.getExtensions().length > 0) {
-          mediaFormatFileExtensions.addAll(ImmutableList.copyOf(pMediaFormat.getExtensions()));
+      public Object visit(MediaFormat mediaFormat) {
+        if (mediaFormat.getExtensions() != null && mediaFormat.getExtensions().length > 0) {
+          mediaFormatFileExtensions.addAll(ImmutableList.copyOf(mediaFormat.getExtensions()));
         }
         return null;
       }
-
     });
 
     // if extensions are defined both in mediaargs and media formats use intersection of both
@@ -220,14 +218,13 @@ class DefaultRenditionHandler implements RenditionHandler {
       return true;
     }
     Boolean isSizeMatchingMediaFormat = visitMediaFormats(mediaArgs, new MediaFormatVisitor<Boolean>() {
-
       @Override
-      public Boolean visit(MediaFormat pMediaFormat) {
-        if (pMediaFormat.getEffectiveMinWidth() > 0
-            || pMediaFormat.getEffectiveMaxWidth() > 0
-            || pMediaFormat.getEffectiveMinHeight() > 0
-            || pMediaFormat.getEffectiveMaxHeight() > 0
-            || pMediaFormat.getRatio() > 0) {
+      public Boolean visit(MediaFormat mediaFormat) {
+        if (mediaFormat.getEffectiveMinWidth() > 0
+            || mediaFormat.getEffectiveMaxWidth() > 0
+            || mediaFormat.getEffectiveMinHeight() > 0
+            || mediaFormat.getEffectiveMaxHeight() > 0
+            || mediaFormat.getRatio() > 0) {
           return true;
         }
         return null;
@@ -255,15 +252,15 @@ class DefaultRenditionHandler implements RenditionHandler {
     // otherwise check for media format restriction
     else if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
       return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
-
         @Override
-        public RenditionMetadata visit(MediaFormat pMediaFormat) {
+        public RenditionMetadata visit(MediaFormat mediaFormat) {
           for (RenditionMetadata candidate : candidates) {
-            if (candidate.matches((int)pMediaFormat.getEffectiveMinWidth(),
-                (int)pMediaFormat.getEffectiveMinHeight(),
-                (int)pMediaFormat.getEffectiveMaxWidth(),
-                (int)pMediaFormat.getEffectiveMaxHeight(),
-                pMediaFormat.getRatio())) {
+            if (candidate.matches((int)mediaFormat.getEffectiveMinWidth(),
+                (int)mediaFormat.getEffectiveMinHeight(),
+                (int)mediaFormat.getEffectiveMaxWidth(),
+                (int)mediaFormat.getEffectiveMaxHeight(),
+                mediaFormat.getRatio())) {
+              candidate.setMediaFormat(mediaFormat);
               return candidate;
             }
           }
@@ -320,14 +317,17 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // or from any media format
     return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
-
       @Override
-      public RenditionMetadata visit(MediaFormat pMediaFormat) {
-        int destWidth = (int)pMediaFormat.getEffectiveMinWidth();
-        int destHeight = (int)pMediaFormat.getEffectiveMinHeight();
-        double destRatio = pMediaFormat.getRatio();
+      public RenditionMetadata visit(MediaFormat mediaFormat) {
+        int destWidth = (int)mediaFormat.getEffectiveMinWidth();
+        int destHeight = (int)mediaFormat.getEffectiveMinHeight();
+        double destRatio = mediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
-        return getVirtualRendition(candidates, destWidth, destHeight, destRatio);
+        RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, destRatio);
+        if (rendition != null) {
+          rendition.setMediaFormat(mediaFormat);
+        }
+        return rendition;
       }
     });
   }

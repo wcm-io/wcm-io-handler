@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media;
 
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.wcm.commons.caching.ModificationDateProvider;
 
 import org.apache.sling.api.adapter.Adaptable;
@@ -62,9 +63,9 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   long getFileSize();
 
   /**
-   * @return Media format name or path
+   * @return Media format that matches with the resolved rendition. Null if no media format was specified for resolving.
    */
-  String getMediaFormat();
+  MediaFormat getMediaFormat();
 
   /**
    * @return Properties of rendition
