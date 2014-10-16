@@ -19,15 +19,23 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
-import org.junit.Assert;
+import java.io.InputStream;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.Rendition;
+import com.day.image.Layer;
 
 /**
  * Tests the {@link RenditionMetadata}, especially the compareTo method
@@ -47,7 +55,6 @@ public class RenditionMetadataTest extends AbstractDamTest {
     originalRendition = new RenditionMetadata(asset.getRendition("original"));
     assertNotNull(originalRendition);
 
-
     originalRenditionCopy = new RenditionMetadata(asset.getRendition("cq5dam.web.215.102.jpg"));
     assertNotNull(originalRenditionCopy);
 
@@ -56,7 +63,6 @@ public class RenditionMetadataTest extends AbstractDamTest {
 
     biggestRendition = new RenditionMetadata(asset.getRendition("cq5dam.web.960.455.jpg"));
     assertNotNull(biggestRendition);
-
   }
 
   /**
@@ -64,7 +70,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   public void testCompareOriginalRenditionToItself() {
-    Assert.assertTrue("original rendition is not eqaul to itself", originalRendition.compareTo(originalRendition) == 0);
+    assertTrue("original rendition is not eqaul to itself", originalRendition.compareTo(originalRendition) == 0);
   }
 
   /**
@@ -72,7 +78,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   public void testCompareSmallToBigRendition() {
-    Assert.assertTrue("smaller rendition is not smaller", smallestRendition.compareTo(biggestRendition) == -1);
+    assertTrue("smaller rendition is not smaller", smallestRendition.compareTo(biggestRendition) == -1);
   }
 
   /**
@@ -80,7 +86,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   public void testCompareBigToSmallRendition() {
-    Assert.assertTrue("bigger rendition is not bigger", biggestRendition.compareTo(smallestRendition) == 1);
+    assertTrue("bigger rendition is not bigger", biggestRendition.compareTo(smallestRendition) == 1);
   }
 
   /**
@@ -88,7 +94,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   public void testCompareTwoEqualRenditions() {
-    Assert.assertTrue("two equal renditions are not equal", biggestRendition.compareTo(biggestRendition) == 0);
+    assertTrue("two equal renditions are not equal", biggestRendition.compareTo(biggestRendition) == 0);
   }
 
   /**
@@ -96,7 +102,85 @@ public class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   public void testCompareOriginalRenditionToEqualRendition() {
-    Assert.assertTrue("original rendition is not preferred over the equal rendition", originalRendition.compareTo(originalRenditionCopy) == -1);
-    Assert.assertTrue("original rendition is not preferred over the equal rendition", originalRenditionCopy.compareTo(originalRendition) == 1);
+    assertTrue("original rendition is not preferred over the equal rendition", originalRendition.compareTo(originalRenditionCopy) == -1);
+    assertTrue("original rendition is not preferred over the equal rendition", originalRenditionCopy.compareTo(originalRendition) == 1);
   }
+
+  @Test
+  public void testMatchesExact() {
+    assertTrue(smallestRendition.matches(450, 213));
+    assertFalse(smallestRendition.matches(500, 500));
+    assertFalse(smallestRendition.matches(450, 500));
+    assertFalse(smallestRendition.matches(500, 213));
+    assertTrue(smallestRendition.matches(450, 0));
+    assertTrue(smallestRendition.matches(0, 213));
+    assertTrue(smallestRendition.matches(0, 0));
+  }
+
+  @Test
+  public void testMatchesSpec() {
+    assertTrue(smallestRendition.matches(450, 213, 450, 213, 0d));
+    assertTrue(smallestRendition.matches(200, 100, 500, 300, 0d));
+    assertTrue(smallestRendition.matches(0, 213, 0, 213, 0d));
+    assertTrue(smallestRendition.matches(450, 0, 450, 0, 0d));
+    assertTrue(smallestRendition.matches(0, 0, 450, 213, 0d));
+    assertTrue(smallestRendition.matches(450, 213, 0, 0, 0d));
+
+    assertFalse(smallestRendition.matches(500, 0, 0, 0, 0d));
+    assertFalse(smallestRendition.matches(0, 500, 0, 0, 0d));
+    assertFalse(smallestRendition.matches(0, 0, 100, 0, 0d));
+    assertFalse(smallestRendition.matches(0, 0, 0, 100, 0d));
+
+    assertTrue(smallestRendition.matches(0, 0, 0, 0, 2.11d));
+    assertFalse(smallestRendition.matches(0, 0, 0, 0, 2.2d));
+  }
+
+  @Test
+  public void testGetLayer() throws PersistenceException {
+    loadImageBinary_originalRenditionCopy();
+    Layer layer = originalRenditionCopy.getLayer();
+    assertEquals(215, layer.getWidth());
+    assertEquals(102, layer.getHeight());
+  }
+
+  @Test
+  public void testGetInputStream() throws Exception {
+    loadImageBinary_originalRenditionCopy();
+    InputStream is = originalRenditionCopy.getInputStream();
+    assertNotNull(is);
+    is.close();
+  }
+
+  @Test
+  public void testAdaptTo() throws Exception {
+    loadImageBinary_originalRenditionCopy();
+    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.web.215.102.jpg";
+
+    Rendition damRendition = originalRenditionCopy.adaptTo(Rendition.class);
+    assertEquals(path, damRendition.getPath());
+
+    Resource resource = originalRenditionCopy.adaptTo(Resource.class);
+    assertEquals(path, resource.getPath());
+
+    Layer layer = originalRenditionCopy.adaptTo(Layer.class);
+    assertEquals(215, layer.getWidth());
+    assertEquals(102, layer.getHeight());
+
+    InputStream is = originalRenditionCopy.adaptTo(InputStream.class);
+    assertNotNull(is);
+    is.close();
+  }
+
+  @Test
+  public void testEquals() {
+    assertTrue(smallestRendition.equals(smallestRendition));
+    assertFalse(smallestRendition.equals(biggestRendition));
+  }
+
+  private void loadImageBinary_originalRenditionCopy() throws PersistenceException {
+    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.web.215.102.jpg";
+    context.resourceResolver().delete(context.resourceResolver().getResource(path));
+    context.load().binaryFile("/sample_image_215x102.jpg", path);
+  }
+
 }

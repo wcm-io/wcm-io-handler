@@ -39,6 +39,8 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -470,6 +472,14 @@ public class InternalLinkTypeTest {
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def#anchor1",
         link.getUrl());
     assertNotNull("anchor", link.getAnchor());
+  }
+
+  @Test
+  public void testGetSyntheticLinkResource() {
+    Resource resource = InternalLinkType.getSyntheticLinkResource(context.resourceResolver(), "/page/ref");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
+        LinkNameConstants.PN_LINK_CONTENT_REF, "/page/ref");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
   }
 
 }

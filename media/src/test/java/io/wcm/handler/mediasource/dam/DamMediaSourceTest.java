@@ -23,6 +23,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_TEASER_SCALE1;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -264,17 +265,17 @@ public class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetMediaElementImageSpecificMediaFormat_ShortFormat() {
+  public void testGetMediaElementImageSpecificMediaFormat_Resize() {
     // create img element for rendition with standard_2col media format
-    MediaArgs args = new MediaArgs(EDITORIAL_2COL);
+    MediaArgs args = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler().get(parStandardMediaRef, args).build();
     HtmlElement img = media.getElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
     // check that this is the requested mediaformat via width/height-attributes of the img-tag
-    assertEquals("width set?", 450, img.getAttributeValueAsInteger("width"));
-    assertEquals("height set?", 213, img.getAttributeValueAsInteger("height"));
-    assertEquals(EDITORIAL_2COL, media.getRendition().getMediaFormat());
+    assertEquals("width set?", 64, img.getAttributeValueAsInteger("width"));
+    assertEquals("height set?", 30, img.getAttributeValueAsInteger("height"));
+    assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
   }
 
   @Test
@@ -358,6 +359,40 @@ public class DamMediaSourceTest extends AbstractDamTest {
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl();
     assertNotNull("returned url?", url);
     assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url);
+  }
+
+  @Test
+  public void testGetMediaUrlStandard_Resize() {
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, SHOWROOM_CONTROLS_SCALE1).buildUrl();
+    assertNotNull("returned url?", url);
+    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.file/standard.jpg", url);
+  }
+
+  @Test
+  public void testGetMediaUrlStandard_Resize_Download() {
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs(SHOWROOM_CONTROLS_SCALE1).forceDownload(true)).buildUrl();
+    assertNotNull("returned url?", url);
+    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.download_attachment.file/standard.jpg",
+        url);
+  }
+
+  @Test
+  public void testGetMediaUrlStandard_FixedDimension_ExactMatch() {
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs().fixedDimension(450, 213)).buildUrl();
+    assertNotNull("returned url?", url);
+    assertEquals("url as expected?",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg", url);
+  }
+
+  @Test
+  public void testGetMediaUrlStandard_FixedDimension_Resize() {
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs().fixedDimension(64, 30)).buildUrl();
+    assertNotNull("returned url?", url);
+    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.file/standard.jpg", url);
   }
 
   @Test

@@ -33,6 +33,8 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -134,6 +136,14 @@ public class MediaLinkTypeTest {
     assertTrue("link valid", link.isValid());
     assertEquals("link url", "/content/dummymedia/pdf1.pdf", link.getUrl());
     assertNotNull("anchor", link.getAnchor());
+  }
+
+  @Test
+  public void testGetSyntheticLinkResource() {
+    Resource resource = MediaLinkType.getSyntheticLinkResource(context.resourceResolver(), "/media/ref");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID,
+        LinkNameConstants.PN_LINK_MEDIA_REF, "/media/ref");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
   }
 
 }

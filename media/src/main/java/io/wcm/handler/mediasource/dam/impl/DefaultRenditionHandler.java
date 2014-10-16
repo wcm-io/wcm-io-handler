@@ -209,7 +209,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         anyImageFileExtension = true;
       }
     }
-    if (!anyImageFileExtension) {
+    if (!anyImageFileExtension && mediaArgs.getFixedWidth() == 0 && mediaArgs.getFixedHeight() == 0) {
       return false;
     }
 

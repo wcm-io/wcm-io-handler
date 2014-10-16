@@ -84,7 +84,7 @@ public final class DamRenditionMetadataService implements EventHandler {
   private static final boolean DEFAULT_ENABLED = true;
 
   @Property(boolValue = DEFAULT_ENABLED, label = "Enabled", description = "Switch to enable or disable this service.")
-  private static final String PROPERTY_ENABLED = "enabled";
+  static final String PROPERTY_ENABLED = "enabled";
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
   private boolean enabled;

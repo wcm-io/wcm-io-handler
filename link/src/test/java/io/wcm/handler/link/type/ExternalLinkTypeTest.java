@@ -33,6 +33,8 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -78,6 +80,14 @@ public class ExternalLinkTypeTest {
     assertEquals("link url", "http://xyz/abc", link.getUrl());
     assertNotNull("anchor", link.getAnchor());
 
+  }
+
+  @Test
+  public void testGetSyntheticLinkResource() {
+    Resource resource = ExternalLinkType.getSyntheticLinkResource(context.resourceResolver(), "http://dummy");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID,
+        LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://dummy");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
   }
 
 }
