@@ -57,6 +57,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Before;
@@ -137,11 +138,8 @@ public class InlineMediaSourceTest {
 
   }
 
-  /**
-   * Test invalid resource
-   */
   @Test
-  public void testInvalid() {
+  public void testInvalidResource() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(emptyResource).build();
@@ -150,9 +148,6 @@ public class InlineMediaSourceTest {
     assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
   }
 
-  /**
-   * Test nt:resource resource without filename
-   */
   @Test
   public void testNtFile() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -180,9 +175,6 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.height", 0, rendition.getHeight());
   }
 
-  /**
-   * Test nt:resource resource
-   */
   @Test
   public void testNtResource() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -210,9 +202,6 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.height", 0, rendition.getHeight());
   }
 
-  /**
-   * Test resource mediaInline child node (nt:resource) with filename
-   */
   @Test
   public void testMediaInline() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -242,9 +231,6 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.height", 0, rendition.getHeight());
   }
 
-  /**
-   * Test resource mediaInline child node (nt:file + nt:resource) with filename
-   */
   @Test
   public void testMediaInlineWithFile() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -274,9 +260,6 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.height", 0, rendition.getHeight());
   }
 
-  /**
-   * Test resource mediaInline child node (nt:file + nt:resource) with filename
-   */
   @Test
   public void testMediaInlineSampleImage() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -304,11 +287,12 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.filesize", 25918, rendition.getFileSize());
     assertEquals("rendition.width", 215, rendition.getWidth());
     assertEquals("rendition.height", 102, rendition.getHeight());
+
+    assertNotNull(media.getAsset().getImageRendition(new MediaArgs()));
+    assertNull(media.getAsset().getFlashRendition(new MediaArgs()));
+    assertNull(media.getAsset().getDownloadRendition(new MediaArgs()));
   }
 
-  /**
-   * Test with alt. text
-   */
   @Test
   public void testWithAltText() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -333,9 +317,6 @@ public class InlineMediaSourceTest {
 
   }
 
-  /**
-   * Test with url mode
-   */
   @Test
   public void testWithUrlMode() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -356,9 +337,6 @@ public class InlineMediaSourceTest {
 
   }
 
-  /**
-   * Test with fixed dimensions
-   */
   @Test
   public void testWithFixedDimensions() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -430,9 +408,6 @@ public class InlineMediaSourceTest {
 
   }
 
-  /**
-   * Test with media formats
-   */
   @Test
   public void testWithMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
@@ -557,6 +532,36 @@ public class InlineMediaSourceTest {
         ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage/mediaInline."
             + MediaFileServlet.SELECTOR + "." + MediaFileServlet.SELECTOR_DOWNLOAD + ".file/sample_image_215x102.jpg",
             media.getRendition().getUrl());
+  }
+
+  @Test
+  public void testWithCroppping() {
+    // set cropping parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
+    props.put(MediaNameConstants.PN_MEDIA_CROP, "10,10,74,40");
+
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 1, media.getRenditions().size());
+    assertEquals("rendition.mediaUrl",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.10,10,74,40.file/sample_image_215x102.jpg",
+        media.getUrl());
+    assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
+  }
+
+  @Test
+  public void testWithCropppingInvalid() {
+    // set cropping parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
+    props.put(MediaNameConstants.PN_MEDIA_CROP, "10,10,20,20");
+
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertFalse("valid?", media.isValid());
   }
 
   @Test
