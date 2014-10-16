@@ -1,0 +1,68 @@
+{
+  "sling:resourceType": "dam/components/video/home",
+  "jcr:title": "Video Profiles",
+  "jcr:primaryType": "sling:Folder",
+  "firefoxhq": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "audioBitrate": "128",
+      "videoBitrate": "4096",
+      "jcr:description": "High quality for Firefox 3.5+ using Theora and Vorbis inside an ogg file.",
+      "sling:resourceType": "dam/components/video/profile",
+      "extension": "ogg",
+      "jcr:title": "Firefox HQ ogg",
+      "audioCodec": "libvorbis",
+      "mimeType": "video/ogg",
+      "audioSamplingRate": "44100",
+      "videoFrameRate": "24000/1001",
+      "jcr:primaryType": "nt:unstructured",
+      "cq:template": "/libs/dam/templates/videoprofile",
+      "htmlType": "video/ogg; codecs=\"theora, vorbis\"",
+      "audioChannels": "2",
+      "videoBitrateTolerance": "4069"
+    }
+  },
+  "flv": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "audioBitrate": "56",
+      "videoBitrate": "200",
+      "jcr:description": "Profile for a small FLV file with low framerate and low bitrate. For Flash Players versions 7 to 9.",
+      "sling:resourceType": "dam/components/video/profile",
+      "jcr:title": "Flash 7+ low quality",
+      "extension": "flv",
+      "audioCodec": "libmp3lame",
+      "mimeType": "video/x-flv",
+      "audioSamplingRate": "22050",
+      "height": "240",
+      "videoFrameRate": "12",
+      "jcr:primaryType": "nt:unstructured",
+      "cq:template": "/libs/dam/templates/videoprofile",
+      "width": "320",
+      "audioChannels": "1"
+    }
+  },
+  "hq": {
+    "jcr:primaryType": "cq:Page",
+    "jcr:content": {
+      "videoCodec": "libx264",
+      "videoBitrate": "6144",
+      "audioBitrate": "128",
+      "jcr:description": "A video profile with for high quality output, two pass encoding, ideal for m4v with h.264 encoding. This can be used for Safari 3.1+, Mobile Safari on iPad, iPhone and iPod touch, and also on AppleTV. Supported on Flash Player 10+ as well.",
+      "sling:resourceType": "dam/components/video/profile",
+      "extension": "m4v",
+      "jcr:title": "High Quality H.264",
+      "audioCodec": "libfaac",
+      "mimeType": "video/x-m4v",
+      "audioSamplingRate": "44100",
+      "twoPass": "true",
+      "videoFrameRate": "24000/1001",
+      "jcr:primaryType": "nt:unstructured",
+      "cq:template": "/libs/dam/templates/videoprofile",
+      "htmlType": "video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"",
+      "customArgs": "-flags +loop -me_method umh -g 250 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 16 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 1 -sc_threshold 40 -flags2 +bpyramid+wpred+mixed_refs+dct8x8+fastpskip -keyint_min 25 -refs 4 -trellis 1 -directpred 3 -partitions +parti8x8+parti4x4+partp8x8+partb8x8",
+      "audioChannels": "2",
+      "videoBitrateTolerance": "8192"
+    }
+  }
+}

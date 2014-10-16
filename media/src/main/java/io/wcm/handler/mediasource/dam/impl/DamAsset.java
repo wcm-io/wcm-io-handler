@@ -150,13 +150,6 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   /**
-   * @return DAM asset
-   */
-  public com.day.cq.dam.api.Asset getDamAsset() {
-    return this.damAsset;
-  }
-
-  /**
    * Get DAM rendition instance.
    * @param mediaArgs Media args
    * @return DAM rendition instance (may be invalid rendition)
@@ -168,7 +161,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   @Override
   @SuppressWarnings("unchecked")
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
-    if (type == Asset.class) {
+    if (type == com.day.cq.dam.api.Asset.class) {
       return (AdapterType)this.damAsset;
     }
     if (type == Resource.class) {

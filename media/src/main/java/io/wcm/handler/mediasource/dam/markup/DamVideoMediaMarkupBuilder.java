@@ -53,6 +53,7 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.commons.util.PrefixRenditionPicker;
 import com.day.cq.dam.video.VideoConstants;
 import com.day.cq.dam.video.VideoProfile;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Default implementation of {@link MediaMarkupBuilder} for DAM video assets.
@@ -65,9 +66,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   private static final String H264_PROFILE = "hq";
   private static final String OGG_PROFILE = "firefoxhq";
-  private static final String[] VIDEO_PROFILE_NAMES = new String[] {
-    OGG_PROFILE, H264_PROFILE
-  };
+  private static final List<String> VIDEO_PROFILE_NAMES = ImmutableList.of(H264_PROFILE, OGG_PROFILE);
 
   private static final Logger log = LoggerFactory.getLogger(DamVideoMediaMarkupBuilder.class);
 
@@ -91,7 +90,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * Return video profile names stored below /etc/dam/video supported by this markup builder.
    * @return Video profile names
    */
-  protected String[] getVideoProfileNames() {
+  protected List<String> getVideoProfileNames() {
     return VIDEO_PROFILE_NAMES;
   }
 
@@ -101,16 +100,13 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    */
   protected List<VideoProfile> getVideoProfiles() {
     List<VideoProfile> profiles = new ArrayList<VideoProfile>();
-    String[] profileNames = getVideoProfileNames();
-    if (profileNames != null) {
-      for (String profileName : profileNames) {
-        VideoProfile profile = VideoProfile.get(resourceResolver, profileName);
-        if (profile != null) {
-          profiles.add(profile);
-        }
-        else {
-          log.warn("DAM video profile with name '{}' does not exist.", profileName);
-        }
+    for (String profileName : getVideoProfileNames()) {
+      VideoProfile profile = VideoProfile.get(resourceResolver, profileName);
+      if (profile != null) {
+        profiles.add(profile);
+      }
+      else {
+        log.warn("DAM video profile with name '{}' does not exist.", profileName);
       }
     }
     return profiles;
@@ -165,7 +161,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     for (VideoProfile profile : getVideoProfiles()) {
       com.day.cq.dam.api.Rendition rendition = profile.getRendition(asset);
       if (rendition != null) {
-        video.createSource().setType(profile.getHtmlType())
+        video.createSource()
+        .setType(profile.getHtmlType())
         .setSrc(urlHandler.get(rendition.getPath()).buildExternalResourceUrl());
       }
     }

@@ -42,7 +42,7 @@ public class CropRenditionHandlerTest extends AbstractDamTest {
   @Before
   public void setUp() throws Exception {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
-    Asset asset = ((DamAsset)media.getAsset()).getDamAsset();
+    Asset asset = media.getAsset().adaptTo(Asset.class);
 
     underTest = new CropRenditionHandler(asset, new CropDimension(0, 0, 960, 315));
 

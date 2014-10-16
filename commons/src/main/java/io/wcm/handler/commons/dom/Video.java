@@ -177,8 +177,8 @@ public final class Video extends AbstractNonSelfClosingHtmlElement<Video> {
    * Html "height" attribute.
    * @return Value of attribute
    */
-  public int getHeight() {
-    return getAttributeValueAsInteger(ATTRIBUTE_HEIGHT);
+  public long getHeight() {
+    return getAttributeValueAsLong(ATTRIBUTE_HEIGHT);
   }
 
   /**
@@ -186,8 +186,8 @@ public final class Video extends AbstractNonSelfClosingHtmlElement<Video> {
    * @param value Value of attribute
    * @return Self reference
    */
-  public Video setHeight(int value) {
-    setAttributeValueAsInteger(ATTRIBUTE_HEIGHT, value);
+  public Video setHeight(long value) {
+    setAttributeValueAsLong(ATTRIBUTE_HEIGHT, value);
     return this;
   }
 
@@ -195,8 +195,8 @@ public final class Video extends AbstractNonSelfClosingHtmlElement<Video> {
    * Html "poster" attribute.
    * @return Value of attribute
    */
-  public int getWidth() {
-    return getAttributeValueAsInteger(ATTRIBUTE_WIDTH);
+  public long getWidth() {
+    return getAttributeValueAsLong(ATTRIBUTE_WIDTH);
   }
 
   /**
@@ -204,8 +204,8 @@ public final class Video extends AbstractNonSelfClosingHtmlElement<Video> {
    * @param value Value of attribute
    * @return Self reference
    */
-  public Video setWidth(int value) {
-    setAttributeValueAsInteger(ATTRIBUTE_WIDTH, value);
+  public Video setWidth(long value) {
+    setAttributeValueAsLong(ATTRIBUTE_WIDTH, value);
     return this;
   }
 
