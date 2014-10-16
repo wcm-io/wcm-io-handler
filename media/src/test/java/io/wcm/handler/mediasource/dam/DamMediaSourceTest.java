@@ -33,11 +33,10 @@ import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.args.MediaArgs;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.testcontext.AppAemContext;
@@ -209,7 +208,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageAltTextFromMediaLib() {
     // create img element for the first rendition of the 'standard' media-item
-    MediaArgsType args = new MediaArgs();
+    MediaArgs args = new MediaArgs();
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
@@ -229,8 +228,8 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testGetMediaElementImageAltTextOverride() {
-    // define alt-text-override via MediaArgsType and check if it is appears in the img-tag
-    MediaArgsType args = new MediaArgs();
+    // define alt-text-override via MediaArgs and check if it is appears in the img-tag
+    MediaArgs args = new MediaArgs();
     args.setAltText("Alt. Text Override!");
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull("returned html element?", img);
@@ -253,7 +252,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormat() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
+    MediaArgs args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
@@ -265,7 +264,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormat_ShortFormat() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
+    MediaArgs args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
@@ -277,7 +276,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormatCrop() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat(HOME_TEASER_SCALE1);
+    MediaArgs args = MediaArgs.mediaFormat(HOME_TEASER_SCALE1);
     HtmlElement img = mediaHandler().get(parStandardMediaRefCrop, args).buildElement();
     assertNotNull("returned html element?", img);
     assertEquals("is img?", "img", img.getName());
@@ -289,7 +288,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormatCropInvalid() {
     // create img element for rendition with standard_2col media format
-    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
+    MediaArgs args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().get(parStandardMediaRefCrop, args).buildElement();
     assertNull("returned html element?", img);
   }
@@ -297,7 +296,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageInvalidMediaFormat() {
     // create img element in a mediaFormat for which there is no rendition is available - returns any rendition
-    MediaArgsType args = MediaArgs.mediaFormat(MediaFormatBuilder.create("someotherformat", AppAemContext.APPLICATION_ID).build());
+    MediaArgs args = MediaArgs.mediaFormat(MediaFormatBuilder.create("someotherformat", AppAemContext.APPLICATION_ID).build());
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull("returned null?", img);
   }
@@ -319,7 +318,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     WCMMode.EDIT.toRequest(context.request());
 
     // dummy image is added only if a specific media format is requested
-    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
+    MediaArgs args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().get(parInvalidMediaRef, args).buildElement();
 
     assertNotNull("returned element?", img);
@@ -336,7 +335,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     WCMMode.EDIT.toRequest(context.request());
 
     // if fixed dimensions are specified, the image must have exactly the specified size
-    MediaArgsType args = MediaArgs.mediaFormat(EDITORIAL_2COL);
+    MediaArgs args = MediaArgs.mediaFormat(EDITORIAL_2COL);
     args.setFixedDimensions(100, 100);
     HtmlElement img = mediaHandler().get(parNullMediaRef, args).buildElement();
 
@@ -425,7 +424,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testDownloadMediaElement() {
-    MediaArgsType mediaArgs = new MediaArgs().setForceDownload(true);
+    MediaArgs mediaArgs = new MediaArgs().setForceDownload(true);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
@@ -453,7 +452,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testMultipleMediaMediaFormats() {
-    MediaArgsType mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    MediaArgs mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
@@ -465,7 +464,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testMultipleMandatoryMediaFormats() {
-    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    MediaArgs mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
@@ -484,7 +483,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testMultipleMandatoryMediaFormatsNotAllMatch() {
-    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(VIDEO_2COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    MediaArgs mediaArgs = MediaArgs.mandatoryMediaFormats(VIDEO_2COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertFalse("valid?", media.isValid());
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());

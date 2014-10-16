@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -106,7 +106,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @return Rendition or null if none is matching
    */
   @Override
-  public RenditionMetadata getRendition(MediaArgsType mediaArgs) {
+  public RenditionMetadata getRendition(MediaArgs mediaArgs) {
 
     // get list of file extensions requested
     String[] requestedFileExtensions = getRequestedFileExtensions(mediaArgs);
@@ -152,7 +152,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    *         Returns null if different file extensions are requested in media formats and media args
    *         and the file extension filtering is not fulfillable.
    */
-  private String[] getRequestedFileExtensions(MediaArgsType mediaArgs) {
+  private String[] getRequestedFileExtensions(MediaArgs mediaArgs) {
     // get file extension defined in media args
     Set<String> mediaArgsFileExtensions = new HashSet<String>();
     if (mediaArgs.getFileExtensions() != null && mediaArgs.getFileExtensions().length > 0) {
@@ -202,7 +202,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param mediaArgs Media arguments
    * @return true if any size restriction was defined.
    */
-  private boolean isSizeMatchingRequest(MediaArgsType mediaArgs, String[] requestedFileExtensions) {
+  private boolean isSizeMatchingRequest(MediaArgs mediaArgs, String[] requestedFileExtensions) {
 
     // check that at least one image file extension is in the list of requested extensions
     boolean anyImageFileExtension = false;
@@ -242,7 +242,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param mediaArgs Media args
    * @return Rendition or null if none found
    */
-  private RenditionMetadata getExactMatchRendition(final Set<RenditionMetadata> candidates, MediaArgsType mediaArgs) {
+  private RenditionMetadata getExactMatchRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
     // check for fixed width and/or height request
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
       for (RenditionMetadata candidate : candidates) {
@@ -305,7 +305,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param mediaArgs Media args
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(final Set<RenditionMetadata> candidates, MediaArgsType mediaArgs) {
+  private RenditionMetadata getVirtualRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
 
     // get from fixed with/height
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
@@ -417,7 +417,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param mediaFormatVisitor Media format visitor
    * @return Return value form media format visitor, if any returned a value that is not null
    */
-  private <T> T visitMediaFormats(MediaArgsType mediaArgs, MediaFormatVisitor<T> mediaFormatVisitor) {
+  private <T> T visitMediaFormats(MediaArgs mediaArgs, MediaFormatVisitor<T> mediaFormatVisitor) {
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     if (mediaFormats != null) {
       for (MediaFormat mediaFormat : mediaFormats) {

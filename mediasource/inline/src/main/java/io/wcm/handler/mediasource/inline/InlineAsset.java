@@ -21,8 +21,8 @@ package io.wcm.handler.mediasource.inline;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.args.MediaArgsType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
@@ -38,7 +38,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   private final Adaptable adaptable;
   private final Resource resource;
   private final Media media;
-  private final MediaArgsType defaultMediaArgs;
+  private final MediaArgs defaultMediaArgs;
   private final String fileName;
 
   /**
@@ -86,7 +86,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getRendition(MediaArgsType mediaArgs) {
+  public Rendition getRendition(MediaArgs mediaArgs) {
     Rendition rendition = getInlineRendition(mediaArgs);
 
     // check if rendition is valid - otherwise return null
@@ -98,7 +98,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getImageRendition(MediaArgsType mediaArgs) {
+  public Rendition getImageRendition(MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isImage()) {
       return rendition;
@@ -109,7 +109,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getFlashRendition(MediaArgsType mediaArgs) {
+  public Rendition getFlashRendition(MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isFlash()) {
       return rendition;
@@ -120,7 +120,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getDownloadRendition(MediaArgsType mediaArgs) {
+  public Rendition getDownloadRendition(MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isDownload()) {
       return rendition;
@@ -135,7 +135,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
    * @param mediaArgs Media args
    * @return Inline rendition instance (may be invalid rendition)
    */
-  private Rendition getInlineRendition(MediaArgsType mediaArgs) {
+  private Rendition getInlineRendition(MediaArgs mediaArgs) {
     return new InlineRendition(this.resource, this.media, mediaArgs, this.fileName, this.adaptable);
   }
 

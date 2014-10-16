@@ -24,9 +24,8 @@ import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.args.MediaArgs;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 
@@ -102,7 +101,7 @@ public final class MediaLinkType extends AbstractLinkType {
       downloadMediaFormats = mediaHandlerConfig.getDownloadMediaFormats().toArray(
           new MediaFormat[mediaHandlerConfig.getDownloadMediaFormats().size()]);
     }
-    MediaArgsType mediaArgs = MediaArgs.mediaFormats(downloadMediaFormats);
+    MediaArgs mediaArgs = MediaArgs.mediaFormats(downloadMediaFormats);
     mediaArgs.setForceDownload(isDownload);
     mediaArgs.setUrlMode(linkRequest.getUrlMode());
 

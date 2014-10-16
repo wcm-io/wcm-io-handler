@@ -23,8 +23,8 @@ import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.impl.ImageFileServlet;
@@ -60,7 +60,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final Adaptable adaptable;
   private final Resource resource;
   private final Media media;
-  private final MediaArgsType defaultMediaArgs;
+  private final MediaArgs defaultMediaArgs;
   private final String fileName;
   private final Dimension imageDimension;
   private final String url;
@@ -76,7 +76,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @param mediaArgs Media args
    * @param fileName File name
    */
-  InlineRendition(Resource resource, Media media, MediaArgsType mediaArgs, String fileName, Adaptable adaptable) {
+  InlineRendition(Resource resource, Media media, MediaArgs mediaArgs, String fileName, Adaptable adaptable) {
     this.resource = resource;
     this.media = media;
     this.defaultMediaArgs = mediaArgs;
@@ -142,7 +142,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    *         width and height set to -1 is returned, a scaling is required but not possible with the given source
    *         object.
    */
-  private Dimension getScaledDimension(Dimension originalDimension, MediaArgsType mediaArgs) {
+  private Dimension getScaledDimension(Dimension originalDimension, MediaArgs mediaArgs) {
 
     // check if image has to be rescaled
     Dimension requestedDimension = getRequestedDimension(mediaArgs);
@@ -187,7 +187,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @param mediaArgs Media args
    * @return Media URL - null if no rendition is available
    */
-  private String buildMediaUrl(Dimension scaledDimension, MediaArgsType mediaArgs) {
+  private String buildMediaUrl(Dimension scaledDimension, MediaArgs mediaArgs) {
 
     // check for file extension filtering
     if (!isMatchingFileExtension(mediaArgs)) {
@@ -304,7 +304,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @param mediaArgs Media args
    * @return true if file extension matches
    */
-  private boolean isMatchingFileExtension(MediaArgsType mediaArgs) {
+  private boolean isMatchingFileExtension(MediaArgs mediaArgs) {
     String[] fileExtensions = mediaArgs.getFileExtensions();
     if (fileExtensions == null || fileExtensions.length == 0) {
       return true;
@@ -322,7 +322,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @param mediaArgs Media arguments
    * @return Requested dimensions
    */
-  private Dimension getRequestedDimension(MediaArgsType mediaArgs) {
+  private Dimension getRequestedDimension(MediaArgs mediaArgs) {
 
     // check for fixed dimensions from media args
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {

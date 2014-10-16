@@ -22,8 +22,8 @@ package io.wcm.handler.media.markup;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.sling.commons.request.RequestParam;
@@ -116,7 +116,7 @@ public final class MediaMarkupBuilderUtil {
    */
   public static Dimension getMediaformatDimension(Media media) {
     // Create dummy image element to be displayed in Edit mode as placeholder.
-    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
+    MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
 
     // detect width/height - either from media args, or from first media format

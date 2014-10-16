@@ -21,10 +21,9 @@ package io.wcm.handler.media.impl;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.args.MediaArgs;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
@@ -40,7 +39,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private final Resource resource;
   private final String mediaRef;
 
-  private MediaArgsType mediaArgs;
+  private MediaArgs mediaArgs;
   private MediaFormat[] mediaFormats;
   private String refProperty;
   private String cropProperty;
@@ -71,7 +70,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public MediaBuilder args(MediaArgsType value) {
+  public MediaBuilder args(MediaArgs value) {
     this.mediaArgs = value;
     return this;
   }
@@ -112,12 +111,7 @@ final class MediaBuilderImpl implements MediaBuilder {
     }
     else {
       // clone media args to make sure the original object is not modified
-      try {
-        this.mediaArgs = (MediaArgsType)this.mediaArgs.clone();
-      }
-      catch (CloneNotSupportedException ex) {
-        throw new IllegalArgumentException("Media argument instances has to be clonable.", ex);
-      }
+      this.mediaArgs = this.mediaArgs.clone();
     }
     MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
         this.refProperty, this.cropProperty);

@@ -22,8 +22,8 @@ package io.wcm.handler.mediasource.dam.impl;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.args.MediaArgsType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
@@ -42,7 +42,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   private final Adaptable adaptable;
   private final com.day.cq.dam.api.Asset damAsset;
   private final CropDimension cropDimension;
-  private final MediaArgsType defaultMediaArgs;
+  private final MediaArgs defaultMediaArgs;
   private final ValueMap properties;
 
   /**
@@ -105,7 +105,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getRendition(MediaArgsType mediaArgs) {
+  public Rendition getRendition(MediaArgs mediaArgs) {
     Rendition rendition = getDamRendition(mediaArgs);
 
     // check if rendition is valid - otherwise return null
@@ -117,7 +117,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getImageRendition(MediaArgsType mediaArgs) {
+  public Rendition getImageRendition(MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isImage()) {
       return rendition;
@@ -128,7 +128,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getFlashRendition(MediaArgsType mediaArgs) {
+  public Rendition getFlashRendition(MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isFlash()) {
       return rendition;
@@ -139,7 +139,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getDownloadRendition(MediaArgsType mediaArgs) {
+  public Rendition getDownloadRendition(MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isDownload()) {
       return rendition;
@@ -154,7 +154,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    * @param mediaArgs Media args
    * @return DAM rendition instance (may be invalid rendition)
    */
-  protected Rendition getDamRendition(MediaArgsType mediaArgs) {
+  protected Rendition getDamRendition(MediaArgs mediaArgs) {
     return new DamRendition(this.damAsset, this.cropDimension, mediaArgs, adaptable);
   }
 

@@ -26,7 +26,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import io.wcm.handler.commons.dom.Div;
-import io.wcm.handler.media.args.MediaArgs;
 import io.wcm.handler.media.spi.MediaSource;
 
 import java.util.Collection;

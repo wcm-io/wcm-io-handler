@@ -20,7 +20,6 @@
 package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 
 import org.apache.sling.api.resource.Resource;
@@ -49,7 +48,7 @@ public interface MediaHandler {
    * @param mediaArgs Additional arguments affecting media resolving
    * @return Media builder
    */
-  MediaBuilder get(Resource resource, MediaArgsType mediaArgs);
+  MediaBuilder get(Resource resource, MediaArgs mediaArgs);
 
   /**
    * Build media which is referenced in the resource (as property or inline binary data).
@@ -74,7 +73,7 @@ public interface MediaHandler {
    * @param mediaArgs Additional arguments affecting media resolving
    * @return Media builder
    */
-  MediaBuilder get(String mediaRef, MediaArgsType mediaArgs);
+  MediaBuilder get(String mediaRef, MediaArgs mediaArgs);
 
   /**
    * Build media which is referenced via its string address.

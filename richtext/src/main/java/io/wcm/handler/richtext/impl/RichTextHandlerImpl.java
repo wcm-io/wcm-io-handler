@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.richtext.RichText;
 import io.wcm.handler.richtext.RichTextBuilder;
 import io.wcm.handler.richtext.RichTextHandler;
@@ -111,7 +111,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     }
   }
 
-  private List<Content> processRichText(String text, UrlMode urlMode, MediaArgsType mediaArgs) {
+  private List<Content> processRichText(String text, UrlMode urlMode, MediaArgs mediaArgs) {
     if (isEmpty(text)) {
       return ImmutableList.of();
     }

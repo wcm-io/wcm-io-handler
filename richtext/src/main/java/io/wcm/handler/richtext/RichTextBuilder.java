@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.richtext;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.url.UrlMode;
 
 import java.util.Collection;
@@ -45,7 +45,7 @@ public interface RichTextBuilder {
    * @param mediaArgs Media arguments
    * @return Rich text builder
    */
-  RichTextBuilder mediaArgs(MediaArgsType mediaArgs);
+  RichTextBuilder mediaArgs(MediaArgs mediaArgs);
 
   /**
    * Set URL mode to be applied for building URLs for inline links and inline images.

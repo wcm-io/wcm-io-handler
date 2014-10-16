@@ -25,9 +25,9 @@ import static org.mockito.Mockito.when;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.args.MediaArgs;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 

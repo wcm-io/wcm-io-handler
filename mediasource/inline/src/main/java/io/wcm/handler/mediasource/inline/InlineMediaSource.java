@@ -23,10 +23,10 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.sling.commons.util.Escape;
 
@@ -94,7 +94,7 @@ public final class InlineMediaSource extends AbstractMediaSource {
 
   @Override
   public Media resolveMedia(Media media) {
-    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
+    MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // the resource that was references originally (and may contain additional attributes)
     Resource referencedResource = media.getMediaRequest().getResource();

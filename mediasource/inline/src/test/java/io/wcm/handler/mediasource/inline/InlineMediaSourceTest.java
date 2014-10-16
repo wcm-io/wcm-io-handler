@@ -40,12 +40,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.args.MediaArgs;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.inline.testcontext.AppAemContext;
@@ -315,7 +314,7 @@ public class InlineMediaSourceTest {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
     Media media;
 
-    MediaArgsType mediaArgs = new MediaArgs();
+    MediaArgs mediaArgs = new MediaArgs();
     mediaArgs.setAltText("Der Jodelkaiser");
 
     media = mediaHandler.get(ntFileResource, mediaArgs).build();
@@ -342,7 +341,7 @@ public class InlineMediaSourceTest {
   public void testWithUrlMode() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaArgsType mediaArgs = MediaArgs.urlMode(UrlModes.FULL_URL);
+    MediaArgs mediaArgs = MediaArgs.urlMode(UrlModes.FULL_URL);
 
     assertEquals("http://www.dummysite.org" + ROOTPATH_CONTENT + "/_jcr_content/filedata.bin",
         mediaHandler.get(ntFileResource, mediaArgs).buildUrl());
@@ -543,7 +542,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testDownloadMediaElement() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgsType mediaArgs = new MediaArgs().setForceDownload(true);
+    MediaArgs mediaArgs = new MediaArgs().setForceDownload(true);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNull("no invalid reason", media.getMediaInvalidReason());
@@ -558,7 +557,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testMultipleMediaMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgsType mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    MediaArgs mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
@@ -571,7 +570,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testMultipleMandatoryMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
+    MediaArgs mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
@@ -591,7 +590,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testMultipleMandatoryMediaFormatsNotAllMatch() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgsType mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_2COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
+    MediaArgs mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_2COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertFalse("valid?", media.isValid());
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());

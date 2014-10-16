@@ -20,7 +20,6 @@
 package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
@@ -37,7 +36,7 @@ public interface MediaBuilder {
    * @param mediaArgs Media arguments
    * @return Media builder
    */
-  MediaBuilder args(MediaArgsType mediaArgs);
+  MediaBuilder args(MediaArgs mediaArgs);
 
   /**
    * Set media format(s).

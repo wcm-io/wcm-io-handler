@@ -23,8 +23,8 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
@@ -65,7 +65,7 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
   public boolean accepts(Media media) {
     // accept if not rendition was found and in edit mode
     // and at least one media format is given, and dummy image is not suppressed
-    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
+    MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     return media.getRendition() == null
         && wcmMode == WCMMode.EDIT
@@ -78,7 +78,7 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
 
     // Create dummy image element to be displayed in Edit mode as placeholder.
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
-    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
+    MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // create dummy image
     String dummyImageUrl = StringUtils.defaultString(mediaArgs.getDummyImageUrl(), DUMMY_IMAGE);

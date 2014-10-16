@@ -23,10 +23,10 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.editcontext.DropTargetImpl;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.sling.models.annotations.AemObject;
@@ -95,7 +95,7 @@ public final class DamMediaSource extends AbstractMediaSource {
   @Override
   public Media resolveMedia(Media media) {
     String mediaRef = getMediaRef(media.getMediaRequest());
-    MediaArgsType mediaArgs = media.getMediaRequest().getMediaArgs();
+    MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     boolean renditionsResolved = false;
     if (StringUtils.isNotBlank(mediaRef)) {

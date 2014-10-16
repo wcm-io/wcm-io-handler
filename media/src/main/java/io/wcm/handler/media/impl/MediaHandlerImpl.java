@@ -21,11 +21,11 @@ package io.wcm.handler.media.impl;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -68,7 +68,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  public MediaBuilder get(Resource resource, MediaArgsType mediaArgs) {
+  public MediaBuilder get(Resource resource, MediaArgs mediaArgs) {
     return get(resource).args(mediaArgs);
   }
 
@@ -83,7 +83,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  public MediaBuilder get(String mediaRef, MediaArgsType mediaArgs) {
+  public MediaBuilder get(String mediaRef, MediaArgs mediaArgs) {
     return get(mediaRef).args(mediaArgs);
   }
 
@@ -199,7 +199,7 @@ public final class MediaHandlerImpl implements MediaHandler {
    * If resolving fails an exception is thrown.
    * @param mediaArgs Media args
    */
-  private void resolveMediaFormats(MediaArgsType mediaArgs) {
+  private void resolveMediaFormats(MediaArgs mediaArgs) {
     // resolved media formats already set? done.
     if (mediaArgs.getMediaFormats() != null) {
       return;

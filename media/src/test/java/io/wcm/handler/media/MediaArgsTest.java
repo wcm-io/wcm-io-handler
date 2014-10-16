@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.args;
+package io.wcm.handler.media;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
@@ -92,7 +92,7 @@ public class MediaArgsTest {
 
   @Test
   public void testFixedDimension() {
-    MediaArgsType mediaArgs = MediaArgs.fixedDimension(100, 50);
+    MediaArgs mediaArgs = MediaArgs.fixedDimension(100, 50);
     assertEquals(100, mediaArgs.getFixedWidth());
     assertEquals(50, mediaArgs.getFixedHeight());
 
@@ -116,9 +116,9 @@ public class MediaArgsTest {
 
   @Test
   public void testEquals() {
-    MediaArgsType mediaArgs1 = MediaArgs.mediaFormat(EDITORIAL_1COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
-    MediaArgsType mediaArgs2 = MediaArgs.mediaFormat(EDITORIAL_1COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
-    MediaArgsType mediaArgs3 = MediaArgs.mediaFormat(EDITORIAL_2COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
+    MediaArgs mediaArgs1 = MediaArgs.mediaFormat(EDITORIAL_1COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
+    MediaArgs mediaArgs2 = MediaArgs.mediaFormat(EDITORIAL_1COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
+    MediaArgs mediaArgs3 = MediaArgs.mediaFormat(EDITORIAL_2COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
 
     assertTrue(mediaArgs1.equals(mediaArgs2));
     assertTrue(mediaArgs2.equals(mediaArgs1));

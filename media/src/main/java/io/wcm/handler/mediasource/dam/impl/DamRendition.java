@@ -20,8 +20,8 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.caching.ModificationDate;
@@ -42,7 +42,7 @@ import com.day.cq.dam.api.Asset;
 class DamRendition extends SlingAdaptable implements Rendition {
 
   private final Adaptable adaptable;
-  private final MediaArgsType mediaArgs;
+  private final MediaArgs mediaArgs;
   private final RenditionMetadata rendition;
 
   /**
@@ -50,7 +50,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
    * @param cropDimension Crop dimension
    * @param mediaArgs Media args
    */
-  DamRendition(Asset asset, CropDimension cropDimension, MediaArgsType mediaArgs, Adaptable adaptable) {
+  DamRendition(Asset asset, CropDimension cropDimension, MediaArgs mediaArgs, Adaptable adaptable) {
     this.mediaArgs = mediaArgs;
 
     // resolve rendition from DAM assets

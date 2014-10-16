@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.richtext;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.url.UrlMode;
 
 import java.util.HashMap;
@@ -39,7 +39,7 @@ public final class RichTextRequest {
   private final String text;
   private final UrlMode urlMode;
   private final TextMode textMode;
-  private final MediaArgsType mediaArgs;
+  private final MediaArgs mediaArgs;
 
   private ValueMap resourceProperties;
 
@@ -50,7 +50,7 @@ public final class RichTextRequest {
    * @param textMode Text mode
    * @param mediaArgs Media arguments
    */
-  public RichTextRequest(Resource resource, String text, UrlMode urlMode, TextMode textMode, MediaArgsType mediaArgs) {
+  public RichTextRequest(Resource resource, String text, UrlMode urlMode, TextMode textMode, MediaArgs mediaArgs) {
     this.resource = resource;
     this.text = text;
     this.urlMode = urlMode;
@@ -94,7 +94,7 @@ public final class RichTextRequest {
   /**
    * @return Media arguments
    */
-  public MediaArgsType getMediaArgs() {
+  public MediaArgs getMediaArgs() {
     return this.mediaArgs;
   }
 

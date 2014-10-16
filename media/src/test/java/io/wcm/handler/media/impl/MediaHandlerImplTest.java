@@ -28,11 +28,10 @@ import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.args.MediaArgs;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -186,7 +185,7 @@ public class MediaHandlerImplTest {
     public Media process(Media media) {
       MediaRequest request = media.getMediaRequest();
       String mediaRef = request.getMediaRef() + "/pre1";
-      MediaArgsType mediaArgs = request.getMediaArgs().setUrlMode(UrlModes.FULL_URL);
+      MediaArgs mediaArgs = request.getMediaArgs().setUrlMode(UrlModes.FULL_URL);
       media.setMediaRequest(new MediaRequest(
           request.getResource(),
           mediaRef,

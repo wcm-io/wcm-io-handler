@@ -19,15 +19,13 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.handler.media.args.MediaArgsType;
-
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Represents a media item that is referenced via a {@link MediaRequest} and resolved via {@link MediaHandler}.
- * It cannot be rendered directly, but contains references to renditions depending on {@link MediaArgsType}.
+ * It cannot be rendered directly, but contains references to renditions depending on {@link MediaArgs}.
  */
 @ProviderType
 public interface Asset extends Adaptable {
@@ -69,27 +67,27 @@ public interface Asset extends Adaptable {
    * @param mediaArgs Media args to filter specific media formats or extensions.
    * @return {@link Rendition} for the first matching rendition or null if not match found.
    */
-  Rendition getRendition(MediaArgsType mediaArgs);
+  Rendition getRendition(MediaArgs mediaArgs);
 
   /**
    * Get the first image rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
    * @return {@link Rendition} for the first matching rendition or null if not match found.
    */
-  Rendition getImageRendition(MediaArgsType mediaArgs);
+  Rendition getImageRendition(MediaArgs mediaArgs);
 
   /**
    * Get the first flash rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
    * @return {@link Rendition} for the first matching rendition or null if not match found.
    */
-  Rendition getFlashRendition(MediaArgsType mediaArgs);
+  Rendition getFlashRendition(MediaArgs mediaArgs);
 
   /**
    * Get the first download rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
    * @return {@link Rendition} for the first matching rendition or null if not match found.
    */
-  Rendition getDownloadRendition(MediaArgsType mediaArgs);
+  Rendition getDownloadRendition(MediaArgs mediaArgs);
 
 }

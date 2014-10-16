@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.MediaArgs;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -31,6 +31,6 @@ interface RenditionHandler {
    * @param mediaArgs Media arguments
    * @return Rendition or null if none is matching
    */
-  RenditionMetadata getRendition(MediaArgsType mediaArgs);
+  RenditionMetadata getRendition(MediaArgs mediaArgs);
 
 }

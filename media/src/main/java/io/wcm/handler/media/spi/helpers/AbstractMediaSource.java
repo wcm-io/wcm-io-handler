@@ -22,10 +22,10 @@ package io.wcm.handler.media.spi.helpers;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.args.MediaArgsType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaSource;
 
@@ -131,15 +131,15 @@ public abstract class AbstractMediaSource implements MediaSource {
   }
 
   /**
-   * Resolves single rendition (or multiple renditions if {@link MediaArgsType#isMediaFormatsMandatory()} is true
+   * Resolves single rendition (or multiple renditions if {@link MediaArgs#isMediaFormatsMandatory()} is true
    * and sets the resolved rendition and the URL of the first (best-matching) rendition in the media object.
    * @param media Media object
    * @param asset Asset
    * @param mediaArgs Media args
    * @return true if all requested renditions could be resolved (at least one or all if
-   *         {@link MediaArgsType#isMediaFormatsMandatory()} was set to true)
+   *         {@link MediaArgs#isMediaFormatsMandatory()} was set to true)
    */
-  protected final boolean resolveRenditions(Media media, Asset asset, MediaArgsType mediaArgs) {
+  protected final boolean resolveRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1 && mediaArgs.isMediaFormatsMandatory()) {
       return resolveAllMandatoryRenditions(media, asset, mediaArgs);
     }
@@ -156,7 +156,7 @@ public abstract class AbstractMediaSource implements MediaSource {
    * @param mediaArgs Media args
    * @return true if a rendition was found
    */
-  private boolean resolveFirstMatchRenditions(Media media, Asset asset, MediaArgsType mediaArgs) {
+  private boolean resolveFirstMatchRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     Rendition rendition = asset.getRendition(mediaArgs);
     if (rendition != null) {
       media.setRenditions(ImmutableList.of(rendition));
@@ -174,24 +174,19 @@ public abstract class AbstractMediaSource implements MediaSource {
    * @param mediaArgs Media args
    * @return true if for *all* media formats a rendition could be found.
    */
-  private boolean resolveAllMandatoryRenditions(Media media, Asset asset, MediaArgsType mediaArgs) {
+  private boolean resolveAllMandatoryRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     boolean allResolved = true;
     List<Rendition> resolvedRenditions = new ArrayList<>();
     for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
-      try {
-        MediaArgsType renditionMediaArgs = (MediaArgsType)mediaArgs.clone();
-        renditionMediaArgs.setMediaFormat(mediaFormat);
-        renditionMediaArgs.setMediaFormatsMandatory(false);
-        Rendition rendition = asset.getRendition(renditionMediaArgs);
-        if (rendition != null) {
-          resolvedRenditions.add(rendition);
-        }
-        else {
-          allResolved = false;
-        }
+      MediaArgs renditionMediaArgs = mediaArgs.clone();
+      renditionMediaArgs.setMediaFormat(mediaFormat);
+      renditionMediaArgs.setMediaFormatsMandatory(false);
+      Rendition rendition = asset.getRendition(renditionMediaArgs);
+      if (rendition != null) {
+        resolvedRenditions.add(rendition);
       }
-      catch (CloneNotSupportedException ex) {
-        throw new RuntimeException("Failed to clone media args.", ex);
+      else {
+        allResolved = false;
       }
     }
     media.setRenditions(resolvedRenditions);

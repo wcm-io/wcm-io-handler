@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.handler.media.args.MediaArgs;
-import io.wcm.handler.media.args.MediaArgsType;
-
 import java.util.HashMap;
 
 import org.apache.sling.api.resource.Resource;
@@ -37,7 +34,7 @@ public final class MediaRequest {
 
   private final Resource resource;
   private final String mediaRef;
-  private final MediaArgsType mediaArgs;
+  private final MediaArgs mediaArgs;
   private final String refProperty;
   private final String cropProperty;
 
@@ -47,7 +44,7 @@ public final class MediaRequest {
    * @param resource Resource containing reference to media asset
    * @param mediaArgs Additional arguments affection media resolving
    */
-  public MediaRequest(Resource resource, MediaArgsType mediaArgs) {
+  public MediaRequest(Resource resource, MediaArgs mediaArgs) {
     this(resource, null, mediaArgs, null, null);
   }
 
@@ -55,7 +52,7 @@ public final class MediaRequest {
    * @param mediaRef Reference to media item
    * @param mediaArgs Additional arguments affection media resolving
    */
-  public MediaRequest(String mediaRef, MediaArgsType mediaArgs) {
+  public MediaRequest(String mediaRef, MediaArgs mediaArgs) {
     this(null, mediaRef, mediaArgs, null, null);
   }
 
@@ -66,7 +63,7 @@ public final class MediaRequest {
    * @param refProperty Name of the property from which the media request is read
    * @param cropProperty Name of the property which contains the cropping parameters
    */
-  public MediaRequest(Resource resource, String mediaRef, MediaArgsType mediaArgs,
+  public MediaRequest(Resource resource, String mediaRef, MediaArgs mediaArgs,
       String refProperty, String cropProperty) {
     this.resource = resource;
     this.mediaRef = mediaRef;
@@ -97,7 +94,7 @@ public final class MediaRequest {
   /**
    * @return Additional arguments affection media resolving
    */
-  public MediaArgsType getMediaArgs() {
+  public MediaArgs getMediaArgs() {
     return this.mediaArgs;
   }
 

@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.richtext.RichText;
 import io.wcm.handler.richtext.RichTextBuilder;
 import io.wcm.handler.richtext.RichTextRequest;
@@ -42,7 +42,7 @@ final class RichTextBuilderImpl implements RichTextBuilder {
 
   private UrlMode urlMode;
   private TextMode textMode;
-  private MediaArgsType mediaArgs;
+  private MediaArgs mediaArgs;
 
   /**
    * @param resource Resource
@@ -75,7 +75,7 @@ final class RichTextBuilderImpl implements RichTextBuilder {
   }
 
   @Override
-  public RichTextBuilder mediaArgs(MediaArgsType value) {
+  public RichTextBuilder mediaArgs(MediaArgs value) {
     this.mediaArgs = value;
     return this;
   }
