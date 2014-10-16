@@ -38,7 +38,7 @@ import org.apache.sling.api.resource.PersistenceException;
 /**
  * Sets up {@link AemContext} for unit tests in this application.
  */
-public final class MediasourceDamAemContext {
+public final class MediaSourceDamAppAemContext {
 
   /**
    * Media formats path
@@ -55,7 +55,7 @@ public final class MediasourceDamAemContext {
    */
   public static final String ROOTPATH_CONTENT = "/content/unittest/de_test/brand/de";
 
-  private MediasourceDamAemContext() {
+  private MediaSourceDamAppAemContext() {
     // static methods only
   }
 

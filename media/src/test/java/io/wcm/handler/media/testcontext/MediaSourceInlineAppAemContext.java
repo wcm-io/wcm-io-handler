@@ -39,7 +39,7 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 /**
  * Sets up {@link AemContext} for unit tests in this application.
  */
-public final class MediaSourceInlineAemContext {
+public final class MediaSourceInlineAppAemContext {
 
   /**
    * Appliation ID
@@ -56,7 +56,7 @@ public final class MediaSourceInlineAemContext {
    */
   public static final String ROOTPATH_CONTENT = "/content/unittest/de_test/brand/de";
 
-  private MediaSourceInlineAemContext() {
+  private MediaSourceInlineAppAemContext() {
     // static methods only
   }
 

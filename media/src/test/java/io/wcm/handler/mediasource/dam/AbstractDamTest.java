@@ -21,7 +21,7 @@ package io.wcm.handler.mediasource.dam;
 
 import static org.junit.Assert.assertNotNull;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.testcontext.MediasourceDamAemContext;
+import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -38,11 +38,11 @@ import com.day.cq.wcm.api.Page;
 public abstract class AbstractDamTest {
 
   @Rule
-  public final AemContext context = MediasourceDamAemContext.newAemContext();
+  public final AemContext context = MediaSourceDamAppAemContext.newAemContext();
 
-  protected static final String ROOTPATH_DAM = MediasourceDamAemContext.DAM_PATH;
-  protected static final String ROOTPATH_CONTENT = MediasourceDamAemContext.ROOTPATH_CONTENT + "/test";
-  protected static final String MEDIAFORMATS_PATH = MediasourceDamAemContext.MEDIAFORMATS_PATH;
+  protected static final String ROOTPATH_DAM = MediaSourceDamAppAemContext.DAM_PATH;
+  protected static final String ROOTPATH_CONTENT = MediaSourceDamAppAemContext.ROOTPATH_CONTENT + "/test";
+  protected static final String MEDIAFORMATS_PATH = MediaSourceDamAppAemContext.MEDIAFORMATS_PATH;
 
   // a media item with three renditions of the 'standard_image' rendition group
   protected static final String MEDIAITEM_PATH_STANDARD = ROOTPATH_DAM + "/standard.jpg";

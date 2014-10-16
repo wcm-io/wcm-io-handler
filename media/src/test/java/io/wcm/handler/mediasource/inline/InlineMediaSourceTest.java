@@ -32,7 +32,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTRO
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_FLYOUT_FEATURE;
-import static io.wcm.handler.media.testcontext.MediaSourceInlineAemContext.ROOTPATH_CONTENT;
+import static io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext.ROOTPATH_CONTENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -47,7 +47,7 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
-import io.wcm.handler.media.testcontext.MediaSourceInlineAemContext;
+import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -72,7 +72,7 @@ import com.google.common.collect.ImmutableList;
 public class InlineMediaSourceTest {
 
   @Rule
-  public final AemContext context = MediaSourceInlineAemContext.newAemContext();
+  public final AemContext context = MediaSourceInlineAppAemContext.newAemContext();
 
   private static final byte[] DUMMY_BINARY = new byte[] {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10
