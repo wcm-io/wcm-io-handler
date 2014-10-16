@@ -17,18 +17,18 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.url.impl;
+package io.wcm.handler.link.type;
 
 import org.apache.sling.api.adapter.Adaptable;
 
 /**
- * Test {@link UrlHandlerImpl} methods with current request and current page null.
+ * Test {@link InternalLinkType} methods.
  */
-public class UrlHandlerImplWithoutRequestPageTest extends UrlHandlerImplTest {
+public class InternalLinkTypeWithoutRequestTest extends InternalLinkTypeTest {
 
   @Override
   protected Adaptable adaptable() {
-    return context.request().getResource();
+    return context.currentResource();
   }
 
 }

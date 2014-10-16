@@ -56,6 +56,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.apache.sling.api.adapter.Adaptable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -71,11 +72,15 @@ public class MediaFormatHandlerTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   private MediaFormatHandler underTest;
 
   @Before
   public void setUp() {
-    underTest = context.request().adaptTo(MediaFormatHandler.class);
+    underTest = adaptable().adaptTo(MediaFormatHandler.class);
   }
 
   @Test

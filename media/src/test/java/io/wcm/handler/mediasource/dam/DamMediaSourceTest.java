@@ -45,6 +45,7 @@ import io.wcm.handler.url.integrator.IntegratorHandler;
 
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Test;
@@ -321,6 +322,10 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testGetMediaElementEditModeDummyImage() {
+    if (!(adaptable() instanceof SlingHttpServletRequest)) {
+      return;
+    }
+
     // simulate edit-mode
     WCMMode.EDIT.toRequest(context.request());
 
@@ -338,6 +343,10 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testGetMediaElementEditModeDummyImageThumbnail() {
+    if (!(adaptable() instanceof SlingHttpServletRequest)) {
+      return;
+    }
+
     // simulate edit-mode
     WCMMode.EDIT.toRequest(context.request());
 
@@ -410,7 +419,10 @@ public class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetMediaUrlIntegrator() throws Exception {
+  public void testGetMediaUrlIntegrator() {
+    if (!(adaptable() instanceof SlingHttpServletRequest)) {
+      return;
+    }
 
     // activate integrator mode
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);

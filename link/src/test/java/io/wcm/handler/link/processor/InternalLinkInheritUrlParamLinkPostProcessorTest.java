@@ -30,6 +30,7 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.junit.Rule;
@@ -45,9 +46,13 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   @Test
   public void testInternalLinkWithDefaultParameterList() {
-    LinkProcessor postProcessor = AdaptTo.notNull(context.request(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalLinkType(), null);
     link.setUrl("/sample.html");
@@ -61,12 +66,17 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
     context.request().setQueryString("debugClientLibs=true&abc=123");
 
     postProcessor.process(link);
-    assertEquals("/sample.html?debugClientLibs=true", link.getUrl());
+    if (adaptable() instanceof SlingHttpServletRequest) {
+      assertEquals("/sample.html?debugClientLibs=true", link.getUrl());
+    }
+    else {
+      assertEquals("/sample.html", link.getUrl());
+    }
   }
 
   @Test
   public void testInternalLinkWithCustomParameterList() {
-    LinkProcessor postProcessor = AdaptTo.notNull(context.request(), AbcInternalLinkInheritUrlParamLinkPostProcessor.class);
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), AbcInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalLinkType(), null);
     link.setUrl("/sample.html");
@@ -80,12 +90,17 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
     context.request().setQueryString("debugClientLibs=true&abc=123");
 
     postProcessor.process(link);
-    assertEquals("/sample.html?abc=123", link.getUrl());
+    if (adaptable() instanceof SlingHttpServletRequest) {
+      assertEquals("/sample.html?abc=123", link.getUrl());
+    }
+    else {
+      assertEquals("/sample.html", link.getUrl());
+    }
   }
 
   @Test
   public void testExternalLinkWithDefaultParameterList() {
-    LinkProcessor postProcessor = AdaptTo.notNull(context.request(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new ExternalLinkType(), null);
     link.setUrl("/sample.html");

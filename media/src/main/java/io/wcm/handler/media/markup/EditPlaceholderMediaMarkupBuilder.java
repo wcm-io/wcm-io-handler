@@ -58,7 +58,7 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
   private UrlHandler urlHandler;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
-  @AemObject
+  @AemObject(optional = true)
   private WCMMode wcmMode;
 
   @Override

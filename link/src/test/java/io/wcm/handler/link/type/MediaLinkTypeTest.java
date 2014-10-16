@@ -33,6 +33,8 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Rule;
@@ -48,9 +50,13 @@ public class MediaLinkTypeTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   @Test
   public void testEmptyLink() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -67,7 +73,7 @@ public class MediaLinkTypeTest {
 
   @Test
   public void testInvalidLink() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -85,9 +91,13 @@ public class MediaLinkTypeTest {
 
   @Test
   public void testInvalidLink_EditMode() {
+    if (!(adaptable() instanceof SlingHttpServletRequest)) {
+      return;
+    }
+
     WCMMode.EDIT.toRequest(context.request());
 
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -107,7 +117,7 @@ public class MediaLinkTypeTest {
   // --> does not work because dummy implementation does not support download media format detection
   // @Test
   // public void testInvalidImageLink() {
-  // LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+  // LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
   //
   // SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver());
   // ValueMap linkProps = linkResource.getProperties();
@@ -123,7 +133,7 @@ public class MediaLinkTypeTest {
 
   @Test
   public void testValidPdfLink() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()

@@ -54,6 +54,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.junit.Rule;
@@ -79,9 +80,13 @@ public class MediaHandlerImplTest {
     }
   });
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   @Test
   public void testPipelining() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     // test pipelining and resolve link
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1", new MediaArgs().urlMode(UrlModes.DEFAULT));
@@ -107,7 +112,7 @@ public class MediaHandlerImplTest {
 
   @Test
   public void testMediaFormatResolving() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
         new MediaArgs("home_stage", "home_teaser"));
@@ -124,7 +129,7 @@ public class MediaHandlerImplTest {
 
   @Test(expected = RuntimeException.class)
   public void testFailedMediaFormatResolving() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
         new MediaArgs("invalid_media_format"));

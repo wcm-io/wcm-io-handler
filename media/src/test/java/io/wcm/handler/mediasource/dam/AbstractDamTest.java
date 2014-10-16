@@ -26,6 +26,7 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
@@ -145,9 +146,13 @@ public abstract class AbstractDamTest {
     assertNotNull("par_inlineImage exists?", parInlineImage);
   }
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   protected MediaHandler mediaHandler() {
     if (this.mediaHandler == null) {
-      this.mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+      this.mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     }
     return this.mediaHandler;
   }

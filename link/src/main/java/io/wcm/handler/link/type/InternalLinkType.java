@@ -74,7 +74,7 @@ public final class InternalLinkType extends AbstractLinkType {
   private UrlHandler urlHandler;
   @AemObject
   private PageManager pageManager;
-  @AemObject
+  @AemObject(optional = true)
   private WCMMode wcmMode;
   @OSGiService
   private SlingSettingsService slingSettings;

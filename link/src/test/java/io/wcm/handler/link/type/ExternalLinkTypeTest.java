@@ -33,6 +33,7 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Rule;
@@ -46,9 +47,13 @@ public class ExternalLinkTypeTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   @Test
   public void testInvalidLink() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -66,7 +71,7 @@ public class ExternalLinkTypeTest {
 
   @Test
   public void testValidLink() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()

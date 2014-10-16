@@ -57,6 +57,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -87,6 +88,10 @@ public class InlineMediaSourceTest {
   private Resource mediaInlineWithFileResource;
   private Resource mediaInlineSampleImageResource;
   private Resource emptyResource;
+
+  protected Adaptable adaptable() {
+    return context.request();
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -140,7 +145,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testInvalidResource() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     Media media = mediaHandler.get(emptyResource).build();
 
@@ -150,7 +155,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testNtFile() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     Media media = mediaHandler.get(ntFileResource).build();
 
@@ -177,7 +182,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testNtResource() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     Media media = mediaHandler.get(ntResourceResource).build();
 
@@ -204,7 +209,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testMediaInline() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     Media media = mediaHandler.get(mediaInlineResource).build();
 
@@ -233,7 +238,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testMediaInlineWithFile() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     Media media = mediaHandler.get(mediaInlineWithFileResource).build();
 
@@ -262,7 +267,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testMediaInlineSampleImage() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     Media media = mediaHandler.get(mediaInlineSampleImageResource).build();
 
@@ -295,7 +300,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testWithAltText() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media;
 
     MediaArgs mediaArgs = new MediaArgs().altText("Der Jodelkaiser");
@@ -319,7 +324,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testWithUrlMode() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     MediaArgs mediaArgs = new MediaArgs().urlMode(UrlModes.FULL_URL);
 
@@ -339,7 +344,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testWithFixedDimensions() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Rendition rendition;
 
     // test invalid resource
@@ -410,7 +415,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testWithMediaFormats() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media;
     Rendition rendition;
 
@@ -521,7 +526,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testDownloadMediaElement() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs().forceDownload(true);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
@@ -540,7 +545,7 @@ public class InlineMediaSourceTest {
     ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
     props.put(MediaNameConstants.PN_MEDIA_CROP, "10,10,74,40");
 
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
@@ -558,7 +563,7 @@ public class InlineMediaSourceTest {
     ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
     props.put(MediaNameConstants.PN_MEDIA_CROP, "10,10,20,20");
 
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertFalse("valid?", media.isValid());
@@ -566,7 +571,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testMultipleMediaMediaFormats() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
@@ -580,7 +585,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testMultipleMandatoryMediaFormats() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(EDITORIAL_1COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
@@ -606,7 +611,7 @@ public class InlineMediaSourceTest {
 
   @Test
   public void testMultipleMandatoryMediaFormatsNotAllMatch() {
-    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(EDITORIAL_2COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertFalse("valid?", media.isValid());

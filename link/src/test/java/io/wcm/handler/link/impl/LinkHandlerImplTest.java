@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.junit.Rule;
@@ -69,12 +70,16 @@ public class LinkHandlerImplTest {
     }
   });
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   /**
    * Test LinkHandler.processLinkRequest pipelining implementation
    */
   @Test
   public void testPipelining() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     // test pipelining and resolve link
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),

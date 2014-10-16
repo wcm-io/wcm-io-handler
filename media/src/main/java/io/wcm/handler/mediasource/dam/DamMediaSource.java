@@ -67,7 +67,7 @@ public final class DamMediaSource extends AbstractMediaSource {
   private ResourceResolver resourceResolver;
   @SlingObject
   private Resource resource;
-  @AemObject
+  @AemObject(optional = true)
   private WCMMode wcmMode;
   @AemObject(optional = true)
   private ComponentContext componentContext;
@@ -149,7 +149,7 @@ public final class DamMediaSource extends AbstractMediaSource {
 
   @Override
   public void enableMediaDrop(HtmlElement element, MediaRequest mediaRequest) {
-    if (wcmMode == WCMMode.DISABLED) {
+    if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
     }
 

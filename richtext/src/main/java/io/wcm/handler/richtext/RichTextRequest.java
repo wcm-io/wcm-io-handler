@@ -99,7 +99,7 @@ public final class RichTextRequest {
   }
 
   /**
-   * @return Properties from resource containing target link. The value map is a copy
+   * @return Properties from resource containing rich text. The value map is a copy
    *         of the original map so it is safe to change the property values contained in the map.
    */
   public ValueMap getResourceProperties() {

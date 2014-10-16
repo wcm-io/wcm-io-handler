@@ -39,6 +39,8 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Before;
@@ -58,6 +60,10 @@ public class InternalLinkTypeTest {
 
   private Page targetPage;
 
+  protected Adaptable adaptable() {
+    return context.request();
+  }
+
   @Before
   public void setUp() throws Exception {
 
@@ -73,7 +79,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testEmptyLink() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -92,7 +98,7 @@ public class InternalLinkTypeTest {
   public void testEmptyLink_EditMode() {
     WCMMode.EDIT.toRequest(context.request());
 
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -109,7 +115,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testInvalidLink() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -127,9 +133,13 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testInvalidLink_EditMode() {
+    if (!(adaptable() instanceof SlingHttpServletRequest)) {
+      return;
+    }
+
     WCMMode.EDIT.toRequest(context.request());
 
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -148,7 +158,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPage() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -166,7 +176,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testStructureElement() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page structureElementPage = context.create().page("/content/unittest/de_test/brand/de/section/structureElement",
         DummyAppTemplate.STRUCTURE_ELEMENT.getTemplatePath());
@@ -180,7 +190,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testSecureTargetPage() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page secureTargetPage = context.create().page("/content/unittest/de_test/brand/de/section/contentSecure",
         DummyAppTemplate.CONTENT_SECURE.getTemplatePath());
@@ -194,7 +204,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testRedirectInternal() throws Exception {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
@@ -211,8 +221,12 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testRedirectInternal_EditMode() throws Exception {
+    if (!(adaptable() instanceof SlingHttpServletRequest)) {
+      return;
+    }
+
     WCMMode.EDIT.toRequest(context.request());
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
@@ -229,7 +243,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testRedirectRedirectInternal() throws Exception {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
@@ -252,7 +266,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testRedirectExternal() throws Exception {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page redirectExternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectExternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
@@ -269,7 +283,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testRedirectCyclic() throws Exception {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     String redirectInternalCyclic1Path = "/content/unittest/de_test/brand/de/section/redirectInternalCyclic1";
     String redirectInternalCyclic2Path = "/content/unittest/de_test/brand/de/section/redirectInternalCyclic2";
@@ -300,7 +314,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testIntegrator() throws Exception {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page integratorPage = context.create().page("/content/unittest/de_test/brand/de/section/integrator",
         DummyAppTemplate.INTEGRATOR.getTemplatePath(), ImmutableValueMap.builder()
@@ -319,8 +333,12 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testIntegrator_EditMode() throws Exception {
+    if (!(adaptable() instanceof SlingHttpServletRequest)) {
+      return;
+    }
+
     WCMMode.EDIT.toRequest(context.request());
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page integratorPage = context.create().page("/content/unittest/de_test/brand/de/section/integrator",
         DummyAppTemplate.INTEGRATOR.getTemplatePath(), ImmutableValueMap.builder()
@@ -339,7 +357,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPageOtherSite() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -357,7 +375,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPageLinkUrlVariants() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html",
         linkHandler.get(targetPage).buildUrl());
@@ -380,7 +398,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPageWithQueryParams_Resource() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -399,7 +417,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPageWithFragment_Resource() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -418,7 +436,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPageWithQueryParamsFragment_Resource() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -438,7 +456,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPageWithQueryParamsFragment_LinkArgs() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
@@ -456,7 +474,7 @@ public class InternalLinkTypeTest {
 
   @Test
   public void testTargetPageWithQueryParamsFragment_LinkArgs_Resource() {
-    LinkHandler linkHandler = AdaptTo.notNull(context.request(), LinkHandler.class);
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()

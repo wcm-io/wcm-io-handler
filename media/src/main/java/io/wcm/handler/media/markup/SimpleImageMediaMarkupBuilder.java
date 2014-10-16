@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.WCMMode;
@@ -46,9 +46,9 @@ import com.day.cq.wcm.api.WCMMode;
 @ConsumerType
 public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
-  @AemObject
+  @AemObject(optional = true)
   private WCMMode wcmMode;
-  @Self
+  @SlingObject(optional = true)
   private SlingHttpServletRequest request;
 
   @Override
@@ -65,7 +65,7 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
     // further processing in edit or preview mode
     Resource resource = media.getMediaRequest().getResource();
-    if (mediaElement != null && resource != null) {
+    if (mediaElement != null && resource != null && wcmMode != null) {
 
       switch (wcmMode) {
         case EDIT:
@@ -75,8 +75,10 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
         case PREVIEW:
           // add diff decoration
-          String refProperty = StringUtils.defaultString(media.getMediaRequest().getRefProperty(), MediaNameConstants.PN_MEDIA_REF);
-          MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request);
+          if (request != null) {
+            String refProperty = StringUtils.defaultString(media.getMediaRequest().getRefProperty(), MediaNameConstants.PN_MEDIA_REF);
+            MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request);
+          }
           break;
 
         default:

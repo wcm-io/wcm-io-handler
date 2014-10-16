@@ -44,7 +44,7 @@ import com.day.cq.wcm.api.WCMMode;
 @ProviderType
 public final class SimpleLinkMarkupBuilder implements LinkMarkupBuilder {
 
-  @AemObject
+  @AemObject(optional = true)
   private WCMMode wcmMode;
 
   @Override
