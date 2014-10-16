@@ -19,20 +19,20 @@
  */
 package io.wcm.handler.mediasource.inline;
 
-import static io.wcm.handler.mediasource.inline.testcontext.AppAemContext.ROOTPATH_CONTENT;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_1COL;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_2COL;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_3COL;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.EDITORIAL_STANDARD;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.HOLZAUTO_BANNER;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.HOLZAUTO_CUTOUT_13PLUS;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2;
-import static io.wcm.handler.mediasource.inline.testcontext.DummyMediaFormats.SHOWROOM_FLYOUT_FEATURE;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_STANDARD;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOLZAUTO_BANNER;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOLZAUTO_CUTOUT_13PLUS;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_FLYOUT_FEATURE;
+import static io.wcm.handler.media.testcontext.MediaSourceInlineAemContext.ROOTPATH_CONTENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -47,7 +47,7 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
-import io.wcm.handler.mediasource.inline.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.MediaSourceInlineAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -72,7 +72,7 @@ import com.google.common.collect.ImmutableList;
 public class InlineMediaSourceTest {
 
   @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  public final AemContext context = MediaSourceInlineAemContext.newAemContext();
 
   private static final byte[] DUMMY_BINARY = new byte[] {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10

@@ -97,7 +97,8 @@
 
             <Sling-Model-Packages>
               io.wcm.handler.media,
-              io.wcm.handler.mediasource.dam
+              io.wcm.handler.mediasource.dam,
+              io.wcm.handler.mediasource.inline
             </Sling-Model-Packages>
 
             <!-- include application path as intial content -->

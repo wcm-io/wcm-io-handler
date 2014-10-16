@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.inline.testcontext;
+package io.wcm.handler.media.testcontext;
 
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
@@ -39,7 +39,7 @@ import org.apache.sling.testing.mock.sling.ResourceResolverType;
 /**
  * Sets up {@link AemContext} for unit tests in this application.
  */
-public final class AppAemContext {
+public final class MediaSourceInlineAemContext {
 
   /**
    * Appliation ID
@@ -56,7 +56,7 @@ public final class AppAemContext {
    */
   public static final String ROOTPATH_CONTENT = "/content/unittest/de_test/brand/de";
 
-  private AppAemContext() {
+  private MediaSourceInlineAemContext() {
     // static methods only
   }
 

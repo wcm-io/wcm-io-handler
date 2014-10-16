@@ -28,6 +28,7 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
+import io.wcm.handler.mediasource.inline.InlineMediaSource;
 
 import java.util.List;
 import java.util.Set;
@@ -49,7 +50,8 @@ import com.google.common.collect.ImmutableSet;
 public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
-      DamMediaSource.class
+      DamMediaSource.class,
+      InlineMediaSource.class
       );
 
   private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =

@@ -42,7 +42,6 @@
     <module>commons</module>
     <module>url</module>
     <module>media</module>
-    <module>mediasource/inline</module>
     <module>link</module>
     <module>richtext</module>
   </modules>
