@@ -84,7 +84,7 @@ public class MediaHandlerImplTest {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     // test pipelining and resolve link
-    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1", MediaArgs.urlMode(UrlModes.DEFAULT));
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1", new MediaArgs().urlMode(UrlModes.DEFAULT));
     Media media = mediaHandler.get(mediaRequest).build();
 
     // make sure initial media request is unmodified
@@ -110,7 +110,7 @@ public class MediaHandlerImplTest {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
-        MediaArgs.mediaFormats("home_stage", "home_teaser"));
+        new MediaArgs("home_stage", "home_teaser"));
     Media metadata = mediaHandler.get(mediaRequest).build();
 
     MediaFormat[] mediaFormats = metadata.getMediaRequest().getMediaArgs().getMediaFormats();
@@ -127,7 +127,7 @@ public class MediaHandlerImplTest {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
-        MediaArgs.mediaFormats("invalid_media_format"));
+        new MediaArgs("invalid_media_format"));
     mediaHandler.get(mediaRequest).build();
   }
 
@@ -185,7 +185,7 @@ public class MediaHandlerImplTest {
     public Media process(Media media) {
       MediaRequest request = media.getMediaRequest();
       String mediaRef = request.getMediaRef() + "/pre1";
-      MediaArgs mediaArgs = request.getMediaArgs().setUrlMode(UrlModes.FULL_URL);
+      MediaArgs mediaArgs = request.getMediaArgs().urlMode(UrlModes.FULL_URL);
       media.setMediaRequest(new MediaRequest(
           request.getResource(),
           mediaRef,

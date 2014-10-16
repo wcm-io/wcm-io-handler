@@ -80,7 +80,7 @@ public class MediaMarkupBuilderUtilTest {
 
   @Test
   public void testGetMediaformatDimension_fixedDimension() {
-    MediaRequest mediaRequest = new MediaRequest("/dummy/image", MediaArgs.fixedDimension(100, 50));
+    MediaRequest mediaRequest = new MediaRequest("/dummy/image", new MediaArgs().fixedDimension(100, 50));
     Media media = new Media(mediaSource, mediaRequest);
 
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
@@ -90,7 +90,7 @@ public class MediaMarkupBuilderUtilTest {
 
   @Test
   public void testGetMediaformatDimension_mediaFormat() {
-    MediaRequest mediaRequest = new MediaRequest("/dummy/image", MediaArgs.mediaFormat(EDITORIAL_1COL));
+    MediaRequest mediaRequest = new MediaRequest("/dummy/image", new MediaArgs(EDITORIAL_1COL));
     Media media = new Media(mediaSource, mediaRequest);
 
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);

@@ -85,20 +85,20 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
 
     // test with wcm modes, without rendition, without mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(null).setNoDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(null).noDummyImage(false);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, without rendition, with mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(null).setNoDummyImage(false);
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    mediaRequest.getMediaArgs().mediaFormat(null).noDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, without rendition, with mediaformat, with suppress
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(true);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).noDummyImage(true);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, with rendition, with mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).noDummyImage(false);
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
@@ -115,20 +115,20 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
 
     // test with wcm modes, without rendition, without mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(null).setNoDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(null).noDummyImage(false);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, without rendition, with mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(null).setNoDummyImage(false);
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    mediaRequest.getMediaArgs().mediaFormat(null).noDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, without rendition, with mediaformat, with suppress
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(true);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).noDummyImage(true);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, with rendition, with mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).noDummyImage(false);
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
@@ -145,20 +145,20 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
 
     // test with wcm modes, without rendition, without mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(null).setNoDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(null).noDummyImage(false);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, without rendition, with mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(null).setNoDummyImage(false);
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    mediaRequest.getMediaArgs().mediaFormat(null).noDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     assertTrue(builder.accepts(media));
 
     // test with wcm modes, without rendition, with mediaformat, with suppress
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(true);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).noDummyImage(true);
     assertFalse(builder.accepts(media));
 
     // test with wcm modes, with rendition, with mediaformat, no suppress
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT).setNoDummyImage(false);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).noDummyImage(false);
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
@@ -170,7 +170,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs());
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
 
     HtmlElement<?> element = builder.build(media);
@@ -187,8 +187,8 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   public void testBuildWithUrlMode() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
-    MediaRequest mediaRequest = new MediaRequest("/invalid/media", MediaArgs.urlMode(UrlModes.FULL_URL));
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs().urlMode(UrlModes.FULL_URL));
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
 
     HtmlElement<?> element = builder.build(media);
@@ -218,7 +218,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs());
-    mediaRequest.getMediaArgs().setMediaFormat(EDITORIAL_1COL);
+    mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
 
     HtmlElement<?> element = builder.build(media);

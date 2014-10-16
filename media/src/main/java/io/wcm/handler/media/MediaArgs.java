@@ -54,6 +54,27 @@ public final class MediaArgs implements Cloneable {
   private ValueMap properties;
 
   /**
+   * Default constructor
+   */
+  public MediaArgs() {
+    // default constructor
+  }
+
+  /**
+   * @param mediaFormats Media formats
+   */
+  public MediaArgs(MediaFormat... mediaFormats) {
+    mediaFormats(mediaFormats);
+  }
+
+  /**
+   * @param mediaFormatNames Media format names
+   */
+  public MediaArgs(String... mediaFormatNames) {
+    mediaFormatNames(mediaFormatNames);
+  }
+
+  /**
    * Returns list of media formats to resolve to. If {@link #isMediaFormatsMandatory()} is false,
    * the first rendition that matches any of the given media format is returned. If it is set to true,
    * for each media format given a rendition has to be resolved and returned. If not all renditions
@@ -69,8 +90,20 @@ public final class MediaArgs implements Cloneable {
    * @param values Media formats
    * @return this
    */
-  public MediaArgs setMediaFormats(MediaFormat... values) {
+  public MediaArgs mediaFormats(MediaFormat... values) {
     this.mediaFormats = values;
+    return this;
+  }
+
+  /**
+   * Sets list of media formats to resolve to.
+   * Additionally {@link #isMediaFormatsMandatory()} is set to true.
+   * @param values Media formats
+   * @return this
+   */
+  public MediaArgs mandatoryMediaFormats(MediaFormat... values) {
+    mediaFormats(values);
+    mediaFormatsMandatory(true);
     return this;
   }
 
@@ -79,7 +112,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Media format
    * @return this
    */
-  public MediaArgs setMediaFormat(MediaFormat value) {
+  public MediaArgs mediaFormat(MediaFormat value) {
     if (value == null) {
       this.mediaFormats = null;
     }
@@ -105,7 +138,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Resolving of all media formats is mandatory.
    * @return this
    */
-  public MediaArgs setMediaFormatsMandatory(boolean value) {
+  public MediaArgs mediaFormatsMandatory(boolean value) {
     this.mediaFormatsMandatory = value;
     return this;
   }
@@ -123,8 +156,20 @@ public final class MediaArgs implements Cloneable {
    * @param values Media format names.
    * @return this
    */
-  public MediaArgs setMediaFormatNames(String... values) {
+  public MediaArgs mediaFormatNames(String... values) {
     this.mediaFormatNames = values;
+    return this;
+  }
+
+  /**
+   * Sets list of media formats to resolve to.
+   * Additionally {@link #isMediaFormatsMandatory()} is set to true.
+   * @param values Media format names.
+   * @return this
+   */
+  public MediaArgs mandatoryMediaFormatNames(String... values) {
+    mediaFormatNames(values);
+    mediaFormatsMandatory(true);
     return this;
   }
 
@@ -133,7 +178,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Media format name
    * @return this
    */
-  public MediaArgs setMediaFormatName(String value) {
+  public MediaArgs mediaFormatName(String value) {
     if (value == null) {
       this.mediaFormatNames = null;
     }
@@ -156,7 +201,7 @@ public final class MediaArgs implements Cloneable {
    * @param values File extensions
    * @return this
    */
-  public MediaArgs setFileExtensions(String... values) {
+  public MediaArgs fileExtensions(String... values) {
     this.fileExtensions = values;
     return this;
   }
@@ -165,7 +210,7 @@ public final class MediaArgs implements Cloneable {
    * @param value File extension
    * @return this
    */
-  public MediaArgs setFileExtension(String value) {
+  public MediaArgs fileExtension(String value) {
     if (value == null) {
       this.fileExtensions = null;
     }
@@ -188,7 +233,7 @@ public final class MediaArgs implements Cloneable {
    * @param value URS mode
    * @return this
    */
-  public MediaArgs setUrlMode(UrlMode value) {
+  public MediaArgs urlMode(UrlMode value) {
     this.urlMode = value;
     return this;
   }
@@ -206,7 +251,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Fixed width
    * @return this
    */
-  public MediaArgs setFixedWidth(long value) {
+  public MediaArgs fixedWidth(long value) {
     this.fixedWidth = value;
     return this;
   }
@@ -224,7 +269,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Fixed height
    * @return this
    */
-  public MediaArgs setFixedHeight(long value) {
+  public MediaArgs fixedHeight(long value) {
     this.fixedHeight = value;
     return this;
   }
@@ -235,7 +280,7 @@ public final class MediaArgs implements Cloneable {
    * @param heightValue Fixed height
    * @return this
    */
-  public MediaArgs setFixedDimensions(long widthValue, long heightValue) {
+  public MediaArgs fixedDimension(long widthValue, long heightValue) {
     this.fixedWidth = widthValue;
     this.fixedHeight = heightValue;
     return this;
@@ -252,7 +297,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Whether to set a "Content-Disposition" header for forcing a "Save as" dialog on the client
    * @return this
    */
-  public MediaArgs setForceDownload(boolean value) {
+  public MediaArgs forceDownload(boolean value) {
     this.forceDownload = value;
     return this;
   }
@@ -269,7 +314,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Custom alternative text. If null or empty, the default alt text from media library is used.
    * @return this
    */
-  public MediaArgs setAltText(String value) {
+  public MediaArgs altText(String value) {
     this.altText = value;
     return this;
   }
@@ -285,7 +330,7 @@ public final class MediaArgs implements Cloneable {
    * @param value If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
-  public MediaArgs setNoDummyImage(boolean value) {
+  public MediaArgs noDummyImage(boolean value) {
     this.noDummyImage = value;
     return this;
   }
@@ -301,7 +346,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Url of custom dummy image. If null default dummy image is used.
    * @return this
    */
-  public MediaArgs setDummyImageUrl(String value) {
+  public MediaArgs dummyImageUrl(String value) {
     this.dummyImageUrl = value;
     return this;
   }
@@ -386,81 +431,6 @@ public final class MediaArgs implements Cloneable {
     }
 
     return clone;
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with media format.
-   * @param mediaFormat Media format
-   * @return Media args
-   */
-  public static MediaArgs mediaFormat(MediaFormat mediaFormat) {
-    return new MediaArgs().setMediaFormat(mediaFormat);
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with media formats.
-   * @param mediaFormats Media formats
-   * @return Media args
-   */
-  public static MediaArgs mediaFormats(MediaFormat... mediaFormats) {
-    return new MediaArgs().setMediaFormats(mediaFormats);
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with media formats.
-   * Additionally {@link #isMediaFormatsMandatory()} is set to true.
-   * @param mediaFormats Media format
-   * @return Media args
-   */
-  public static MediaArgs mandatoryMediaFormats(MediaFormat... mediaFormats) {
-    return new MediaArgs().setMediaFormats(mediaFormats).setMediaFormatsMandatory(true);
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with media format.
-   * @param mediaFormatName Media format name
-   * @return Media args
-   */
-  public static MediaArgs mediaFormat(String mediaFormatName) {
-    return new MediaArgs().setMediaFormatName(mediaFormatName);
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with media formats.
-   * @param mediaFormatNames Media format names
-   * @return Media args
-   */
-  public static MediaArgs mediaFormats(String... mediaFormatNames) {
-    return new MediaArgs().setMediaFormatNames(mediaFormatNames);
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with media formats.
-   * Additionally {@link #isMediaFormatsMandatory()} is set to true.
-   * @param mediaFormatNames Media format names
-   * @return Media args
-   */
-  public static MediaArgs mandatoryMediaFormats(String... mediaFormatNames) {
-    return new MediaArgs().setMediaFormatNames(mediaFormatNames).setMediaFormatsMandatory(true);
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with URL mode.
-   * @param urlMode URL mode
-   * @return Media args
-   */
-  public static MediaArgs urlMode(UrlMode urlMode) {
-    return new MediaArgs().setUrlMode(urlMode);
-  }
-
-  /**
-   * Shortcut for building {@link MediaArgs} with URL mode.
-   * @param fixedWidth Fixed width
-   * @param fixedHeight Fixed height
-   * @return Media args
-   */
-  public static MediaArgs fixedDimension(int fixedWidth, int fixedHeight) {
-    return new MediaArgs().setFixedDimensions(fixedWidth, fixedHeight);
   }
 
 }

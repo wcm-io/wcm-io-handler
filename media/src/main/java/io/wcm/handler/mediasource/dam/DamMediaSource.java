@@ -104,7 +104,7 @@ public final class DamMediaSource extends AbstractMediaSource {
       if (StringUtils.isEmpty(mediaArgs.getAltText())
           && media.getMediaRequest().getResource() != null) {
         ValueMap props = media.getMediaRequest().getResource().getValueMap();
-        mediaArgs.setAltText(props.get(MediaNameConstants.PN_MEDIA_ALTTEXT, String.class));
+        mediaArgs.altText(props.get(MediaNameConstants.PN_MEDIA_ALTTEXT, String.class));
       }
 
       // Check for crop dimensions

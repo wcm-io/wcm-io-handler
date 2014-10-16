@@ -105,7 +105,7 @@ public class SimpleImageMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
 
     assertNull("no rendition", builder.build(media));
@@ -145,7 +145,7 @@ public class SimpleImageMediaMarkupBuilderTest {
 
     MediaRequest mediaRequest = new MediaRequest(resource, new MediaArgs());
     when(resource.getValueMap()).thenReturn(ImmutableValueMap.of(MediaNameConstants.PN_MEDIA_REF, "/media/dummy"));
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
@@ -163,7 +163,7 @@ public class SimpleImageMediaMarkupBuilderTest {
 
     MediaRequest mediaRequest = new MediaRequest(resource, new MediaArgs());
     when(resource.getValueMap()).thenReturn(ImmutableValueMap.of(MediaNameConstants.PN_MEDIA_REF, "/media/dummy"));
-    mediaRequest.getMediaArgs().setMediaFormat(DUMMY_FORMAT);
+    mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));

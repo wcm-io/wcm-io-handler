@@ -314,8 +314,7 @@ public class InlineMediaSourceTest {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
     Media media;
 
-    MediaArgs mediaArgs = new MediaArgs();
-    mediaArgs.setAltText("Der Jodelkaiser");
+    MediaArgs mediaArgs = new MediaArgs().altText("Der Jodelkaiser");
 
     media = mediaHandler.get(ntFileResource, mediaArgs).build();
     assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
@@ -341,7 +340,7 @@ public class InlineMediaSourceTest {
   public void testWithUrlMode() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    MediaArgs mediaArgs = MediaArgs.urlMode(UrlModes.FULL_URL);
+    MediaArgs mediaArgs = new MediaArgs().urlMode(UrlModes.FULL_URL);
 
     assertEquals("http://www.dummysite.org" + ROOTPATH_CONTENT + "/_jcr_content/filedata.bin",
         mediaHandler.get(ntFileResource, mediaArgs).buildUrl());
@@ -366,63 +365,63 @@ public class InlineMediaSourceTest {
     Rendition rendition;
 
     // test invalid resource
-    rendition = mediaHandler.get(emptyResource, MediaArgs.fixedDimension(10, 10)).build().getRendition();
+    rendition = mediaHandler.get(emptyResource, new MediaArgs().fixedDimension(10, 10)).build().getRendition();
     assertNull("rendition invalid", rendition);
 
     // test non-image resource - dimensions have no effect
-    rendition = mediaHandler.get(mediaInlineResource, MediaArgs.fixedDimension(10, 10)).build().getRendition();
+    rendition = mediaHandler.get(mediaInlineResource, new MediaArgs().fixedDimension(10, 10)).build().getRendition();
     assertEquals("width", 0, rendition.getWidth());
     assertEquals("height", 0, rendition.getHeight());
     assertEquals("url", ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInline/mediaInline./mediainlinedata.bin", rendition.getUrl());
 
     // test image resource with invalid aspect ratio
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(10, 10)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(10, 10)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(20, 10)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(20, 10)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
     // test image resource with dimensions that are too big
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(430, 204)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(430, 204)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(430, 0)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(430, 0)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(0, 204)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(0, 204)).refProperty("mediaInline").build().getRendition();
     assertNull("rendition invalid", rendition);
 
     // test image resource with dimensions exact fit
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(215, 102)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(215, 102)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 215, rendition.getWidth());
     assertEquals("height", 102, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline./sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions smaller
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(108, 51)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(108, 51)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 108, rendition.getWidth());
     assertEquals("height", 51, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".108.51.file/sample_image_215x102.jpg", rendition.getUrl());
 
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(42, 20)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(42, 20)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(42, 0)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(42, 0)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only height
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(0, 20)).refProperty("mediaInline").build().getRendition();
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(0, 20)).refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test with force download
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.fixedDimension(0, 20).setForceDownload(true))
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(0, 20).forceDownload(true))
         .refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
@@ -441,40 +440,40 @@ public class InlineMediaSourceTest {
     Rendition rendition;
 
     // test invalid resource
-    media = mediaHandler.get(emptyResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS)).refProperty("mediaInline").build();
+    media = mediaHandler.get(emptyResource, new MediaArgs(SHOWROOM_CONTROLS)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats with invalid aspect ratio
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(HOLZAUTO_BANNER)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(HOLZAUTO_BANNER)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(HOLZAUTO_CUTOUT_13PLUS)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(HOLZAUTO_CUTOUT_13PLUS)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats that are too big
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(EDITORIAL_STANDARD)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_STANDARD)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(EDITORIAL_2COL)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_2COL)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media format exact fit
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(EDITORIAL_1COL)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_1COL)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertTrue("media valid", media.isValid());
     assertNull("no invalid reason", media.getMediaInvalidReason());
@@ -483,7 +482,7 @@ public class InlineMediaSourceTest {
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline./sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions smaller
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_FLYOUT_FEATURE)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_FLYOUT_FEATURE)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertTrue("media valid", media.isValid());
     assertNull("no invalid reason", media.getMediaInvalidReason());
@@ -491,7 +490,7 @@ public class InlineMediaSourceTest {
     assertEquals("height", 97, rendition.getHeight());
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".205.97.file/sample_image_215x102.jpg", rendition.getUrl());
 
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertTrue("media valid", media.isValid());
     assertNull("no invalid reason", media.getMediaInvalidReason());
@@ -500,7 +499,7 @@ public class InlineMediaSourceTest {
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH)).refProperty("mediaInline")
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH)).refProperty("mediaInline")
         .build();
     rendition = media.getRendition();
     assertTrue("media valid", media.isValid());
@@ -510,7 +509,7 @@ public class InlineMediaSourceTest {
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only height
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT)).refProperty("mediaInline")
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT)).refProperty("mediaInline")
         .build();
     rendition = media.getRendition();
     assertTrue("media valid", media.isValid());
@@ -520,7 +519,7 @@ public class InlineMediaSourceTest {
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".63.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width, fitting ratio
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1))
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1))
         .refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertTrue("media valid", media.isValid());
@@ -530,7 +529,7 @@ public class InlineMediaSourceTest {
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test image resource with dimensions only width, invalid ratio
-    media = mediaHandler.get(mediaInlineSampleImageResource, MediaArgs.mediaFormat(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2))
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2))
         .refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
@@ -542,7 +541,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testDownloadMediaElement() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgs mediaArgs = new MediaArgs().setForceDownload(true);
+    MediaArgs mediaArgs = new MediaArgs().forceDownload(true);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNull("no invalid reason", media.getMediaInvalidReason());
@@ -557,7 +556,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testMultipleMediaMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgs mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
+    MediaArgs mediaArgs = new MediaArgs(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
@@ -570,7 +569,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testMultipleMandatoryMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgs mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(EDITORIAL_1COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
@@ -590,7 +589,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testMultipleMandatoryMediaFormatsNotAllMatch() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    MediaArgs mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_2COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(EDITORIAL_2COL, SHOWROOM_FLYOUT_FEATURE, SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertFalse("valid?", media.isValid());
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());

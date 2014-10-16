@@ -123,7 +123,7 @@ public final class InlineMediaSource extends AbstractMediaSource {
     if (StringUtils.isEmpty(mediaArgs.getAltText()) && referencedResource != null) {
       // otherwise check if there is a custom altText specified in the component's properties
       ValueMap props = referencedResource.getValueMap();
-      mediaArgs.setAltText(props.get(MediaNameConstants.PN_MEDIA_ALTTEXT, String.class));
+      mediaArgs.altText(props.get(MediaNameConstants.PN_MEDIA_ALTTEXT, String.class));
     }
 
     // Check for crop dimensions

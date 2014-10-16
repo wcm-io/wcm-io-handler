@@ -40,100 +40,100 @@ import com.google.common.collect.ImmutableMap;
 public class MediaArgsTest {
 
   @Test
-  public void testMediaFormats() {
-    MediaArgs mediaArgs;
-
-    mediaArgs = MediaArgs.mediaFormat(EDITORIAL_1COL);
-    assertArrayEquals(new MediaFormat[] {
-        EDITORIAL_1COL
-    }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
-
-    mediaArgs = MediaArgs.mediaFormat("editorial_1col");
-    assertArrayEquals(new String[] {
-        "editorial_1col"
-    }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
-
-    mediaArgs = MediaArgs.mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
-    assertArrayEquals(new MediaFormat[] {
-        EDITORIAL_1COL, EDITORIAL_2COL
-    }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
-
-    mediaArgs = MediaArgs.mediaFormats("editorial_1col", "editorial_2col");
-    assertArrayEquals(new String[] {
-        "editorial_1col", "editorial_2col"
-    }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
-
-    assertNull(MediaArgs.mediaFormat((MediaFormat)null).getMediaFormats());
-    assertNull(MediaArgs.mediaFormat((String)null).getMediaFormatNames());
-  }
-
-  @Test
-  public void testMediaFormatsMandatory() {
-    MediaArgs mediaArgs;
-
-    mediaArgs = MediaArgs.mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
-    assertArrayEquals(new MediaFormat[] {
-        EDITORIAL_1COL, EDITORIAL_2COL
-    }, mediaArgs.getMediaFormats());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
-
-    mediaArgs = MediaArgs.mandatoryMediaFormats("editorial_1col", "editorial_2col");
-    assertArrayEquals(new String[] {
-        "editorial_1col", "editorial_2col"
-    }, mediaArgs.getMediaFormatNames());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
-
-    assertNull(MediaArgs.mediaFormat((MediaFormat)null).getMediaFormats());
-    assertNull(MediaArgs.mediaFormat((String)null).getMediaFormatNames());
-  }
+    public void testGetMediaFormats() {
+      MediaArgs mediaArgs;
+  
+      mediaArgs = new MediaArgs(EDITORIAL_1COL);
+      assertArrayEquals(new MediaFormat[] {
+          EDITORIAL_1COL
+      }, mediaArgs.getMediaFormats());
+      assertFalse(mediaArgs.isMediaFormatsMandatory());
+  
+      mediaArgs = new MediaArgs("editorial_1col");
+      assertArrayEquals(new String[] {
+          "editorial_1col"
+      }, mediaArgs.getMediaFormatNames());
+      assertFalse(mediaArgs.isMediaFormatsMandatory());
+  
+      mediaArgs = new MediaArgs(EDITORIAL_1COL, EDITORIAL_2COL);
+      assertArrayEquals(new MediaFormat[] {
+          EDITORIAL_1COL, EDITORIAL_2COL
+      }, mediaArgs.getMediaFormats());
+      assertFalse(mediaArgs.isMediaFormatsMandatory());
+  
+      mediaArgs = new MediaArgs("editorial_1col", "editorial_2col");
+      assertArrayEquals(new String[] {
+          "editorial_1col", "editorial_2col"
+      }, mediaArgs.getMediaFormatNames());
+      assertFalse(mediaArgs.isMediaFormatsMandatory());
+  
+      assertNull(new MediaArgs().mediaFormat((MediaFormat)null).getMediaFormats());
+      assertNull(new MediaArgs().mediaFormatName((String)null).getMediaFormatNames());
+    }
 
   @Test
-  public void testUrlMode() {
-    assertEquals(UrlModes.FULL_URL, MediaArgs.urlMode(UrlModes.FULL_URL).getUrlMode());
-  }
+    public void testGetMediaFormatsMandatory() {
+      MediaArgs mediaArgs;
+  
+      mediaArgs = new MediaArgs().mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
+      assertArrayEquals(new MediaFormat[] {
+          EDITORIAL_1COL, EDITORIAL_2COL
+      }, mediaArgs.getMediaFormats());
+      assertTrue(mediaArgs.isMediaFormatsMandatory());
+  
+      mediaArgs = new MediaArgs().mandatoryMediaFormatNames("editorial_1col", "editorial_2col");
+      assertArrayEquals(new String[] {
+          "editorial_1col", "editorial_2col"
+      }, mediaArgs.getMediaFormatNames());
+      assertTrue(mediaArgs.isMediaFormatsMandatory());
+  
+      assertNull(new MediaArgs().mandatoryMediaFormats((MediaFormat[])null).getMediaFormats());
+      assertNull(new MediaArgs().mandatoryMediaFormatNames((String[])null).getMediaFormatNames());
+    }
+
+  @Test
+    public void testGetUrlMode() {
+      assertEquals(UrlModes.FULL_URL, new MediaArgs().urlMode(UrlModes.FULL_URL).getUrlMode());
+    }
 
   @Test
   public void testFixedDimension() {
-    MediaArgs mediaArgs = MediaArgs.fixedDimension(100, 50);
+    MediaArgs mediaArgs = new MediaArgs().fixedDimension(100, 50);
     assertEquals(100, mediaArgs.getFixedWidth());
     assertEquals(50, mediaArgs.getFixedHeight());
 
-    mediaArgs.setFixedWidth(200);
-    mediaArgs.setFixedHeight(100);
+    mediaArgs.fixedWidth(200);
+    mediaArgs.fixedHeight(100);
     assertEquals(200, mediaArgs.getFixedWidth());
     assertEquals(100, mediaArgs.getFixedHeight());
   }
 
   @Test
-  public void testFileExtensions() {
-    assertArrayEquals(new String[] {
-        "gif"
-    }, new MediaArgs().setFileExtension("gif").getFileExtensions());
-    assertArrayEquals(new String[] {
-        "gif", "jpg"
-    }, new MediaArgs().setFileExtensions("gif", "jpg").getFileExtensions());
-
-    assertNull(new MediaArgs().setFileExtension(null).getFileExtensions());
-  }
+    public void testGetFileExtensions() {
+      assertArrayEquals(new String[] {
+          "gif"
+      }, new MediaArgs().fileExtension("gif").getFileExtensions());
+      assertArrayEquals(new String[] {
+          "gif", "jpg"
+      }, new MediaArgs().fileExtensions("gif", "jpg").getFileExtensions());
+  
+      assertNull(new MediaArgs().fileExtension(null).getFileExtensions());
+    }
 
   @Test
-  public void testProperties() {
-    Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
-
-    MediaArgs mediaArgs = new MediaArgs()
-    .property("prop3", "value3")
-    .properties(props)
-    .property("prop2", "value2");
-
-    assertEquals(3, mediaArgs.getProperties().size());
-    assertEquals("value1", mediaArgs.getProperties().get("prop1", String.class));
-    assertEquals("value2", mediaArgs.getProperties().get("prop2", String.class));
-    assertEquals("value3", mediaArgs.getProperties().get("prop3", String.class));
-  }
+    public void testGetProperties() {
+      Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
+  
+      MediaArgs mediaArgs = new MediaArgs()
+      .property("prop3", "value3")
+      .properties(props)
+      .property("prop2", "value2");
+  
+      assertEquals(3, mediaArgs.getProperties().size());
+      assertEquals("value1", mediaArgs.getProperties().get("prop1", String.class));
+      assertEquals("value2", mediaArgs.getProperties().get("prop2", String.class));
+      assertEquals("value3", mediaArgs.getProperties().get("prop3", String.class));
+    }
 
   @Test
   public void testClone() {
@@ -152,16 +152,16 @@ public class MediaArgsTest {
     Map<String,Object> props = ImmutableValueMap.of("prop1", "value1", "prop2", "value2");
 
     MediaArgs mediaArgs = new MediaArgs();
-    mediaArgs.setMediaFormats(mediaFormats);
-    mediaArgs.setMediaFormatNames(mediaFormatNames);
-    mediaArgs.setMediaFormatsMandatory(true);
-    mediaArgs.setFileExtensions(fileExtensions);
-    mediaArgs.setUrlMode(UrlModes.FULL_URL_FORCENONSECURE);
-    mediaArgs.setFixedWidth(10);
-    mediaArgs.setFixedHeight(20);
-    mediaArgs.setForceDownload(true);
-    mediaArgs.setAltText("altText");
-    mediaArgs.setDummyImageUrl("/dummy/url");
+    mediaArgs.mediaFormats(mediaFormats);
+    mediaArgs.mediaFormatNames(mediaFormatNames);
+    mediaArgs.mediaFormatsMandatory(true);
+    mediaArgs.fileExtensions(fileExtensions);
+    mediaArgs.urlMode(UrlModes.FULL_URL_FORCENONSECURE);
+    mediaArgs.fixedWidth(10);
+    mediaArgs.fixedHeight(20);
+    mediaArgs.forceDownload(true);
+    mediaArgs.altText("altText");
+    mediaArgs.dummyImageUrl("/dummy/url");
     mediaArgs.properties(props);
 
     MediaArgs clone = mediaArgs.clone();
@@ -186,9 +186,9 @@ public class MediaArgsTest {
 
   @Test
   public void testEquals() {
-    MediaArgs mediaArgs1 = MediaArgs.mediaFormat(EDITORIAL_1COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
-    MediaArgs mediaArgs2 = MediaArgs.mediaFormat(EDITORIAL_1COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
-    MediaArgs mediaArgs3 = MediaArgs.mediaFormat(EDITORIAL_2COL).setUrlMode(UrlModes.FULL_URL).setAltText("abc");
+    MediaArgs mediaArgs1 = new MediaArgs().mediaFormat(EDITORIAL_1COL).urlMode(UrlModes.FULL_URL).altText("abc");
+    MediaArgs mediaArgs2 = new MediaArgs().mediaFormat(EDITORIAL_1COL).urlMode(UrlModes.FULL_URL).altText("abc");
+    MediaArgs mediaArgs3 = new MediaArgs().mediaFormat(EDITORIAL_2COL).urlMode(UrlModes.FULL_URL).altText("abc");
 
     assertTrue(mediaArgs1.equals(mediaArgs2));
     assertTrue(mediaArgs2.equals(mediaArgs1));

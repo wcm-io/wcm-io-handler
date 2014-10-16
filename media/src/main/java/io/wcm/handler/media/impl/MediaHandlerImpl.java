@@ -216,8 +216,8 @@ public final class MediaHandlerImpl implements MediaHandler {
         throw new RuntimeException("Media format name '" + mediaFormatNames[i] + "' is invalid.");
       }
     }
-    mediaArgs.setMediaFormats(mediaFormats);
-    mediaArgs.setMediaFormatNames((String[])null);
+    mediaArgs.mediaFormats(mediaFormats);
+    mediaArgs.mediaFormatNames((String[])null);
   }
 
 }

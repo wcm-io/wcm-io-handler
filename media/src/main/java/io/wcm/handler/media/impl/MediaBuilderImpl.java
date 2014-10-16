@@ -106,8 +106,8 @@ final class MediaBuilderImpl implements MediaBuilder {
     }
     if (this.mediaArgs == null) {
       this.mediaArgs = new MediaArgs();
-      this.mediaArgs.setMediaFormats(this.mediaFormats);
-      this.mediaArgs.setUrlMode(this.urlMode);
+      this.mediaArgs.mediaFormats(this.mediaFormats);
+      this.mediaArgs.urlMode(this.urlMode);
     }
     else {
       // clone media args to make sure the original object is not modified

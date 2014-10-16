@@ -179,8 +179,8 @@ public abstract class AbstractMediaSource implements MediaSource {
     List<Rendition> resolvedRenditions = new ArrayList<>();
     for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
       MediaArgs renditionMediaArgs = mediaArgs.clone();
-      renditionMediaArgs.setMediaFormat(mediaFormat);
-      renditionMediaArgs.setMediaFormatsMandatory(false);
+      renditionMediaArgs.mediaFormat(mediaFormat);
+      renditionMediaArgs.mediaFormatsMandatory(false);
       Rendition rendition = asset.getRendition(renditionMediaArgs);
       if (rendition != null) {
         resolvedRenditions.add(rendition);
