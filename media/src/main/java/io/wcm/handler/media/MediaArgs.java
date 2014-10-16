@@ -22,11 +22,16 @@ package io.wcm.handler.media;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -46,6 +51,7 @@ public final class MediaArgs implements Cloneable {
   private String altText;
   private boolean noDummyImage;
   private String dummyImageUrl;
+  private ValueMap properties;
 
   /**
    * Returns list of media formats to resolve to. If {@link #isMediaFormatsMandatory()} is false,
@@ -300,6 +306,44 @@ public final class MediaArgs implements Cloneable {
     return this;
   }
 
+  /**
+   * Custom properties that my be used by application-specific markup builders or processors.
+   * @param map Property map. Is merged with properties already set.
+   * @return this
+   */
+  public MediaArgs properties(Map<String, Object> map) {
+    if (map == null) {
+      throw new IllegalArgumentException("Map argument must not be null.");
+    }
+    getProperties().putAll(map);
+    return this;
+  }
+
+  /**
+   * Custom properties that my be used by application-specific markup builders or processors.
+   * @param key Property key
+   * @param value Property value
+   * @return this
+   */
+  public MediaArgs property(String key, Object value) {
+    if (key == null) {
+      throw new IllegalArgumentException("Key argument must not be null.");
+    }
+    getProperties().put(key, value);
+    return this;
+  }
+
+  /**
+   * Custom properties that my be used by application-specific markup builders or processors.
+   * @return Value map
+   */
+  public ValueMap getProperties() {
+    if (this.properties == null) {
+      this.properties = new ValueMapDecorator(new HashMap<String, Object>());
+    }
+    return this.properties;
+  }
+
   @Override
   public int hashCode() {
     return HashCodeBuilder.reflectionHashCode(this);
@@ -315,25 +359,33 @@ public final class MediaArgs implements Cloneable {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
   }
 
+
   /**
    * Custom clone-method for {@link MediaArgs}
    * @return the cloned {@link MediaArgs}
    */
+  // CHECKSTYLE:OFF
   @Override
   public MediaArgs clone() {
-    try {
-      MediaArgs clone = (MediaArgs)super.clone();
+    // CHECKSTYLE:ON
+    MediaArgs clone = new MediaArgs();
 
-      // explicitly copy all array fields (primitive properties are properly cloned by super.clone()
-      clone.setMediaFormats(ArrayUtils.clone(this.mediaFormats));
-      clone.setMediaFormatNames(ArrayUtils.clone(this.mediaFormatNames));
-      clone.setFileExtensions(ArrayUtils.clone(this.fileExtensions));
+    clone.mediaFormats = ArrayUtils.clone(this.mediaFormats);
+    clone.mediaFormatNames = ArrayUtils.clone(this.mediaFormatNames);
+    clone.mediaFormatsMandatory = this.mediaFormatsMandatory;
+    clone.fileExtensions = ArrayUtils.clone(this.fileExtensions);
+    clone.urlMode = this.urlMode;
+    clone.fixedWidth = this.fixedWidth;
+    clone.fixedHeight = this.fixedHeight;
+    clone.forceDownload = this.forceDownload;
+    clone.altText = this.altText;
+    clone.noDummyImage = this.noDummyImage;
+    clone.dummyImageUrl = this.dummyImageUrl;
+    if (this.properties != null) {
+      clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
+    }
 
-      return clone;
-    }
-    catch (CloneNotSupportedException ex) {
-      throw new RuntimeException("Clone failed.", ex);
-    }
+    return clone;
   }
 
   /**

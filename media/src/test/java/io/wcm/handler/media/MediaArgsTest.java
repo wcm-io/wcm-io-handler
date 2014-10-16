@@ -24,12 +24,18 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlModes;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+
+import java.util.Map;
 
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 public class MediaArgsTest {
 
@@ -112,6 +118,70 @@ public class MediaArgsTest {
     }, new MediaArgs().setFileExtensions("gif", "jpg").getFileExtensions());
 
     assertNull(new MediaArgs().setFileExtension(null).getFileExtensions());
+  }
+
+  @Test
+  public void testProperties() {
+    Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
+
+    MediaArgs mediaArgs = new MediaArgs()
+    .property("prop3", "value3")
+    .properties(props)
+    .property("prop2", "value2");
+
+    assertEquals(3, mediaArgs.getProperties().size());
+    assertEquals("value1", mediaArgs.getProperties().get("prop1", String.class));
+    assertEquals("value2", mediaArgs.getProperties().get("prop2", String.class));
+    assertEquals("value3", mediaArgs.getProperties().get("prop3", String.class));
+  }
+
+  @Test
+  public void testClone() {
+    MediaFormat[] mediaFormats = new MediaFormat[] {
+        EDITORIAL_1COL,
+        EDITORIAL_2COL
+    };
+    String[] mediaFormatNames = new String[] {
+        "mf1",
+        "mf2"
+    };
+    String[] fileExtensions = new String[] {
+        "ext1",
+        "ext2"
+    };
+    Map<String,Object> props = ImmutableValueMap.of("prop1", "value1", "prop2", "value2");
+
+    MediaArgs mediaArgs = new MediaArgs();
+    mediaArgs.setMediaFormats(mediaFormats);
+    mediaArgs.setMediaFormatNames(mediaFormatNames);
+    mediaArgs.setMediaFormatsMandatory(true);
+    mediaArgs.setFileExtensions(fileExtensions);
+    mediaArgs.setUrlMode(UrlModes.FULL_URL_FORCENONSECURE);
+    mediaArgs.setFixedWidth(10);
+    mediaArgs.setFixedHeight(20);
+    mediaArgs.setForceDownload(true);
+    mediaArgs.setAltText("altText");
+    mediaArgs.setDummyImageUrl("/dummy/url");
+    mediaArgs.properties(props);
+
+    MediaArgs clone = mediaArgs.clone();
+    assertNotSame(mediaArgs, clone);
+    assertNotSame(mediaArgs.getMediaFormats(), clone.getMediaFormats());
+    assertNotSame(mediaArgs.getMediaFormatNames(), clone.getMediaFormatNames());
+    assertNotSame(mediaArgs.getFileExtensions(), clone.getFileExtensions());
+    assertNotSame(mediaArgs.getProperties(), clone.getProperties());
+
+    assertArrayEquals(mediaArgs.getMediaFormats(), clone.getMediaFormats());
+    assertArrayEquals(mediaArgs.getMediaFormatNames(), clone.getMediaFormatNames());
+    assertEquals(mediaArgs.isMediaFormatsMandatory(), clone.isMediaFormatsMandatory());
+    assertArrayEquals(mediaArgs.getFileExtensions(), clone.getFileExtensions());
+    assertEquals(mediaArgs.getUrlMode(), clone.getUrlMode());
+    assertEquals(mediaArgs.getFixedWidth(), clone.getFixedWidth());
+    assertEquals(mediaArgs.getFixedHeight(), clone.getFixedHeight());
+    assertEquals(mediaArgs.isForceDownload(), clone.isForceDownload());
+    assertEquals(mediaArgs.getAltText(), clone.getAltText());
+    assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
+    assertEquals(ImmutableValueMap.copyOf(mediaArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
 
   @Test
