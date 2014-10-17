@@ -77,6 +77,9 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   @Override
   public final boolean accepts(Media media) {
+    if (!media.isValid()) {
+      return false;
+    }
     Asset asset = getDamAsset(media);
     if (asset != null) {
       return asset.getRendition(new PrefixRenditionPicker(VideoConstants.RENDITION_PREFIX)) != null;

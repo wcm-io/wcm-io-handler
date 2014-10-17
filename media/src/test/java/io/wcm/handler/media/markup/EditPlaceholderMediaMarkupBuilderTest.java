@@ -31,6 +31,7 @@ import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
@@ -103,6 +104,10 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
 
+    // test invalid
+    media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
+    assertFalse(builder.accepts(media));
+
   }
 
   @Test
@@ -131,6 +136,10 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).noDummyImage(false);
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
+    assertFalse(builder.accepts(media));
+
+    // test invalid
+    media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
     assertFalse(builder.accepts(media));
 
   }
@@ -162,6 +171,10 @@ public class EditPlaceholderMediaMarkupBuilderTest {
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
     assertFalse(builder.accepts(media));
+
+    // test invalid
+    media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
+    assertTrue(builder.accepts(media));
 
   }
 

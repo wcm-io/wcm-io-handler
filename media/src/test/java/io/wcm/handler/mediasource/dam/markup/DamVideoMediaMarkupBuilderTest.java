@@ -29,6 +29,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Source;
 import io.wcm.handler.commons.dom.Video;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -61,6 +62,9 @@ public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
     assertTrue(underTest.accepts(video));
     // does not accept image
     assertFalse(underTest.accepts(mediaHandler().get(MEDIAITEM_PATH_STANDARD).build()));
+    // does not accept invalid video
+    video.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
+    assertFalse(underTest.accepts(video));
   }
 
   @Test

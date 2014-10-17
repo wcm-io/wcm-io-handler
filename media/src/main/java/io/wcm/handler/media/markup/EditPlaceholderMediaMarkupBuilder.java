@@ -67,7 +67,7 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
     // and at least one media format is given, and dummy image is not suppressed
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    return media.getRendition() == null
+    return (!media.isValid() || media.getRendition() == null)
         && wcmMode == WCMMode.EDIT
         && (mediaFormats != null && mediaFormats.length > 0)
         && !mediaArgs.isNoDummyImage();
