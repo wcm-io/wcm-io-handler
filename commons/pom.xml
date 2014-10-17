@@ -35,7 +35,7 @@
   <packaging>bundle</packaging>
 
   <name>Handler Commons</name>
-  <description>Common handler utility and helper funtions.</description>
+  <description>Functionality shared by the handler implementations.</description>
 
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io.git</connection>

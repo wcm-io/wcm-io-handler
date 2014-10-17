@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * Link handler API for integrator template support.
+ * URL handler API for integrator template support.
  */
 @org.osgi.annotation.versioning.Version("0.2.0")
 package io.wcm.handler.url.integrator;

@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * Helper classes for rich text handling.
+ * Helper classes for RichText handling.
  */
 @org.osgi.annotation.versioning.Version("0.2.0")
 package io.wcm.handler.richtext.util;

@@ -35,7 +35,7 @@
   <packaging>bundle</packaging>
 
   <name>Media Handler</name>
-  <description>Media resolving, processing and markup generation incl. DAM media source.</description>
+  <description>Media resolving, processing and markup generation.</description>
 
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io.git</connection>
@@ -136,6 +136,34 @@
 
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+    
+      <!-- Group JavaDocs -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <groups>
+            <group>
+              <title>Media Handler</title>
+              <packages>io.wcm.handler.media:io.wcm.handler.media.*</packages>
+            </group>
+            <group>
+              <title>DAM Media Source</title>
+              <packages>io.wcm.handler.mediasource.dam:io.wcm.handler.mediasource.dam.*</packages>
+            </group>
+            <group>
+              <title>Inline Media Source</title>
+              <packages>io.wcm.handler.mediasource.inline:io.wcm.handler.mediasource.inline.*</packages>
+            </group>
+          </groups>
+        </configuration>
+      </plugin>
+    
+    </plugins>
+  </reporting>
 
   <distributionManagement>
     <site>
