@@ -32,6 +32,7 @@ import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
@@ -97,6 +98,10 @@ public class SimpleImageMediaMarkupBuilderTest {
     when(rendition.isImage()).thenReturn(true);
 
     assertTrue("image rendition", builder.accepts(media));
+
+    media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
+
+    assertFalse("media is invalid", builder.accepts(media));
 
   }
 

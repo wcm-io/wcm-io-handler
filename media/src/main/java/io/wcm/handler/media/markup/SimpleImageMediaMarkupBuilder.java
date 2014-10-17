@@ -53,8 +53,10 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
   @Override
   public final boolean accepts(Media media) {
-    // accept if rendition is an image rendition
-    return media.getRendition() != null && media.getRendition().isImage();
+    // accept if rendition is an image rendition, and resolving was successful
+    return media.isValid()
+        && media.getRendition() != null
+        && media.getRendition().isImage();
   }
 
   @Override
