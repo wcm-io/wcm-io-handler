@@ -115,11 +115,9 @@ public final class MediaLinkType extends AbstractLinkType {
       link.setTargetRendition(media.getRendition());
     }
 
-    if (link.getUrl() == null) {
-      // mark link as invalid if a reference was set that could not be resolved
-      if (StringUtils.isNotEmpty(mediaRef)) {
-        link.setLinkReferenceInvalid(true);
-      }
+    // mark link as invalid if a reference was set that could not be resolved
+    if (link.getUrl() == null && StringUtils.isNotEmpty(mediaRef)) {
+      link.setLinkReferenceInvalid(true);
     }
 
     return link;

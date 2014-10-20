@@ -323,7 +323,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   @Override
   @SuppressWarnings("unchecked")
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
-    if (type == com.day.cq.dam.api.Rendition.class) {
+    if (type == Rendition.class) {
       return (AdapterType)this.rendition;
     }
     if (type == Resource.class) {

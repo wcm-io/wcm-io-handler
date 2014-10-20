@@ -197,10 +197,8 @@ public final class InlineMediaSource extends AbstractMediaSource {
       String fileExtension = null;
       if (ntResourceResource != null) {
         String mimeType = ntResourceResource.getValueMap().get(JcrConstants.JCR_MIMETYPE, String.class);
-        if (StringUtils.isNotEmpty(mimeType)) {
-          if (mimeTypeService != null) {
-            fileExtension = mimeTypeService.getExtension(mimeType);
-          }
+        if (StringUtils.isNotEmpty(mimeType) && mimeTypeService != null) {
+          fileExtension = mimeTypeService.getExtension(mimeType);
         }
       }
       if (StringUtils.isEmpty(fileExtension)) {

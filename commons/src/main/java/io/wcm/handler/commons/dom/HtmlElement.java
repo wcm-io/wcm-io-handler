@@ -202,9 +202,9 @@ public class HtmlElement<T extends HtmlElement> extends AbstractHtmlElementFacto
     StringBuilder styleString = new StringBuilder();
     for (Map.Entry style : styleMap.entrySet()) {
       styleString.append(style.getKey());
-      styleString.append(":");
+      styleString.append(':');
       styleString.append(style.getValue());
-      styleString.append(";");
+      styleString.append(';');
     }
     setStyleString(styleString.toString());
     return (T)this;

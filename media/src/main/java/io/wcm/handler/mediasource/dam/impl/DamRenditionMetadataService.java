@@ -96,7 +96,7 @@ public final class DamRenditionMetadataService implements EventHandler {
   private SlingSettingsService slingSettings;
 
   @Activate
-  protected void activate(ComponentContext componentContext) {
+  private void activate(ComponentContext componentContext) {
     // Activate only in author mode, and check enabled status in service configuration as well
     enabled = !RunMode.disableIfNotAuthor(slingSettings.getRunModes(), componentContext, log)
         && PropertiesUtil.toBoolean(componentContext.getProperties().get(PROPERTY_ENABLED), DEFAULT_ENABLED);

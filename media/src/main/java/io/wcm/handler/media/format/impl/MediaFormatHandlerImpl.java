@@ -25,7 +25,6 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.MediaFormatRankingComparator;
 import io.wcm.handler.media.format.MediaFormatSizeRankingComparator;
-import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 import java.util.Comparator;
@@ -37,10 +36,8 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
-import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import com.google.common.collect.ImmutableSortedSet;
@@ -53,10 +50,6 @@ import com.google.common.collect.ImmutableSortedSet;
 }, adapters = MediaFormatHandler.class)
 public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
-  @Self
-  private MediaHandlerConfig mediaHandlerConfig;
-  @SlingObject
-  private ResourceResolver resourceResolver;
   @SlingObject
   private Resource currentResource;
   @OSGiService

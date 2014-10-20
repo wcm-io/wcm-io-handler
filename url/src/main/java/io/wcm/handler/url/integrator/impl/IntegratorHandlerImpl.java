@@ -154,11 +154,9 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
         }
       }
     }
-    if (mode == null) {
-      // fallback to first mode defined in configuration
-      if (!integratorModes.isEmpty()) {
-        mode = integratorModes.iterator().next();
-      }
+    // fallback to first mode defined in configuration
+    if (mode == null && !integratorModes.isEmpty()) {
+      mode = integratorModes.iterator().next();
     }
     return mode;
   }

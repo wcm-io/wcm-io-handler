@@ -160,7 +160,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    *         Return empty list to remove this element.
    *         Return list with other content to replace element with new content.
    */
-  protected List<Content> rewriteAnchor(Element element) {
+  private List<Content> rewriteAnchor(Element element) {
 
     // detect empty anchor elements and insert at least an empty string to avoid "self-closing" elements
     // that are not handled correctly by most browsers
@@ -191,7 +191,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param element DOM element
    * @return Link metadata
    */
-  protected Link getAnchorLink(Element element) {
+  private Link getAnchorLink(Element element) {
     SyntheticLinkResource resource = new SyntheticLinkResource(resourceResolver);
     ValueMap resourceProps = resource.getValueMap();
 
@@ -216,7 +216,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param element Original element
    * @return Anchor element or null if link is invalid
    */
-  protected Element buildAnchorElement(Link pLink, Element element) {
+  private Element buildAnchorElement(Link pLink, Element element) {
     return pLink.getAnchor();
   }
 
@@ -226,7 +226,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param element Link element
    * @return true if any metadata attribute was found
    */
-  protected boolean getAnchorMetadataFromData(ValueMap pResourceProps, Element element) {
+  private boolean getAnchorMetadataFromData(ValueMap pResourceProps, Element element) {
     boolean foundAny = false;
 
     List<Attribute> attributes = element.getAttributes();
@@ -266,7 +266,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param pResourceProps Valuemap to write link metadata to
    * @param element Link element
    */
-  protected boolean getAnchorLegacyMetadataFromSingleData(ValueMap pResourceProps, Element element) {
+  private boolean getAnchorLegacyMetadataFromSingleData(ValueMap pResourceProps, Element element) {
     boolean foundAny = false;
 
     JSONObject metadata = null;
@@ -299,7 +299,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param pResourceProps Valuemap to write link metadata to
    * @param element Link element
    */
-  protected void getAnchorLegacyMetadataFromRel(ValueMap pResourceProps, Element element) {
+  private void getAnchorLegacyMetadataFromRel(ValueMap pResourceProps, Element element) {
     // Check href attribute - do not change elements with no href or links to anchor names
     String href = element.getAttributeValue("href");
     String linkWindowTarget = element.getAttributeValue("target");
@@ -391,7 +391,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    *         Return empty list to remove this element.
    *         Return list with other content to replace element with new content.
    */
-  protected List<Content> rewriteImage(Element element) {
+  private List<Content> rewriteImage(Element element) {
 
     // resolve media metadata from DOM element
     Media media = getImageMedia(element);
@@ -412,7 +412,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param element DOM element
    * @return Media metadata
    */
-  protected Media getImageMedia(Element element) {
+  private Media getImageMedia(Element element) {
     String ref = element.getAttributeValue("src");
     if (StringUtils.isNotEmpty(ref)) {
       ref = unexternalizeImageRef(ref);
@@ -426,7 +426,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param element Original element
    * @return Image element or null if media reference is invalid
    */
-  protected Element buildImageElement(Media pMedia, Element element) {
+  private Element buildImageElement(Media pMedia, Element element) {
     if (pMedia.isValid()) {
       element.setAttribute("src", pMedia.getUrl());
     }
@@ -478,7 +478,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
    * @param property Metadata property name
    * @return JCR property name
    */
-  protected String mapMetadataPropertyName(String property) {
+  private String mapMetadataPropertyName(String property) {
     String translation = LINKATTRIBUTE_MAPPING.get(property);
     if (StringUtils.isNotEmpty(translation)) {
       return translation;

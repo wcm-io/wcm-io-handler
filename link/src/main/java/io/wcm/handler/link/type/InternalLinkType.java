@@ -169,11 +169,9 @@ public final class InternalLinkType extends AbstractLinkType {
           .buildExternalLinkUrl(targetPage);
     }
 
-    if (linkUrl == null) {
-      // mark link as invalid if a reference was set that could not be resolved
-      if (referenceSet) {
-        link.setLinkReferenceInvalid(true);
-      }
+    // mark link as invalid if a reference was set that could not be resolved
+    if (linkUrl == null && referenceSet) {
+      link.setLinkReferenceInvalid(true);
     }
 
     // set link url

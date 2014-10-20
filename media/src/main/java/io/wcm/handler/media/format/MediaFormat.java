@@ -190,10 +190,8 @@ public final class MediaFormat implements Comparable<MediaFormat> {
     }
 
     // otherwise calculate ratio
-    if (isFixedDimension()) {
-      if (this.width > 0 && this.height > 0) {
-        return (double)this.width / (double)this.height;
-      }
+    if (isFixedDimension() && this.width > 0 && this.height > 0) {
+      return (double)this.width / (double)this.height;
     }
 
     return 0d;
@@ -366,7 +364,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return User-friendly combined title of current media format name and dimension.
    */
-  protected String getCombinedTitle() {
+  String getCombinedTitle() {
     if (combinedTitle == null) {
       StringBuilder sb = new StringBuilder();
 
@@ -389,7 +387,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
           sbRestrictions.append("..");
           sbRestrictions.append(widthMax);
         }
-        sbRestrictions.append("x");
+        sbRestrictions.append('x');
         if (heightMin == heightMax) {
           sbRestrictions.append(heightMin);
         }
@@ -417,7 +415,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       if (extensionList != null) {
         for (int i = 0; i < extensionList.length && i < MAX_EXTENSIONS; i++) {
           if (i > 0) {
-            extensionsString.append(",");
+            extensionsString.append(',');
           }
           extensionsString.append(extensionList[i]);
         }
@@ -430,10 +428,10 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       }
 
       // add extended display parts
-      if (extParts.size() > 0) {
+      if (!extParts.isEmpty()) {
         sb.append(" (");
         sb.append(StringUtils.join(extParts, "; "));
-        sb.append(")");
+        sb.append(')');
       }
 
       combinedTitle = sb.toString();

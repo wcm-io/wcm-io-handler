@@ -22,7 +22,6 @@ package io.wcm.handler.url.impl;
 import io.wcm.handler.url.UrlBuilder;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.UrlMode;
-import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.sling.models.annotations.AemObject;
@@ -56,8 +55,6 @@ public final class UrlHandlerImpl implements UrlHandler {
   private Adaptable self;
   @Self
   private UrlHandlerConfig urlHandlerConfig;
-  @Self
-  private IntegratorHandler integratorHandler;
   @SlingObject
   private ResourceResolver resolver;
   @OSGiService
@@ -107,10 +104,10 @@ public final class UrlHandlerImpl implements UrlHandler {
     // rewrite path to current context
     StringBuilder rewrittenPath = new StringBuilder();
     for (int i = 0; i <= siteRootLevelContextPath; i++) {
-      rewrittenPath.append("/").append(contextPathParts[i]);
+      rewrittenPath.append('/').append(contextPathParts[i]);
     }
     for (int i = siteRootLevelPath + 1; i < pathParts.length; i++) {
-      rewrittenPath.append("/").append(pathParts[i]);
+      rewrittenPath.append('/').append(pathParts[i]);
     }
     return rewrittenPath.toString();
   }
@@ -209,7 +206,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     // Extension url part
     StringBuilder extensionPart = new StringBuilder();
     if (StringUtils.isNotBlank(extension)) {
-      extensionPart.append(".").append(extension);
+      extensionPart.append('.').append(extension);
     }
 
     // Selector url part
@@ -217,7 +214,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     if (StringUtils.isNotBlank(selector)) {
       // prepend delimiter to selector if required
       if (!StringUtils.startsWith(selector, ".")) {
-        selectorPart.append(".");
+        selectorPart.append('.');
       }
       selectorPart.append(selector);
     }
@@ -237,7 +234,7 @@ public final class UrlHandlerImpl implements UrlHandler {
       }
 
       // add a ".suffix" selector to avoid overlapping of filenames between suffixed and non-suffixed versions of the same page in the dispatcher cache
-      selectorPart.append(".").append(UrlHandler.SELECTOR_SUFFIX);
+      selectorPart.append('.').append(UrlHandler.SELECTOR_SUFFIX);
     }
 
     // build externalized url
@@ -264,7 +261,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     // append new query parameters
     if (StringUtils.isNotBlank(queryString)) {
       if (queryParams.length() > 0) {
-        queryParams.append("&");
+        queryParams.append('&');
       }
       queryParams.append(queryString);
     }
@@ -278,10 +275,10 @@ public final class UrlHandlerImpl implements UrlHandler {
             for (String value : values) {
               if (StringUtils.isNotEmpty(value)) {
                 if (queryParams.length() > 0) {
-                  queryParams.append("&");
+                  queryParams.append('&');
                 }
                 queryParams.append(parameterName);
-                queryParams.append("=");
+                queryParams.append('=');
                 queryParams.append(value);
               }
             }
@@ -292,7 +289,7 @@ public final class UrlHandlerImpl implements UrlHandler {
 
     // build complete url
     if (queryParams.length() > 0) {
-      urlBuilder.append("?");
+      urlBuilder.append('?');
       urlBuilder.append(queryParams);
     }
     return urlBuilder.toString();
@@ -305,7 +302,7 @@ public final class UrlHandlerImpl implements UrlHandler {
 
     // strip off anchor if already present
     StringBuilder urlBuilder;
-    int index = url.indexOf("#");
+    int index = url.indexOf('#');
     if (index >= 0) {
       urlBuilder = new StringBuilder(url.substring(0, index));
     }
@@ -316,7 +313,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     // prepend "#" for anchor if not present
     if (StringUtils.isNotBlank(fragment)) {
       if (!StringUtils.startsWith(fragment, "#")) {
-        urlBuilder.append("#");
+        urlBuilder.append('#');
       }
       urlBuilder.append(fragment);
     }

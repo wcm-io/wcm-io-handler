@@ -411,7 +411,7 @@ public final class MediaArgs implements Cloneable {
    */
   // CHECKSTYLE:OFF
   @Override
-  public MediaArgs clone() {
+  public MediaArgs clone() { //NOPMD
     // CHECKSTYLE:ON
     MediaArgs clone = new MediaArgs();
 

@@ -38,10 +38,7 @@ class CropRenditionHandler extends DefaultRenditionHandler implements RenditionH
 
   private static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\.1280\\.1280\\..*$");
 
-  private final Asset asset;
-  private final CropDimension cropDimension;
   private final Set<RenditionMetadata> renditions;
-  private final RenditionMetadata originalRendition;
 
   /**
    * @param asset DAM asset
@@ -49,11 +46,9 @@ class CropRenditionHandler extends DefaultRenditionHandler implements RenditionH
    */
   public CropRenditionHandler(Asset asset, CropDimension cropDimension) {
     super(asset);
-    this.asset = asset;
-    this.cropDimension = cropDimension;
 
     // get original rendition
-    this.originalRendition = new RenditionMetadata(asset.getOriginal());
+    RenditionMetadata originalRendition = new RenditionMetadata(asset.getOriginal());
 
     // check if default web rendition exists - use this one, otherwise the original
     RenditionMetadata sourceRendition = null;
@@ -67,27 +62,26 @@ class CropRenditionHandler extends DefaultRenditionHandler implements RenditionH
       }
     }
     if (sourceRendition == null) {
-      sourceRendition = this.originalRendition;
+      sourceRendition = originalRendition;
     }
 
     // check if original rendition is an image
-    String originalFileExtension = StringUtils.substringAfterLast(this.asset.getName(), ".");
+    String originalFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
     boolean isImage = FileExtension.isImage(originalFileExtension);
 
     // check if original image is not an image because otherwise cropping is not possible
     this.renditions = new TreeSet<>();
-    if (isImage) {
-      // check if original image is big enough because otherwise cropping is not possible
-      if (sourceRendition.getWidth() >= this.cropDimension.getRight()
-          && sourceRendition.getHeight() >= this.cropDimension.getBottom()) {
-        // add virtual rendition for cropped image
-        this.renditions.add(new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
-            this.cropDimension.getWidth(), this.cropDimension.getHeight(), this.cropDimension));
-      }
+    // check if original image is big enough because otherwise cropping is not possible
+    if (isImage
+        && sourceRendition.getWidth() >= cropDimension.getRight()
+        && sourceRendition.getHeight() >= cropDimension.getBottom()) {
+      // add virtual rendition for cropped image
+      this.renditions.add(new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
+          cropDimension.getWidth(), cropDimension.getHeight(), cropDimension));
     }
 
     // always add original rendition
-    this.renditions.add(this.originalRendition);
+    this.renditions.add(originalRendition);
   }
 
   /**

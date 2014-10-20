@@ -56,7 +56,7 @@ final class DataPropertyUtil {
     for (int i = 0; i < headlessCamelCaseName.length(); i++) {
       char c = headlessCamelCaseName.charAt(i);
       if (CharUtils.isAsciiAlphaUpper(c)) {
-        html5DataName.append("-");
+        html5DataName.append('-');
       }
       html5DataName.append(Character.toLowerCase(c));
     }

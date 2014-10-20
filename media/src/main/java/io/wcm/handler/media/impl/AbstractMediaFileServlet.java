@@ -160,14 +160,14 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
       response.setContentType(ContentType.DOWNLOAD);
 
       // Construct disposition header
-      String dispositionHeader = "attachment;";
+      StringBuilder dispositionHeader = new StringBuilder("attachment;");
       String suffix = request.getRequestPathInfo().getSuffix();
       suffix = StringUtils.stripStart(suffix, "/");
       if (StringUtils.isNotEmpty(suffix)) {
-        dispositionHeader += "filename=\"" + suffix + "\"";
+        dispositionHeader.append("filename=\"").append(suffix).append("\"");
       }
 
-      response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader);
+      response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());
     }
 
     // write binary data

@@ -236,10 +236,10 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
       while (flashvarsIterator.hasNext()) {
         Map.Entry<String, String> entry = flashvarsIterator.next();
         flashvarsString.append(URLEncoder.encode(entry.getKey(), CharEncoding.UTF_8));
-        flashvarsString.append("=");
+        flashvarsString.append('=');
         flashvarsString.append(URLEncoder.encode(entry.getValue(), CharEncoding.UTF_8));
         if (flashvarsIterator.hasNext()) {
-          flashvarsString.append("&");
+          flashvarsString.append('&');
         }
       }
       return flashvarsString.toString();

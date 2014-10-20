@@ -80,7 +80,7 @@ public final class LinkHandlerImpl implements LinkHandler {
     // detect link type - first accepting wins
     LinkType linkType = null;
     List<Class<? extends LinkType>> linkTypes = linkHandlerConfig.getLinkTypes();
-    if (linkTypes == null || linkTypes.size() == 0) {
+    if (linkTypes == null || linkTypes.isEmpty()) {
       throw new RuntimeException("No link types defined.");
     }
     for (Class<? extends LinkType> candidateLinkTypeClass : linkTypes) {

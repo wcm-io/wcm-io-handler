@@ -175,9 +175,9 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if extensions are defined both in mediaargs and media formats use intersection of both
     final String[] fileExtensions;
-    if (mediaArgsFileExtensions.size() > 0 && mediaFormatFileExtensions.size() > 0) {
+    if (!mediaArgsFileExtensions.isEmpty() && !mediaFormatFileExtensions.isEmpty()) {
       Collection<String> intersection = Sets.intersection(mediaArgsFileExtensions, mediaFormatFileExtensions);
-      if (intersection.size() == 0) {
+      if (intersection.isEmpty()) {
         // not intersected file extensions - return null to singal no valid file extension request
         return null;
       }
@@ -185,7 +185,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         fileExtensions = intersection.toArray(new String[intersection.size()]);
       }
     }
-    else if (mediaArgsFileExtensions.size() > 0) {
+    else if (!mediaArgsFileExtensions.isEmpty()) {
       fileExtensions = mediaArgsFileExtensions.toArray(new String[mediaArgsFileExtensions.size()]);
     }
     else {
@@ -290,7 +290,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     if (this.originalRendition != null && candidates.contains(this.originalRendition)) {
       return this.originalRendition;
     }
-    else if (candidates.size() > 0) {
+    else if (!candidates.isEmpty()) {
       return candidates.iterator().next();
     }
     else {

@@ -98,13 +98,11 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
       // check if scaling is required
       scaledDimension = getScaledDimension(dimension);
-      if (scaledDimension != null) {
-        if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
-          // overwrite image dimension of {@link Rendition} instance with scaled dimensions
-          dimension = scaledDimension;
-          // change extension to JPEG because scaling always produces JPEG images
-          processedFileName = StringUtils.substringBeforeLast(processedFileName, ".") + "." + FileExtension.JPEG;
-        }
+      if (scaledDimension != null && !scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
+        // overwrite image dimension of {@link Rendition} instance with scaled dimensions
+        dimension = scaledDimension;
+        // change extension to JPEG because scaling always produces JPEG images
+        processedFileName = StringUtils.substringBeforeLast(processedFileName, ".") + "." + FileExtension.JPEG;
       }
     }
     this.fileName = processedFileName;

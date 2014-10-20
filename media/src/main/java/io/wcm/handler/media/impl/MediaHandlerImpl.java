@@ -110,7 +110,7 @@ public final class MediaHandlerImpl implements MediaHandler {
     // detect media source
     MediaSource mediaSource = null;
     List<Class<? extends MediaSource>> mediaTypes = mediaHandlerConfig.getSources();
-    if (mediaTypes == null || mediaTypes.size() == 0) {
+    if (mediaTypes == null || mediaTypes.isEmpty()) {
       throw new RuntimeException("No media sources defined.");
     }
     for (Class<? extends MediaSource> candidateMediaSourceClass : mediaTypes) {

@@ -89,11 +89,11 @@ public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
     StringBuilder url = new StringBuilder();
     url.append(info.getResourcePath());
     if (info.getSelectorString() != null) {
-      url.append(".").append(info.getSelectorString());
+      url.append('.').append(info.getSelectorString());
     }
-    url.append("." + FileExtension.HTML); // use html extension instead of .htx extension
+    url.append('.').append(FileExtension.HTML); // use html extension instead of .htx extension
     if (info.getSuffix() != null) {
-      url.append("/").append(info.getSuffix());
+      url.append('/').append(info.getSuffix());
     }
 
     if (log.isDebugEnabled()) {
