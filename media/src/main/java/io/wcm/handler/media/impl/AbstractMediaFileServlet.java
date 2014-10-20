@@ -164,7 +164,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
       String suffix = request.getRequestPathInfo().getSuffix();
       suffix = StringUtils.stripStart(suffix, "/");
       if (StringUtils.isNotEmpty(suffix)) {
-        dispositionHeader.append("filename=\"").append(suffix).append("\"");
+        dispositionHeader.append("filename=\"").append(suffix).append('\"');
       }
 
       response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());

@@ -129,7 +129,7 @@ public final class UrlHandlerImpl implements UrlHandler {
 
     // add link URL prefix (scheme/hostname or integrator placeholder) if required
     String linkUrlPrefix = getLinkUrlPrefix(urlMode, targetPage);
-    externalizedUrl = StringUtils.defaultString(linkUrlPrefix) + externalizedUrl;
+    externalizedUrl = StringUtils.defaultString(linkUrlPrefix) + externalizedUrl; //NOPMD
 
     return externalizedUrl;
   }
@@ -171,7 +171,7 @@ public final class UrlHandlerImpl implements UrlHandler {
 
     // add resource URL prefix (scheme/hostname or integrator placeholder) if required
     String resourceUrlPrefix = getResourceUrlPrefix(urlMode);
-    externalizedUrl = StringUtils.defaultString(resourceUrlPrefix) + externalizedUrl;
+    externalizedUrl = StringUtils.defaultString(resourceUrlPrefix) + externalizedUrl; //NOPMD
 
     return externalizedUrl;
   }
@@ -198,7 +198,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     return rootPath;
   }
 
-  String buildUrl(String path, String selector, String extension, String suffix) {
+  String buildUrl(String path, String selector, String extension, String suffix) { //NOPMD
     if (StringUtils.isBlank(path)) {
       return null;
     }

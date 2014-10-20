@@ -155,12 +155,12 @@ public final class DamMediaSource extends AbstractMediaSource {
 
     String refProperty = getMediaRefProperty(mediaRequest);
     if (!StringUtils.startsWith(refProperty, "./")) {
-      refProperty = "./" + refProperty;
+      refProperty = "./" + refProperty; //NOPMD
     }
 
     String cropProperty = getMediaCropProperty(mediaRequest);
     if (!StringUtils.startsWith(cropProperty, "./")) {
-      cropProperty = "./" + cropProperty;
+      cropProperty = "./" + cropProperty; //NOPMD
     }
 
     String name = refProperty;

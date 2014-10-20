@@ -139,15 +139,15 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
             || StringUtils.equals(mediaFormat.getRenditionGroup(), mediaFormatRequested.getRenditionGroup())) {
 
           // check if size matched (image size is same or bigger)
-          if (isRenditionMatchSizeSameBigger(mediaFormat, mediaFormatRequested)) {
+          if (isRenditionMatchSizeSameBigger(mediaFormat, mediaFormatRequested)) { //NOPMD
 
             // if media formats have ratios, check ratio (with tolerance)
             // otherwise add to list anyway, it *can* contain matching media items
-            if (isRenditionMatchRatio(mediaFormat, mediaFormatRequested)
+            if (isRenditionMatchRatio(mediaFormat, mediaFormatRequested) //NOPMD
                 || !mediaFormat.hasRatio() || !mediaFormatRequested.hasRatio()) {
 
               // check for supported file extension
-              if (isRenditionMatchExtension(mediaFormat)) {
+              if (isRenditionMatchExtension(mediaFormat)) { //NOPMD
                 matchingFormats.add(mediaFormat);
               }
             }
@@ -186,15 +186,15 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
             || StringUtils.equals(mediaFormat.getRenditionGroup(), mediaFormatRequested.getRenditionGroup())) {
 
           // check if size matched (image size is same or smaller)
-          if (isRenditionMatchSizeSameSmaller(mediaFormat, mediaFormatRequested)) {
+          if (isRenditionMatchSizeSameSmaller(mediaFormat, mediaFormatRequested)) { //NOPMD
 
             // if media formats have ratios, check ratio (with tolerance)
             // otherwise add to list anyway, it *can* contain matching media items
-            if (isRenditionMatchRatio(mediaFormat, mediaFormatRequested)
+            if (isRenditionMatchRatio(mediaFormat, mediaFormatRequested) //NOPMD
                 || !mediaFormat.hasRatio() || !mediaFormatRequested.hasRatio()) {
 
               // check for supported file extension
-              if (isRenditionMatchExtension(mediaFormat)) {
+              if (isRenditionMatchExtension(mediaFormat)) { //NOPMD
                 matchingFormats.add(mediaFormat);
               }
             }

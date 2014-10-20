@@ -126,7 +126,7 @@ final class Externalizer {
 
     // add webapp context path
     if (request != null) {
-      path = StringUtils.defaultString(request.getContextPath()) + path;
+      path = StringUtils.defaultString(request.getContextPath()) + path; //NOPMD
     }
 
     // build full URL again
