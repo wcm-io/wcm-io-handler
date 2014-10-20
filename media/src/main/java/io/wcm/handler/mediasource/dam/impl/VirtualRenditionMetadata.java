@@ -94,7 +94,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof VirtualRenditionMetadata)) {
+    if (obj == null || obj.getClass() != this.getClass()) {
       return false;
     }
     VirtualRenditionMetadata other = (VirtualRenditionMetadata)obj;

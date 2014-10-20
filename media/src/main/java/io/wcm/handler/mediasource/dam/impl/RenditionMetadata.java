@@ -247,7 +247,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof RenditionMetadata)) {
+    if (obj == null || obj.getClass() != this.getClass()) {
       return false;
     }
     RenditionMetadata other = (RenditionMetadata)obj;

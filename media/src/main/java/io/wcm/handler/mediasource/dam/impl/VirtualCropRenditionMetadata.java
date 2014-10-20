@@ -106,7 +106,7 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof VirtualCropRenditionMetadata)) {
+    if (obj == null || obj.getClass() != this.getClass()) {
       return false;
     }
     VirtualCropRenditionMetadata other = (VirtualCropRenditionMetadata)obj;

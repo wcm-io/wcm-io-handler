@@ -184,7 +184,7 @@ public final class RichTextUtil {
           }
 
           // element is the same - rewrite child elements
-          else if (rewriteContent.size() == 1 && rewriteContent.get(0) == element) {
+          else if (rewriteContent.size() == 1 && rewriteContent.get(0) == element) { //NOPMD
             rewriteContent(element, rewriteContentHandler);
             newContent.add(element);
           }
@@ -222,7 +222,7 @@ public final class RichTextUtil {
           }
 
           // element is the same - ignore
-          else if (rewriteContent.size() == 1 && rewriteContent.get(0) == text) {
+          else if (rewriteContent.size() == 1 && rewriteContent.get(0) == text) { //NOPMD
             // add original element
             newContent.add(text);
           }
