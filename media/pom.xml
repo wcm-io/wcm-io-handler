@@ -139,7 +139,7 @@
 
   <reporting>
     <plugins>
-    
+
       <!-- Group JavaDocs -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -161,7 +161,7 @@
           </groups>
         </configuration>
       </plugin>
-    
+
     </plugins>
   </reporting>
 
