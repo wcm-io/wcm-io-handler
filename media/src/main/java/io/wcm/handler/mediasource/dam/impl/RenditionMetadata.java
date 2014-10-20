@@ -27,6 +27,8 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 import java.io.InputStream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -238,17 +240,20 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
 
   @Override
   public int hashCode() {
-    return this.rendition.getPath().hashCode();
+    return new HashCodeBuilder()
+    .append(this.rendition.getPath())
+    .hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof RenditionMetadata) {
-      return StringUtils.equals(this.getRendition().getPath(), ((RenditionMetadata)obj).getRendition().getPath());
-    }
-    else {
+    if (!(obj instanceof RenditionMetadata)) {
       return false;
     }
+    RenditionMetadata other = (RenditionMetadata)obj;
+    return new EqualsBuilder()
+    .append(this.rendition.getPath(), other.rendition.getPath())
+    .build();
   }
 
   @Override

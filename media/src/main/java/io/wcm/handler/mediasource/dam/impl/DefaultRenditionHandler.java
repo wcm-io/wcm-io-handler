@@ -37,6 +37,8 @@ import com.day.cq.dam.api.Rendition;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Handles resolving DAM renditions and resizing for media handler.
  */
@@ -219,6 +221,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
     Boolean isSizeMatchingMediaFormat = visitMediaFormats(mediaArgs, new MediaFormatVisitor<Boolean>() {
       @Override
+      @SuppressFBWarnings("NP_BOOLEAN_RETURN_NULL")
       public Boolean visit(MediaFormat mediaFormat) {
         if (mediaFormat.getEffectiveMinWidth() > 0
             || mediaFormat.getEffectiveMaxWidth() > 0

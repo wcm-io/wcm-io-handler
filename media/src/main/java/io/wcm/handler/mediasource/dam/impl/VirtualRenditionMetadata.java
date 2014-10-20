@@ -24,6 +24,9 @@ import io.wcm.handler.media.impl.MediaFileServlet;
 
 import java.io.InputStream;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
@@ -78,6 +81,28 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   protected InputStream getInputStream() {
     // currently not supported for virtual renditions
     return null;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder()
+    .append(this.getRendition().getPath())
+    .append(width)
+    .append(height)
+    .hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof VirtualRenditionMetadata)) {
+      return false;
+    }
+    VirtualRenditionMetadata other = (VirtualRenditionMetadata)obj;
+    return new EqualsBuilder()
+    .append(this.getRendition().getPath(), other.getRendition().getPath())
+    .append(this.width, other.width)
+    .append(this.height, other.height)
+    .build();
   }
 
 }

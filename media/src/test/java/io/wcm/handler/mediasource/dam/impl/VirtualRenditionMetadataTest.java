@@ -20,7 +20,9 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
@@ -30,11 +32,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 public class VirtualRenditionMetadataTest extends AbstractDamTest {
 
   private VirtualRenditionMetadata underTest;
+  private Rendition rendition;
 
   @Before
   public void setUp() throws Exception {
@@ -44,7 +48,8 @@ public class VirtualRenditionMetadataTest extends AbstractDamTest {
 
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     Asset asset = media.getAsset().adaptTo(Asset.class);
-    underTest = new VirtualRenditionMetadata(asset.getRendition("cq5dam.web.215.102.jpg"), 108, 51);
+    rendition = asset.getRendition("cq5dam.web.215.102.jpg");
+    underTest = new VirtualRenditionMetadata(rendition, 108, 51);
   }
 
   @Test
@@ -59,5 +64,16 @@ public class VirtualRenditionMetadataTest extends AbstractDamTest {
     InputStream is = underTest.getInputStream();
     assertNull(is);
   }
+
+  @Test
+  public void testEquals() {
+    VirtualRenditionMetadata m1 = new VirtualRenditionMetadata(rendition, 108, 51);
+    VirtualRenditionMetadata m2 = new VirtualRenditionMetadata(rendition, 108, 51);
+    VirtualRenditionMetadata m3 = new VirtualRenditionMetadata(rendition, 10, 20);
+
+    assertTrue(m1.equals(m2));
+    assertFalse(m1.equals(m3));
+  }
+
 
 }

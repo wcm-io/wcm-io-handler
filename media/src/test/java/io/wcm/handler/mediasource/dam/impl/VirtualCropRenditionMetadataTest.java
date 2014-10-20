@@ -20,7 +20,9 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
@@ -78,5 +80,19 @@ public class VirtualCropRenditionMetadataTest extends AbstractDamTest {
     InputStream is = underTest.getInputStream();
     assertNull(is);
   }
+
+  @Test
+  public void testEquals() {
+    VirtualCropRenditionMetadata m1 = new VirtualCropRenditionMetadata(rendition, 108, 51,
+        new CropDimension(5, 5, 30, 25));
+    VirtualCropRenditionMetadata m2 = new VirtualCropRenditionMetadata(rendition, 108, 51,
+        new CropDimension(5, 5, 30, 25));
+    VirtualCropRenditionMetadata m3 = new VirtualCropRenditionMetadata(rendition, 108, 51,
+        new CropDimension(10, 10, 30, 25));
+
+    assertTrue(m1.equals(m2));
+    assertFalse(m1.equals(m3));
+  }
+
 
 }
