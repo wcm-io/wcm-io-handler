@@ -49,7 +49,7 @@ public final class MediaArgs implements Cloneable {
   private long fixedHeight;
   private boolean forceDownload;
   private String altText;
-  private boolean noDummyImage;
+  private boolean dummyImage = true;
   private String dummyImageUrl;
   private ValueMap properties;
 
@@ -322,16 +322,16 @@ public final class MediaArgs implements Cloneable {
   /**
    * @return If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    */
-  public boolean isNoDummyImage() {
-    return this.noDummyImage;
+  public boolean isDummyImage() {
+    return this.dummyImage;
   }
 
   /**
    * @param value If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
-  public MediaArgs noDummyImage(boolean value) {
-    this.noDummyImage = value;
+  public MediaArgs dummyImage(boolean value) {
+    this.dummyImage = value;
     return this;
   }
 
@@ -424,7 +424,7 @@ public final class MediaArgs implements Cloneable {
     clone.fixedHeight = this.fixedHeight;
     clone.forceDownload = this.forceDownload;
     clone.altText = this.altText;
-    clone.noDummyImage = this.noDummyImage;
+    clone.dummyImage = this.dummyImage;
     clone.dummyImageUrl = this.dummyImageUrl;
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));

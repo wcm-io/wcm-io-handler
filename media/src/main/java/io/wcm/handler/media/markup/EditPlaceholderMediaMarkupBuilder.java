@@ -70,7 +70,7 @@ public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuild
     return (!media.isValid() || media.getRendition() == null)
         && wcmMode == WCMMode.EDIT
         && (mediaFormats != null && mediaFormats.length > 0)
-        && !mediaArgs.isNoDummyImage();
+        && mediaArgs.isDummyImage();
   }
 
   @Override
