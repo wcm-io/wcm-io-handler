@@ -38,13 +38,123 @@ public interface MediaBuilder {
    */
   MediaBuilder args(MediaArgs mediaArgs);
 
+
   /**
-   * Set media format(s).
-   * It is not allowed to set both media args and Media formats at the same time.
-   * @param mediaFormats Media format(s)
-   * @return Media builder
+   * Sets list of media formats to resolve to.
+   * @param values Media formats
+   * @return this
    */
-  MediaBuilder mediaFormats(MediaFormat... mediaFormats);
+  MediaBuilder mediaFormats(MediaFormat... values);
+
+  /**
+   * Sets list of media formats to resolve to.
+   * Additionally {@link #mediaFormatsMandatory(boolean)} is set to true.
+   * @param values Media formats
+   * @return this
+   */
+  MediaBuilder mandatoryMediaFormats(MediaFormat... values);
+
+  /**
+   * Sets a single media format to resolve to.
+   * @param value Media format
+   * @return this
+   */
+  MediaBuilder mediaFormat(MediaFormat value);
+
+  /**
+   * If set to true, media handler never returns a dummy image. Otherwise this can happen
+   * in edit mode.
+   * @param value Resolving of all media formats is mandatory.
+   * @return this
+   */
+  MediaBuilder mediaFormatsMandatory(boolean value);
+
+  /**
+   * Sets list of media formats to resolve to.
+   * @param values Media format names.
+   * @return this
+   */
+  MediaBuilder mediaFormatNames(String... values);
+
+  /**
+   * Sets list of media formats to resolve to.
+   * Additionally {@link #mediaFormatsMandatory(boolean)} is set to true.
+   * @param values Media format names.
+   * @return this
+   */
+  MediaBuilder mandatoryMediaFormatNames(String... values);
+
+  /**
+   * Sets a single media format to resolve to.
+   * @param value Media format name
+   * @return this
+   */
+  MediaBuilder mediaFormatName(String value);
+
+  /**
+   * @param values File extensions
+   * @return this
+   */
+  MediaBuilder fileExtensions(String... values);
+
+  /**
+   * @param value File extension
+   * @return this
+   */
+  MediaBuilder fileExtension(String value);
+
+  /**
+   * @param value URS mode
+   * @return this
+   */
+  MediaBuilder urlMode(UrlMode value);
+
+  /**
+   * Use fixed width instead of width from media format or original image
+   * @param value Fixed width
+   * @return this
+   */
+  MediaBuilder fixedWidth(long value);
+
+  /**
+   * Use fixed height instead of width from media format or original image
+   * @param value Fixed height
+   * @return this
+   */
+  MediaBuilder fixedHeight(long value);
+
+  /**
+   * Use fixed dimensions instead of width from media format or original image
+   * @param widthValue Fixed width
+   * @param heightValue Fixed height
+   * @return this
+   */
+  MediaBuilder fixedDimension(long widthValue, long heightValue);
+
+  /**
+   * @param value Whether to set a "Content-Disposition" header for forcing a "Save as" dialog on the client
+   * @return this
+   */
+  MediaBuilder forceDownload(boolean value);
+
+  /**
+   * Allows to specify a custom alternative text that is to be used instead of the one defined in the the media lib item
+   * @param value Custom alternative text. If null or empty, the default alt text from media library is used.
+   * @return this
+   */
+  MediaBuilder altText(String value);
+
+  /**
+   * @param value If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
+   * @return this
+   */
+  MediaBuilder dummyImage(boolean value);
+
+  /**
+   * @param value Url of custom dummy image. If null default dummy image is used.
+   * @return this
+   */
+  MediaBuilder dummyImageUrl(String value);
 
   /**
    * Sets the name of the property from which the media request is read, or node name for inline media.
@@ -59,14 +169,6 @@ public interface MediaBuilder {
    * @return Media builder
    */
   MediaBuilder cropProperty(String cropProperty);
-
-  /**
-   * Sets URL mode for resolving the media URLs. This is a shortcut instead setting it in the media arguments.
-   * It is not allowed to set both media args and URL mode at the same time.
-   * @param urlMode URL mode
-   * @return Media builder
-   */
-  MediaBuilder urlMode(UrlMode urlMode);
 
   /**
    * Resolve media and return metadata objects that contains all results.

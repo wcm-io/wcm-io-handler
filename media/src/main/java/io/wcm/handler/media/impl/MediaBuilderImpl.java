@@ -39,11 +39,9 @@ final class MediaBuilderImpl implements MediaBuilder {
   private final Resource resource;
   private final String mediaRef;
 
-  private MediaArgs mediaArgs;
-  private MediaFormat[] mediaFormats;
+  private MediaArgs mediaArgs = new MediaArgs();
   private String refProperty;
   private String cropProperty;
-  private UrlMode urlMode;
 
   public MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
     this.resource = resource;
@@ -63,7 +61,8 @@ final class MediaBuilderImpl implements MediaBuilder {
     }
     this.resource = mediaRequest.getResource();
     this.mediaRef = mediaRequest.getMediaRef();
-    this.mediaArgs = mediaRequest.getMediaArgs();
+    // clone media args to make sure the original object is not modified
+    this.mediaArgs = mediaRequest.getMediaArgs().clone();
     this.refProperty = mediaRequest.getRefProperty();
     this.cropProperty = mediaRequest.getCropProperty();
     this.mediaHandler = mediaHandler;
@@ -71,13 +70,113 @@ final class MediaBuilderImpl implements MediaBuilder {
 
   @Override
   public MediaBuilder args(MediaArgs value) {
-    this.mediaArgs = value;
+    if (value == null) {
+      throw new IllegalArgumentException("MediaArgs is null.");
+    }
+    // clone media args to make sure the original object is not modified
+    this.mediaArgs = value.clone();
     return this;
   }
 
   @Override
-  public MediaBuilder mediaFormats(MediaFormat... value) {
-    this.mediaFormats = value;
+  public MediaBuilder mediaFormats(MediaFormat... values) {
+    this.mediaArgs.mediaFormats(values);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder mandatoryMediaFormats(MediaFormat... values) {
+    this.mediaArgs.mandatoryMediaFormats(values);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder mediaFormat(MediaFormat value) {
+    this.mediaArgs.mediaFormat(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder mediaFormatsMandatory(boolean value) {
+    this.mediaArgs.mediaFormatsMandatory(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder mediaFormatNames(String... values) {
+    this.mediaArgs.mediaFormatNames(values);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder mandatoryMediaFormatNames(String... values) {
+    this.mediaArgs.mandatoryMediaFormatNames(values);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder mediaFormatName(String value) {
+    this.mediaArgs.mediaFormatName(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder fileExtensions(String... values) {
+    this.mediaArgs.fileExtensions(values);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder fileExtension(String value) {
+    this.mediaArgs.fileExtension(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder urlMode(UrlMode value) {
+    this.mediaArgs.urlMode(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder fixedWidth(long value) {
+    this.mediaArgs.fixedWidth(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder fixedHeight(long value) {
+    this.mediaArgs.fixedHeight(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder fixedDimension(long widthValue, long heightValue) {
+    this.mediaArgs.fixedDimension(widthValue, heightValue);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder forceDownload(boolean value) {
+    this.mediaArgs.forceDownload(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder altText(String value) {
+    this.mediaArgs.altText(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder dummyImage(boolean value) {
+    this.mediaArgs.dummyImage(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder dummyImageUrl(String value) {
+    this.mediaArgs.dummyImageUrl(value);
     return this;
   }
 
@@ -94,25 +193,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public MediaBuilder urlMode(UrlMode value) {
-    this.urlMode = value;
-    return this;
-  }
-
-  @Override
   public Media build() {
-    if (this.mediaArgs != null && (this.urlMode != null || this.mediaFormats != null)) {
-      throw new IllegalArgumentException("Please set media arguments or URL/media formats mode, not both.");
-    }
-    if (this.mediaArgs == null) {
-      this.mediaArgs = new MediaArgs();
-      this.mediaArgs.mediaFormats(this.mediaFormats);
-      this.mediaArgs.urlMode(this.urlMode);
-    }
-    else {
-      // clone media args to make sure the original object is not modified
-      this.mediaArgs = this.mediaArgs.clone();
-    }
     MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
         this.refProperty, this.cropProperty);
     return mediaHandler.processRequest(request);

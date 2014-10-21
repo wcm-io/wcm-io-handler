@@ -20,9 +20,12 @@
 package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -134,6 +137,38 @@ public class MediaHandlerImplTest {
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
         new MediaArgs("invalid_media_format"));
     mediaHandler.get(mediaRequest).build();
+  }
+
+  @Test
+  public void testAllBuilderProps() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    MediaFormat[] mediaFormats = {
+        TestMediaFormats.HOME_STAGE, TestMediaFormats.HOME_TEASER
+    };
+    String[] fileExtensions = {
+        "ext1", "ext2"
+    };
+
+    Media media = mediaHandler.get("/content/dummymedia/item1")
+        .mandatoryMediaFormats(mediaFormats)
+        .fileExtensions(fileExtensions)
+        .fixedDimension(200, 100)
+        .forceDownload(true)
+        .altText("alt")
+        .dummyImage(false)
+        .dummyImageUrl("/dummy/url")
+        .build();
+
+    MediaArgs args = media.getMediaRequest().getMediaArgs();
+    assertArrayEquals(mediaFormats, args.getMediaFormats());
+    assertTrue(args.isMediaFormatsMandatory());
+    assertArrayEquals(fileExtensions, args.getFileExtensions());
+    assertEquals(200, args.getFixedWidth());
+    assertEquals(100, args.getFixedHeight());
+    assertTrue(args.isForceDownload());
+    assertFalse(args.isDummyImage());
+    assertEquals("/dummy/url", args.getDummyImageUrl());
   }
 
 
