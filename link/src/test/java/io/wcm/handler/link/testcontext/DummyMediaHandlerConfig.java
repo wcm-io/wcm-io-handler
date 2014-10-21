@@ -20,10 +20,7 @@
 package io.wcm.handler.link.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
-import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 
@@ -49,20 +46,9 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
           DummyMediaSource.class
           );
 
-  private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =
-      ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
-          SimpleImageMediaMarkupBuilder.class,
-          EditPlaceholderMediaMarkupBuilder.class
-          );
-
   @Override
   public List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
-  }
-
-  @Override
-  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
-    return MEDIA_MARKUP_BUILDERS;
   }
 
 }

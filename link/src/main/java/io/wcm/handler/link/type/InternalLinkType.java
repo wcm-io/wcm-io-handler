@@ -195,6 +195,8 @@ public final class InternalLinkType extends AbstractLinkType {
         redirectPage.getContentResource(),
         null,
         linkRequest.getUrlMode(),
+        linkRequest.isDummyLink(),
+        linkRequest.getDummyLinkUrl(),
         linkRequest.getSelectors(),
         linkRequest.getExtension(),
         linkRequest.getSuffix(),

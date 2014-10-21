@@ -73,6 +73,18 @@ public interface LinkBuilder {
   LinkBuilder urlMode(UrlMode urlMode);
 
   /**
+   * @param value If set to true, link handler returns a dummy link in edit mode when link is invalid.
+   * @return this
+   */
+  LinkBuilder dummyLink(boolean value);
+
+  /**
+   * @param value Custom dummy link url. If null default dummy url is used.
+   * @return this
+   */
+  LinkBuilder dummyLinkUrl(String value);
+
+  /**
    * Resolve link and return metadata object that contains the results.
    * @return Link metadata object. Never null, if the resolving failed the isValid() method returns false.
    */

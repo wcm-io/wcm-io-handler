@@ -20,22 +20,12 @@
 package io.wcm.handler.richtext.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
-import io.wcm.handler.link.spi.LinkMarkupBuilder;
-import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
-import io.wcm.handler.link.type.ExternalLinkType;
-import io.wcm.handler.link.type.InternalLinkType;
-import io.wcm.handler.link.type.MediaLinkType;
-
-import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Dummy link configuration
@@ -46,24 +36,6 @@ import com.google.common.collect.ImmutableList;
 @Application(AppAemContext.APPLICATION_ID)
 public class DummyLinkHandlerConfig extends AbstractLinkHandlerConfig {
 
-  private static final List<Class<? extends LinkType>> LINK_TYPES = ImmutableList.<Class<? extends LinkType>>of(
-      InternalLinkType.class,
-      ExternalLinkType.class,
-      MediaLinkType.class
-      );
-
-  private static final List<Class<? extends LinkMarkupBuilder>> LINK_MARKUP_BUILDERS = ImmutableList.<Class<? extends LinkMarkupBuilder>>of(
-      SimpleLinkMarkupBuilder.class
-      );
-
-  @Override
-  public List<Class<? extends LinkType>> getLinkTypes() {
-    return LINK_TYPES;
-  }
-
-  @Override
-  public List<Class<? extends LinkMarkupBuilder>> getMarkupBuilders() {
-    return LINK_MARKUP_BUILDERS;
-  }
+  // no overrides
 
 }

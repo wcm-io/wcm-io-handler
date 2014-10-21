@@ -20,7 +20,7 @@
 package io.wcm.handler.media.spi.helpers;
 
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
+import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
@@ -54,7 +54,7 @@ public abstract class AbstractMediaHandlerConfig implements MediaHandlerConfig {
   private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =
       ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
           SimpleImageMediaMarkupBuilder.class,
-          EditPlaceholderMediaMarkupBuilder.class
+          DummyImageMediaMarkupBuilder.class
           );
 
   @Override

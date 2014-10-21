@@ -145,7 +145,7 @@ public interface MediaBuilder {
   MediaBuilder altText(String value);
 
   /**
-   * @param value If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
+   * @param value If set to false, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
   MediaBuilder dummyImage(boolean value);

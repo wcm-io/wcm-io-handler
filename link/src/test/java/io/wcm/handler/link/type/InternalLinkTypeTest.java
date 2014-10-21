@@ -147,7 +147,7 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/content/path")
         .build());
 
-    Link link = linkHandler.get(linkResource).build();
+    Link link = linkHandler.get(linkResource).dummyLink(true).build();
 
     assertFalse("link valid", link.isValid());
     assertTrue("link ref invalid", link.isLinkReferenceInvalid());

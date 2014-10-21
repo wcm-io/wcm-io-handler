@@ -39,6 +39,8 @@ public final class LinkRequest {
   private final Resource resource;
   private final Page page;
   private final UrlMode urlMode;
+  private final boolean dummyLink;
+  private final String dummyLinkUrl;
   private final String selectors;
   private final String extension;
   private final String suffix;
@@ -57,16 +59,18 @@ public final class LinkRequest {
    * @param queryString Query parameters string (properly url-encoded)
    * @param fragement Fragment identifier
    */
-  public LinkRequest(Resource resource, Page page, UrlMode urlMode, String selectors, String extension,
-      String suffix, String queryString, String fragement) {
+  public LinkRequest(Resource resource, Page page, UrlMode urlMode, boolean dummyLink, String dummyLinkUrl,
+      String selectors, String extension, String suffix, String queryString, String fragement) {
     this.resource = resource;
     this.page = page;
+    this.urlMode = urlMode;
+    this.dummyLink = dummyLink;
+    this.dummyLinkUrl = dummyLinkUrl;
     this.selectors = selectors;
     this.extension = extension;
     this.suffix = suffix;
     this.queryString = queryString;
     this.fragement = fragement;
-    this.urlMode = urlMode;
 
     // validate parameters
     if (this.resource != null && this.page != null) {
@@ -80,7 +84,7 @@ public final class LinkRequest {
    * @param urlMode URL mode for externalizing the URL
    */
   public LinkRequest(Resource resource, Page page, UrlMode urlMode) {
-    this(resource, page, urlMode, null, null, null, null, null);
+    this(resource, page, urlMode, false, null, null, null, null, null, null);
   }
 
   /**
@@ -102,6 +106,20 @@ public final class LinkRequest {
    */
   public UrlMode getUrlMode() {
     return this.urlMode;
+  }
+
+  /**
+   * @return If set to true, link handler returns a dummy link in edit mode when link is invalid.
+   */
+  public boolean isDummyLink() {
+    return this.dummyLink;
+  }
+
+  /**
+   * @return Custom dummy link url. If null default dummy url is used.
+   */
+  public String getDummyLinkUrl() {
+    return this.dummyLinkUrl;
   }
 
   /**

@@ -21,10 +21,7 @@ package io.wcm.handler.media.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
-import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
@@ -54,12 +51,6 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
       InlineMediaSource.class
       );
 
-  private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =
-      ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
-          SimpleImageMediaMarkupBuilder.class,
-          EditPlaceholderMediaMarkupBuilder.class
-          );
-
   private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of(
       DummyMediaFormats.DOWNLOAD
       );
@@ -67,11 +58,6 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
   @Override
   public List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
-  }
-
-  @Override
-  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
-    return MEDIA_MARKUP_BUILDERS;
   }
 
   @Override

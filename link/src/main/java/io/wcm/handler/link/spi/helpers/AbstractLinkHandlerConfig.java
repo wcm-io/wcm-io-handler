@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.link.spi.helpers;
 
+import io.wcm.handler.link.markup.DummyLinkMarkupBuilder;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
@@ -48,7 +49,8 @@ public abstract class AbstractLinkHandlerConfig implements LinkHandlerConfig {
       );
 
   private static final List<Class<? extends LinkMarkupBuilder>> LINK_MARKUP_BUILDERS = ImmutableList.<Class<? extends LinkMarkupBuilder>>of(
-      SimpleLinkMarkupBuilder.class
+      SimpleLinkMarkupBuilder.class,
+      DummyLinkMarkupBuilder.class
       );
 
   @Override

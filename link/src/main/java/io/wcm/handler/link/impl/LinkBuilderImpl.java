@@ -38,13 +38,15 @@ final class LinkBuilderImpl implements LinkBuilder {
 
   private final Resource resource;
   private final Page page;
+  private UrlMode urlMode;
+  private boolean dummyLink;
+  private String dummyLinkUrl;
 
   private String selectors;
   private String extension;
   private String suffix;
   private String queryString;
   private String fragement;
-  private UrlMode urlMode;
 
   public LinkBuilderImpl(Resource resource, LinkHandlerImpl linkHandler) {
     this.resource = resource;
@@ -61,12 +63,33 @@ final class LinkBuilderImpl implements LinkBuilder {
   public LinkBuilderImpl(LinkRequest linkRequest, LinkHandlerImpl linkHandler) {
     this.resource = linkRequest.getResource();
     this.page = linkRequest.getPage();
+    this.urlMode = linkRequest.getUrlMode();
+    this.dummyLink = linkRequest.isDummyLink();
+    this.dummyLinkUrl = linkRequest.getDummyLinkUrl();
     this.selectors = linkRequest.getSelectors();
     this.extension = linkRequest.getExtension();
     this.suffix = linkRequest.getSuffix();
     this.queryString = linkRequest.getQueryString();
-    this.urlMode = linkRequest.getUrlMode();
+    this.fragement = linkRequest.getFragement();
     this.linkHandler = linkHandler;
+  }
+
+  @Override
+  public LinkBuilder urlMode(UrlMode value) {
+    this.urlMode = value;
+    return this;
+  }
+
+  @Override
+  public LinkBuilder dummyLink(boolean value) {
+    this.dummyLink = value;
+    return this;
+  }
+
+  @Override
+  public LinkBuilder dummyLinkUrl(String value) {
+    this.dummyLinkUrl = value;
+    return this;
   }
 
   @Override
@@ -100,15 +123,9 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
-  public LinkBuilder urlMode(UrlMode value) {
-    this.urlMode = value;
-    return this;
-  }
-
-  @Override
   public Link build() {
-    LinkRequest request = new LinkRequest(this.resource, this.page, this.urlMode, this.selectors,
-        this.extension, this.suffix, this.queryString, this.fragement);
+    LinkRequest request = new LinkRequest(this.resource, this.page, this.urlMode, this.dummyLink, this.dummyLinkUrl,
+        this.selectors, this.extension, this.suffix, this.queryString, this.fragement);
     return linkHandler.processRequest(request);
   }
 

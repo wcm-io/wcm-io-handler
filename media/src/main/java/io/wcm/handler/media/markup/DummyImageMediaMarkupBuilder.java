@@ -50,7 +50,7 @@ import com.day.cq.wcm.api.WCMMode;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class EditPlaceholderMediaMarkupBuilder implements MediaMarkupBuilder {
+public final class DummyImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
   @Self
   private Adaptable adaptable;

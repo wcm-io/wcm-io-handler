@@ -21,15 +21,17 @@ package io.wcm.handler.link.markup;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
+import io.wcm.sling.models.annotations.AemObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.osgi.annotation.versioning.ProviderType;
+
+import com.day.cq.wcm.api.WCMMode;
 
 /**
  * Very basic implementation of {@link LinkMarkupBuilder}
@@ -38,30 +40,23 @@ import org.osgi.annotation.versioning.ProviderType;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class SimpleLinkMarkupBuilder implements LinkMarkupBuilder {
+public final class DummyLinkMarkupBuilder implements LinkMarkupBuilder {
+
+  @AemObject(optional = true)
+  private WCMMode wcmMode;
 
   @Override
   public boolean accepts(Link link) {
-    return link.isValid() && StringUtils.isNotEmpty(link.getUrl());
+    return (!link.isValid() || link.getUrl() == null)
+        && wcmMode == WCMMode.EDIT
+        && link.getLinkRequest().isDummyLink();
   }
 
   @Override
   public Anchor build(Link link) {
-    ValueMap props = link.getLinkRequest().getResourceProperties();
-
     // build anchor
-    Anchor anchor = new Anchor(link.getUrl());
-
-    // window target
-    String target = props.get(LinkNameConstants.PN_LINK_WINDOW_TARGET, String.class);
-    if (StringUtils.isNotEmpty(target) && !"_self".equals(target)) {
-      anchor.setTarget(target);
-    }
-
-    // all other link reference properties like popup windows settings, user tracking
-    // have to be handled by project-specific implementations of LinkMarkupBuilder
-
-    return anchor;
+    String url = StringUtils.defaultString(link.getLinkRequest().getDummyLinkUrl(), LinkHandler.INVALID_LINK);
+    return new Anchor(url);
   }
 
 }

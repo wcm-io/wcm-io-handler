@@ -54,10 +54,10 @@ import com.day.cq.wcm.api.WCMMode;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Test {@link EditPlaceholderMediaMarkupBuilder}
+ * Test {@link DummyImageMediaMarkupBuilder}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EditPlaceholderMediaMarkupBuilderTest {
+public class DummyImageMediaMarkupBuilderTest {
 
   private static final MediaFormat DUMMY_FORMAT = create("dummyformat", AppAemContext.APPLICATION_ID).build();
 
@@ -80,7 +80,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   public void testAccepts_DISABLED() {
     WCMMode.DISABLED.toRequest(context.request());
 
-    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
@@ -114,7 +114,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   public void testAccepts_PREVIEW() {
     WCMMode.PREVIEW.toRequest(context.request());
 
-    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
@@ -148,7 +148,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   public void testAccepts_EDIT() {
     WCMMode.EDIT.toRequest(context.request());
 
-    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
@@ -180,7 +180,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
 
   @Test
   public void testBuild() {
-    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
@@ -198,7 +198,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
 
   @Test
   public void testBuildWithUrlMode() {
-    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs().urlMode(UrlModes.FULL_URL));
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
@@ -216,7 +216,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
 
   @Test
   public void testIsValidMedia() {
-    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     assertFalse(builder.isValidMedia(null));
     assertFalse(builder.isValidMedia(new Image()));
@@ -228,7 +228,7 @@ public class EditPlaceholderMediaMarkupBuilderTest {
   @Test
   public void testWithMediaFormat() {
 
-    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), EditPlaceholderMediaMarkupBuilder.class);
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);

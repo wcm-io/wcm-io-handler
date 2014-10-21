@@ -21,7 +21,7 @@ package io.wcm.handler.media.spi.helpers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.media.markup.EditPlaceholderMediaMarkupBuilder;
+import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
@@ -44,7 +44,7 @@ public class AbstractMediaHandlerConfigTest {
   public void testGetMarkupBuilders() {
     assertEquals(2, underTest.getMarkupBuilders().size());
     assertEquals(SimpleImageMediaMarkupBuilder.class, underTest.getMarkupBuilders().get(0));
-    assertEquals(EditPlaceholderMediaMarkupBuilder.class, underTest.getMarkupBuilders().get(1));
+    assertEquals(DummyImageMediaMarkupBuilder.class, underTest.getMarkupBuilders().get(1));
   }
 
   @Test

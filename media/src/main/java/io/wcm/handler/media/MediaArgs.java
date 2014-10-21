@@ -327,7 +327,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * @param value If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
+   * @param value If set to false, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
   public MediaArgs dummyImage(boolean value) {

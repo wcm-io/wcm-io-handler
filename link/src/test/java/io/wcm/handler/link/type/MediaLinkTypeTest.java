@@ -105,13 +105,13 @@ public class MediaLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/invalid/media/link")
         .build());
 
-    Link link = linkHandler.get(linkResource).build();
+    Link link = linkHandler.get(linkResource).dummyLink(true).dummyLinkUrl("/my/dummy/url").build();
 
     assertFalse("link valid", link.isValid());
     assertTrue("link ref invalid", link.isLinkReferenceInvalid());
     assertNull("link url", link.getUrl());
     assertNotNull("anchor", link.getAnchor());
-    assertEquals("anchor.href", LinkHandler.INVALID_LINK, link.getAnchor().getHRef());
+    assertEquals("anchor.href", "/my/dummy/url", link.getAnchor().getHRef());
   }
 
   // --> does not work because dummy implementation does not support download media format detection
