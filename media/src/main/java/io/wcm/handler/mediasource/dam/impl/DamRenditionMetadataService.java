@@ -22,12 +22,10 @@ package io.wcm.handler.mediasource.dam.impl;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;
 
-import java.util.Calendar;
 import java.util.EnumSet;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Activate;
@@ -228,13 +226,16 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param asset Asset
    * @param userId User id
    */
-  private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) throws RepositoryException {
+  private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) {
+    // -- this is currently DISABLED due to WCMIO-27, concurrency issues with DAM workflows
+    /*
     Node node = asset.adaptTo(Node.class);
     Node contentNode = node.getNode(JcrConstants.JCR_CONTENT);
     // this is a workaround to make sure asset is marked as modified
     contentNode.setProperty(JcrConstants.JCR_LASTMODIFIED, Calendar.getInstance());
     contentNode.setProperty(JcrConstants.JCR_LAST_MODIFIED_BY, userId);
     resolver.adaptTo(Session.class).save();
+     */
   }
 
   /**
