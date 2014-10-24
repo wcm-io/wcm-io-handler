@@ -227,7 +227,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param userId User id
    */
   private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) {
-    // -- this is currently DISABLED due to WCMIO-27, concurrency issues with DAM workflows
+    // -- this is currently DISABLED due to WCMIO-28, concurrency issues with DAM workflows
     /*
     Node node = asset.adaptTo(Node.class);
     Node contentNode = node.getNode(JcrConstants.JCR_CONTENT);
