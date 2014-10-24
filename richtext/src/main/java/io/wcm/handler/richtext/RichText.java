@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.richtext;
 
+import io.wcm.wcm.commons.util.ToStringStyle;
+
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jdom2.Content;
 import org.jdom2.output.Format;
 import org.jdom2.output.Format.TextMode;
@@ -80,7 +83,7 @@ public final class RichText {
 
   @Override
   public String toString() {
-    return getMarkup();
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
   }
 
 }

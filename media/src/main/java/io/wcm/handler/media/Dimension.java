@@ -19,10 +19,11 @@
  */
 package io.wcm.handler.media;
 
+import io.wcm.wcm.commons.util.ToStringStyle;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -70,7 +71,7 @@ public class Dimension {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
   }
 
 }

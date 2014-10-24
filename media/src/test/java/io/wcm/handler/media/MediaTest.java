@@ -79,7 +79,6 @@ public class MediaTest {
     underTest.setUrl("/my/url");
 
     assertEquals("/my/url", underTest.getUrl());
-    assertEquals("/my/url", underTest.toString());
   }
 
   @Test
@@ -117,6 +116,14 @@ public class MediaTest {
     underTest.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
     assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, underTest.getMediaInvalidReason());
     assertFalse(underTest.isValid());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(
+        "Media[mediaSource=mediaSource,mediaRequest=MediaRequest[mediaRef=/media/ref,"
+            + "mediaArgs=MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,dummyImage=true]]]",
+            underTest.toString());
   }
 
 }

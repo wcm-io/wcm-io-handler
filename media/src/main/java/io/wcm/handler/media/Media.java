@@ -21,9 +21,11 @@ package io.wcm.handler.media;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 import java.util.Collection;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.ImmutableList;
@@ -196,7 +198,7 @@ public final class Media {
 
   @Override
   public String toString() {
-    return this.url;
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
   }
 
 }

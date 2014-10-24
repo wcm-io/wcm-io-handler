@@ -82,7 +82,6 @@ public class LinkTest {
     assertFalse(underTest.isValid());
     underTest.setUrl("http://dummy");
     assertEquals("http://dummy", underTest.getUrl());
-    assertEquals("http://dummy", underTest.toString());
     assertTrue(underTest.isValid());
   }
 
@@ -105,6 +104,11 @@ public class LinkTest {
     Rendition rendition = mock(Rendition.class);
     underTest.setTargetRendition(rendition);
     assertSame(rendition, underTest.getTargetRendition());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals("Link[linkType=linkType,linkRequest=LinkRequest[urlMode=DEFAULT,dummyLink=false],linkReferenceInvalid=false]", underTest.toString());
   }
 
 }

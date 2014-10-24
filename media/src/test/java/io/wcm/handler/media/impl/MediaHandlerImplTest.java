@@ -110,7 +110,6 @@ public class MediaHandlerImplTest {
     assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", media.getElement().getAttributeValue("src"));
 
     assertEquals("<img src=\"http://xyz/content/dummymedia/item1/pre1.gif\" />", media.getMarkup());
-    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.toString());
   }
 
   @Test

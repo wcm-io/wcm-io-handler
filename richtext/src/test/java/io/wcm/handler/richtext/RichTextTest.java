@@ -54,7 +54,6 @@ public class RichTextTest {
     assertTrue(underTest.isValid());
     assertEquals(content, underTest.getContent());
     assertEquals("<span>wurst</span>  <div class=\"abc\"></div>", underTest.getMarkup());
-    assertEquals("<span>wurst</span>  <div class=\"abc\"></div>", underTest.toString());
   }
 
   @Test
@@ -64,7 +63,6 @@ public class RichTextTest {
     assertFalse(underTest.isValid());
     assertTrue(underTest.getContent().isEmpty());
     assertNull(underTest.getMarkup());
-    assertNull(underTest.toString());
   }
 
   @Test
@@ -74,7 +72,12 @@ public class RichTextTest {
     assertFalse(underTest.isValid());
     assertNull(underTest.getContent());
     assertNull(underTest.getMarkup());
-    assertNull(underTest.toString());
+  }
+
+  @Test
+  public void testToString() throws Exception {
+    RichText underTest = new RichText(richTextRequest, null);
+    assertEquals("RichText[richTextRequest=RichTextRequest[]]", underTest.toString());
   }
 
 }

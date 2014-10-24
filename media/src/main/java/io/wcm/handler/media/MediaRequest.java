@@ -19,8 +19,11 @@
  */
 package io.wcm.handler.media;
 
+import io.wcm.wcm.commons.util.ToStringStyle;
+
 import java.util.HashMap;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
@@ -125,6 +128,11 @@ public final class MediaRequest {
       }
     }
     return this.resourceProperties;
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
   }
 
 }

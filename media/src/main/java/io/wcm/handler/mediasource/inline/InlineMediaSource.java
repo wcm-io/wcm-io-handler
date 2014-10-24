@@ -264,4 +264,9 @@ public final class InlineMediaSource extends AbstractMediaSource {
     // not supported
   }
 
+  @Override
+  public String toString() {
+    return ID;
+  }
+
 }

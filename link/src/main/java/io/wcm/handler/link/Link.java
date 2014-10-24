@@ -23,11 +23,13 @@ import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Rendition;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jdom2.Attribute;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -200,7 +202,7 @@ public final class Link {
 
   @Override
   public String toString() {
-    return this.url;
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
   }
 
 }

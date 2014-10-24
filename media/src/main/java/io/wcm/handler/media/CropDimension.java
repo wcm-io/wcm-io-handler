@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media;
 
+import io.wcm.wcm.commons.util.ToStringStyle;
+
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
@@ -26,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -91,7 +92,7 @@ public final class CropDimension extends Dimension {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
   }
 
   /**

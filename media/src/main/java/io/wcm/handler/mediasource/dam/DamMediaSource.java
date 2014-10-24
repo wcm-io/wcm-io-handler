@@ -193,4 +193,9 @@ public final class DamMediaSource extends AbstractMediaSource {
     }
   }
 
+  @Override
+  public String toString() {
+    return ID;
+  }
+
 }

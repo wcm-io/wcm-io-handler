@@ -298,4 +298,9 @@ public final class InternalLinkType extends AbstractLinkType {
     return new SyntheticLinkResource(resourceResolver, map);
   }
 
+  @Override
+  public String toString() {
+    return ID;
+  }
+
 }

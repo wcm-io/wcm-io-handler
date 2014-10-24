@@ -21,6 +21,7 @@ package io.wcm.handler.media;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
@@ -401,9 +401,8 @@ public final class MediaArgs implements Cloneable {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
   }
-
 
   /**
    * Custom clone-method for {@link MediaArgs}

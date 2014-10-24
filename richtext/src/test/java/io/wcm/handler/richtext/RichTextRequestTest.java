@@ -71,4 +71,10 @@ public class RichTextRequestTest {
     new RichTextRequest(resource, "text", null, null, null);
   }
 
+  @Test
+  public void testToString() {
+    RichTextRequest underTest = new RichTextRequest(null, "text", null, null, null);
+    assertEquals("RichTextRequest[text=text]", underTest.toString());
+  }
+
 }
