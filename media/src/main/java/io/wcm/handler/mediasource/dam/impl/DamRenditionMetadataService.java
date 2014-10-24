@@ -26,6 +26,7 @@ import java.util.EnumSet;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Activate;
@@ -225,8 +226,9 @@ public final class DamRenditionMetadataService implements EventHandler {
    * Updates last modified information and saves the session.
    * @param asset Asset
    * @param userId User id
+   * @throws RepositoryException
    */
-  private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) {
+  private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) throws RepositoryException {
     // -- this is currently DISABLED due to WCMIO-28, concurrency issues with DAM workflows
     /*
     Node node = asset.adaptTo(Node.class);
@@ -234,8 +236,8 @@ public final class DamRenditionMetadataService implements EventHandler {
     // this is a workaround to make sure asset is marked as modified
     contentNode.setProperty(JcrConstants.JCR_LASTMODIFIED, Calendar.getInstance());
     contentNode.setProperty(JcrConstants.JCR_LAST_MODIFIED_BY, userId);
-    resolver.adaptTo(Session.class).save();
      */
+    resolver.adaptTo(Session.class).save();
   }
 
   /**
