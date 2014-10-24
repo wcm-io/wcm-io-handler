@@ -19,14 +19,11 @@
  */
 package io.wcm.handler.url.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -76,15 +73,6 @@ final class Externalizer {
     }
     else {
       path = resolver.map(path);
-    }
-
-    // resourceresolver map does an additional urlencoder.encode on the url - which leads to double-encoded urls
-    // de-encode them once here to repair this :(
-    try {
-      path = URLDecoder.decode(path, CharEncoding.UTF_8);
-    }
-    catch (UnsupportedEncodingException ex) {
-      throw new RuntimeException(ex);
     }
 
     // remove scheme and hostname (probably added by sling mapping)

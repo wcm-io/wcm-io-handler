@@ -29,7 +29,7 @@ import org.junit.Test;
 public class ExternalizerTest {
 
   @Test
-  public void testIsExternalized() throws Exception {
+  public void testIsExternalized() {
     assertFalse(Externalizer.isExternalized("/absolute/path"));
     assertFalse(Externalizer.isExternalized("relative/path"));
     assertTrue(Externalizer.isExternalized("http://www.heise.de/path1"));
@@ -41,7 +41,7 @@ public class ExternalizerTest {
   }
 
   @Test
-  public void testMangleNamespaces() throws Exception {
+  public void testMangleNamespaces() {
     assertEquals("/content/aa/bb/content.png", Externalizer.mangleNamespaces("/content/aa/bb/content.png"));
     assertEquals("/content/aa/bb/_jcr_content.png", Externalizer.mangleNamespaces("/content/aa/bb/jcr:content.png"));
   }
