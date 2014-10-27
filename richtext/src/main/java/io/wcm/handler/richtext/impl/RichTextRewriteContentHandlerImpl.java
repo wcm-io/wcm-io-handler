@@ -37,7 +37,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.CharEncoding;
@@ -59,7 +58,6 @@ import org.jdom2.Element;
 import org.jdom2.Text;
 
 import com.day.cq.commons.jcr.JcrConstants;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -95,20 +93,6 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
       "ol",
       "li"
       );
-
-  /**
-   * Maps legacy metadata attribute names to JCR property names used by link handling
-   */
-  private static final Map<String, String> LINKATTRIBUTE_MAPPING = ImmutableMap.<String, String>builder()
-      .put("linktype", LinkNameConstants.PN_LINK_TYPE)
-      .put("linkanchorname", LinkNameConstants.PN_LINK_ANCHOR_NAME)
-      .put("linkqueryparams", LinkNameConstants.PN_LINK_QUERY_PARAM)
-      .put("linkwindowwidth", LinkNameConstants.PN_LINK_WINDOW_WIDTH)
-      .put("linkwindowheight", LinkNameConstants.PN_LINK_WINDOW_HEIGHT)
-      .put("linkmediadownload", LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD)
-      .put("linkwindowfeatures", LinkNameConstants.PN_LINK_WINDOW_FEATURES)
-      .build();
-
 
   /**
    * Checks if the given element has to be rewritten.
@@ -327,7 +311,6 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
     if (metadataPropertyNames != null) {
       for (int i = 0; i < metadataPropertyNames.length(); i++) {
         String metadataPropertyName = metadataPropertyNames.optString(i);
-        String jcrPropertyName = mapMetadataPropertyName(metadataPropertyName);
 
         // check if value is array
         JSONArray valueArray = metadata.optJSONArray(metadataPropertyName);
@@ -337,13 +320,13 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
           for (int j = 0; j < valueArray.length(); j++) {
             values.add(valueArray.optString(j));
           }
-          pResourceProps.put(jcrPropertyName, values.toArray(new String[values.size()]));
+          pResourceProps.put(metadataPropertyName, values.toArray(new String[values.size()]));
         }
         else {
           // store simple value
           Object value = metadata.opt(metadataPropertyName);
           if (value != null) {
-            pResourceProps.put(jcrPropertyName, value);
+            pResourceProps.put(metadataPropertyName, value);
           }
         }
       }
@@ -470,22 +453,6 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
       }
     }
     return value;
-  }
-
-  /**
-   * Maps a metadata property name to a JCR property name.
-   * By default they should be identical, but legacy data can contain old variants of property names (e.g. lowercase).
-   * @param property Metadata property name
-   * @return JCR property name
-   */
-  private String mapMetadataPropertyName(String property) {
-    String translation = LINKATTRIBUTE_MAPPING.get(property);
-    if (StringUtils.isNotEmpty(translation)) {
-      return translation;
-    }
-    else {
-      return property;
-    }
   }
 
   @Override
