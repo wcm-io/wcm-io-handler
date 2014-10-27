@@ -20,13 +20,13 @@
 package io.wcm.handler.mediasource.inline;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.commons.jcr.JcrBinary;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.impl.JcrBinary;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.sling.commons.util.Escape;
 
