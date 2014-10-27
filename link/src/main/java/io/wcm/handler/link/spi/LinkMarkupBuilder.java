@@ -25,7 +25,11 @@ import io.wcm.handler.link.Link;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Builds XHTML markup for links
+ * Builds XHTML markup for links.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface LinkMarkupBuilder {

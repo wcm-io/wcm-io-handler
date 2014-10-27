@@ -28,7 +28,7 @@ For a Link URL always the target page to which the internal link points to has t
 
 ### Building URLs
 
-The URL Handler is a Sling Model and can be adapted either from a request or a resource. It automatically reads the context-specific configuration for the Site URLs based on the resource path of the current request or the path of the resource adapted from.
+The [URL Handler][url-handler] is a Sling Model and can be adapted either from a request or a resource. It automatically reads the context-specific configuration for the Site URLs based on the resource path of the current request or the path of the resource adapted from.
 
 Example:
 
@@ -67,7 +67,7 @@ For accessing the parameter you can use the constants from [UrlParams][url-param
 
 Optionally you can implement an interface to specify in more detail the URL resolving needs of your application. For this you have to implement the [UrlHandlerConfig][url-handler-config] interface. You can extend from [AbstractUrlHandlerConfig][abstract-url-handler-config] and overwrite only what is required.
 
-The class you implement is a Sling Model class, and should have an @Application annotation as well with the Application ID specified via the [Application Provider interface][config-application-provider] of the configuration infrastructure.
+The class you implement is a Sling Model class, and should have an @Application annotation with the Application ID specified via the [Application Provider interface][config-application-provider] of the configuration infrastructure.
 
 With this you can:
 
@@ -100,6 +100,7 @@ public class UrlHandlerConfigImpl extends AbstractUrlHandlerConfig {
 ```
 
 
+[url-handler]: apidocs/io/wcm/handler/url/UrlHandler.html
 [link-handler]: ../link/
 [media-handler]: ../media/
 [richtext-handler]: ../richtext/

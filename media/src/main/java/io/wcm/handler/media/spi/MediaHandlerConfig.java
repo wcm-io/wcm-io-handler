@@ -28,6 +28,10 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Provides application-specific configuration information required for media handling.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface MediaHandlerConfig {

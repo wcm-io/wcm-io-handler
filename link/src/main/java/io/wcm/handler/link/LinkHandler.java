@@ -26,6 +26,11 @@ import com.day.cq.wcm.api.Page;
 
 /**
  * Manages link resolving and markup generation.
+ * <p>
+ * The interface is implemented by a Sling Model. You can adapt from
+ * {@link org.apache.sling.api.SlingHttpServletRequest} or {@link org.apache.sling.api.resource.Resource} to get a
+ * context-specific handler instance.
+ * </p>
  */
 @ProviderType
 public interface LinkHandler {

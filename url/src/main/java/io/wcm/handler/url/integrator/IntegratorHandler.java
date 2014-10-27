@@ -25,6 +25,11 @@ import com.day.cq.wcm.api.Page;
 
 /**
  * Manages detection of integrator template context.
+ * <p>
+ * The interface is implemented by a Sling Model. You can adapt from
+ * {@link org.apache.sling.api.SlingHttpServletRequest} or {@link org.apache.sling.api.resource.Resource} to get a
+ * context-specific handler instance.
+ * </p>
  */
 @ProviderType
 public interface IntegratorHandler {

@@ -26,7 +26,11 @@ import io.wcm.handler.link.LinkRequest;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Defines a link type supported by {@link LinkHandler}
+ * Defines a link type supported by {@link LinkHandler}.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface LinkType {

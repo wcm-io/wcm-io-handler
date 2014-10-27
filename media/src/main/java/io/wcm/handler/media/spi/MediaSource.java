@@ -27,7 +27,11 @@ import io.wcm.handler.media.MediaRequest;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Defines a media source supported by {@link MediaHandler}
+ * Defines a media source supported by {@link MediaHandler}.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface MediaSource {

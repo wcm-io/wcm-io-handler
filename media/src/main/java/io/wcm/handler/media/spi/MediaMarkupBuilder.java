@@ -25,7 +25,11 @@ import io.wcm.handler.media.Media;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Builds XHTML markup for media element
+ * Builds XHTML markup for media element.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface MediaMarkupBuilder {

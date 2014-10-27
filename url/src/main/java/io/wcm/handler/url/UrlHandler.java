@@ -23,6 +23,11 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Rewrites and builds URLs for links to content pages and resources.
+ * <p>
+ * The interface is implemented by a Sling Model. You can adapt from
+ * {@link org.apache.sling.api.SlingHttpServletRequest} or {@link org.apache.sling.api.resource.Resource} to get a
+ * context-specific handler instance.
+ * </p>
  */
 @ProviderType
 public interface UrlHandler {

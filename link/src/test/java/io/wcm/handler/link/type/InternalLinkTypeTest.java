@@ -423,7 +423,7 @@ public class InternalLinkTypeTest {
         ImmutableValueMap.builder()
         .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .put(LinkNameConstants.PN_LINK_ANCHOR_NAME, "anchor1")
+        .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
         .build());
 
     Link link = linkHandler.get(linkResource).build();
@@ -443,7 +443,7 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
         .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
-        .put(LinkNameConstants.PN_LINK_ANCHOR_NAME, "anchor1")
+        .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
         .build());
 
     Link link = linkHandler.get(linkResource).build();
@@ -481,7 +481,7 @@ public class InternalLinkTypeTest {
         .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
         .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
-        .put(LinkNameConstants.PN_LINK_ANCHOR_NAME, "anchor1")
+        .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
         .build());
 
     Link link = linkHandler.get(linkResource).queryString("p5=abc&p6=xyz").fragment("anchor2").build();

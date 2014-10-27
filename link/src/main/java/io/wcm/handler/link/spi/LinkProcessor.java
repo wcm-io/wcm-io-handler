@@ -24,7 +24,11 @@ import io.wcm.handler.link.Link;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Processes link metadata before or after link resolving
+ * Processes link metadata before or after link resolving.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface LinkProcessor {

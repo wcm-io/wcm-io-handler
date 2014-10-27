@@ -24,7 +24,11 @@ import io.wcm.handler.media.Media;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Processes media metadata before or after media resolving
+ * Processes media metadata before or after media resolving.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface MediaProcessor {

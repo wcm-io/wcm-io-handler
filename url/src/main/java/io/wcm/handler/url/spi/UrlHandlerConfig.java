@@ -30,9 +30,10 @@ import com.day.cq.wcm.api.Page;
 
 /**
  * Provides application-specific configuration information required for URL handling.
- * This interface has to be implemented by a Sling @Model class, optional with @Application annotation,
- * the adaptables should be {@link org.apache.sling.api.resource.Resource} and
- * {@link org.apache.sling.api.SlingHttpServletRequest}.
+ * <p>
+ * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface UrlHandlerConfig {

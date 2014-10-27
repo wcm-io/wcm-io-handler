@@ -27,6 +27,9 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Allows application to provide media formats for the media handler.
+ * <p>
+ * This interface has to be implented as OSGi service.
+ * </p>
  */
 @ConsumerType
 public interface MediaFormatProvider {

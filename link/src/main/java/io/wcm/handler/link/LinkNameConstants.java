@@ -67,9 +67,9 @@ public final class LinkNameConstants {
   public static final String PN_LINK_EXTERNAL_REF = "linkExternalRef";
 
   /**
-   * Name of anchor
+   * Name of fragment
    */
-  public static final String PN_LINK_ANCHOR_NAME = "linkAnchorName";
+  public static final String PN_LINK_FRAGMENT = "linkFragment";
 
   /**
    * Open media library item with download dialog

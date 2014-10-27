@@ -153,7 +153,7 @@ public final class InternalLinkType extends AbstractLinkType {
 
       // optionally override query parameters and fragment from link resource
       queryString = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, queryString);
-      fragment = props.get(LinkNameConstants.PN_LINK_ANCHOR_NAME, fragment);
+      fragment = props.get(LinkNameConstants.PN_LINK_FRAGMENT, fragment);
 
       // build url
       linkUrl = urlHandler.get(targetPage.getPath())
