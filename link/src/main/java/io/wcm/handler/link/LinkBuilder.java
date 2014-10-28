@@ -31,6 +31,13 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface LinkBuilder {
 
   /**
+   * Set link arguments
+   * @param linkArgs Link arguments
+   * @return Link builder
+   */
+  LinkBuilder args(LinkArgs linkArgs);
+
+  /**
    * Set selectors
    * @param selectors Selector string
    * @return Link builder

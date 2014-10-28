@@ -103,7 +103,7 @@ public final class MediaLinkType extends AbstractLinkType {
     }
     MediaArgs mediaArgs = new MediaArgs(downloadMediaFormats)
     .forceDownload(isDownload)
-    .urlMode(linkRequest.getUrlMode());
+        .urlMode(linkRequest.getLinkArgs().getUrlMode());
 
     // resolve media library reference
     Media media = mediaHandler.get(mediaRef, mediaArgs).build();

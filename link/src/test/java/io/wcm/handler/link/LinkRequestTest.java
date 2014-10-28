@@ -28,8 +28,8 @@ public class LinkRequestTest {
 
   @Test
   public void testToString() throws Exception {
-    LinkRequest request = new LinkRequest(null, null, UrlModes.DEFAULT);
-    assertEquals("LinkRequest[urlMode=DEFAULT,dummyLink=false]", request.toString());
+    LinkRequest request = new LinkRequest(null, null, new LinkArgs().urlMode(UrlModes.DEFAULT));
+    assertEquals("LinkRequest[linkArgs=LinkArgs[urlMode=DEFAULT,dummyLink=false]]", request.toString());
   }
 
 }

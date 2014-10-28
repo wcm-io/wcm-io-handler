@@ -29,7 +29,6 @@ import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.url.UrlModes;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class LinkTest {
 
   @Mock
   private LinkType linkType;
-  private LinkRequest linkRequest = new LinkRequest(null, null, UrlModes.DEFAULT);
+  private LinkRequest linkRequest = new LinkRequest(null, null, null);
 
   private Link underTest;
 
@@ -108,7 +107,8 @@ public class LinkTest {
 
   @Test
   public void testToString() {
-    assertEquals("Link[linkType=linkType,linkRequest=LinkRequest[urlMode=DEFAULT,dummyLink=false],linkReferenceInvalid=false]", underTest.toString());
+    assertEquals("Link[linkType=linkType,linkRequest=LinkRequest[linkArgs=LinkArgs[dummyLink=false]],linkReferenceInvalid=false]",
+        underTest.toString());
   }
 
 }

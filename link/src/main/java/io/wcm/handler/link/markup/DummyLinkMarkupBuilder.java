@@ -49,13 +49,13 @@ public final class DummyLinkMarkupBuilder implements LinkMarkupBuilder {
   public boolean accepts(Link link) {
     return (!link.isValid() || link.getUrl() == null)
         && wcmMode == WCMMode.EDIT
-        && link.getLinkRequest().isDummyLink();
+        && link.getLinkRequest().getLinkArgs().isDummyLink();
   }
 
   @Override
   public Anchor build(Link link) {
     // build anchor
-    String url = StringUtils.defaultString(link.getLinkRequest().getDummyLinkUrl(), LinkHandler.INVALID_LINK);
+    String url = StringUtils.defaultString(link.getLinkRequest().getLinkArgs().getDummyLinkUrl(), LinkHandler.INVALID_LINK);
     return new Anchor(url);
   }
 

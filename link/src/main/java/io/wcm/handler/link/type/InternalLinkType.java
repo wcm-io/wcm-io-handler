@@ -20,6 +20,7 @@
 package io.wcm.handler.link.type;
 
 import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
@@ -145,11 +146,12 @@ public final class InternalLinkType extends AbstractLinkType {
     if (targetPage != null) {
       link.setTargetPage(targetPage);
 
-      String selectors = linkRequest.getSelectors();
-      String fileExtension = StringUtils.defaultString(linkRequest.getExtension(), FileExtension.HTML);
-      String suffix = linkRequest.getSuffix();
-      String queryString = linkRequest.getQueryString();
-      String fragment = linkRequest.getFragement();
+      LinkArgs linkArgs = linkRequest.getLinkArgs();
+      String selectors = linkArgs.getSelectors();
+      String fileExtension = StringUtils.defaultString(linkArgs.getExtension(), FileExtension.HTML);
+      String suffix = linkArgs.getSuffix();
+      String queryString = linkArgs.getQueryString();
+      String fragment = linkArgs.getFragment();
 
       // optionally override query parameters and fragment from link resource
       queryString = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, queryString);
@@ -165,7 +167,7 @@ public final class InternalLinkType extends AbstractLinkType {
 
       // externalize url
       linkUrl = urlHandler.get(linkUrl)
-          .urlMode(linkRequest.getUrlMode())
+          .urlMode(linkArgs.getUrlMode())
           .buildExternalLinkUrl(targetPage);
     }
 
@@ -194,14 +196,7 @@ public final class InternalLinkType extends AbstractLinkType {
     LinkRequest redirectLinkRequest = new LinkRequest(
         redirectPage.getContentResource(),
         null,
-        linkRequest.getUrlMode(),
-        linkRequest.isDummyLink(),
-        linkRequest.getDummyLinkUrl(),
-        linkRequest.getSelectors(),
-        linkRequest.getExtension(),
-        linkRequest.getSuffix(),
-        linkRequest.getQueryString(),
-        linkRequest.getFragement());
+        linkRequest.getLinkArgs());
 
     // check of maximum recursive calls via threadlocal to avoid endless loops, return invalid link if one is detected
     LinkResolveCounter linkResolveCounter = LinkResolveCounter.get();

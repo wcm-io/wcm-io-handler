@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
@@ -87,17 +88,17 @@ public class LinkHandlerImplTest {
         .put(LinkNameConstants.PN_LINK_TYPE, "dummy")
         .put("dummyLinkRef", "/path1")
         .build());
-    LinkRequest linkRequest = new LinkRequest(linkResource, null, UrlModes.DEFAULT);
+    LinkRequest linkRequest = new LinkRequest(linkResource, null, new LinkArgs().urlMode(UrlModes.DEFAULT));
     Link link = linkHandler.get(linkRequest).build();
 
     // make sure initial link reference is unmodified
     assertEquals("dummy", linkRequest.getResourceProperties().get(LinkNameConstants.PN_LINK_TYPE, String.class));
     assertEquals("/path1", linkRequest.getResourceProperties().get("dummyLinkRef", String.class));
-    assertEquals(UrlModes.DEFAULT, linkRequest.getUrlMode());
+    assertEquals(UrlModes.DEFAULT, linkRequest.getLinkArgs().getUrlMode());
 
     // check preprocessed link reference
     assertEquals("/path1/pre1", link.getLinkRequest().getResourceProperties().get("dummyLinkRef", String.class));
-    assertEquals(UrlModes.FULL_URL, link.getLinkRequest().getUrlMode());
+    assertEquals(UrlModes.FULL_URL, link.getLinkRequest().getLinkArgs().getUrlMode());
 
     // check final link url and html element
     assertEquals(true, link.isValid());
@@ -163,7 +164,7 @@ public class LinkHandlerImplTest {
       LinkRequest newLinkRequest = new LinkRequest(
           linkRequest.getResource(),
           linkRequest.getPage(),
-          UrlModes.FULL_URL
+          new LinkArgs().urlMode(UrlModes.FULL_URL)
           );
       newLinkRequest.getResourceProperties().put("dummyLinkRef", contentRef);
       link.setLinkRequest(newLinkRequest);

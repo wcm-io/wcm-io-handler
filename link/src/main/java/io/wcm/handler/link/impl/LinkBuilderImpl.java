@@ -21,6 +21,7 @@ package io.wcm.handler.link.impl;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkBuilder;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.url.UrlMode;
@@ -38,15 +39,7 @@ final class LinkBuilderImpl implements LinkBuilder {
 
   private final Resource resource;
   private final Page page;
-  private UrlMode urlMode;
-  private boolean dummyLink;
-  private String dummyLinkUrl;
-
-  private String selectors;
-  private String extension;
-  private String suffix;
-  private String queryString;
-  private String fragement;
+  private LinkArgs linkArgs = new LinkArgs();
 
   public LinkBuilderImpl(Resource resource, LinkHandlerImpl linkHandler) {
     this.resource = resource;
@@ -61,71 +54,77 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   public LinkBuilderImpl(LinkRequest linkRequest, LinkHandlerImpl linkHandler) {
+    if (linkRequest == null) {
+      throw new IllegalArgumentException("Link request is null.");
+    }
     this.resource = linkRequest.getResource();
     this.page = linkRequest.getPage();
-    this.urlMode = linkRequest.getUrlMode();
-    this.dummyLink = linkRequest.isDummyLink();
-    this.dummyLinkUrl = linkRequest.getDummyLinkUrl();
-    this.selectors = linkRequest.getSelectors();
-    this.extension = linkRequest.getExtension();
-    this.suffix = linkRequest.getSuffix();
-    this.queryString = linkRequest.getQueryString();
-    this.fragement = linkRequest.getFragement();
     this.linkHandler = linkHandler;
+    // clone link args to make sure the original object is not modified
+    this.linkArgs = linkRequest.getLinkArgs().clone();
+  }
+
+  @Override
+  public LinkBuilder args(LinkArgs value) {
+    if (value == null) {
+      throw new IllegalArgumentException("LinkArgs is null.");
+    }
+    // clone link args to make sure the original object is not modified
+    this.linkArgs = value.clone();
+    return this;
   }
 
   @Override
   public LinkBuilder urlMode(UrlMode value) {
-    this.urlMode = value;
+    this.linkArgs.urlMode(value);
     return this;
   }
 
   @Override
   public LinkBuilder dummyLink(boolean value) {
-    this.dummyLink = value;
+    this.linkArgs.dummyLink(value);
     return this;
   }
 
   @Override
   public LinkBuilder dummyLinkUrl(String value) {
-    this.dummyLinkUrl = value;
+    this.linkArgs.dummyLinkUrl(value);
     return this;
   }
 
   @Override
   public LinkBuilder selectors(String value) {
-    this.selectors = value;
+    this.linkArgs.selectors(value);
     return this;
   }
 
   @Override
   public LinkBuilder extension(String value) {
-    this.extension = value;
+    this.linkArgs.extension(value);
     return this;
   }
 
   @Override
   public LinkBuilder suffix(String value) {
-    this.suffix = value;
+    this.linkArgs.suffix(value);
     return this;
   }
 
   @Override
   public LinkBuilder queryString(String value) {
-    this.queryString = value;
+    this.linkArgs.queryString(value);
     return this;
   }
 
   @Override
   public LinkBuilder fragment(String value) {
-    this.fragement = value;
+    this.linkArgs.fragment(value);
     return this;
   }
 
   @Override
   public Link build() {
-    LinkRequest request = new LinkRequest(this.resource, this.page, this.urlMode, this.dummyLink, this.dummyLinkUrl,
-        this.selectors, this.extension, this.suffix, this.queryString, this.fragement);
+    LinkRequest request = new LinkRequest(this.resource, this.page, this.linkArgs);
     return linkHandler.processRequest(request);
   }
 

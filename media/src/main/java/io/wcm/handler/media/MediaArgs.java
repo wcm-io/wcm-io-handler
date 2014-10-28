@@ -35,7 +35,7 @@ import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Default implementation of media arguments
+ * Holds parameters to influence the media resolving process.
  */
 @ProviderType
 public final class MediaArgs implements Cloneable {

@@ -246,7 +246,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
   }
 
   /**
-   * Support legacy data structures where link metadata is stored as JSON fragement in single HTML5 data attribute.
+   * Support legacy data structures where link metadata is stored as JSON fragment in single HTML5 data attribute.
    * @param pResourceProps Valuemap to write link metadata to
    * @param element Link element
    */
@@ -279,7 +279,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
   }
 
   /**
-   * Support legacy data structures where link metadata is stored as JSON fragement in rel attribute.
+   * Support legacy data structures where link metadata is stored as JSON fragment in rel attribute.
    * @param pResourceProps Valuemap to write link metadata to
    * @param element Link element
    */

@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.link;
 
-import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
 import java.util.HashMap;
@@ -40,53 +39,24 @@ public final class LinkRequest {
 
   private final Resource resource;
   private final Page page;
-  private final UrlMode urlMode;
-  private final boolean dummyLink;
-  private final String dummyLinkUrl;
-  private final String selectors;
-  private final String extension;
-  private final String suffix;
-  private final String queryString;
-  private final String fragement;
+  private final LinkArgs linkArgs;
 
   private ValueMap resourceProperties;
 
   /**
    * @param resource Resource containing properties that define the link target
    * @param page Target content page
-   * @param urlMode URL mode for externalizing the URL
-   * @param selectors Selector string
-   * @param extension File extension
-   * @param suffix Suffix string
-   * @param queryString Query parameters string (properly url-encoded)
-   * @param fragement Fragment identifier
+   * @param linkArgs Link arguments
    */
-  public LinkRequest(Resource resource, Page page, UrlMode urlMode, boolean dummyLink, String dummyLinkUrl,
-      String selectors, String extension, String suffix, String queryString, String fragement) {
+  public LinkRequest(Resource resource, Page page, LinkArgs linkArgs) {
     this.resource = resource;
     this.page = page;
-    this.urlMode = urlMode;
-    this.dummyLink = dummyLink;
-    this.dummyLinkUrl = dummyLinkUrl;
-    this.selectors = selectors;
-    this.extension = extension;
-    this.suffix = suffix;
-    this.queryString = queryString;
-    this.fragement = fragement;
+    this.linkArgs = linkArgs != null ? linkArgs : new LinkArgs();
 
     // validate parameters
     if (this.resource != null && this.page != null) {
       throw new IllegalArgumentException("Set resource or page, not both.");
     }
-  }
-
-  /**
-   * @param resource Resource containing properties that define the link target
-   * @param page Target content page
-   * @param urlMode URL mode for externalizing the URL
-   */
-  public LinkRequest(Resource resource, Page page, UrlMode urlMode) {
-    this(resource, page, urlMode, false, null, null, null, null, null, null);
   }
 
   /**
@@ -104,59 +74,10 @@ public final class LinkRequest {
   }
 
   /**
-   * @return URL mode for externalizing the URL
+   * @return Link arguments
    */
-  public UrlMode getUrlMode() {
-    return this.urlMode;
-  }
-
-  /**
-   * @return If set to true, link handler returns a dummy link in edit mode when link is invalid.
-   */
-  public boolean isDummyLink() {
-    return this.dummyLink;
-  }
-
-  /**
-   * @return Custom dummy link url. If null default dummy url is used.
-   */
-  public String getDummyLinkUrl() {
-    return this.dummyLinkUrl;
-  }
-
-  /**
-   * @return Selector string
-   */
-  public String getSelectors() {
-    return this.selectors;
-  }
-
-  /**
-   * @return File extension
-   */
-  public String getExtension() {
-    return this.extension;
-  }
-
-  /**
-   * @return Suffix string
-   */
-  public String getSuffix() {
-    return this.suffix;
-  }
-
-  /**
-   * @return Query parameters string (properly url-encoded)
-   */
-  public String getQueryString() {
-    return this.queryString;
-  }
-
-  /**
-   * @return Fragment identifier
-   */
-  public String getFragement() {
-    return this.fragement;
+  public LinkArgs getLinkArgs() {
+    return this.linkArgs;
   }
 
   /**
