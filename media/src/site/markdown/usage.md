@@ -188,6 +188,16 @@ public class MediaHandlerConfigImpl extends AbstractMediaHandlerConfig {
 }
 ```
 
+Schematic flow of media handling process:
+
+1. Start media handler processing
+2. Detect media source, store result in media request
+3. Apply preprocessors on media request
+4. Resolve media using media source, store result in media request
+5. Generate markup using markup builder, store result in media request
+6. Apply postprocessors on media request
+
+
 
 [media-handler]: apidocs/io/wcm/handler/media/MediaHandler.html
 [media-builder]: apidocs/io/wcm/handler/media/MediaBuilder.html

@@ -127,6 +127,15 @@ public class LinkHandlerConfigImpl extends AbstractLinkHandlerConfig {
 }
 ```
 
+Schematic flow of link handling process:
+
+1. Start link handler processing
+2. Detect link type, store result in link request
+3. Apply preprocessors on link request
+4. Resolve link using link type, store result in link request
+5. Generate markup using markup builder, store result in link request
+6. Apply postprocessors on link request
+
 
 [link-handler]: apidocs/io/wcm/handler/link/LinkHandler.html
 [link-builder]: apidocs/io/wcm/handler/link/LinkBuilder.html
