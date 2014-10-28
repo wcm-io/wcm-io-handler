@@ -52,9 +52,6 @@ import org.mockito.stubbing.Answer;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * Test {@link UrlHandlerImpl} methods.
- */
 public class UrlHandlerImplTest {
 
   @Rule
@@ -259,9 +256,6 @@ public class UrlHandlerImplTest {
 
   }
 
-  /**
-   * Test UrlHandler#externalizeLinkUrl(String, com.day.cq.wcm.api.Page, io.wcm.handler.url.UrlMode)
-   */
   @Test
   public void testExternalizeLinkUrl() {
     // create current page in site context
@@ -364,9 +358,6 @@ public class UrlHandlerImplTest {
 
   }
 
-  /**
-   * Test UrlHandler#externalizeResourceUrl(String, io.wcm.handler.url.UrlMode)
-   */
   @Test
   public void testExternalizeResourceUrl() {
     // create current page in site context
@@ -449,9 +440,6 @@ public class UrlHandlerImplTest {
 
   }
 
-  /**
-   * Test UrlHandler#buildUrl(String, String, String, String)
-   */
   @Test
   public void testBuildUrl() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
@@ -494,9 +482,24 @@ public class UrlHandlerImplTest {
 
   }
 
-  /**
-   * Test UrlHandler#appendQueryString(String, String)
-   */
+  @Test
+  public void testUrlWithSpaces() {
+    UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
+
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/path%20with/spaces.gif",
+        urlHandler.get("/content/unittest/de_test/brand/de/path with/spaces")
+        .extension("gif").urlMode(UrlModes.FULL_URL).buildExternalResourceUrl());
+  }
+
+  @Test
+  public void testUrlWithSpecialChars() {
+    UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
+
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/path%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC.gif",
+        urlHandler.get("/content/unittest/de_test/brand/de/pathäöüß€")
+        .extension("gif").urlMode(UrlModes.FULL_URL).buildExternalResourceUrl());
+  }
+
   @Test
   public void testAppendQueryString() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
@@ -522,9 +525,6 @@ public class UrlHandlerImplTest {
 
   }
 
-  /**
-   * Test UrlHandler#appendQueryString(String, String, java.util.Set)
-   */
   @Test
   public void testAppendQueryStringWithInheritance() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
@@ -571,9 +571,6 @@ public class UrlHandlerImplTest {
 
   }
 
-  /**
-   * Test UrlHandler#setFragment(String, String)
-   */
   @Test
   public void testSetAnchor() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);

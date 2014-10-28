@@ -75,9 +75,11 @@ final class Externalizer {
       path = resolver.map(path);
     }
 
-    // remove scheme and hostname (probably added by sling mapping)
+    // remove scheme and hostname (probably added by sling mapping), but leave path in escaped form
     try {
-      path = new URI(path).getPath();
+      path = new URI(path).getRawPath();
+      // replace %2F back to / for better readability
+      path = StringUtils.replace(path, "%2F", "/");
     }
     catch (URISyntaxException ex) {
       throw new RuntimeException("Sling map method returned invalid URI: " + path, ex);
