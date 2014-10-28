@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -50,7 +51,6 @@ import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.commons.WCMUtils;
-import com.day.text.Text;
 
 /**
  * Default implementation for media requests to media items stored in CQ5 DAM.
