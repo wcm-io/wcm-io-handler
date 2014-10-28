@@ -29,7 +29,12 @@ import org.osgi.annotation.versioning.ProviderType;
 import com.day.cq.wcm.api.Page;
 
 /**
- * Controls building of Urls.
+ * An UrlMode define the externalization logic for URLs depending on context-specific configuration parameters
+ * defined in {@link UrlParams}.
+ * <p>
+ * If you want to implement your own UrlMode you can create an enum and let it extend from this interface. See
+ * {@link UrlModes} class as an example.
+ * </p>
  */
 @ProviderType
 public interface UrlMode {

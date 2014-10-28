@@ -39,10 +39,10 @@ import com.day.cq.wcm.api.Page;
 public enum UrlModes implements UrlMode {
 
   /**
-   * Default mode: Does generate a full externalized Url only if both site-url and site-url-secure parameter
-   * are set in site config. If not set, only URLs without hostname are generated.
-   * If the target is an internal content page, from the site config parameters site-url or site-url-secure
-   * is chosen automatically depending on the secure state of the page.
+   * Default mode: Does generate a full externalized URL only if both siteUrl and siteUrlSecure parameter
+   * are set in context-specific configuration. If not set, only URLs without hostname are generated.
+   * If the target is an internal content page, siteUrl or siteUrlSecure is chosen automatically depending on the secure
+   * state of the page.
    */
   DEFAULT {
 
@@ -65,8 +65,8 @@ public enum UrlModes implements UrlMode {
   },
 
   /**
-   * Default mode: Does generate a externalized Url without any protocol and hostname,
-   * independent of any setting in site config.
+   * Default mode: Does generate a externalized URL without any protocol and hostname,
+   * independent of any setting in context-specific configuration.
    */
   NO_HOSTNAME {
 
@@ -83,9 +83,9 @@ public enum UrlModes implements UrlMode {
   },
 
   /**
-   * Enforce the generation of a full Url with protocol and hostname.
-   * If the target is an internal content page, from the site config parameters site-url or site-url-secure
-   * is chosen automatically depending on the secure state of page.
+   * Enforce the generation of a full URL with protocol and hostname.
+   * If the target is an internal content page, siteUrl or siteUrlSecure is chosen automatically depending on the secure
+   * state of page.
    */
   FULL_URL {
 
@@ -164,7 +164,7 @@ public enum UrlModes implements UrlMode {
   },
 
   /**
-   * Enforce the generation of a full Url with protocol and hostname and non-secure mode.
+   * Enforce the generation of a full URL with protocol and hostname and non-secure mode.
    */
   FULL_URL_FORCENONSECURE {
 
@@ -225,8 +225,8 @@ public enum UrlModes implements UrlMode {
   },
 
   /**
-   * Enforce the generation of a full Url with protocol and hostname and secure mode.
-   * If site-url-secure is not set, site-url is used.
+   * Enforce the generation of a full URL with protocol and hostname and secure mode.
+   * If siteUrlSecure is not set, siteUrl is used.
    */
   FULL_URL_FORCESECURE {
 
@@ -287,7 +287,7 @@ public enum UrlModes implements UrlMode {
   },
 
   /**
-   * Enforce the generation of a full Url with hostname and "//" as protocol (protocol-relative mode).
+   * Enforce the generation of a full URL with hostname and "//" as protocol (protocol-relative mode).
    * Using "//" instead of "http://" or "https://" results in using the same protocol as the current request
    * in the browser.
    */
@@ -322,7 +322,7 @@ public enum UrlModes implements UrlMode {
         }
       }
 
-      // return site-url in protocol-relative mode
+      // return siteUrl in protocol-relative mode
       return convertToProtocolRelative(config.get(UrlParams.SITE_URL));
     }
 
