@@ -38,9 +38,9 @@ UrlHandler urlHandler = request.adaptTo(UrlHandler.class);
 // build externalized resource URL
 String url = urlHandler.get(cssPath).buildExternalResourceUrl();
 
-// build content link with selector and protocol change
-String url = urlHandler.get(pagePath).selectors("form")
-    .urlMode(UrlModes.FULL_URL_FORCESECURE).buildExternalLinkUrl(targetPage);
+// build content page link with selector and protocol change
+String url = urlHandler.get(targetPage).selectors("form")
+    .urlMode(UrlModes.FULL_URL_FORCESECURE).buildExternalLinkUrl();
 ```
 
 Alternatively you can inject the `UrlHandler` into your Sling Model using the `@Self` annotation if the model itself adapts from request or resource.
