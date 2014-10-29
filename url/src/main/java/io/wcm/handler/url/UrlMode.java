@@ -32,12 +32,17 @@ import com.day.cq.wcm.api.Page;
  * An UrlMode define the externalization logic for URLs depending on context-specific configuration parameters
  * defined in {@link UrlParams}.
  * <p>
- * If you want to implement your own UrlMode you can create an enum and let it extend from this interface. See
+ * If you want to implement your own UrlMode you can create a singleton class extending this interface. See
  * {@link UrlModes} class as an example.
  * </p>
  */
 @ProviderType
 public interface UrlMode {
+
+  /**
+   * @return Id uniquely identifying the URL mode
+   */
+  String getId();
 
   /**
    * Get prefix (scheme, hostname and context path or integrator placeholder) for externalizing a content page link URL.
