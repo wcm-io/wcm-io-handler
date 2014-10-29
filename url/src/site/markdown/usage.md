@@ -55,11 +55,11 @@ With the different Enumeration constants from [UrlModes][url-modes] you have fin
 
 To make sure that the externalization works properly you have to configure three Parameters in the [context-specific Configuration][config]:
 
-* Site URL: Site URL on public access from outside, for non-secure access (HTTP).
-* Site URL Secure: Site URL for public access from outside, for secure access (HTTPS).
-* Site URL Author: Site URL on author instance.
+* siteUrl: Site URL on public access from outside, for non-secure access (HTTP).
+* siteUrlSecure: Site URL for public access from outside, for secure access (HTTPS).
+* siteUrlAuthor: Site URL on author instance.
 
-Site URL is a protocol and hostname, e.g. http://www.mycompany.com
+Site URL is a protocol and hostname, e.g. `http://www.mycompany.com`.
 For accessing the parameter you can use the constants from [UrlParams][url-params] class.
 
 
