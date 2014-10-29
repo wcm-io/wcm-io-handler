@@ -39,7 +39,7 @@ final class Externalizer {
 
   /**
    * Externalizes an URL by applying Sling Mapping. Hostname and scheme are not added because they are added by the
-   * link handler depending on site URL configuratoin and secure/non-secure mode. URLs that are already externalized
+   * link handler depending on site URL configuration and secure/non-secure mode. URLs that are already externalized
    * remain untouched.
    * @param url Unexternalized URL
    * @param resolver Resource resolver
@@ -51,7 +51,7 @@ final class Externalizer {
     // apply externalization only path part
     String path = url;
 
-    // split off query string or fragment that may be appendend to the URL
+    // split off query string or fragment that may be appended to the URL
     String urlRemainder = null;
     int urlRemainderPos = StringUtils.indexOfAny(path, '?', '#');
     if (urlRemainderPos >= 0) {
@@ -92,7 +92,7 @@ final class Externalizer {
   /**
    * Externalizes an URL without applying Sling Mapping. Instead the servlet context path is added and sling namespace
    * mangling is applied manually.
-   * Hostname and scheme are not added because they are added by the link handler depending on site URL configuratoin
+   * Hostname and scheme are not added because they are added by the link handler depending on site URL configuration
    * and secure/non-secure mode. URLs that are already externalized remain untouched.
    * @param url Unexternalized URL
    * @param request Request
@@ -103,7 +103,7 @@ final class Externalizer {
     // apply externalization only path part
     String path = url;
 
-    // split off query string or fragment that may be appendend to the URL
+    // split off query string or fragment that may be appended to the URL
     String urlRemainder = null;
     int urlRemainderPos = StringUtils.indexOfAny(path, '?', '#');
     if (urlRemainderPos >= 0) {
