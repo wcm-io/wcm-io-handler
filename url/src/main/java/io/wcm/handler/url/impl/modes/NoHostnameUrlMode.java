@@ -22,6 +22,7 @@ package io.wcm.handler.url.impl.modes;
 import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
 
@@ -42,7 +43,7 @@ public final class NoHostnameUrlMode extends AbstractUrlMode {
   }
 
   @Override
-  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage) {
+  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource) {
     return null;
   }
 

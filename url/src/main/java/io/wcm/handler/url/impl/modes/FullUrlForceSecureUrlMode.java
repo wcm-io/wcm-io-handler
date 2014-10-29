@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import io.wcm.config.api.Configuration;
-import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -28,8 +26,8 @@ import io.wcm.wcm.commons.util.RunMode;
 
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
 
@@ -54,25 +52,19 @@ public final class FullUrlForceSecureUrlMode extends AbstractUrlMode {
       return IntegratorPlaceholder.URL_CONTENT_SECURE;
     }
 
-    Configuration config = adaptable.adaptTo(Configuration.class);
-    if (config == null) {
-      return null;
-    }
+    UrlConfig config = getUrlConfigForTarget(adaptable, targetPage);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes)) {
-      String siteUrlAuthor = config.get(UrlParams.SITE_URL_AUTHOR);
-      if (StringUtils.isNotEmpty(siteUrlAuthor)) {
-        return siteUrlAuthor;
-      }
+    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+      return config.getSiteUrlAuthor();
     }
 
     // return secure site url
-    return StringUtils.defaultIfEmpty(config.get(UrlParams.SITE_URL_SECURE), config.get(UrlParams.SITE_URL));
+    return config.getSiteUrlSecure();
   }
 
   @Override
-  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage) {
+  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource) {
 
     // if integrator template mode with placeholders is active return resource url placeholder
     IntegratorHandler integratorHandler = AdaptTo.notNull(adaptable, IntegratorHandler.class);
@@ -81,21 +73,15 @@ public final class FullUrlForceSecureUrlMode extends AbstractUrlMode {
       return IntegratorPlaceholder.URL_CONTENT_PROXY;
     }
 
-    Configuration config = adaptable.adaptTo(Configuration.class);
-    if (config == null) {
-      return null;
-    }
+    UrlConfig config = getUrlConfigForTarget(adaptable, targetResource);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes)) {
-      String siteUrlAuthor = config.get(UrlParams.SITE_URL_AUTHOR);
-      if (StringUtils.isNotEmpty(siteUrlAuthor)) {
-        return siteUrlAuthor;
-      }
+    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+      return config.getSiteUrlAuthor();
     }
 
     // return secure site url
-    return StringUtils.defaultIfEmpty(config.get(UrlParams.SITE_URL_SECURE), config.get(UrlParams.SITE_URL));
+    return config.getSiteUrlSecure();
   }
 
 }

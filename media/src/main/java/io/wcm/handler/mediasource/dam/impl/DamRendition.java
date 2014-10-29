@@ -73,7 +73,8 @@ class DamRendition extends SlingAdaptable implements Rendition {
       // build externalized URL
       UrlHandler urlHandler = AdaptTo.notNull(adaptable, UrlHandler.class);
       String mediaPath = this.rendition.getMediaPath(this.mediaArgs.isForceDownload());
-      return urlHandler.get(mediaPath).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl();
+      return urlHandler.get(mediaPath).urlMode(this.mediaArgs.getUrlMode())
+          .buildExternalResourceUrl(this.rendition.adaptTo(Resource.class));
     }
     else {
       return null;

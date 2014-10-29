@@ -42,6 +42,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.junit.Rule;
@@ -271,10 +272,14 @@ public class UrlHandlerImplTest {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // invalid parameters
-    assertEquals(null, externalizeLinkUrl(urlHandler, null, null));
-    assertEquals(null, externalizeLinkUrl(urlHandler, null, targetPage));
-    assertEquals(null, externalizeLinkUrl(urlHandler, "", null));
-    assertEquals(null, externalizeLinkUrl(urlHandler, "", targetPage));
+    assertEquals(null, urlHandler.get((String)null).buildExternalLinkUrl());
+    assertEquals(null, urlHandler.get("").buildExternalLinkUrl());
+    assertEquals(null, urlHandler.get((Resource)null).buildExternalLinkUrl());
+    assertEquals(null, urlHandler.get((Page)null).buildExternalLinkUrl());
+    assertEquals(null, urlHandler.get((String)null).buildExternalLinkUrl(targetPage));
+    assertEquals(null, urlHandler.get("").buildExternalLinkUrl(targetPage));
+    assertEquals(null, urlHandler.get((Resource)null).buildExternalLinkUrl(targetPage));
+    assertEquals(null, urlHandler.get((Page)null).buildExternalLinkUrl(targetPage));
 
     // urls that are already externalized
     assertEquals("http://xyz/abc", externalizeLinkUrl(urlHandler, "http://xyz/abc", null));
@@ -295,6 +300,8 @@ public class UrlHandlerImplTest {
         externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", null));
     assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html",
         externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", targetPage));
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html",
+        urlHandler.get(targetPage).extension("html").buildExternalLinkUrl());
     assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2/_jcr_content.html",
         externalizeLinkUrl(urlHandler, targetPage.getContentResource().getPath() + ".html", targetPage));
     assertEquals("/content/unittest/de_test/brand/de/section2/page2/_jcr_content.html",
@@ -371,8 +378,10 @@ public class UrlHandlerImplTest {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // invalid parameters
-    assertEquals(null, externalizeResourceUrl(urlHandler, null));
-    assertEquals(null, externalizeResourceUrl(urlHandler, ""));
+    assertEquals(null, urlHandler.get((String)null).buildExternalResourceUrl());
+    assertEquals(null, urlHandler.get("").buildExternalResourceUrl());
+    assertEquals(null, urlHandler.get((Resource)null).buildExternalResourceUrl());
+    assertEquals(null, urlHandler.get((Page)null).buildExternalResourceUrl());
 
     // urls that are already externalized
     assertEquals("http://xyz/abc", externalizeResourceUrl(urlHandler, "http://xyz/abc"));
@@ -391,6 +400,9 @@ public class UrlHandlerImplTest {
         externalizeResourceUrl(urlHandler, targetPage.getPath() + ".png"));
     assertEquals("/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
         externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png"));
+    assertEquals("/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
+        urlHandler.get(context.resourceResolver().getResource("/content/unittest/de_test/brand/de/section2/page2/jcr:content"))
+        .extension("png").buildExternalResourceUrl());
     assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
         externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png", UrlModes.FULL_URL));
 
@@ -429,11 +441,11 @@ public class UrlHandlerImplTest {
           externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png"));
       assertEquals("http://en.dummysite.org/apps/testapp/docroot/img.png",
           externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png", UrlModes.FULL_URL));
-      assertEquals("/content/unittest/de_test/brand/de/section2/page2.png",
+      assertEquals("http://de.dummysite.org/de/section2/page2.png",
           externalizeResourceUrl(urlHandler, targetPage.getPath() + ".png"));
-      assertEquals("/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
+      assertEquals("http://de.dummysite.org/de/section2/page2/_jcr_content.png",
           externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png"));
-      assertEquals("http://en.dummysite.org/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
+      assertEquals("http://de.dummysite.org/de/section2/page2/_jcr_content.png",
           externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png", UrlModes.FULL_URL));
 
     }

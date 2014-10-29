@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import io.wcm.config.api.Configuration;
-import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
@@ -29,8 +27,8 @@ import io.wcm.wcm.commons.util.RunMode;
 
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
 
@@ -62,30 +60,24 @@ public final class FullUrlUrlMode extends AbstractUrlMode {
       }
     }
 
-    Configuration config = adaptable.adaptTo(Configuration.class);
-    if (config == null) {
-      return null;
-    }
+    UrlConfig config = getUrlConfigForTarget(adaptable, targetPage);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes)) {
-      String siteUrlAuthor = config.get(UrlParams.SITE_URL_AUTHOR);
-      if (StringUtils.isNotEmpty(siteUrlAuthor)) {
-        return siteUrlAuthor;
-      }
+    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+      return config.getSiteUrlAuthor();
     }
 
     // return secure or non-secure site url
-    String siteUrl = config.get(UrlParams.SITE_URL);
     if (targetPage != null && urlHandlerConfig.isSecure(targetPage)) {
-      String siteUrlSecure = config.get(UrlParams.SITE_URL_SECURE);
-      return StringUtils.defaultIfEmpty(siteUrlSecure, siteUrl);
+      return config.getSiteUrlSecure();
     }
-    return siteUrl;
+    else {
+      return config.getSiteUrl();
+    }
   }
 
   @Override
-  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage) {
+  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource) {
 
     // if integrator template mode with placeholders is active return resource url placeholder
     IntegratorHandler integratorHandler = AdaptTo.notNull(adaptable, IntegratorHandler.class);
@@ -94,28 +86,22 @@ public final class FullUrlUrlMode extends AbstractUrlMode {
       return IntegratorPlaceholder.URL_CONTENT_PROXY;
     }
 
-    Configuration config = adaptable.adaptTo(Configuration.class);
-    if (config == null) {
-      return null;
-    }
+    UrlConfig config = getUrlConfigForTarget(adaptable, targetResource);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes)) {
-      String siteUrlAuthor = config.get(UrlParams.SITE_URL_AUTHOR);
-      if (StringUtils.isNotEmpty(siteUrlAuthor)) {
-        return siteUrlAuthor;
-      }
+    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+      return config.getSiteUrlAuthor();
     }
 
     // return secure or non-secure site url
     UrlHandlerConfig urlHandlerConfig = AdaptTo.notNull(adaptable, UrlHandlerConfig.class);
-    String siteUrl = config.get(UrlParams.SITE_URL);
     if ((currentPage != null && urlHandlerConfig.isSecure(currentPage))
         || integratorHandler.isIntegratorTemplateSecureMode()) {
-      String siteUrlSecure = config.get(UrlParams.SITE_URL_SECURE);
-      return StringUtils.defaultIfEmpty(siteUrlSecure, siteUrl);
+      return config.getSiteUrlSecure();
     }
-    return siteUrl;
+    else {
+      return config.getSiteUrl();
+    }
   }
 
 }

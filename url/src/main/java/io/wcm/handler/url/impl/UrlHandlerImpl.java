@@ -30,7 +30,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -69,6 +68,16 @@ public final class UrlHandlerImpl implements UrlHandler {
   @Override
   public UrlBuilder get(String path) {
     return new UrlBuilderImpl(path, this);
+  }
+
+  @Override
+  public UrlBuilder get(Resource resource) {
+    return new UrlBuilderImpl(resource, this);
+  }
+
+  @Override
+  public UrlBuilder get(Page page) {
+    return new UrlBuilderImpl(page, this);
   }
 
   @Override
@@ -139,7 +148,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     return mode.getLinkUrlPrefix(self, slingSettings.getRunModes(), currentPage, targetPage);
   }
 
-  String externalizeResourceUrl(String url, UrlMode urlMode) {
+  String externalizeResourceUrl(final String url, final Resource targetResource, final UrlMode urlMode) {
 
     // check for empty path
     if (StringUtils.isEmpty(url)) {
@@ -151,51 +160,25 @@ public final class UrlHandlerImpl implements UrlHandler {
       return url;
     }
 
-    // check if path that should be externalized points to another site than the current site
-    // if this is the case, apply externalization without sling mapping
-    boolean slingMappingRequired = false;
-    if (currentPage != null) {
-      String currentSiteRoot = getRootPath(currentPage.getPath(), urlHandlerConfig.getSiteRootLevel(currentPage.getPath()));
-      String pathSiteRoot = getRootPath(url, urlHandlerConfig.getSiteRootLevel(url));
-      slingMappingRequired = StringUtils.equals(currentSiteRoot, pathSiteRoot);
-    }
-    String externalizedUrl;
-    if (slingMappingRequired) {
-      // apply sling mapping, namespace mangling and add webapp context path if required
-      externalizedUrl = Externalizer.externalizeUrl(url, resolver, request);
-    }
-    else {
-      // apply namespace mangling and add webapp context path if required, do *not* apply sling mapping
-      externalizedUrl = Externalizer.externalizeUrlWithoutMapping(url, request);
+    // try to resolve the target resource from url/path if it was not given initially (only below /content)
+    Resource resource = targetResource;
+    if (resource == null && StringUtils.startsWith(url, "/content/")) {
+      resource = resolver.resolve(url); // accept NonExistingResource as well
     }
 
+    // apply sling mapping when externalizing URLs
+    String externalizedUrl = Externalizer.externalizeUrl(url, resolver, request);
+
     // add resource URL prefix (scheme/hostname or integrator placeholder) if required
-    String resourceUrlPrefix = getResourceUrlPrefix(urlMode);
+    String resourceUrlPrefix = getResourceUrlPrefix(urlMode, resource);
     externalizedUrl = StringUtils.defaultString(resourceUrlPrefix) + externalizedUrl; //NOPMD
 
     return externalizedUrl;
   }
 
-  private String getResourceUrlPrefix(UrlMode urlMode) {
+  private String getResourceUrlPrefix(UrlMode urlMode, Resource targetResource) {
     UrlMode mode = ObjectUtils.defaultIfNull(urlMode, urlHandlerConfig.getDefaultUrlMode());
-    return mode.getResourceUrlPrefix(self, slingSettings.getRunModes(), currentPage);
-  }
-
-  /**
-   * Gets site root level path of a site.
-   * @param path Path of page within the site
-   * @param rootLevel Level of root page
-   * @return Site root path for the site. The path is not checked for validness.
-   */
-  private String getRootPath(String path, int rootLevel) {
-    String rootPath = Text.getAbsoluteParent(path, rootLevel);
-
-    // strip off everything after first "." - root path may be passed with selectors/extension which is not relevant
-    if (StringUtils.contains(rootPath, ".")) {
-      rootPath = StringUtils.substringBefore(rootPath, ".");
-    }
-
-    return rootPath;
+    return mode.getResourceUrlPrefix(self, slingSettings.getRunModes(), currentPage, targetResource);
   }
 
   String buildUrl(String path, String selector, String extension, String suffix) { //NOPMD

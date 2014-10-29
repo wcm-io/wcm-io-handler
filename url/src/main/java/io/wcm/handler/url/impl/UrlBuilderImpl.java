@@ -25,6 +25,7 @@ import io.wcm.handler.url.UrlMode;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
 
@@ -34,8 +35,10 @@ import com.day.cq.wcm.api.Page;
 final class UrlBuilderImpl implements UrlBuilder {
 
   private final UrlHandlerImpl urlHandler;
-
   private final String path;
+  private final Resource resource;
+  private final Page page;
+
   private String selectors;
   private String extension;
   private String suffix;
@@ -50,6 +53,30 @@ final class UrlBuilderImpl implements UrlBuilder {
    */
   public UrlBuilderImpl(String path, UrlHandlerImpl urlHandler) {
     this.path = path;
+    this.resource = null;
+    this.page = null;
+    this.urlHandler = urlHandler;
+  }
+
+  /**
+   * @param resource Resource
+   * @param urlHandler Url handler instance
+   */
+  public UrlBuilderImpl(Resource resource, UrlHandlerImpl urlHandler) {
+    this.path = resource != null ? resource.getPath() : null;
+    this.resource = resource;
+    this.page = null;
+    this.urlHandler = urlHandler;
+  }
+
+  /**
+   * @param page Page
+   * @param urlHandler Url handler instance
+   */
+  public UrlBuilderImpl(Page page, UrlHandlerImpl urlHandler) {
+    this.path = page != null ? page.getPath() : null;
+    this.resource = null;
+    this.page = page;
     this.urlHandler = urlHandler;
   }
 
@@ -110,15 +137,39 @@ final class UrlBuilderImpl implements UrlBuilder {
   }
 
   @Override
+  public String buildExternalLinkUrl() {
+    return buildExternalLinkUrl(null);
+  }
+
+  @Override
   public String buildExternalLinkUrl(Page targetPage) {
+    Page targetPageToUse = targetPage;
+    if (targetPageToUse == null) {
+      targetPageToUse = page;
+    }
+    if (targetPageToUse == null && resource != null) {
+      targetPageToUse = resource.adaptTo(Page.class);
+    }
     String url = build();
-    return urlHandler.externalizeLinkUrl(url, targetPage, urlMode);
+    return urlHandler.externalizeLinkUrl(url, targetPageToUse, urlMode);
   }
 
   @Override
   public String buildExternalResourceUrl() {
+    return buildExternalResourceUrl(null);
+  }
+
+  @Override
+  public String buildExternalResourceUrl(Resource targetResource) {
+    Resource targetResourceToUse = targetResource;
+    if (targetResourceToUse == null) {
+      targetResourceToUse = resource;
+    }
+    if (targetResourceToUse == null && page != null) {
+      targetResourceToUse = page.adaptTo(Resource.class);
+    }
     String url = build();
-    return urlHandler.externalizeResourceUrl(url, urlMode);
+    return urlHandler.externalizeResourceUrl(url, targetResourceToUse, urlMode);
   }
 
 }

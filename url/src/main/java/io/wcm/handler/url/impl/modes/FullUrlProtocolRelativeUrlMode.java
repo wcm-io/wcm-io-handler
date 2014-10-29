@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import io.wcm.config.api.Configuration;
-import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
@@ -31,6 +29,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
 
@@ -62,25 +61,19 @@ public final class FullUrlProtocolRelativeUrlMode extends AbstractUrlMode {
       }
     }
 
-    Configuration config = adaptable.adaptTo(Configuration.class);
-    if (config == null) {
-      return null;
-    }
+    UrlConfig config = getUrlConfigForTarget(adaptable, targetPage);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes)) {
-      String siteUrlAuthor = config.get(UrlParams.SITE_URL_AUTHOR);
-      if (StringUtils.isNotEmpty(siteUrlAuthor)) {
-        return siteUrlAuthor;
-      }
+    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+      return config.getSiteUrlAuthor();
     }
 
     // return siteUrl in protocol-relative mode
-    return convertToProtocolRelative(config.get(UrlParams.SITE_URL));
+    return convertToProtocolRelative(config.getSiteUrl());
   }
 
   @Override
-  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage) {
+  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource) {
 
     // if integrator template mode with placeholders is active return resource url placeholder
     IntegratorHandler integratorHandler = AdaptTo.notNull(adaptable, IntegratorHandler.class);
@@ -89,21 +82,15 @@ public final class FullUrlProtocolRelativeUrlMode extends AbstractUrlMode {
       return IntegratorPlaceholder.URL_CONTENT_PROXY;
     }
 
-    Configuration config = adaptable.adaptTo(Configuration.class);
-    if (config == null) {
-      return null;
-    }
+    UrlConfig config = getUrlConfigForTarget(adaptable, targetResource);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes)) {
-      String siteUrlAuthor = config.get(UrlParams.SITE_URL_AUTHOR);
-      if (StringUtils.isNotEmpty(siteUrlAuthor)) {
-        return siteUrlAuthor;
-      }
+    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+      return config.getSiteUrlAuthor();
     }
 
     // return secure or non-secure site url
-    return convertToProtocolRelative(config.get(UrlParams.SITE_URL));
+    return convertToProtocolRelative(config.getSiteUrl());
   }
 
   /**

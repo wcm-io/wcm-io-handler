@@ -19,7 +19,10 @@
  */
 package io.wcm.handler.url;
 
+import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
+
+import com.day.cq.wcm.api.Page;
 
 /**
  * Rewrites and builds URLs for links to content pages and resources.
@@ -40,10 +43,24 @@ public interface UrlHandler {
 
   /**
    * Builds and optionally externalizes an URL using a builder pattern.
-   * @param path Content path
+   * @param path Path to start URL building with
    * @return URL builder which allows to chain further optional parameters before building the URL string.
    */
   UrlBuilder get(String path);
+
+  /**
+   * Builds and optionally externalizes an URL using a builder pattern.
+   * @param resource Resource, URL building is started with its path
+   * @return URL builder which allows to chain further optional parameters before building the URL string.
+   */
+  UrlBuilder get(Resource resource);
+
+  /**
+   * Builds and optionally externalizes an URL using a builder pattern.
+   * @param page Page Page, URL building is started with its path
+   * @return URL builder which allows to chain further optional parameters before building the URL string.
+   */
+  UrlBuilder get(Page page);
 
   /**
    * Rewrites given path to current site or context.

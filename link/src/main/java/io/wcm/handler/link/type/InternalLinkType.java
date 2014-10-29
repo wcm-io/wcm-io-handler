@@ -157,16 +157,13 @@ public final class InternalLinkType extends AbstractLinkType {
       queryString = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, queryString);
       fragment = props.get(LinkNameConstants.PN_LINK_FRAGMENT, fragment);
 
-      // build url
-      linkUrl = urlHandler.get(targetPage.getPath())
+      // build link url
+      linkUrl = urlHandler.get(targetPage)
           .selectors(selectors)
           .extension(fileExtension)
           .suffix(suffix)
           .queryString(queryString)
-          .fragment(fragment).build();
-
-      // externalize url
-      linkUrl = urlHandler.get(linkUrl)
+          .fragment(fragment)
           .urlMode(linkArgs.getUrlMode())
           .buildExternalLinkUrl(targetPage);
     }

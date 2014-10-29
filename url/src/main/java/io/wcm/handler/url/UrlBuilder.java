@@ -21,6 +21,7 @@ package io.wcm.handler.url;
 
 import java.util.Set;
 
+import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -89,7 +90,14 @@ public interface UrlBuilder {
 
   /**
    * Build externalized URL that links to a content page.
-   * @param targetPage Target page of internal link (e.g. for checking secure mode)
+   * This may only be used if a page was given in the {@link UrlHandler#get(Page)} call.
+   * @return URL
+   */
+  String buildExternalLinkUrl();
+
+  /**
+   * Build externalized URL that links to a content page.
+   * @param targetPage Target page of internal link (e.g. for checking url configuration and secure mode)
    * @return URL
    */
   String buildExternalLinkUrl(Page targetPage);
@@ -99,5 +107,12 @@ public interface UrlBuilder {
    * @return URL
    */
   String buildExternalResourceUrl();
+
+  /**
+   * Build externalized URL that links to a resource (e.g. image, CSS or JavaScript reference).
+   * @param targetResource Target resource of resource link (e.g. for checking url configuration)
+   * @return URL
+   */
+  String buildExternalResourceUrl(Resource targetResource);
 
 }

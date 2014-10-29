@@ -75,10 +75,15 @@ public final class AppAemContext {
       context.addModelsForPackage("io.wcm.handler.url");
 
       // create current page in site context
-      context.currentPage(context.create().page("/content/unittest/de_test/brand/de",
-          DummyAppTemplate.CONTENT.getTemplatePath()));
-      context.create().page("/content/unittest/de_test/brand/en",
-          DummyAppTemplate.CONTENT.getTemplatePath());
+      context.currentPage(context.create().page("/content/unittest/de_test/brand/de"));
+      context.create().page("/content/unittest/de_test/brand/de/setion");
+      context.create().page("/content/unittest/de_test/brand/de/section/page");
+      context.create().page("/content/unittest/de_test/brand/de/section2");
+      context.create().page("/content/unittest/de_test/brand/de/section2/page2");
+      context.create().page("/content/unittest/de_test/brand/de/section2/page3");
+      context.create().page("/content/unittest/de_test/brand/en");
+      context.create().page("/content/unittest/de_test/brand/en/section");
+      context.create().page("/content/unittest/de_test/brand/en/section/page");
 
       // default site config
       MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de",

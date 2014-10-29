@@ -24,6 +24,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -61,8 +62,10 @@ public interface UrlMode {
    *          {@link UrlHandlerConfig}
    * @param runModes Current sling run modes
    * @param currentPage Current page (is null if not executed in request context)
+   * @param targetResource Target resource to which the resource link points to
+   *          (may be null if it could not be resolved)
    * @return Prefix or null
    */
-  String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage);
+  String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource);
 
 }

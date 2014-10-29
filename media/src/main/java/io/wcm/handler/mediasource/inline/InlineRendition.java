@@ -249,7 +249,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl();
+    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl(this.resource);
   }
 
   /**
@@ -276,7 +276,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl();
+    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl(this.resource);
   }
 
   /**
@@ -299,7 +299,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
-    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl();
+    return urlHandler.get(path).urlMode(this.mediaArgs.getUrlMode()).buildExternalResourceUrl(this.resource);
   }
 
   /**

@@ -166,7 +166,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
       if (rendition != null) {
         video.createSource()
         .setType(profile.getHtmlType())
-        .setSrc(urlHandler.get(rendition.getPath()).buildExternalResourceUrl());
+        .setSrc(urlHandler.get(rendition.getPath()).buildExternalResourceUrl(rendition.adaptTo(Resource.class)));
       }
     }
   }
