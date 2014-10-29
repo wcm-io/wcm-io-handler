@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.url.impl;
 
+import io.wcm.sling.commons.util.Escape;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
@@ -41,10 +43,11 @@ final class Externalizer {
    * Externalizes an URL by applying Sling Mapping. Hostname and scheme are not added because they are added by the
    * link handler depending on site URL configuration and secure/non-secure mode. URLs that are already externalized
    * remain untouched.
-   * @param url Unexternalized URL
+   * @param url Unexternalized URL (without scheme or hostname)
    * @param resolver Resource resolver
    * @param request Request
-   * @return Exernalized URL
+   * @return Exernalized URL without scheme or hostname, but with short URLs (if configured in Sling Mapping is
+   *         configured), and the path is URL-encoded if it contains special chars.
    */
   public static String externalizeUrl(String url, ResourceResolver resolver, SlingHttpServletRequest request) {
 
@@ -94,9 +97,9 @@ final class Externalizer {
    * mangling is applied manually.
    * Hostname and scheme are not added because they are added by the link handler depending on site URL configuration
    * and secure/non-secure mode. URLs that are already externalized remain untouched.
-   * @param url Unexternalized URL
+   * @param url Unexternalized URL (without scheme or hostname)
    * @param request Request
-   * @return Exernalized URL
+   * @return Exernalized URL without scheme or hostname, the path is URL-encoded if it contains special chars.
    */
   public static String externalizeUrlWithoutMapping(String url, SlingHttpServletRequest request) {
 
@@ -118,6 +121,12 @@ final class Externalizer {
     if (request != null) {
       path = StringUtils.defaultString(request.getContextPath()) + path; //NOPMD
     }
+
+    // url-encode path
+    path = Escape.urlEncode(path);
+    path = StringUtils.replace(path, "+", "%20");
+    // replace %2F back to / for better readability
+    path = StringUtils.replace(path, "%2F", "/");
 
     // build full URL again
     return path + (urlRemainder != null ? urlRemainder : "");
