@@ -29,6 +29,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
+import io.wcm.testing.mock.wcmio.sling.models.MockSlingExtensions;
 
 import java.io.IOException;
 
@@ -84,6 +85,9 @@ public final class AppAemContext {
       if (testCallback != null) {
         testCallback.execute(context);
       }
+
+      // wcm.io Sling extensions
+      MockSlingExtensions.setUp(context);
 
       // URL handler-specific parameter definitions
       context.registerService(ParameterProvider.class, new UrlHandlerParameterProviderImpl());
