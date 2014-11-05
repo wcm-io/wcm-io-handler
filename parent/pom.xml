@@ -48,10 +48,6 @@
     <site.url.module.prefix>handler</site.url.module.prefix>
 
     <jdom2.version>2.0.5</jdom2.version>
-
-    <!-- TODO: remove after next release! -->
-    <baseline.skip>true</baseline.skip>
-
   </properties>
 
   <dependencies>
