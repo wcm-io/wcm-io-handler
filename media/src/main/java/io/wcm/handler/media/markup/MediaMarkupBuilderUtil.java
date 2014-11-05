@@ -55,6 +55,7 @@ public final class MediaMarkupBuilderUtil {
    * @param mediaElement Element to be decorated
    * @param resource Resource pointing to JCR node
    * @param refProperty Name of property for media library item reference. If null, default name is used.
+   * @param request Servlet request
    */
   public static void addDiffDecoration(HtmlElement<?> mediaElement, Resource resource, String refProperty,
       SlingHttpServletRequest request) {

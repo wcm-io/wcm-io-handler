@@ -71,6 +71,7 @@ public final class MediaFormatBuilder {
   /**
    * Create a new media format builder.
    * @param name Media format name. Only characters, numbers, hyphen and underline are allowed.
+   * @param applicationId Application id
    * @return Media foramt builder
    */
   public static MediaFormatBuilder create(String name, String applicationId) {

@@ -68,7 +68,7 @@ public interface MediaSource {
   Media resolveMedia(Media media);
 
   /**
-   * Create a ExtJS drop area for given HTML element to enable drag&drop of media library items
+   * Create a ExtJS drop area for given HTML element to enable drag and drop of media library items
    * from content finder to this element.
    * @param element Html element
    * @param mediaRequest Media request to detect media args and property names
