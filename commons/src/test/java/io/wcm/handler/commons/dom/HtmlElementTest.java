@@ -21,6 +21,7 @@ package io.wcm.handler.commons.dom;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
@@ -129,7 +130,8 @@ public class HtmlElementTest {
     assertEquals("value1", underTest.getStyle("test1"));
 
     underTest.setStyle("test2", "value21");
-    assertEquals("test1:value1;test2:value21;", underTest.getStyleString());
+    assertTrue("test1:value1;test2:value21;".equals(underTest.getStyleString())
+        || "test2:value21;test1:value1;".equals(underTest.getStyleString()));
   }
 
   @Test
