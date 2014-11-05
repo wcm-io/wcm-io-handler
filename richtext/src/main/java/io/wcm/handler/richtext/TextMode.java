@@ -30,7 +30,7 @@ public enum TextMode {
   XHTML,
 
   /**
-   * Test is plain text, only convert line breaks to <code>&lt;br/&gt;</code elements.
+   * Test is plain text, only convert line breaks to <code>&lt;br/&gt;</code> elements.
    */
   PLAIN
 

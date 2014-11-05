@@ -44,6 +44,7 @@ public final class RichText {
 
   /**
    * @param richTextRequest Rich text request
+   * @param content Content
    */
   public RichText(RichTextRequest richTextRequest, List<Content> content) {
     this.richTextRequest = richTextRequest;
