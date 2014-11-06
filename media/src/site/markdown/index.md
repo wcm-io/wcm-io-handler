@@ -16,6 +16,7 @@ Media resolving, processing and markup generation.
 ### Documentation
 
 * [Usage][usage]
+* [System configuration][configuration]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -34,6 +35,7 @@ The Media Handler provides:
 
 
 [usage]: usage.html
+[configuration]: configuration.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [url-handler]: ../url/
