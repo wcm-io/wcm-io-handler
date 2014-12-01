@@ -24,6 +24,7 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.sling.commons.request.RequestParam;
@@ -38,6 +39,7 @@ import com.day.cq.commons.DiffInfo;
 import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.components.ComponentContext;
 
 /**
  * Helper methods for {@link MediaMarkupBuilder} implementations.
@@ -141,6 +143,35 @@ public final class MediaMarkupBuilderUtil {
     }
 
     return new Dimension(width, height);
+  }
+
+  /**
+   * Implements check whether to apply drag&amp;drop support as described in {@link DragDropSupport}.
+   * @param mediaRequest Media request
+   * @param wcmComponentContext WCM component context
+   * @return true if drag&amp;droup can be applied.
+   */
+  public static boolean canApplyDragDropSupport(MediaRequest mediaRequest, ComponentContext wcmComponentContext) {
+    switch (mediaRequest.getMediaArgs().getDragDropSupport()) {
+      case ALWAYS:
+        return true;
+      case NEVER:
+        return false;
+      case AUTO:
+        String resourcePath = null;
+        if (mediaRequest.getResource() != null) {
+          resourcePath = mediaRequest.getResource().getPath();
+        }
+        String componentResourcePath = null;
+        if (wcmComponentContext != null && wcmComponentContext.getResource() != null) {
+          componentResourcePath = wcmComponentContext.getResource().getPath();
+        }
+        return resourcePath != null && StringUtils.equals(resourcePath, componentResourcePath);
+      default:
+        throw new IllegalArgumentException("Unsupported drag&drop support mode: "
+            + mediaRequest.getMediaArgs().getDragDropSupport());
+    }
+
   }
 
 }

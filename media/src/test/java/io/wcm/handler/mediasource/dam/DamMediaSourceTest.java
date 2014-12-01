@@ -30,6 +30,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Asset;
@@ -37,8 +39,10 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormatBuilder;
+import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.integrator.IntegratorHandler;
@@ -52,6 +56,10 @@ import org.junit.Test;
 
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.wcm.api.WCMMode;
+import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.DropTarget;
+import com.day.cq.wcm.api.components.EditConfig;
+import com.day.cq.wcm.api.components.EditContext;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -560,6 +568,24 @@ public class DamMediaSourceTest extends AbstractDamTest {
         "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
         renditions.get(1).getUrl());
     assertEquals(EDITORIAL_3COL, renditions.get(1).getMediaFormat());
+  }
+
+  @Test
+  public void testEnableMediaDrop() {
+    // simulate component context
+    ComponentContext wcmComponentContext = mock(ComponentContext.class);
+    context.request().setAttribute(ComponentContext.CONTEXT_ATTR_NAME, wcmComponentContext);
+    when(wcmComponentContext.getResource()).thenReturn(parStandardMediaRef);
+    when(wcmComponentContext.getEditContext()).thenReturn(mock(EditContext.class));
+    when(wcmComponentContext.getEditContext().getEditConfig()).thenReturn(mock(EditConfig.class));
+
+    WCMMode.EDIT.toRequest(context.request());
+    HtmlElement div = new Div();
+    MediaRequest mediaRequest = new MediaRequest(parStandardMediaRef, new MediaArgs().dragDropSupport(DragDropSupport.ALWAYS));
+    DamMediaSource underTest = context.request().adaptTo(DamMediaSource.class);
+
+    underTest.enableMediaDrop(div, mediaRequest);
+    assertEquals(DropTarget.CSS_CLASS_PREFIX + MediaNameConstants.PN_MEDIA_REF, div.getCssClass());
   }
 
 }

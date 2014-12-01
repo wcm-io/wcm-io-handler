@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
@@ -136,6 +137,15 @@ public class MediaArgsTest {
   }
 
   @Test
+  public void testDragDropSupport() {
+    MediaArgs mediaArgs = new MediaArgs();
+    assertEquals(DragDropSupport.AUTO, mediaArgs.getDragDropSupport());
+
+    mediaArgs.dragDropSupport(DragDropSupport.ALWAYS);
+    assertEquals(DragDropSupport.ALWAYS, mediaArgs.getDragDropSupport());
+  }
+
+  @Test
   public void testClone() {
     MediaFormat[] mediaFormats = new MediaFormat[] {
         EDITORIAL_1COL,
@@ -162,6 +172,7 @@ public class MediaArgsTest {
     mediaArgs.forceDownload(true);
     mediaArgs.altText("altText");
     mediaArgs.dummyImageUrl("/dummy/url");
+    mediaArgs.dragDropSupport(DragDropSupport.NEVER);
     mediaArgs.properties(props);
 
     MediaArgs clone = mediaArgs.clone();
@@ -181,6 +192,7 @@ public class MediaArgsTest {
     assertEquals(mediaArgs.isForceDownload(), clone.isForceDownload());
     assertEquals(mediaArgs.getAltText(), clone.getAltText());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
+    assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());
     assertEquals(ImmutableValueMap.copyOf(mediaArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
 
@@ -200,7 +212,7 @@ public class MediaArgsTest {
   public void testToString() throws Exception {
     MediaArgs mediaArgs = new MediaArgs().altText("abc");
     assertEquals(
-        "MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,altText=abc,dummyImage=true]",
+        "MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,altText=abc,dummyImage=true,dragDropSupport=AUTO]",
         mediaArgs.toString());
   }
 

@@ -27,6 +27,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.sling.models.annotations.AemObject;
@@ -168,7 +169,8 @@ public final class DamMediaSource extends AbstractMediaSource {
       name = Text.getName(name);
     }
 
-    if (componentContext != null && componentContext.getEditContext() != null) {
+    if (componentContext != null && componentContext.getEditContext() != null
+        && MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext)) {
       Component componentDefinition = WCMUtils.getComponent(resource);
 
       // set drop target - with path of current component as default resource type
@@ -187,9 +189,10 @@ public final class DamMediaSource extends AbstractMediaSource {
       }).setParameters(params);
 
       componentContext.getEditContext().getEditConfig().getDropTargets().put(dropTarget.getId(), dropTarget);
-    }
-    if (element != null) {
-      element.addCssClass(DropTarget.CSS_CLASS_PREFIX + name);
+
+      if (element != null) {
+        element.addCssClass(DropTarget.CSS_CLASS_PREFIX + name);
+      }
     }
   }
 

@@ -122,7 +122,7 @@ public class MediaTest {
   public void testToString() {
     assertEquals(
         "Media[mediaSource=mediaSource,mediaRequest=MediaRequest[mediaRef=/media/ref,"
-            + "mediaArgs=MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,dummyImage=true]]]",
+            + "mediaArgs=MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,dummyImage=true,dragDropSupport=AUTO]]]",
             underTest.toString());
   }
 

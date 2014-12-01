@@ -20,6 +20,7 @@
 package io.wcm.handler.media;
 
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
@@ -51,6 +52,7 @@ public final class MediaArgs implements Cloneable {
   private String altText;
   private boolean dummyImage = true;
   private String dummyImageUrl;
+  private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
   private ValueMap properties;
 
   /**
@@ -352,6 +354,27 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Drag&amp;Drop support for media builder.
+   * @return Drag&amp;Drop support
+   */
+  public DragDropSupport getDragDropSupport() {
+    return this.dragDropSupport;
+  }
+
+  /**
+   * Drag&amp;Drop support for media builder.
+   * @param value Drag&amp;Drop support
+   * @return this
+   */
+  public MediaArgs dragDropSupport(DragDropSupport value) {
+    if (value == null) {
+      throw new IllegalArgumentException("No null value allowed for drag&drop support.");
+    }
+    this.dragDropSupport = value;
+    return this;
+  }
+
+  /**
    * Custom properties that my be used by application-specific markup builders or processors.
    * @param map Property map. Is merged with properties already set.
    * @return this
@@ -425,6 +448,7 @@ public final class MediaArgs implements Cloneable {
     clone.altText = this.altText;
     clone.dummyImage = this.dummyImage;
     clone.dummyImageUrl = this.dummyImageUrl;
+    clone.dragDropSupport = this.dragDropSupport;
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
     }

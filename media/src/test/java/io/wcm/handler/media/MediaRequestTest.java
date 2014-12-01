@@ -29,7 +29,7 @@ public class MediaRequestTest {
   public void testToString() {
     MediaRequest request = new MediaRequest("/path", null);
     assertEquals(
-        "MediaRequest[mediaRef=/path,mediaArgs=MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,dummyImage=true]]",
+        "MediaRequest[mediaRef=/path,mediaArgs=MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,dummyImage=true,dragDropSupport=AUTO]]",
         request.toString());
   }
 

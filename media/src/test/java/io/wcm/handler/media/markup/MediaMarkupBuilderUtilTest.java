@@ -21,6 +21,8 @@ package io.wcm.handler.media.markup;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
@@ -43,6 +45,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.components.ComponentContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MediaMarkupBuilderUtilTest {
@@ -61,6 +64,8 @@ public class MediaMarkupBuilderUtilTest {
   private Page page;
   @Mock
   private SlingHttpServletRequest request;
+  @Mock
+  private ComponentContext componentContext;
 
   @Before
   public void setUp() throws Exception {
@@ -106,6 +111,35 @@ public class MediaMarkupBuilderUtilTest {
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
     assertEquals(MediaMarkupBuilder.DUMMY_MIN_DIMENSION, dimension.getWidth());
     assertEquals(MediaMarkupBuilder.DUMMY_MIN_DIMENSION, dimension.getHeight());
+  }
+
+  @Test
+  public void testCanApplyDragDropSupport_DragDropSupport_Never() {
+    MediaRequest mediaRequest = new MediaRequest(resource, new MediaArgs().dragDropSupport(DragDropSupport.NEVER));
+    assertFalse(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
+  }
+
+  @Test
+  public void testCanApplyDragDropSupport_DragDropSupport_Always() {
+    MediaRequest mediaRequest = new MediaRequest(resource, new MediaArgs().dragDropSupport(DragDropSupport.ALWAYS));
+    assertTrue(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
+  }
+
+  @Test
+  public void testCanApplyDragDropSupport_DragDropSupport_Auto() {
+    // not allowed if not resource is specified
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().dragDropSupport(DragDropSupport.AUTO));
+    assertFalse(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
+
+    // not allowed if resource paths do not match
+    mediaRequest = new MediaRequest(resource, new MediaArgs().dragDropSupport(DragDropSupport.AUTO));
+    assertFalse(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
+
+    // allowed if resource paths do match
+    when(resource.getPath()).thenReturn("/content/resource/path");
+    when(componentContext.getResource()).thenReturn(resource);
+    mediaRequest = new MediaRequest(resource, new MediaArgs().dragDropSupport(DragDropSupport.AUTO));
+    assertTrue(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
   }
 
 }
