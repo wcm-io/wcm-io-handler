@@ -51,11 +51,18 @@ public class CropRenditionHandlerTest extends AbstractDamTest {
   }
 
   /**
-   * Tests if the candidates contain 2 renditions
+   * Tests if the candidates contain 8 renditions
    */
   @Test
   public void testNumberOfCandidates() {
-    assertEquals("there must be two candidates", 2, underTest.getAvailableRenditions().size());
+    assertEquals("there must be two candidates", 7, underTest.getAvailableRenditions().size());
+  }
+
+  @Test
+  public void testFirstCandidateIsVirtualRendition() {
+    RenditionMetadata virtualRendition = underTest.getAvailableRenditions().iterator().next();
+    assertEquals("/content/dam/test/standard.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpg.image_file.960.315.0,0,960,315.file/cq5dam.web.1280.1280.jpg",
+        virtualRendition.getMediaPath(false));
   }
 
   /**

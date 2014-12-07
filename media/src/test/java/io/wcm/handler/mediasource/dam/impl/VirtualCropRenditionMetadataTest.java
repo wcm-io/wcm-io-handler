@@ -40,6 +40,7 @@ import com.day.image.Layer;
 public class VirtualCropRenditionMetadataTest extends AbstractDamTest {
 
   private Rendition rendition;
+  private RenditionMetadata originalRendition;
 
   @Before
   public void setUp() throws Exception {
@@ -50,6 +51,7 @@ public class VirtualCropRenditionMetadataTest extends AbstractDamTest {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     Asset asset = media.getAsset().adaptTo(Asset.class);
     rendition = asset.getRendition("cq5dam.web.215.102.jpg");
+    originalRendition = new RenditionMetadata(asset.getRendition("original"));
   }
 
   @Test
@@ -94,5 +96,15 @@ public class VirtualCropRenditionMetadataTest extends AbstractDamTest {
     assertFalse(m1.equals(m3));
   }
 
+  @Test
+  public void testCompareTo() {
+    VirtualCropRenditionMetadata virtualRendition = new VirtualCropRenditionMetadata(rendition, 108, 51,
+        new CropDimension(5, 5, 30, 25));
+    RenditionMetadata biggerRendition = new RenditionMetadata(rendition);
+    assertEquals(-1, virtualRendition.compareTo(originalRendition));
+    assertEquals(-1, virtualRendition.compareTo(biggerRendition));
+    assertEquals(1, originalRendition.compareTo(virtualRendition));
+    assertEquals(1, biggerRendition.compareTo(virtualRendition));
+  }
 
 }

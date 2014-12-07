@@ -19,6 +19,12 @@
            "sling:resourceType":"/apps/test/components/media",
            "jcr:primaryType":"nt:unstructured"
          },
+         "par_responsive_mediaRef_crop":{
+           "mediaRef":"/content/dam/test/standard.jpg",
+           "mediaCrop": "10,5,225,107",
+           "sling:resourceType":"/apps/test/components/media",
+           "jcr:primaryType":"nt:unstructured"
+         },
          "par_standard_mediaRef_altText":{
            "mediaRef":"/content/dam/test/standard.jpg",
            "mediaAltText":"Alt. Text from Paragraph",

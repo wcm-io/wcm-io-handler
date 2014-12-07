@@ -23,7 +23,6 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,11 +33,10 @@ import com.day.cq.dam.api.Rendition;
 /**
  * Handles resolving DAM renditions and resizing for media handler.
  */
-class CropRenditionHandler extends DefaultRenditionHandler implements RenditionHandler {
+class CropRenditionHandler extends DefaultRenditionHandler {
 
   private static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\.1280\\.1280\\..*$");
-
-  private final Set<RenditionMetadata> renditions;
+  private final CropDimension cropDimension;
 
   /**
    * @param asset DAM asset
@@ -46,50 +44,27 @@ class CropRenditionHandler extends DefaultRenditionHandler implements RenditionH
    */
   public CropRenditionHandler(Asset asset, CropDimension cropDimension) {
     super(asset);
+    this.cropDimension = cropDimension;
+  }
 
-    // get original rendition
-    RenditionMetadata originalRendition = new RenditionMetadata(asset.getOriginal());
-
-    // check if default web rendition exists - use this one, otherwise the original
-    RenditionMetadata sourceRendition = null;
-    for (Rendition rendition : asset.getRenditions()) {
-      if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getName()).matches()) {
-        sourceRendition = new RenditionMetadata(rendition);
-        if (sourceRendition.getWidth() == 0 || sourceRendition.getHeight() == 0) {
-          sourceRendition = null;
-        }
-        break;
+  @Override
+  protected void addRendition(Set<RenditionMetadata> candidates, Rendition rendition) {
+    if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getName()).matches()) {
+      RenditionMetadata sourceRendition = new RenditionMetadata(rendition);
+      String originalFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
+      boolean isImage = FileExtension.isImage(originalFileExtension);
+      if (isImage
+          && sourceRendition.getWidth() >= cropDimension.getRight()
+          && sourceRendition.getHeight() >= cropDimension.getBottom()) {
+        // add virtual rendition for cropped image
+        candidates.add(new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
+            cropDimension.getWidth(), cropDimension.getHeight(), cropDimension));
       }
     }
-    if (sourceRendition == null) {
-      sourceRendition = originalRendition;
+    else {
+      super.addRendition(candidates, rendition);
     }
 
-    // check if original rendition is an image
-    String originalFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
-    boolean isImage = FileExtension.isImage(originalFileExtension);
 
-    // check if original image is not an image because otherwise cropping is not possible
-    this.renditions = new TreeSet<>();
-    // check if original image is big enough because otherwise cropping is not possible
-    if (isImage
-        && sourceRendition.getWidth() >= cropDimension.getRight()
-        && sourceRendition.getHeight() >= cropDimension.getBottom()) {
-      // add virtual rendition for cropped image
-      this.renditions.add(new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
-          cropDimension.getWidth(), cropDimension.getHeight(), cropDimension));
-    }
-
-    // always add original rendition
-    this.renditions.add(originalRendition);
   }
-
-  /**
-   * @return All renditions that are available for this asset
-   */
-  @Override
-  protected Set<RenditionMetadata> getAvailableRenditions() {
-    return this.renditions;
-  }
-
 }

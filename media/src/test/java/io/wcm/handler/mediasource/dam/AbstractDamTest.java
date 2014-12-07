@@ -69,6 +69,9 @@ public abstract class AbstractDamTest {
   // paragraph with mediaRef property pointing to {@link #MEDIAITEM_PATH_STANDARD} with cropping attributes
   protected Resource parStandardMediaRefCrop;
 
+  // paragraph with mediaRef property pointing to {@link #MEDIAITEM_PATH_STANDARD} with cropping attributes
+  protected Resource parResponsiveMediaRefCrop;
+
   // paragraph with mediaRef property pointing to {@link #MEDIAITEM_PATH_STANDARD} with editorial alt.text
   protected Resource parStandardMediaRefAltText;
 
@@ -117,6 +120,9 @@ public abstract class AbstractDamTest {
 
     parStandardMediaRefCrop = testPage.getContentResource("content/par_standard_mediaRef_crop");
     assertNotNull("par_standard_mediaRef_crop exists?", parStandardMediaRefCrop);
+
+    parResponsiveMediaRefCrop = testPage.getContentResource("content/par_responsive_mediaRef_crop");
+    assertNotNull("par_responsive_mediaRef_crop exists?", parResponsiveMediaRefCrop);
 
     parStandardMediaRefAltText = testPage.getContentResource("content/par_standard_mediaRef_altText");
     assertNotNull("par_standard_mediaRef_altText exists?", parStandardMediaRefAltText);

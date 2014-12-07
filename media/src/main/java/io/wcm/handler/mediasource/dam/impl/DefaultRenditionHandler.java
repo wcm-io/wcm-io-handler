@@ -35,6 +35,7 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -44,36 +45,45 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 class DefaultRenditionHandler implements RenditionHandler {
 
-  private final Set<RenditionMetadata> renditions;
+  protected Set<RenditionMetadata> renditions;
   private final RenditionMetadata originalRendition;
+  protected final Asset asset;
 
   /**
    * @param asset DAM asset
    */
   public DefaultRenditionHandler(Asset asset) {
-
-    // gather rendition infos of all renditions and sort them by size (smallest first)
-    this.renditions = new TreeSet<RenditionMetadata>();
-    RenditionMetadata orgRendition = null;
-    for (Rendition rendition : asset.getRenditions()) {
-      // ignore CQ thumbnail renditions
-      if (StringUtils.startsWith(rendition.getName(), DamConstants.PREFIX_ASSET_THUMBNAIL + ".")) {
-        continue;
-      }
-      RenditionMetadata renditionMetadata = new RenditionMetadata(rendition);
-      this.renditions.add(renditionMetadata);
-      if (StringUtils.equals(rendition.getName(), DamConstants.ORIGINAL_FILE)) {
-        orgRendition = renditionMetadata;
-      }
-    }
-    this.originalRendition = orgRendition;
+    this.asset = asset;
+    originalRendition = new RenditionMetadata(asset.getOriginal());
   }
 
   /**
    * @return All renditions that are available for this asset
    */
   protected Set<RenditionMetadata> getAvailableRenditions() {
+    if (this.renditions == null) {
+      // gather rendition infos of all renditions and sort them by size (smallest or virtual crop rendition first)
+      Set<RenditionMetadata> candidates = new TreeSet<RenditionMetadata>();
+      for (Rendition rendition : asset.getRenditions()) {
+        addRendition(candidates, rendition);
+      }
+
+      this.renditions = ImmutableSet.<RenditionMetadata>copyOf(candidates);
+    }
     return this.renditions;
+  }
+
+  /**
+   * adds rendition to the list of candidates, if it should be available for resolving
+   * @param candidates
+   * @param rendition
+   */
+  protected void addRendition(Set<RenditionMetadata> candidates, Rendition rendition) {
+    if (!StringUtils.startsWith(rendition.getName(), DamConstants.PREFIX_ASSET_THUMBNAIL + ".")) {
+      // ignore CQ thumbnail renditions
+      RenditionMetadata renditionMetadata = new RenditionMetadata(rendition);
+      candidates.add(renditionMetadata);
+    }
   }
 
   /**
