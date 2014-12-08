@@ -45,9 +45,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 class DefaultRenditionHandler implements RenditionHandler {
 
-  protected Set<RenditionMetadata> renditions;
+  private Set<RenditionMetadata> renditions;
   private final RenditionMetadata originalRendition;
-  protected final Asset asset;
+  private final Asset asset;
 
   /**
    * @param asset DAM asset
@@ -60,14 +60,13 @@ class DefaultRenditionHandler implements RenditionHandler {
   /**
    * @return All renditions that are available for this asset
    */
-  protected Set<RenditionMetadata> getAvailableRenditions() {
+  Set<RenditionMetadata> getAvailableRenditions() {
     if (this.renditions == null) {
       // gather rendition infos of all renditions and sort them by size (smallest or virtual crop rendition first)
       Set<RenditionMetadata> candidates = new TreeSet<RenditionMetadata>();
       for (Rendition rendition : asset.getRenditions()) {
         addRendition(candidates, rendition);
       }
-
       this.renditions = ImmutableSet.<RenditionMetadata>copyOf(candidates);
     }
     return this.renditions;
@@ -78,12 +77,21 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param candidates
    * @param rendition
    */
-  protected void addRendition(Set<RenditionMetadata> candidates, Rendition rendition) {
+  private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition) {
+    // ignore CQ thumbnail renditions
     if (!StringUtils.startsWith(rendition.getName(), DamConstants.PREFIX_ASSET_THUMBNAIL + ".")) {
-      // ignore CQ thumbnail renditions
-      RenditionMetadata renditionMetadata = new RenditionMetadata(rendition);
+      RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
       candidates.add(renditionMetadata);
     }
+  }
+
+  /**
+   * Create rendition metadata for given rendition. May be overridden by subclasses.
+   * @param rendition Rendition
+   * @return Rendition metadata
+   */
+  protected RenditionMetadata createRenditionMetadata(Rendition rendition) {
+    return new RenditionMetadata(rendition);
   }
 
   /**

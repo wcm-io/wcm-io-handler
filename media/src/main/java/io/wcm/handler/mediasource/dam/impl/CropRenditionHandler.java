@@ -22,7 +22,6 @@ package io.wcm.handler.mediasource.dam.impl;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +36,7 @@ class CropRenditionHandler extends DefaultRenditionHandler {
 
   private static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\.1280\\.1280\\..*$");
   private final CropDimension cropDimension;
+  private final String assetFileExtension;
 
   /**
    * @param asset DAM asset
@@ -45,26 +45,24 @@ class CropRenditionHandler extends DefaultRenditionHandler {
   public CropRenditionHandler(Asset asset, CropDimension cropDimension) {
     super(asset);
     this.cropDimension = cropDimension;
+    assetFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
   }
 
   @Override
-  protected void addRendition(Set<RenditionMetadata> candidates, Rendition rendition) {
+  protected RenditionMetadata createRenditionMetadata(Rendition rendition) {
     if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getName()).matches()) {
       RenditionMetadata sourceRendition = new RenditionMetadata(rendition);
-      String originalFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
-      boolean isImage = FileExtension.isImage(originalFileExtension);
+      boolean isImage = FileExtension.isImage(assetFileExtension);
       if (isImage
           && sourceRendition.getWidth() >= cropDimension.getRight()
           && sourceRendition.getHeight() >= cropDimension.getBottom()) {
         // add virtual rendition for cropped image
-        candidates.add(new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
-            cropDimension.getWidth(), cropDimension.getHeight(), cropDimension));
+        return new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
+            cropDimension.getWidth(), cropDimension.getHeight(), cropDimension);
       }
     }
-    else {
-      super.addRendition(candidates, rendition);
-    }
-
-
+    // fallback to default handling
+    return super.createRenditionMetadata(rendition);
   }
+
 }
