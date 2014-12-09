@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert" issue="WCMIO-39">
         Drop Target Area definition in DamMediaSource should provide more control for activation and deactivation on the component level.
       </action>
+      <action type="update" dev="isechyn" issue="WCMIO-40">
+        CropRenditionHandler should prefer the virtual crop rendition but still consider other renditions for media resolving.
+      </action>
     </release>
 
     <release version="0.5.0" date="2014-11-05">
