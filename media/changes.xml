@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="0.5.2" date="2015-01-12">
+    <release version="0.6.0" date="2015-01-12">
       <action type="update" dev="sseifert" issue="WCMIO-39">
         Drop Target Area definition in DamMediaSource should provide more control for activation and deactivation on the component level.
       </action>
