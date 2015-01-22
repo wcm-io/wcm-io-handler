@@ -67,9 +67,19 @@ class DefaultRenditionHandler implements RenditionHandler {
       for (Rendition rendition : asset.getRenditions()) {
         addRendition(candidates, rendition);
       }
+      candidates = postProcessCandidates(candidates);
       this.renditions = ImmutableSet.<RenditionMetadata>copyOf(candidates);
     }
     return this.renditions;
+  }
+
+  /**
+   * Provides an option to post process the list of candidates. Can be overriden in subclasses
+   * @param candidates
+   * @return {@link Set} of {@link RenditionMetadata}
+   */
+  protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
+    return candidates;
   }
 
   /**

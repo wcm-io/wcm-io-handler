@@ -55,7 +55,7 @@ public class CropRenditionHandlerTest extends AbstractDamTest {
    */
   @Test
   public void testNumberOfCandidates() {
-    assertEquals("there must be two candidates", 7, underTest.getAvailableRenditions().size());
+    assertEquals("there must be two candidates", 8, underTest.getAvailableRenditions().size());
   }
 
   @Test

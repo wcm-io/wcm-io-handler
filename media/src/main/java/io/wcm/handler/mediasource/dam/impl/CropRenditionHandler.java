@@ -22,12 +22,14 @@ package io.wcm.handler.mediasource.dam.impl;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.Rendition;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -49,20 +51,29 @@ class CropRenditionHandler extends DefaultRenditionHandler {
   }
 
   @Override
-  protected RenditionMetadata createRenditionMetadata(Rendition rendition) {
-    if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getName()).matches()) {
-      RenditionMetadata sourceRendition = new RenditionMetadata(rendition);
-      boolean isImage = FileExtension.isImage(assetFileExtension);
-      if (isImage
-          && sourceRendition.getWidth() >= cropDimension.getRight()
-          && sourceRendition.getHeight() >= cropDimension.getBottom()) {
-        // add virtual rendition for cropped image
-        return new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
-            cropDimension.getWidth(), cropDimension.getHeight(), cropDimension);
+  protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
+    TreeSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);
+    Iterator<RenditionMetadata> descendingIterator = processedCandidates.descendingIterator();
+    VirtualCropRenditionMetadata cropRendition = null;
+    while (descendingIterator.hasNext()) {
+      RenditionMetadata rendition = descendingIterator.next();
+      if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getRendition().getName()).matches()) {
+        RenditionMetadata sourceRendition = new RenditionMetadata(rendition.getRendition());
+        boolean isImage = FileExtension.isImage(assetFileExtension);
+        if (isImage
+            && sourceRendition.getWidth() >= cropDimension.getRight()
+            && sourceRendition.getHeight() >= cropDimension.getBottom()) {
+          // found biggest virtual rendition for cropped image
+          cropRendition = new VirtualCropRenditionMetadata(sourceRendition.getRendition(),
+              cropDimension.getWidth(), cropDimension.getHeight(), cropDimension);
+          break;
+        }
       }
     }
-    // fallback to default handling
-    return super.createRenditionMetadata(rendition);
+    if (cropRendition != null) {
+      processedCandidates.add(cropRendition);
+    }
+    return processedCandidates;
   }
 
 }
