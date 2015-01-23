@@ -64,8 +64,9 @@ public final class ExternalLinkType extends AbstractLinkType {
 
   @Override
   public boolean accepts(String linkRef) {
-    // accept as external link if the ref contains "://"
-    return StringUtils.contains(linkRef, "://");
+    // accept as external link if the ref contains "://" and mailto links
+    return StringUtils.contains(linkRef, "://")
+        || StringUtils.startsWith(linkRef, "mailto:");
   }
 
   @Override

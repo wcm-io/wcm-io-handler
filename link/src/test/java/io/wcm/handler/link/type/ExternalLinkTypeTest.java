@@ -28,6 +28,7 @@ import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -93,6 +94,16 @@ public class ExternalLinkTypeTest {
     ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID,
         LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://dummy");
     assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
+  }
+
+  @Test
+  public void testAccepts() throws Exception {
+    LinkType underTest = AdaptTo.notNull(adaptable(), ExternalLinkType.class);
+
+    assertTrue(underTest.accepts("http://hostname"));
+    assertTrue(underTest.accepts("https://hostname"));
+    assertTrue(underTest.accepts("mailto:abc@xx.yy"));
+    assertFalse(underTest.accepts("/relative/path"));
   }
 
 }
