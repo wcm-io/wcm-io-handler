@@ -54,7 +54,9 @@ class DefaultRenditionHandler implements RenditionHandler {
    */
   public DefaultRenditionHandler(Asset asset) {
     this.asset = asset;
-    originalRendition = new RenditionMetadata(asset.getOriginal());
+
+    Rendition damOriginalRendition = asset.getOriginal();
+    originalRendition = damOriginalRendition != null ? new RenditionMetadata(damOriginalRendition) : null;
   }
 
   /**
