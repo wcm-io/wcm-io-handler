@@ -27,6 +27,9 @@
       <action type="fix" dev="sseifert" issue="WCMIO-40">
         Avoid NPE if original rendition is not present.
       </action>
+      <action type="update" dev="isechyn" issue="WCMIO-44">
+        CropRenditionHandler should consider the biggest web enabled rendition
+      </action>
     </release>
 
     <release version="0.6.0" date="2015-01-12">

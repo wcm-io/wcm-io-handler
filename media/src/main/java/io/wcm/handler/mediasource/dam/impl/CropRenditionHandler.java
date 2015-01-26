@@ -36,7 +36,7 @@ import com.day.cq.dam.api.Asset;
  */
 class CropRenditionHandler extends DefaultRenditionHandler {
 
-  private static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\.1280\\.1280\\..*$");
+  private static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\..*$");
   private final CropDimension cropDimension;
   private final String assetFileExtension;
 
@@ -50,6 +50,12 @@ class CropRenditionHandler extends DefaultRenditionHandler {
     assetFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
   }
 
+  /**
+   * Searches for the biggest web enabled rendition and, if exists, adds a {@link VirtualCropRenditionMetadata} to the
+   * list
+   * @param candidates
+   * @return {@link Set} of {@link RenditionMetadata}
+   */
   @Override
   protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
     TreeSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);

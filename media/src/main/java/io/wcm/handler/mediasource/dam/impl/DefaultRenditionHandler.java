@@ -76,7 +76,7 @@ class DefaultRenditionHandler implements RenditionHandler {
   }
 
   /**
-   * Provides an option to post process the list of candidates. Can be overriden in subclasses
+   * Provides an option to post process the list of candidates. Can be overridden in subclasses
    * @param candidates
    * @return {@link Set} of {@link RenditionMetadata}
    */
