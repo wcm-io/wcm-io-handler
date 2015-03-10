@@ -165,11 +165,11 @@ Example:
 @Application(ApplicationProviderImpl.APPLICATION_ID)
 public class MediaHandlerConfigImpl extends AbstractMediaHandlerConfig {
 
-  private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS = 
+  private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS =
       ImmutableSet.of(
           MediaFormats.DOWNLOAD
       );
-  private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS = 
+  private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =
       ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
           SimpleImageMediaMarkupBuilder.class,
           DummyImageMediaMarkupBuilder.class
