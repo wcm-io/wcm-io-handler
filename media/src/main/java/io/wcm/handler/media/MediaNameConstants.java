@@ -97,4 +97,14 @@ public final class MediaNameConstants {
    */
   public static final String CSS_DIFF_REMOVED = "wcmio_mediahandler_wcm_diff_removed";
 
+  /**
+   * Property name for responsive breakpoint (mq)
+   */
+  public static final String PROP_BREAKPOINT = "mq";
+
+  /**
+   * Property name for setting additional CSS classes
+   */
+  public static final String PROP_CSS_CLASS = "cssClass";
+
 }

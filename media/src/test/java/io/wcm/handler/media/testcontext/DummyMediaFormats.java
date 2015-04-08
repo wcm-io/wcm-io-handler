@@ -21,6 +21,7 @@ package io.wcm.handler.media.testcontext;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
 import static io.wcm.handler.media.testcontext.AppAemContext.APPLICATION_ID;
+import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.format.MediaFormat;
 
 public final class DummyMediaFormats {
@@ -495,6 +496,20 @@ public final class DummyMediaFormats {
       .label("Ratio (16:10)")
       .ratio(1.6)
       .extensions("gif","jpg","png")
+      .build();
+
+  /* formats for testing responsive images */
+  public static final MediaFormat RESPONSIVE_32_9_M1 = create("responsive_32_9_m1", APPLICATION_ID)
+      .label("Responsive 32:9")
+      .fixedDimension(1281, 360)
+      .extensions("gif", "jpg", "jpeg", "png")
+      .property(MediaNameConstants.PROP_BREAKPOINT, "M1")
+      .build();
+  public static final MediaFormat RESPONSIVE_32_9_L1 = create("responsive_32_9_l1", APPLICATION_ID)
+      .label("Responsive 32:9")
+      .fixedDimension(1920, 540)
+      .extensions("gif", "jpg", "jpeg", "png")
+      .property(MediaNameConstants.PROP_BREAKPOINT, "L1")
       .build();
 
 }

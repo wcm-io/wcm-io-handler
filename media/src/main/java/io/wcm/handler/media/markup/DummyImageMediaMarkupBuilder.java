@@ -27,7 +27,6 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -44,13 +43,13 @@ import org.osgi.annotation.versioning.ProviderType;
 import com.day.cq.wcm.api.WCMMode;
 
 /**
- * Generates a dummy image as edit placeholder in WCM edit mode, if no media item is set.
+ * Generates a simple dummy image as edit placeholder in WCM edit mode, if no media item is set.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class DummyImageMediaMarkupBuilder implements MediaMarkupBuilder {
+public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuilder {
 
   @Self
   private Adaptable adaptable;
@@ -87,6 +86,9 @@ public final class DummyImageMediaMarkupBuilder implements MediaMarkupBuilder {
         .buildExternalResourceUrl();
     Image image = new Image(dummyImageUrl, dimension.getWidth(), dimension.getHeight())
     .addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
+
+    // set additional attributes
+    setAdditionalAttributes(image, media.getMediaRequest().getMediaArgs());
 
     // enable drag&drop for media source - if none is specified use first one defined in config
     MediaSource mediaSource = media.getMediaSource();

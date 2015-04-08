@@ -25,17 +25,12 @@ import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.sling.models.annotations.AemObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ConsumerType;
-
-import com.day.cq.wcm.api.WCMMode;
 
 /**
  * Basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
@@ -44,12 +39,7 @@ import com.day.cq.wcm.api.WCMMode;
     SlingHttpServletRequest.class, Resource.class
 })
 @ConsumerType
-public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
-
-  @AemObject(optional = true)
-  private WCMMode wcmMode;
-  @SlingObject(optional = true)
-  private SlingHttpServletRequest request;
+public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuilder {
 
   @Override
   public final boolean accepts(Media media) {
@@ -65,29 +55,11 @@ public class SimpleImageMediaMarkupBuilder implements MediaMarkupBuilder {
     // render media element for rendition
     HtmlElement<?> mediaElement = getImageElement(media);
 
+    // set additional attributes
+    setAdditionalAttributes(mediaElement, media.getMediaRequest().getMediaArgs());
+
     // further processing in edit or preview mode
-    Resource resource = media.getMediaRequest().getResource();
-    if (mediaElement != null && resource != null && wcmMode != null) {
-
-      switch (wcmMode) {
-        case EDIT:
-          // enable drag&drop from content finder
-          media.getMediaSource().enableMediaDrop(mediaElement, media.getMediaRequest());
-          break;
-
-        case PREVIEW:
-          // add diff decoration
-          if (request != null) {
-            String refProperty = StringUtils.defaultString(media.getMediaRequest().getRefProperty(), MediaNameConstants.PN_MEDIA_REF);
-            MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request);
-          }
-          break;
-
-        default:
-          // do nothing
-      }
-
-    }
+    applyWcmMarkup(mediaElement, media);
 
     return mediaElement;
   }
