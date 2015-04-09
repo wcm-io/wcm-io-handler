@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
@@ -241,7 +242,7 @@ public class SuffixBuilder {
    * @param parameterMap map of key-value pairs
    * @return the suffix containing the relative path to the resource (and eventually other parts)
    */
-  public String build(Page page, Page suffixBasePage, SortedMap<String, String> parameterMap) {
+  public String build(Page page, Page suffixBasePage, Map<String, String> parameterMap) {
     return build(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class), parameterMap);
   }
 
@@ -297,7 +298,7 @@ public class SuffixBuilder {
    * @param parameterMap map of key-value pairs
    * @return the suffix containing the relative path to the resource (and eventually other parts)
    */
-  public String build(Resource resource, Resource suffixBaseResource, SortedMap<String, String> parameterMap) {
+  public String build(Resource resource, Resource suffixBaseResource, Map<String, String> parameterMap) {
     return this.build(parameterMap, getRelativePath(resource, suffixBaseResource));
   }
 
@@ -368,6 +369,18 @@ public class SuffixBuilder {
   }
 
   /**
+   * Constructs a suffix that contains a key-value pair with a numerical value. Depending on the
+   * {@link SuffixStateKeepingStrategy}, the suffix contains further
+   * parts from the current request that should be kept when constructing new links.
+   * @param key the key
+   * @param value the value
+   * @return the suffix containing an encoded key value-pair (and eventually other parts)
+   */
+  public String build(String key, long value) {
+    return build(key, Long.toString(value));
+  }
+
+  /**
    * Constructs a suffix that contains a key-value pair with a boolean value. Depending on the
    * {@link SuffixStateKeepingStrategy}, the suffix contains further
    * parts from the current request that should be kept when constructing new links.
@@ -386,7 +399,7 @@ public class SuffixBuilder {
    * @param parameterMap map of key-value pairs
    * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
    */
-  public String build(SortedMap<String, String> parameterMap) {
+  public String build(Map<String, String> parameterMap) {
     return this.build(parameterMap, new String[0]);
   }
 
@@ -399,7 +412,7 @@ public class SuffixBuilder {
    * @param parameterMap map of key-value pairs
    * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
    */
-  String build(Collection<Resource> resources, Resource baseResource, SortedMap<String, String> parameterMap) {
+  String build(Collection<Resource> resources, Resource baseResource, Map<String, String> parameterMap) {
     String[] relativePaths = new String[resources.size()];
     Iterator<Resource> it = resources.iterator();
     int i = 0;
@@ -418,7 +431,8 @@ public class SuffixBuilder {
    * @param resourcePaths resource paths to be added
    * @return an URL-safe suffix
    */
-  private String build(SortedMap<String, String> parameterMap, String... resourcePaths) {
+  private String build(Map<String, String> parameterMap, String... resourcePaths) {
+    SortedMap<String, String> sortedParameterMap = new TreeMap<>(parameterMap);
 
     // gather resource paths in a treeset (having them in a defined order helps with caching)
     Set<String> resourcePathsSet = new TreeSet<>();
@@ -429,9 +443,9 @@ public class SuffixBuilder {
       if (nextPart.indexOf(KEY_VALUE_DELIMITER) > 0) {
         String key = decodeKey(nextPart);
         // decode and keep the part if it is not overriden in the given parameter-map
-        if (!parameterMap.containsKey(key)) {
+        if (!sortedParameterMap.containsKey(key)) {
           String value = decodeValue(nextPart);
-          parameterMap.put(key, value);
+          sortedParameterMap.put(key, value);
         }
       }
       else {
@@ -457,7 +471,7 @@ public class SuffixBuilder {
     }
 
     // now encode all entries from the parameter map
-    for (Entry<String, String> entry : parameterMap.entrySet()) {
+    for (Entry<String, String> entry : sortedParameterMap.entrySet()) {
       String value = entry.getValue();
       if (value == null) {
         // don't add suffix part if value is null

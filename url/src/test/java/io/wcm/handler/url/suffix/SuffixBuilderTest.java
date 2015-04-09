@@ -37,8 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +49,7 @@ import org.junit.Test;
 
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Unit test for {@link SuffixBuilder}
@@ -178,6 +178,20 @@ public class SuffixBuilderTest {
     assertEquals("abc=123", suffix);
   }
 
+
+  /**
+   * Test method for {@link SuffixBuilder#build(String, long)}
+   */
+  @Test
+  public void testBuildStringLong() {
+    // construct suffix with numerical key/value-pair
+    String key = "abc";
+    long value = 123456789012345L;
+    String suffix = getBuilder().build(key, value);
+    // suffix should contain key=value
+    assertEquals("abc=123456789012345", suffix);
+  }
+
   /**
    * Test method for {@link SuffixBuilder#build(String, boolean)}
    */
@@ -295,15 +309,16 @@ public class SuffixBuilderTest {
   }
 
   /**
-   * Test method for {@link SuffixBuilder#build(SortedMap)}
+   * Test method for {@link SuffixBuilder#build(Map)}
    */
   @Test
   public void testBuildSortedMapOfStringString() {
     // construct suffix to a resource with multiple key/value-pairs
-    SortedMap<String, String> map = new TreeMap<String, String>();
-    map.put("abc", "123");
-    map.put("ghi", "789");
-    map.put("def", "456");
+    Map<String, String> map = ImmutableMap.<String, String>builder()
+        .put("abc", "123")
+        .put("ghi", "789")
+        .put("def", "456")
+        .build();
     String suffix = getBuilder().build(map);
     // suffix should contain all entries, in alphabetical order separated with /
     assertEquals("abc=123" + SUFFIX_PART_DELIMITER + "def=456" + SUFFIX_PART_DELIMITER + "ghi=789", suffix);
@@ -311,7 +326,7 @@ public class SuffixBuilderTest {
 
   /**
    * tests escaping/unescaping functionality by constructing complex suffix with
-   * {@link SuffixBuilder#build(java.util.Collection, Resource, SortedMap)} and then decomposing it using
+   * {@link SuffixBuilder#build(java.util.Collection, Resource, Map)} and then decomposing it using
    * {@link SuffixParser#getPart(String, String)} and {@link SuffixParser#getResource(Filter)}
    * @throws UnsupportedEncodingException
    */
@@ -322,9 +337,11 @@ public class SuffixBuilderTest {
     String nastyValue1 = NASTY_STRING_VALUE + "1";
     String nastyKey2 = NASTY_STRING_VALUE + "2";
     String nastyValue2 = NASTY_STRING_VALUE + "2";
-    SortedMap<String, String> keyValueMap = new TreeMap<String, String>();
-    keyValueMap.put(nastyKey1, nastyValue1);
-    keyValueMap.put(nastyKey2, nastyValue2);
+
+    Map<String, String> keyValueMap = ImmutableMap.<String, String>builder()
+        .put(nastyKey1, nastyValue1)
+        .put(nastyKey2, nastyValue2)
+        .build();
 
     // create resources with nasty (but valid) node name
     Page basePage = context.create().page("/content/a", "template", "title");
@@ -377,9 +394,11 @@ public class SuffixBuilderTest {
     String slashValue1 = "my/value1";
     String slashKey2 = "my/key2";
     String slashValue2 = "my/value2";
-    SortedMap<String, String> keyValueMap = new TreeMap<String, String>();
-    keyValueMap.put(slashKey1, slashValue1);
-    keyValueMap.put(slashKey2, slashValue2);
+
+    Map<String, String> keyValueMap = ImmutableMap.<String, String>builder()
+        .put(slashKey1, slashValue1)
+        .put(slashKey2, slashValue2)
+        .build();
 
     // create resources with valid node name
     Page basePage = context.create().page("/content/a", "template", "title");
@@ -504,10 +523,11 @@ public class SuffixBuilderTest {
     Resource resourceC = createResource(currentPage.getContentResource().getPath() + "/c" + NASTY_NODE_NAME);
     List<Resource> resources = Arrays.asList(resourceAA, resourceB, resourceC);
 
-    SortedMap<String, String> map = new TreeMap<String, String>();
-    map.put("abc", "true");
-    map.put("ghi", "123");
-    map.put("jkl", NASTY_STRING_VALUE);
+    Map<String, String> map = ImmutableMap.<String, String>builder()
+        .put("abc", "true")
+        .put("ghi", "123")
+        .put("jkl", NASTY_STRING_VALUE)
+        .build();
 
     SuffixBuilder builder = getBuilder();
     return builder.build(resources, currentPage.getContentResource(), map);

@@ -124,6 +124,20 @@ public class SuffixParser {
   }
 
   /**
+   * Extract the value of a named numerical suffix part from this request's suffix
+   * @param key key of the suffix part
+   * @param defaultValue the default value to return if suffix part not set
+   * @return the value of that named parameter (or null if not used)
+   */
+  public long getPart(String key, long defaultValue) {
+    String value = findSuffixPartByKey(key);
+    if (value == null) {
+      return defaultValue;
+    }
+    return NumberUtils.toLong(value, defaultValue);
+  }
+
+  /**
    * Extract the value of a named suffix part from this request's suffix
    * @param key key of the suffix part
    * @return the value of that named parameter (or null if not used)
