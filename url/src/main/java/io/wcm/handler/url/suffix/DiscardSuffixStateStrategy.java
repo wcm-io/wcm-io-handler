@@ -24,11 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Simple {@link SuffixStateKeepingStrategy} that just discards the suffix from the current request
  */
-public class DiscardSuffixStateStrategy implements SuffixStateKeepingStrategy {
+@ProviderType
+public final class DiscardSuffixStateStrategy implements SuffixStateKeepingStrategy {
 
   @Override
   public List<String> getSuffixPartsToKeep(SlingHttpServletRequest request) {

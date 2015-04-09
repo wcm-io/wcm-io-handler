@@ -22,11 +22,13 @@ package io.wcm.handler.url.suffix;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Interface for strategies that decide which parts from the current request's suffix should be kept when constructing
  * new links with the {@link SuffixBuilder}
  */
+@ConsumerType
 public interface SuffixStateKeepingStrategy {
 
   /**

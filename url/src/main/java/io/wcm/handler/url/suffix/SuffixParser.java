@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
@@ -40,7 +41,8 @@ import com.day.cq.wcm.api.PageManager;
 /**
  * Parses suffixes from Sling URLs build with {@link SuffixBuilder}.
  */
-public class SuffixParser {
+@ProviderType
+public final class SuffixParser {
 
   private final SlingHttpServletRequest request;
 

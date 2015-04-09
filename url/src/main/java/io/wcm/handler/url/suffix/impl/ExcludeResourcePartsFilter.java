@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.url.suffix.impl;
 
-
 /**
  * Suffix-part filter that removes all resource-suffix-parts
  * (identified by not containing {@link UrlSuffixUtil#KEY_VALUE_DELIMITER})

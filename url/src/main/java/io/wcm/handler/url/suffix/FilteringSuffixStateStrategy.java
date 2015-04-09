@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.Filter;
 
@@ -32,7 +33,8 @@ import com.day.cq.commons.Filter;
  * Implementation of {@link SuffixStateKeepingStrategy} that calls a Filter for each suffix part from the
  * current request to decide if it should be kept when constructing a new suffix.
  */
-public class FilteringSuffixStateStrategy implements SuffixStateKeepingStrategy {
+@ProviderType
+public final class FilteringSuffixStateStrategy implements SuffixStateKeepingStrategy {
 
   private final Filter<String> suffixPartFilter;
 

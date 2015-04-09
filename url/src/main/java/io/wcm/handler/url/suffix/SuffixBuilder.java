@@ -48,6 +48,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.Filter;
 import com.google.common.collect.ImmutableList;
@@ -55,7 +56,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * Builds suffixes to be used in Sling URLs and that can be parsed with {@link SuffixParser}.
  */
-public class SuffixBuilder {
+@ProviderType
+public final class SuffixBuilder {
 
   private final List<String> initialSuffixParts;
   private final Map<String, Object> parameterMap = new HashMap<>();
