@@ -26,7 +26,7 @@ import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeResourcePathPar
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeValue;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.keyValuePairAsMap;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.getRelativePath;
 import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
 import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
 import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
@@ -36,17 +36,15 @@ import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
 import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -54,26 +52,21 @@ import org.apache.sling.api.resource.Resource;
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Builds suffixes to be used in Sling URLs and that can be parsed with {@link SuffixParser}.
  */
 public class SuffixBuilder {
 
-  // decides which of the suffix parts from the current request will be kept when constructing a new suffix
-  private final SuffixStateKeepingStrategy stateStrategy;
-
-  private final SlingHttpServletRequest request;
+  private final List<String> initialSuffixParts;
+  private final Map<String, Object> parameterMap = new HashMap<>();
+  private final List<String> resourcePaths = new ArrayList<>();
 
   /**
-   * Create a {@link SuffixBuilder} with the default {@link SuffixStateKeepingStrategy} (which discards all existing
-   * suffix state when constructing a new suffix)
-   * @param request Sling request
+   * Create a {@link SuffixBuilder} which discards all existing suffix state when constructing a new suffix).
    */
-  public SuffixBuilder(SlingHttpServletRequest request) {
-    this.request = request;
-    this.stateStrategy = new DiscardSuffixStateStrategy();
+  public SuffixBuilder() {
+    this.initialSuffixParts = new ArrayList<>();
   }
 
   /**
@@ -84,8 +77,7 @@ public class SuffixBuilder {
    *          kept in new constructed links
    */
   public SuffixBuilder(SlingHttpServletRequest request, SuffixStateKeepingStrategy stateStrategy) {
-    this.request = request;
-    this.stateStrategy = stateStrategy;
+    this.initialSuffixParts = stateStrategy.getSuffixPartsToKeep(request);
   }
 
   /**
@@ -95,16 +87,14 @@ public class SuffixBuilder {
    * @param suffixPartFilter the filter that is called for each suffix part
    */
   public SuffixBuilder(SlingHttpServletRequest request, Filter<String> suffixPartFilter) {
-    this.request = request;
-    this.stateStrategy = new FilteringSuffixStateStrategy(suffixPartFilter);
+    this(request, new FilteringSuffixStateStrategy(suffixPartFilter));
   }
 
   /**
-   * @param request Sling request
    * @return a {@link SuffixBuilder} that discards all existing suffix state when constructing a new suffix
    */
-  public static SuffixBuilder thatDiscardsAllSuffixState(SlingHttpServletRequest request) {
-    return new SuffixBuilder(request);
+  public static SuffixBuilder thatDiscardsAllSuffixState() {
+    return new SuffixBuilder();
   }
 
   /**
@@ -189,236 +179,47 @@ public class SuffixBuilder {
   }
 
   /**
-   * Constructs a reduced suffix that does not add any new suffix part, and only keeps those as defined by the
-   * {@link SuffixStateKeepingStrategy}
-   * @return the suffix
-   */
-  public String build() {
-    return build(getInitialSuffixParts(), ImmutableMap.<String, Object>of(), new String[0]);
-  }
-
-  /**
-   * Constructs a suffix that addresses a page. Depending on the {@link SuffixStateKeepingStrategy}, the suffix contains
-   * further parts from the current
-   * request that should be kept when constructing new links.
-   * @param page the page
-   * @param suffixBasePage the base page used to construct the relative path
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Page page, Page suffixBasePage) {
-    return build(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix contains
-   * further parts from the current request that should be kept when constructing new links.
-   * @param page the page
-   * @param suffixBasePage the base page used to construct the relative path
+   * Puts a key-value pair into the suffix.
    * @param key the key
    * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
+   * @return this
    */
-  public String build(Page page, Page suffixBasePage, String key, String value) {
-    return build(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class), key, value);
+  public SuffixBuilder put(String key, Object value) {
+    parameterMap.put(key, value);
+    return this;
   }
 
   /**
-   * Constructs a suffix that contains both a jcr resource path and a key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix contains
-   * further parts from the current request that should be kept when constructing new links.
+   * Puts a map of key-value pairs into the suffix.
+   * @param map map of key-value pairs
+   * @return this
+   */
+  public SuffixBuilder putAll(Map<String, Object> map) {
+    this.parameterMap.putAll(map);
+    return this;
+  }
+
+  /**
+   * Puts a relative path of a page into the suffix.
    * @param page the page
    * @param suffixBasePage the base page used to construct the relative path
-   * @param parameterMap map of key-value pairs
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
+   * @return this
    */
-  public String build(Page page, Page suffixBasePage, Map<String, Object> parameterMap) {
-    return build(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class), parameterMap);
+  public SuffixBuilder page(Page page, Page suffixBasePage) {
+    return resource(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
   }
 
   /**
-   * Constructs a suffix that contains both a jcr resource path and a numerical key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current request that should be kept when constructing new links.
-   * @param page the page
-   * @param suffixBasePage the base page used to construct the relative path
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Page page, Page suffixBasePage, String key, int value) {
-    return build(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class), key, value);
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a numerical key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current request that should be kept when constructing new links.
-   * @param page the page
-   * @param suffixBasePage the base page used to construct the relative path
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Page page, Page suffixBasePage, String key, long value) {
-    return build(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class), key, value);
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a boolean key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current request that should be kept when constructing new links.
-   * @param page the page
-   * @param suffixBasePage the base page used to construct the relative path
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Page page, Page suffixBasePage, String key, boolean value) {
-    return build(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class), key, value);
-  }
-
-  /**
-   * Constructs a suffix that addresses a jcr resource. Depending on the {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current
-   * request that should be kept when constructing new links.
+   * Puts a relative path of a resource into the suffix.
    * @param resource the resource
    * @param suffixBaseResource the base resource used to construct the relative path
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
+   * @return this
    */
-  public String build(Resource resource, Resource suffixBaseResource) {
+  public SuffixBuilder resource(Resource resource, Resource suffixBaseResource) {
     // get relative path to base resource
     String relativePath = getRelativePath(resource, suffixBaseResource);
-
-    return SuffixBuilder.build(getInitialSuffixParts(), ImmutableMap.<String, Object>of(), relativePath);
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix contains
-   * further parts from the current request that should be kept when constructing new links.
-   * @param resource the resource
-   * @param suffixBaseResource the base resource used to construct the relative path
-   * @param parameterMap map of key-value pairs
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Resource resource, Resource suffixBaseResource, Map<String, Object> parameterMap) {
-    return SuffixBuilder.build(getInitialSuffixParts(), parameterMap, getRelativePath(resource, suffixBaseResource));
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix contains
-   * further parts from the current request that should be kept when constructing new links.
-   * @param resource the resource
-   * @param suffixBaseResource the base resource used to construct the relative path
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Resource resource, Resource suffixBaseResource, String key, String value) {
-    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a numerical key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current request that should be kept when constructing new links.
-   * @param resource the resource
-   * @param suffixBaseResource the base resource used to construct the relative path
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Resource resource, Resource suffixBaseResource, String key, int value) {
-    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a numerical key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current request that should be kept when constructing new links.
-   * @param resource the resource
-   * @param suffixBaseResource the base resource used to construct the relative path
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Resource resource, Resource suffixBaseResource, String key, long value) {
-    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
-  }
-
-  /**
-   * Constructs a suffix that contains both a jcr resource path and a boolean key-value pair. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current request that should be kept when constructing new links.
-   * @param resource the resource
-   * @param suffixBaseResource the base resource used to construct the relative path
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing the relative path to the resource (and eventually other parts)
-   */
-  public String build(Resource resource, Resource suffixBaseResource, String key, boolean value) {
-    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
-  }
-
-  /**
-   * Constructs a suffix that contains a key-value pair. Depending on the {@link SuffixStateKeepingStrategy}, the suffix
-   * contains further parts from the current
-   * request that should be kept when constructing new links.
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing an encoded key value-pair (and eventually other parts)
-   */
-  public String build(String key, String value) {
-    return build(getInitialSuffixParts(), keyValuePairAsMap(key, value), new String[0]);
-  }
-
-  /**
-   * Constructs a suffix that contains a key-value pair with a numerical value. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix contains further
-   * parts from the current request that should be kept when constructing new links.
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing an encoded key value-pair (and eventually other parts)
-   */
-  public String build(String key, int value) {
-    return build(key, Integer.toString(value));
-  }
-
-  /**
-   * Constructs a suffix that contains a key-value pair with a numerical value. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix contains further
-   * parts from the current request that should be kept when constructing new links.
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing an encoded key value-pair (and eventually other parts)
-   */
-  public String build(String key, long value) {
-    return build(key, Long.toString(value));
-  }
-
-  /**
-   * Constructs a suffix that contains a key-value pair with a boolean value. Depending on the
-   * {@link SuffixStateKeepingStrategy}, the suffix contains further
-   * parts from the current request that should be kept when constructing new links.
-   * @param key the key
-   * @param value the value
-   * @return the suffix containing an encoded key value-pair (and eventually other parts)
-   */
-  public String build(String key, boolean value) {
-    return build(key, Boolean.toString(value));
-  }
-
-  /**
-   * Constructs a suffix that contains multiple key-value pairs. Depending on the {@link SuffixStateKeepingStrategy},
-   * the suffix contains further parts from the
-   * current request that should be kept when constructing new links.
-   * @param parameterMap map of key-value pairs
-   * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
-   */
-  public String build(Map<String, Object> parameterMap) {
-    return SuffixBuilder.build(getInitialSuffixParts(), parameterMap, new String[0]);
+    resourcePaths.add(relativePath);
+    return this;
   }
 
   /**
@@ -427,49 +228,40 @@ public class SuffixBuilder {
    * further parts from the current request that should be kept when constructing new links.
    * @param resources resources to address
    * @param baseResource base resource to construct relative path
-   * @param parameterMap map of key-value pairs
    * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
    */
-  String build(Collection<Resource> resources, Resource baseResource, Map<String, Object> parameterMap) {
-    String[] relativePaths = new String[resources.size()];
-    Iterator<Resource> it = resources.iterator();
-    int i = 0;
-    while (it.hasNext()) {
-      relativePaths[i] = getRelativePath(it.next(), baseResource);
-      i++;
+  public SuffixBuilder resources(Iterable<Resource> resources, Resource baseResource) {
+    for (Resource resource : resources) {
+      resource(resource, baseResource);
     }
-    return SuffixBuilder.build(getInitialSuffixParts(), parameterMap, relativePaths);
+    return this;
   }
 
   /**
-   * The function that does the actual suffic constructing for all cases. Combines the suffix parts to be kept from the
-   * current request with the ones specified
-   * as parameters, (re)encodes and joines them in a single string
-   * @param parameterMap map of key/value parameter
-   * @param resourcePaths resource paths to be added
-   * @return an URL-safe suffix
+   * Build complete suffix.
+   * @return the suffix
    */
-  private static String build(List<String> initialSuffixParts, Map<String, Object> parameterMap, String... resourcePaths) {
+  public String build() {
     SortedMap<String, Object> sortedParameterMap = new TreeMap<>(parameterMap);
 
     // gather resource paths in a treeset (having them in a defined order helps with caching)
-    Set<String> resourcePathsSet = new TreeSet<>();
+    SortedSet<String> resourcePathsSet = new TreeSet<>();
 
     // iterate over all parts that should be kept from the current request
     for (String nextPart : initialSuffixParts) {
       // if this is a key-value-part:
       if (nextPart.indexOf(KEY_VALUE_DELIMITER) > 0) {
         String key = decodeKey(nextPart);
-        // decode and keep the part if it is not overriden in the given parameter-map
+        // decode and keep the part if it is not overridden in the given parameter-map
         if (!sortedParameterMap.containsKey(key)) {
           String value = decodeValue(nextPart);
           sortedParameterMap.put(key, value);
         }
       }
       else {
-        // decode and keep the resource paths (unless they are specified again in pResourcepaths)
+        // decode and keep the resource paths (unless they are specified again in resourcePaths)
         String path = decodeResourcePathPart(nextPart);
-        if (!ArrayUtils.contains(resourcePaths, path)) {
+        if (!resourcePaths.contains(path)) {
           resourcePathsSet.add(path);
         }
       }
@@ -502,40 +294,6 @@ public class SuffixBuilder {
 
     // finally join these parts to a single string
     return StringUtils.join(suffixParts, SUFFIX_PART_DELIMITER);
-  }
-
-  /**
-   * @param resource the resource being addressed by the relative path
-   * @param baseResource the resource used as base to resolve the relative path
-   * @return the relative path (without leading slash)
-   */
-  public static String getRelativePath(Resource resource, Resource baseResource) {
-    if (baseResource == null) {
-      throw new IllegalArgumentException("the base resource for constructing relative path must not be null");
-    }
-    if (resource == null) {
-      throw new IllegalArgumentException("the resource for constructing relative path must not be null");
-    }
-    String absolutePath = resource.getPath();
-    String basePath = baseResource.getPath();
-
-    if (absolutePath.equals(basePath)) {
-      // relative path for the root resource is "."
-      return ".";
-    }
-
-    // be picky about resources not located beneath the base resource
-    if (!absolutePath.startsWith(basePath + "/")) {
-      throw new IllegalArgumentException("the resource " + resource + " is not a descendent of the base resource " + baseResource);
-    }
-
-    // return relative path
-    return StringUtils.substringAfter(absolutePath, basePath + "/");
-  }
-
-  private List<String> getInitialSuffixParts() {
-    // delegate the decision which parts of the suffix to keep to the SuffixStateKeepingStrategy being used
-    return stateStrategy.getSuffixPartsToKeep(request);
   }
 
 }

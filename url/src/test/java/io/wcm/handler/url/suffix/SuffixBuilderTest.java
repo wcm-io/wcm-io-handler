@@ -37,7 +37,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -85,7 +84,7 @@ public class SuffixBuilderTest {
     setContextAttributes(urlEncodedSuffix, currentPage);
 
     // create a UrlSuffixHelper that doesn't keep any state
-    return new SuffixBuilder(context.request());
+    return new SuffixBuilder();
   }
 
   private SuffixParser getParserWithIncommingSuffix(final String urlEncodedSuffix, Page currentPage) {
@@ -123,11 +122,8 @@ public class SuffixBuilderTest {
         .build());
   }
 
-  /**
-   * Test method for {@link SuffixBuilder#build()}
-   */
   @Test
-  public void testBuildEmptySuffix() {
+  public void testPageEmptySuffix() {
     // construct a "resetting" suffix that does not add any elements to the suffix
     String suffix = getBuilder().build();
     // should return empty string, cause there is no suffix in the simulated request
@@ -135,15 +131,12 @@ public class SuffixBuilderTest {
     assertTrue(StringUtils.isEmpty(suffix));
   }
 
-  /**
-   * Test method for {@link SuffixBuilder#build(String, String)}
-   */
   @Test
-  public void testBuildStringString() {
+  public void testPageStringString() {
     // construct suffix with key/value-pair
     String key = "abc";
     String value = "def";
-    String suffix = getBuilder().build(key, value);
+    String suffix = getBuilder().put(key, value).build();
     // suffix should contain key=value
     assertEquals("abc=def", suffix);
 
@@ -151,7 +144,7 @@ public class SuffixBuilderTest {
     // construct suffix with empty value
     key = "abc";
     value = "";
-    suffix = getBuilder().build(key, value);
+    suffix = getBuilder().put(key, value).build();
     // suffix should contain key=
     assertEquals("abc=", suffix);
 
@@ -159,82 +152,70 @@ public class SuffixBuilderTest {
     // construct suffix with null value
     key = "abc";
     value = null;
-    suffix = getBuilder().build(key, value);
+    suffix = getBuilder().put(key, value).build();
     // suffix should be empty
     assertEquals("", suffix);
 
   }
 
-  /**
-   * Test method for {@link SuffixBuilder#build(String, int)}
-   */
   @Test
-  public void testBuildStringInt() {
+  public void testPageStringInt() {
     // construct suffix with numerical key/value-pair
     String key = "abc";
     int value = 123;
-    String suffix = getBuilder().build(key, value);
+    String suffix = getBuilder().put(key, value).build();
     // suffix should contain key=value
     assertEquals("abc=123", suffix);
   }
 
 
-  /**
-   * Test method for {@link SuffixBuilder#build(String, long)}
-   */
   @Test
-  public void testBuildStringLong() {
+  public void testPageStringLong() {
     // construct suffix with numerical key/value-pair
     String key = "abc";
     long value = 123456789012345L;
-    String suffix = getBuilder().build(key, value);
+    String suffix = getBuilder().put(key, value).build();
     // suffix should contain key=value
     assertEquals("abc=123456789012345", suffix);
   }
 
-  /**
-   * Test method for {@link SuffixBuilder#build(String, boolean)}
-   */
   @Test
-  public void testBuildStringBoolean() {
+  public void testPageStringBoolean() {
     // construct suffix with boolean key/value-pair
     String key = "abc";
     boolean value = true;
-    String suffix = getBuilder().build(key, value);
+    String suffix = getBuilder().put(key, value).build();
     // suffix should contain key=true
     assertEquals("abc=true", suffix);
 
     value = false;
-    suffix = getBuilder().build(key, value);
+    suffix = getBuilder().put(key, value).build();
     // suffix should contain key=false
     assertEquals("abc=false", suffix);
   }
 
 
-  /**
-   * Test method for {@link SuffixBuilder#build(Resource, Resource)}
-   */
   @Test
-  public void testBuildResourceResource() {
+  public void testPageResourceResource() {
     // construct suffix pointing to a resource
     Page page = context.create().page("/content/a", "template", "title");
     Resource baseResource = page.getContentResource();
     Resource targetResource = context.create().resource("/content/a/jcr:content/b/c");
 
-    String suffix = getBuilder().build(targetResource, baseResource);
+    String suffix = getBuilder().resource(targetResource, baseResource).build();
     // suffix should contain relative path without leading slash
     assertEquals("b" + ESCAPED_SLASH + "c", suffix);
 
 
     // construct suffix for base resource
-    suffix = getBuilder().build(baseResource, baseResource);
+    suffix = getBuilder().resource(baseResource, baseResource).build();
     // should be .
     assertEquals(ESCAPED_DOT, suffix);
 
 
     // construct suffix for a null resource
     try {
-      suffix = getBuilder().build(null, baseResource);
+      suffix = getBuilder().resource(null, baseResource).build();
       fail("expected IllegalArgumentException");
     }
     catch (IllegalArgumentException e) {
@@ -243,7 +224,7 @@ public class SuffixBuilderTest {
 
     // construct suffix for a null base resource
     try {
-      suffix = getBuilder().build(targetResource, null);
+      suffix = getBuilder().resource(targetResource, null).build();
       fail("expected IllegalArgumentException");
     }
     catch (IllegalArgumentException e) {
@@ -253,7 +234,7 @@ public class SuffixBuilderTest {
     // construct suffix with an invalid base resource
     try {
       baseResource = createResource("/content/b");
-      suffix = getBuilder().build(baseResource, null);
+      suffix = getBuilder().resource(baseResource, null).build();
       fail("expected IllegalArgumentException");
     }
     catch (IllegalArgumentException e) {
@@ -261,72 +242,59 @@ public class SuffixBuilderTest {
     }
   }
 
-
-  /**
-   * Test method for {@link SuffixBuilder#build(Resource, Resource, String, String)}
-   */
   @Test
-  public void testBuildResourceResourceStringString() {
+  public void testPageResourceResourceStringString() {
     // construct suffix pointing to a resource with key/value-pair
     Resource targetResource = createResource("/content/a/b/c");
     Resource baseResource = createResource("/content/a");
     String key = "abc";
     String value = "def";
-    String suffix = getBuilder().build(targetResource, baseResource, key, value);
+    String suffix = getBuilder().resource(targetResource, baseResource).put(key, value).build();
     // suffix should contain both suffix parts, separated with / (resource path first)
     assertEquals("b" + ESCAPED_SLASH + "c" + SUFFIX_PART_DELIMITER + "abc=def", suffix);
 
   }
 
-  /**
-   * Test method for {@link SuffixBuilder#build(Resource, Resource, String, int)}
-   */
   @Test
-  public void testBuildResourceResourceStringInt() {
+  public void testPageResourceResourceStringInt() {
     // construct suffix pointing to a resource with a numeric key/value-pair
     Resource targetResource = createResource("/content/a/b/c");
     Resource baseResource = createResource("/content/a");
     String key = "abc";
     int value = 123;
-    String suffix = getBuilder().build(targetResource, baseResource, key, value);
+    String suffix = getBuilder().resource(targetResource, baseResource).put(key, value).build();
     // suffix should contain both suffix parts, separated with / (resource path first)
     assertEquals("b" + ESCAPED_SLASH + "c" + SUFFIX_PART_DELIMITER + "abc=123", suffix);
   }
 
-  /**
-   * Test method for {@link SuffixBuilder#build(Resource, Resource, String, boolean)}
-   */
   @Test
-  public void testBuildResourceResourceStringBoolean() {
+  public void testPageResourceResourceStringBoolean() {
     // construct suffix pointing to a resource with a boolean key/value-pair
     Resource targetResource = createResource("/content/a/b/c");
     Resource baseResource = createResource("/content/a");
     String key = "abc";
     boolean value = true;
-    String suffix = getBuilder().build(targetResource, baseResource, key, value);
+    String suffix = getBuilder().resource(targetResource, baseResource).put(key, value).build();
     // should contain both suffix parts, separated with / (resource path first)
     assertEquals("b" + ESCAPED_SLASH + "c" + SUFFIX_PART_DELIMITER + "abc=true", suffix);
   }
 
-  /**
-   * Test method for {@link SuffixBuilder#build(Map)}
-   */
   @Test
-  public void testBuildSortedMapOfStringString() {
+  public void testPageSortedMapOfStringString() {
     // construct suffix to a resource with multiple key/value-pairs
     ValueMap map = ImmutableValueMap.builder()
         .put("abc", 123)
         .put("ghi", 789)
         .put("def", 456)
         .build();
-    String suffix = getBuilder().build(map);
+    String suffix = getBuilder().putAll(map).build();
     // suffix should contain all entries, in alphabetical order separated with /
     assertEquals("abc=123" + SUFFIX_PART_DELIMITER + "def=456" + SUFFIX_PART_DELIMITER + "ghi=789", suffix);
   }
 
   /**
    * tests escaping/unescaping functionality by constructing complex suffix with
-   * {@link SuffixBuilder#build(java.util.Collection, Resource, Map)} and then decomposing it using
+   * {@link SuffixBuilder#resources(Iterable, Resource)} and then decomposing it using
    * {@link SuffixParser#getPart(String, String)} and {@link SuffixParser#getResource(Filter)}
    * @throws UnsupportedEncodingException
    */
@@ -354,7 +322,7 @@ public class SuffixBuilderTest {
     Resource nastyResource2 = createResource("/content/a/jcr:content/b/c" + NASTY_NODE_NAME + "2", resourceType2);
 
     // construct suffix with all keys, values and paths properly escaped
-    String suffix = getBuilder().build(Arrays.asList(nastyResource1, nastyResource2), baseResource, keyValueMap);
+    String suffix = getBuilder().resources(Arrays.asList(nastyResource1, nastyResource2), baseResource).putAll(keyValueMap).build();
     assertNotNull(suffix);
 
     // create SuffixHelper with that suffix, decode it and simulate request to the base page
@@ -411,7 +379,7 @@ public class SuffixBuilderTest {
     Resource slashResource2 = createResource("/content/a/jcr:content/b/c2", resourceType2);
 
     // construct suffix with all keys, values and paths properly escaped
-    String suffix = getBuilder().build(Arrays.asList(slashResource1, slashResource2), baseResource, keyValueMap);
+    String suffix = getBuilder().resources(Arrays.asList(slashResource1, slashResource2), baseResource).putAll(keyValueMap).build();
     assertNotNull("suffix empty", suffix);
 
     // ensure that no slash, not single nor double-escaped found in suffix
@@ -452,7 +420,7 @@ public class SuffixBuilderTest {
     setContextAttributes(incomingSuffix, null);
 
     // create a suffix builder for that context, and check that suffix and currentPage from the context are used
-    SuffixBuilder builder = new SuffixBuilder(context.request());
+    SuffixBuilder builder = new SuffixBuilder();
 
     // Because the default SuffixStateKeepingStrategy is to discard everything,
     // a new suffix created with this builder should be empty if no additional info is added
@@ -486,10 +454,9 @@ public class SuffixBuilderTest {
     // create a builder with a mock filter that counts how often is called
     // and includes the 2nd and 4th part in the suffix
     EventElementsMockFilter mockFilter = new EventElementsMockFilter();
-    SuffixBuilder builder = new SuffixBuilder(context.request(), mockFilter);
 
     // make sure the filter was called for all parts when constructing a new suffix
-    String outgoingSuffix = builder.build();
+    String outgoingSuffix = new SuffixBuilder(context.request(), mockFilter).build();
     assertEquals(4, mockFilter.getTestedElements().size());
 
     // only the 2nd and 4th parts should pass the filter
@@ -497,14 +464,17 @@ public class SuffixBuilderTest {
 
 
     // make sure named parameters can be re-added or overwritten
-    assertEquals("abc" + SUFFIX_PART_DELIMITER + "def=true" + SUFFIX_PART_DELIMITER + "jkl=123", builder.build("def", true));
-    assertEquals("abc" + SUFFIX_PART_DELIMITER + "jkl=456", builder.build("jkl", 456));
+    assertEquals("abc" + SUFFIX_PART_DELIMITER + "def=true" + SUFFIX_PART_DELIMITER + "jkl=123",
+        new SuffixBuilder(context.request(), mockFilter).put("def", true).build());
+    assertEquals("abc" + SUFFIX_PART_DELIMITER + "jkl=456",
+        new SuffixBuilder(context.request(), mockFilter).put("jkl", 456).build());
 
     // make soure resource parts can be appended
     Page basePage = context.create().page("/content/a", "template", "title");
     Resource resource = createResource(basePage.getContentResource().getPath() + "/def");
     // both the existing abc and b should be in the constructed suffix
-    assertEquals("abc" + SUFFIX_PART_DELIMITER + "def" + SUFFIX_PART_DELIMITER + "jkl=123", builder.build(resource, basePage.getContentResource()));
+    assertEquals("abc" + SUFFIX_PART_DELIMITER + "def" + SUFFIX_PART_DELIMITER + "jkl=123",
+        new SuffixBuilder(context.request(), mockFilter).resource(resource, basePage.getContentResource()).build());
   }
 
   /**
@@ -530,7 +500,7 @@ public class SuffixBuilderTest {
         .build();
 
     SuffixBuilder builder = getBuilder();
-    return builder.build(resources, currentPage.getContentResource(), map);
+    return builder.resources(resources, currentPage.getContentResource()).putAll(map).build();
   }
 
   @Test
@@ -539,7 +509,7 @@ public class SuffixBuilderTest {
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
     // this suffix builder should clear the whole suffix
-    SuffixBuilder builder = SuffixBuilder.thatDiscardsAllSuffixState(context.request());
+    SuffixBuilder builder = SuffixBuilder.thatDiscardsAllSuffixState();
     assertEquals("", builder.build());
   }
 

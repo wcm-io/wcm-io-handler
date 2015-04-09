@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Static methods and constants for URL suffix handling.
@@ -225,6 +226,35 @@ public final class UrlSuffixUtil {
     Map<String, Object> paramMap = new HashMap<>();
     paramMap.put(key, value);
     return paramMap;
+  }
+
+  /**
+   * @param resource the resource being addressed by the relative path
+   * @param baseResource the resource used as base to resolve the relative path
+   * @return the relative path (without leading slash)
+   */
+  public static String getRelativePath(Resource resource, Resource baseResource) {
+    if (baseResource == null) {
+      throw new IllegalArgumentException("the base resource for constructing relative path must not be null");
+    }
+    if (resource == null) {
+      throw new IllegalArgumentException("the resource for constructing relative path must not be null");
+    }
+    String absolutePath = resource.getPath();
+    String basePath = baseResource.getPath();
+
+    if (absolutePath.equals(basePath)) {
+      // relative path for the root resource is "."
+      return ".";
+    }
+
+    // be picky about resources not located beneath the base resource
+    if (!absolutePath.startsWith(basePath + "/")) {
+      throw new IllegalArgumentException("the resource " + resource + " is not a descendent of the base resource " + baseResource);
+    }
+
+    // return relative path
+    return StringUtils.substringAfter(absolutePath, basePath + "/");
   }
 
 }
