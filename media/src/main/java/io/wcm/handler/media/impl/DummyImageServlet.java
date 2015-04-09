@@ -70,9 +70,9 @@ public final class DummyImageServlet extends AbstractImageServlet {
   @Override
   protected Layer createLayer(ImageContext ctx) throws RepositoryException, IOException {
     SuffixParser parser = new SuffixParser(ctx.request);
-    int width = parser.getPart(SUFFIX_WIDTH, 0);
-    int height = parser.getPart(SUFFIX_HEIGHT, 0);
-    String name = parser.getPart(SUFFIX_MEDIA_FORMAT_NAME, (String)null);
+    int width = parser.get(SUFFIX_WIDTH, 0);
+    int height = parser.get(SUFFIX_HEIGHT, 0);
+    String name = parser.get(SUFFIX_MEDIA_FORMAT_NAME, String.class);
 
     // validate with/height
     if (width < 1 || height < 1) {
