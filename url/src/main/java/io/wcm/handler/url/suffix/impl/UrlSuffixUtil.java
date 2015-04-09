@@ -24,8 +24,6 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -223,8 +221,8 @@ public final class UrlSuffixUtil {
    * @param value Value
    * @return Map
    */
-  public static SortedMap<String, String> keyValuePairAsMap(String key, String value) {
-    SortedMap<String, String> paramMap = new TreeMap<>();
+  public static Map<String, Object> keyValuePairAsMap(String key, Object value) {
+    Map<String, Object> paramMap = new HashMap<>();
     paramMap.put(key, value);
     return paramMap;
   }

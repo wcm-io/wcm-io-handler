@@ -42,6 +42,7 @@ import java.util.Map;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.JcrResourceConstants;
 import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
 import org.junit.Rule;
@@ -49,7 +50,6 @@ import org.junit.Test;
 
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Unit test for {@link SuffixBuilder}
@@ -314,10 +314,10 @@ public class SuffixBuilderTest {
   @Test
   public void testBuildSortedMapOfStringString() {
     // construct suffix to a resource with multiple key/value-pairs
-    Map<String, String> map = ImmutableMap.<String, String>builder()
-        .put("abc", "123")
-        .put("ghi", "789")
-        .put("def", "456")
+    ValueMap map = ImmutableValueMap.builder()
+        .put("abc", 123)
+        .put("ghi", 789)
+        .put("def", 456)
         .build();
     String suffix = getBuilder().build(map);
     // suffix should contain all entries, in alphabetical order separated with /
@@ -338,7 +338,7 @@ public class SuffixBuilderTest {
     String nastyKey2 = NASTY_STRING_VALUE + "2";
     String nastyValue2 = NASTY_STRING_VALUE + "2";
 
-    Map<String, String> keyValueMap = ImmutableMap.<String, String>builder()
+    ValueMap keyValueMap = ImmutableValueMap.builder()
         .put(nastyKey1, nastyValue1)
         .put(nastyKey2, nastyValue2)
         .build();
@@ -395,7 +395,7 @@ public class SuffixBuilderTest {
     String slashKey2 = "my/key2";
     String slashValue2 = "my/value2";
 
-    Map<String, String> keyValueMap = ImmutableMap.<String, String>builder()
+    ValueMap keyValueMap = ImmutableValueMap.builder()
         .put(slashKey1, slashValue1)
         .put(slashKey2, slashValue2)
         .build();
@@ -523,9 +523,9 @@ public class SuffixBuilderTest {
     Resource resourceC = createResource(currentPage.getContentResource().getPath() + "/c" + NASTY_NODE_NAME);
     List<Resource> resources = Arrays.asList(resourceAA, resourceB, resourceC);
 
-    Map<String, String> map = ImmutableMap.<String, String>builder()
-        .put("abc", "true")
-        .put("ghi", "123")
+    ValueMap map = ImmutableValueMap.builder()
+        .put("abc", true)
+        .put("ghi", 123)
         .put("jkl", NASTY_STRING_VALUE)
         .build();
 
