@@ -24,6 +24,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+
 class MockStrategy implements SuffixStateKeepingStrategy {
 
   private final String incomingSuffix;
@@ -35,10 +37,10 @@ class MockStrategy implements SuffixStateKeepingStrategy {
   }
 
   @Override
-  public List<String> getSuffixPartsToKeep(SuffixBuilder helper) {
+  public List<String> getSuffixPartsToKeep(SlingHttpServletRequest request) {
 
     // the suffix from the helper should be the one we put in the context
-    String suffix = helper.getRequest().getRequestPathInfo().getSuffix();
+    String suffix = request.getRequestPathInfo().getSuffix();
     assertEquals(suffix, incomingSuffix);
 
     // return the fixed suffix parts

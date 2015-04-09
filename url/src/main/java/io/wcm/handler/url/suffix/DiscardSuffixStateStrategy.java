@@ -23,13 +23,15 @@ package io.wcm.handler.url.suffix;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+
 /**
  * Simple {@link SuffixStateKeepingStrategy} that just discards the suffix from the current request
  */
 public class DiscardSuffixStateStrategy implements SuffixStateKeepingStrategy {
 
   @Override
-  public List<String> getSuffixPartsToKeep(SuffixBuilder helper) {
+  public List<String> getSuffixPartsToKeep(SlingHttpServletRequest request) {
     // just return a empty list
     return new ArrayList<String>();
   }

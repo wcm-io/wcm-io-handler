@@ -24,6 +24,8 @@ import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.splitSuffix;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+
 import com.day.cq.commons.Filter;
 
 /**
@@ -42,14 +44,14 @@ public class FilteringSuffixStateStrategy implements SuffixStateKeepingStrategy 
   }
 
   @Override
-  public List<String> getSuffixPartsToKeep(SuffixBuilder helper) {
+  public List<String> getSuffixPartsToKeep(SlingHttpServletRequest request) {
 
     // get and split suffix parts from the current request
-    String existingSuffix = helper.getRequest().getRequestPathInfo().getSuffix();
+    String existingSuffix = request.getRequestPathInfo().getSuffix();
     String[] suffixPartArray = splitSuffix(existingSuffix);
 
     // iterate over all these suffix parts and gather those that should be kept
-    List<String> suffixPartsToKeep = new ArrayList<String>();
+    List<String> suffixPartsToKeep = new ArrayList<>();
     for (int i = 0; i < suffixPartArray.length; i++) {
       String nextPart = suffixPartArray[i];
 

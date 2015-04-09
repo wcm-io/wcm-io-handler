@@ -66,9 +66,6 @@ public class SuffixBuilder {
 
   private final SlingHttpServletRequest request;
 
-  // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // CONSTRUCTORS
-
   /**
    * Create a {@link SuffixBuilder} with the default {@link SuffixStateKeepingStrategy} (which discards all existing
    * suffix state when constructing a new suffix)
@@ -101,10 +98,6 @@ public class SuffixBuilder {
     this.request = request;
     this.stateStrategy = new FilteringSuffixStateStrategy(suffixPartFilter);
   }
-
-
-  // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // STATIC CONVENIENCE METHODS FOR CREATING INSTANCES WITH A SPECIFIC BEHAVIOUR
 
   /**
    * @param request Sling request
@@ -195,16 +188,13 @@ public class SuffixBuilder {
     return new SuffixBuilder(request, filter);
   }
 
-  // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // SUFFIX CONSTRUCTION
-
   /**
    * Constructs a reduced suffix that does not add any new suffix part, and only keeps those as defined by the
    * {@link SuffixStateKeepingStrategy}
    * @return the suffix
    */
   public String build() {
-    return build(ImmutableMap.<String, Object>of(), new String[0]);
+    return build(getInitialSuffixParts(), ImmutableMap.<String, Object>of(), new String[0]);
   }
 
   /**
@@ -300,7 +290,7 @@ public class SuffixBuilder {
     // get relative path to base resource
     String relativePath = getRelativePath(resource, suffixBaseResource);
 
-    return this.build(ImmutableMap.<String, Object>of(), relativePath);
+    return SuffixBuilder.build(getInitialSuffixParts(), ImmutableMap.<String, Object>of(), relativePath);
   }
 
   /**
@@ -313,7 +303,7 @@ public class SuffixBuilder {
    * @return the suffix containing the relative path to the resource (and eventually other parts)
    */
   public String build(Resource resource, Resource suffixBaseResource, Map<String, Object> parameterMap) {
-    return this.build(parameterMap, getRelativePath(resource, suffixBaseResource));
+    return SuffixBuilder.build(getInitialSuffixParts(), parameterMap, getRelativePath(resource, suffixBaseResource));
   }
 
   /**
@@ -327,7 +317,7 @@ public class SuffixBuilder {
    * @return the suffix containing the relative path to the resource (and eventually other parts)
    */
   public String build(Resource resource, Resource suffixBaseResource, String key, String value) {
-    return this.build(keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
+    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
   }
 
   /**
@@ -341,7 +331,7 @@ public class SuffixBuilder {
    * @return the suffix containing the relative path to the resource (and eventually other parts)
    */
   public String build(Resource resource, Resource suffixBaseResource, String key, int value) {
-    return this.build(keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
+    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
   }
 
   /**
@@ -355,7 +345,7 @@ public class SuffixBuilder {
    * @return the suffix containing the relative path to the resource (and eventually other parts)
    */
   public String build(Resource resource, Resource suffixBaseResource, String key, long value) {
-    return this.build(keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
+    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
   }
 
   /**
@@ -369,7 +359,7 @@ public class SuffixBuilder {
    * @return the suffix containing the relative path to the resource (and eventually other parts)
    */
   public String build(Resource resource, Resource suffixBaseResource, String key, boolean value) {
-    return this.build(keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
+    return SuffixBuilder.build(getInitialSuffixParts(), keyValuePairAsMap(key, value), getRelativePath(resource, suffixBaseResource));
   }
 
   /**
@@ -381,7 +371,7 @@ public class SuffixBuilder {
    * @return the suffix containing an encoded key value-pair (and eventually other parts)
    */
   public String build(String key, String value) {
-    return build(keyValuePairAsMap(key, value), new String[0]);
+    return build(getInitialSuffixParts(), keyValuePairAsMap(key, value), new String[0]);
   }
 
   /**
@@ -428,7 +418,7 @@ public class SuffixBuilder {
    * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
    */
   public String build(Map<String, Object> parameterMap) {
-    return this.build(parameterMap, new String[0]);
+    return SuffixBuilder.build(getInitialSuffixParts(), parameterMap, new String[0]);
   }
 
   /**
@@ -448,7 +438,7 @@ public class SuffixBuilder {
       relativePaths[i] = getRelativePath(it.next(), baseResource);
       i++;
     }
-    return this.build(parameterMap, relativePaths);
+    return SuffixBuilder.build(getInitialSuffixParts(), parameterMap, relativePaths);
   }
 
   /**
@@ -459,14 +449,14 @@ public class SuffixBuilder {
    * @param resourcePaths resource paths to be added
    * @return an URL-safe suffix
    */
-  private String build(Map<String, Object> parameterMap, String... resourcePaths) {
+  private static String build(List<String> initialSuffixParts, Map<String, Object> parameterMap, String... resourcePaths) {
     SortedMap<String, Object> sortedParameterMap = new TreeMap<>(parameterMap);
 
     // gather resource paths in a treeset (having them in a defined order helps with caching)
     Set<String> resourcePathsSet = new TreeSet<>();
 
     // iterate over all parts that should be kept from the current request
-    for (String nextPart : getInitialSuffixParts()) {
+    for (String nextPart : initialSuffixParts) {
       // if this is a key-value-part:
       if (nextPart.indexOf(KEY_VALUE_DELIMITER) > 0) {
         String key = decodeKey(nextPart);
@@ -545,11 +535,7 @@ public class SuffixBuilder {
 
   private List<String> getInitialSuffixParts() {
     // delegate the decision which parts of the suffix to keep to the SuffixStateKeepingStrategy being used
-    return stateStrategy.getSuffixPartsToKeep(this);
-  }
-
-  SlingHttpServletRequest getRequest() {
-    return this.request;
+    return stateStrategy.getSuffixPartsToKeep(request);
   }
 
 }

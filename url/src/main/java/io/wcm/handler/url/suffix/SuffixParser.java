@@ -44,9 +44,6 @@ public class SuffixParser {
 
   private final SlingHttpServletRequest request;
 
-  // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // CONSTRUCTORS
-
   /**
    * Create a {@link SuffixParser} with the default {@link SuffixStateKeepingStrategy} (which discards all existing
    * suffix state when constructing a new suffix)
@@ -65,11 +62,6 @@ public class SuffixParser {
   public SuffixParser(SlingHttpServletRequest request, Filter<String> suffixPartFilter) {
     this.request = request;
   }
-
-
-
-  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // SUFFIX PARSING / EXTRACTION
 
   /**
    * Extract the value of a named suffix part from this request's suffix
@@ -143,7 +135,7 @@ public class SuffixParser {
    * @return the value of that named parameter (or null if not used)
    */
   private String findSuffixPartByKey(String key) {
-    for (String part : splitSuffix(getRequest().getRequestPathInfo().getSuffix())) {
+    for (String part : splitSuffix(request.getRequestPathInfo().getSuffix())) {
       if (part.indexOf(KEY_VALUE_DELIMITER) >= 0) {
         String partKey = decodeKey(part);
         if (partKey.equals(key)) {
@@ -210,21 +202,21 @@ public class SuffixParser {
     // resolve base path or fallback to current page's content if not specified
     Resource baseResource;
     if (StringUtils.isNotBlank(basePath)) {
-      baseResource = getRequest().getResourceResolver().getResource(basePath);
+      baseResource = request.getResourceResolver().getResource(basePath);
     }
     else {
-      PageManager pageManager = getRequest().getResourceResolver().adaptTo(PageManager.class);
-      Page currentPage = pageManager.getContainingPage(getRequest().getResource());
+      PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
+      Page currentPage = pageManager.getContainingPage(request.getResource());
       if (currentPage != null) {
         baseResource = currentPage.getContentResource();
       }
       else {
-        baseResource = getRequest().getResource();
+        baseResource = request.getResource();
       }
     }
 
     // split the suffix to extract the paths of the selected components
-    String[] suffixParts = splitSuffix(getRequest().getRequestPathInfo().getSuffix());
+    String[] suffixParts = splitSuffix(request.getRequestPathInfo().getSuffix());
 
     // iterate over all parts and gather those resources
     List<Resource> selectedResources = new ArrayList<>();
@@ -238,7 +230,7 @@ public class SuffixParser {
       String decodedPath = decodeResourcePathPart(path);
 
       // lookup the resource specified by the path (which is relative to the current page's content resource)
-      Resource resource = getRequest().getResourceResolver().getResource(baseResource, decodedPath);
+      Resource resource = request.getResourceResolver().getResource(baseResource, decodedPath);
       if (resource == null) {
         // no resource found with given path, continue with next path in suffix
         continue;
@@ -252,10 +244,6 @@ public class SuffixParser {
     }
 
     return selectedResources;
-  }
-
-  SlingHttpServletRequest getRequest() {
-    return this.request;
   }
 
 }

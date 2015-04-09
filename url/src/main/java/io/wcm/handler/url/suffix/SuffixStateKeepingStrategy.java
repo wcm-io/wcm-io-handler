@@ -21,6 +21,8 @@ package io.wcm.handler.url.suffix;
 
 import java.util.List;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+
 /**
  * Interface for strategies that decide which parts from the current request's suffix should be kept when constructing
  * new links with the {@link SuffixBuilder}
@@ -28,10 +30,11 @@ import java.util.List;
 public interface SuffixStateKeepingStrategy {
 
   /**
-   * Implement this method to return those suffix parts that should be kept at the beginning of the suffix to construct to keep the page's state
-   * @param helper the {@link SuffixBuilder} that uses this strategy
+   * Implement this method to return those suffix parts that should be kept at the beginning of the suffix to construct
+   * to keep the page's state
+   * @param request Current request
    * @return a list of suffix parts
    */
-  List<String> getSuffixPartsToKeep(SuffixBuilder helper);
+  List<String> getSuffixPartsToKeep(SlingHttpServletRequest request);
 
 }
