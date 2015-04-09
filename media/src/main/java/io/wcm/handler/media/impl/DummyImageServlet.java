@@ -19,20 +19,15 @@
  */
 package io.wcm.handler.media.impl;
 
+import io.wcm.handler.url.suffix.SuffixParser;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -70,20 +65,21 @@ public final class DummyImageServlet extends AbstractImageServlet {
   /**
    * Suffix for Name of mediaformat (optional)
    */
-  public static final String SUFFIX_MEDIA_FORMAT_NAME = "mediaformat";
+  public static final String SUFFIX_MEDIA_FORMAT_NAME = "mf";
 
   @Override
   protected Layer createLayer(ImageContext ctx) throws RepositoryException, IOException {
-    Map<String, String> suffix = getSuffix(ctx);
-    if (!suffix.containsKey(SUFFIX_HEIGHT) || !suffix.containsKey(SUFFIX_WIDTH) || !suffix.containsKey(SUFFIX_MEDIA_FORMAT_NAME)) {
+    SuffixParser parser = new SuffixParser(ctx.request);
+    int width = parser.getPart(SUFFIX_WIDTH, 0);
+    int height = parser.getPart(SUFFIX_HEIGHT, 0);
+    String name = parser.getPart(SUFFIX_MEDIA_FORMAT_NAME, (String)null);
+
+    // validate with/height
+    if (width < 1 || height < 1) {
       return new Layer(1, 1, null);
     }
-    int height = NumberUtils.toInt(suffix.get(SUFFIX_HEIGHT));
-    int width = NumberUtils.toInt(suffix.get(SUFFIX_WIDTH));
-    if (height == 0 || width == 0) {
-      return new Layer(1, 1, null);
-    }
-    Layer textLayer = getTextLayer(suffix);
+
+    Layer textLayer = getTextLayer(width, height, name);
 
     int x = (width - textLayer.getWidth()) / 2;
     int y = (height - textLayer.getHeight()) / 2;
@@ -100,10 +96,9 @@ public final class DummyImageServlet extends AbstractImageServlet {
     return layer;
   }
 
-  private Layer getTextLayer(Map<String, String> suffix) {
-    int height = NumberUtils.toInt(suffix.get(SUFFIX_HEIGHT));
-    int width = NumberUtils.toInt(suffix.get(SUFFIX_WIDTH));
-    String text = suffix.get(SUFFIX_MEDIA_FORMAT_NAME) + "\n" + width + " x " + height;
+  private Layer getTextLayer(int width, int height, String name) {
+    String text = (StringUtils.isNotEmpty(name) ? name + "\n" : "")
+        + width + " x " + height;
     Font font = new Font("Arial", width / 30);
     int align = AbstractFont.ALIGN_BASE | AbstractFont.ALIGN_CENTER | AbstractFont.TTANTIALIASED;
     Layer ret = new Layer(1, 1, null);
@@ -115,25 +110,6 @@ public final class DummyImageServlet extends AbstractImageServlet {
   @Override
   protected boolean checkModifiedSince(SlingHttpServletRequest pReq, SlingHttpServletResponse pResp) {
     return false;
-  }
-
-  private Map<String, String> getSuffix(ImageContext ctx) {
-    try {
-      Map<String, String> ret = new HashMap<>();
-      String suffixRaw = ctx.request.getRequestPathInfo().getSuffix();
-      suffixRaw = StringUtils.removeEnd(suffixRaw, "." + ctx.request.getRequestPathInfo().getExtension());
-      String[] suffix = StringUtils.split(suffixRaw, "/");
-      for (String suf : suffix) {
-        String[] spli = StringUtils.split(suf, "=");
-        if (spli.length == 2) {
-          ret.put(spli[0], URLDecoder.decode(spli[1], CharEncoding.UTF_8));
-        }
-      }
-      return ret;
-    }
-    catch (UnsupportedEncodingException ex) {
-      throw new RuntimeException("Unsupported encoding.", ex);
-    }
   }
 
 }

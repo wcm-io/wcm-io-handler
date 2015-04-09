@@ -30,7 +30,6 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.models.annotations.AemObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -57,8 +56,6 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
   private UrlHandler urlHandler;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
-  @AemObject(optional = true)
-  private WCMMode wcmMode;
 
   @Override
   public boolean accepts(Media media) {
@@ -67,7 +64,8 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     return (!media.isValid() || media.getRendition() == null)
-        && wcmMode == WCMMode.EDIT
+        && getWcmMode() != null
+        && getWcmMode() != WCMMode.DISABLED
         && (mediaFormats != null && mediaFormats.length > 0)
         && mediaArgs.isDummyImage();
   }

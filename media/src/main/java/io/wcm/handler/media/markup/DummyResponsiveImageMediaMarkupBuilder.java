@@ -29,14 +29,10 @@ import io.wcm.handler.media.impl.DummyImageServlet;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.url.UrlHandler;
+import io.wcm.handler.url.suffix.SuffixBuilder;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -48,6 +44,7 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.WCMMode;
+import com.google.common.collect.ImmutableSortedMap;
 
 /**
  * Generates a rendered dummy image as edit placeholder in WCM edit mode with information about image sizes
@@ -65,8 +62,6 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
   private UrlHandler urlHandler;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
-  @AemObject(optional = true)
-  private WCMMode wcmMode;
 
   @Override
   public final boolean accepts(Media media) {
@@ -75,8 +70,8 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     return (!media.isValid() || media.getRendition() == null)
-        && wcmMode != null
-        && wcmMode != WCMMode.DISABLED
+        && getWcmMode() != null
+        && getWcmMode() != WCMMode.DISABLED
         && (mediaFormats != null && mediaFormats.length > 1)
         && mediaArgs.isDummyImage() && mediaArgs.isMediaFormatsMandatory();
   }
@@ -150,19 +145,12 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
   }
 
   private String buildDummyServletSuffix(MediaFormat format) {
-    try {
-      long width = format.getWidth();
-      long height = format.getHeight();
-      String label = URLEncoder.encode(format.getLabel(), CharEncoding.UTF_8);
-      StringBuilder sb = new StringBuilder();
-      sb.append(DummyImageServlet.SUFFIX_HEIGHT).append("=").append(height).append("/");
-      sb.append(DummyImageServlet.SUFFIX_WIDTH).append("=").append(width).append("/");
-      sb.append(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME).append("=").append(label);
-      return sb.toString();
-    }
-    catch (UnsupportedEncodingException ex) {
-      throw new RuntimeException("Unsupported encoding.", ex);
-    }
+    SuffixBuilder builder = new SuffixBuilder(getRequest());
+    return builder.build(ImmutableSortedMap.<String, String>naturalOrder()
+        .put(DummyImageServlet.SUFFIX_WIDTH, Long.toString(format.getWidth()))
+        .put(DummyImageServlet.SUFFIX_HEIGHT, Long.toString(format.getHeight()))
+        .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, format.getLabel())
+        .build());
   }
 
   /**

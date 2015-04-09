@@ -126,7 +126,7 @@ public class DummyImageMediaMarkupBuilderTest {
     // test with wcm modes, without rendition, with mediaformat, no suppress
     mediaRequest.getMediaArgs().mediaFormat(null).dummyImage(true);
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
-    assertFalse(builder.accepts(media));
+    assertTrue(builder.accepts(media));
 
     // test with wcm modes, without rendition, with mediaformat, with suppress
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).dummyImage(false);
@@ -140,7 +140,7 @@ public class DummyImageMediaMarkupBuilderTest {
 
     // test invalid
     media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
-    assertFalse(builder.accepts(media));
+    assertTrue(builder.accepts(media));
 
   }
 

@@ -97,4 +97,19 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
     }
   }
 
+
+  /**
+   * @return Current WCM Mode (may be null)
+   */
+  protected final WCMMode getWcmMode() {
+    return this.wcmMode;
+  }
+
+  /**
+   * @return Current request
+   */
+  protected final SlingHttpServletRequest getRequest() {
+    return this.request;
+  }
+
 }
