@@ -160,11 +160,11 @@ public class DummyResponsiveImageMediaMarkupBuilderTest {
     assertEquals(2, sources.length());
 
     assertEquals("L1", sources.getJSONObject(0).get(MediaNameConstants.PROP_BREAKPOINT));
-    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=540/width=1920/mediaformat=Responsive+32%3A9.png",
+    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=540/mf=Responsive%7E2032%7E3A9/width=1920.png",
         sources.getJSONObject(0).get("src"));
 
     assertEquals("M1", sources.getJSONObject(1).get(MediaNameConstants.PROP_BREAKPOINT));
-    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=360/width=1281/mediaformat=Responsive+32%3A9.png",
+    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=360/mf=Responsive%7E2032%7E3A9/width=1281.png",
         sources.getJSONObject(1).get("src"));
     assertEquals("alt", null, image.getAttributeValue("alt"));
 
