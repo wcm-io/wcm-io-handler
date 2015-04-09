@@ -31,7 +31,6 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.suffix.SuffixBuilder;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -145,12 +144,11 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
   }
 
   private String buildDummyServletSuffix(MediaFormat format) {
-    SuffixBuilder builder = new SuffixBuilder(getRequest());
-    return builder.build(ImmutableValueMap.builder()
-        .put(DummyImageServlet.SUFFIX_WIDTH, format.getWidth())
-        .put(DummyImageServlet.SUFFIX_HEIGHT, format.getHeight())
-        .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, format.getLabel())
-        .build());
+    return new SuffixBuilder()
+    .put(DummyImageServlet.SUFFIX_WIDTH, format.getWidth())
+    .put(DummyImageServlet.SUFFIX_HEIGHT, format.getHeight())
+    .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, format.getLabel())
+    .build();
   }
 
   /**
