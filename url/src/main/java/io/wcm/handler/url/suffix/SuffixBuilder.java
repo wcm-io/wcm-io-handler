@@ -50,7 +50,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.commons.Filter;
-import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -197,16 +196,6 @@ public class SuffixBuilder {
   public SuffixBuilder putAll(Map<String, Object> map) {
     this.parameterMap.putAll(map);
     return this;
-  }
-
-  /**
-   * Puts a relative path of a page into the suffix.
-   * @param page the page
-   * @param suffixBasePage the base page used to construct the relative path
-   * @return this
-   */
-  public SuffixBuilder page(Page page, Page suffixBasePage) {
-    return resource(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
   }
 
   /**

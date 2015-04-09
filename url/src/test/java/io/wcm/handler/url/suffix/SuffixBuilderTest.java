@@ -50,9 +50,6 @@ import org.junit.Test;
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
 
-/**
- * Unit test for {@link SuffixBuilder}
- */
 public class SuffixBuilderTest {
 
   @Rule
@@ -295,7 +292,7 @@ public class SuffixBuilderTest {
   /**
    * tests escaping/unescaping functionality by constructing complex suffix with
    * {@link SuffixBuilder#resources(Iterable, Resource)} and then decomposing it using
-   * {@link SuffixParser#getPart(String, String)} and {@link SuffixParser#getResource(Filter)}
+   * {@link SuffixParser#get(String, String)} and {@link SuffixParser#getResource(Filter)}
    * @throws UnsupportedEncodingException
    */
   @Test
@@ -329,8 +326,8 @@ public class SuffixBuilderTest {
     String suffixWithExtension = "/" + suffix + ".html";
     SuffixParser parser = getParserWithIncommingSuffix(suffixWithExtension, basePage);
     // both nasty keys should be found and decoded
-    assertEquals(nastyValue1, parser.getPart(nastyKey1, null));
-    assertEquals(nastyValue2, parser.getPart(nastyKey2, null));
+    assertEquals(nastyValue1, parser.get(nastyKey1, String.class));
+    assertEquals(nastyValue2, parser.get(nastyKey2, String.class));
     // both nasty resources should be found and decoded
     assertNotNull("resource 1 invalid", parser.getResource(filterType1));
     assertEquals(nastyResource1.getPath(), parser.getResource(filterType1).getPath());
@@ -342,8 +339,8 @@ public class SuffixBuilderTest {
     String suffixWithoutExtension = "/" + suffix;
     parser = getParserWithIncommingSuffix(suffixWithoutExtension, basePage);
     // both nasty keys should be found and decoded
-    assertEquals(nastyValue1, parser.getPart(nastyKey1, null));
-    assertEquals(nastyValue2, parser.getPart(nastyKey2, null));
+    assertEquals(nastyValue1, parser.get(nastyKey1, String.class));
+    assertEquals(nastyValue2, parser.get(nastyKey2, String.class));
     // both nasty resources should be found and decoded
     assertEquals(nastyResource1.getPath(), parser.getResource(filterType1).getPath());
     assertEquals(nastyResource2.getPath(), parser.getResource(filterType2).getPath());
@@ -391,8 +388,8 @@ public class SuffixBuilderTest {
     String suffixWithExtension = "/" + suffix + ".html";
     SuffixParser parser = getParserWithIncommingSuffix(suffixWithExtension, basePage);
     // both nasty keys should be found and decoded
-    assertEquals(slashValue1, parser.getPart(slashKey1, null));
-    assertEquals(slashValue2, parser.getPart(slashKey2, null));
+    assertEquals(slashValue1, parser.get(slashKey1, String.class));
+    assertEquals(slashValue2, parser.get(slashKey2, String.class));
     // both nasty resources should be found and decoded
     assertNotNull("resource 1 invalid", parser.getResource(filterType1));
     assertEquals(slashResource1.getPath(), parser.getResource(filterType1).getPath());
@@ -404,8 +401,8 @@ public class SuffixBuilderTest {
     String suffixWithoutExtension = "/" + suffix;
     parser = getParserWithIncommingSuffix(suffixWithoutExtension, basePage);
     // both nasty keys should be found and decoded
-    assertEquals(slashValue1, parser.getPart(slashKey1, null));
-    assertEquals(slashValue2, parser.getPart(slashKey2, null));
+    assertEquals(slashValue1, parser.get(slashKey1, String.class));
+    assertEquals(slashValue2, parser.get(slashKey2, String.class));
     // both nasty resources should be found and decoded
     assertEquals(slashResource1.getPath(), parser.getResource(filterType1).getPath());
     assertEquals(slashResource2.getPath(), parser.getResource(filterType2).getPath());

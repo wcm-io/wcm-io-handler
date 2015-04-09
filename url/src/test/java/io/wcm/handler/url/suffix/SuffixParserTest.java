@@ -43,9 +43,6 @@ import org.junit.Test;
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
 
-/**
- * Unit test for {@link SuffixParser}
- */
 public class SuffixParserTest {
 
   @Rule
@@ -94,169 +91,163 @@ public class SuffixParserTest {
         .build());
   }
 
-  /**
-   * Test method for {@link SuffixParser#getPart(String, String)}
-   */
   @Test
-  public void testGetPartStringString() {
+  public void testGetLongIntBooleanStringString() {
     // create UrlSuffixHelper with single-part suffix in request
     String suffix = "/abc=def";
     SuffixParser parser = getParserWithIncomingSuffix(suffix);
     // reading existing key with and without default value should return the right value
-    assertEquals("def", parser.getPart("abc", "default"));
-    assertEquals("def", parser.getPart("abc", null));
+    assertEquals("def", parser.get("abc", "default"));
+    assertEquals("def", parser.get("abc", String.class));
     // reading a non-existing key should return the default value (which can be null!)
-    assertEquals("default", parser.getPart("def", "default"));
-    assertNull(parser.getPart("def", null));
+    assertEquals("default", parser.get("def", "default"));
+    assertNull(parser.get("def", String.class));
 
 
     // create UrlSuffixHelper with null suffix in request
     parser = getParserWithIncomingSuffix(null);
     // reading any key should return the default value (which can be null!)
-    assertEquals("default", parser.getPart("abc", "default"));
-    assertNull(parser.getPart("abc", null));
+    assertEquals("default", parser.get("abc", "default"));
+    assertNull(parser.get("abc", String.class));
 
 
     // create UrlSuffixHelper with empty suffix in request
     parser = getParserWithIncomingSuffix("");
     // reading any key should return the default value (which can be null!)
-    assertEquals("default", parser.getPart("abc", "default"));
-    assertNull(parser.getPart("abc", null));
+    assertEquals("default", parser.get("abc", "default"));
+    assertNull(parser.get("abc", String.class));
 
 
     // create UrlSuffixHelper with empty *value* in request
     parser = getParserWithIncomingSuffix("/abc=");
     // reading the key should return the empty string
-    assertEquals("", parser.getPart("abc", "default"));
+    assertEquals("", parser.get("abc", "default"));
 
 
     // create UrlSuffixHelper with additional extension in suffix
     parser = getParserWithIncomingSuffix("/abc=def.html");
     // reading the key should return the empty string
-    assertEquals("def", parser.getPart("abc", "default"));
+    assertEquals("def", parser.get("abc", "default"));
   }
 
-  /**
-   * Test method for {@link SuffixParser#getPart(String, boolean)}
-   */
   @Test
-  public void testGetPartStringBoolean() {
+  public void testGetLongIntBooleanStringBoolean() {
     // create UrlSuffixHelper with single-part suffix in request
     SuffixParser parser = getParserWithIncomingSuffix("/abc=true");
     // reading existing key with any default value should return the right value
-    assertEquals(true, parser.getPart("abc", true));
-    assertEquals(true, parser.getPart("abc", false));
+    assertEquals(true, parser.get("abc", true));
+    assertEquals(true, parser.get("abc", false));
     // reading a non-existing key should return the default value
-    assertEquals(true, parser.getPart("def", true));
-    assertEquals(false, parser.getPart("def", false));
+    assertEquals(true, parser.get("def", true));
+    assertEquals(false, parser.get("def", false));
+    // test with type
+    assertEquals(true, parser.get("abc", Boolean.class));
+    assertEquals(false, parser.get("def", Boolean.class));
 
 
     // create UrlSuffixHelper with null suffix in request
     parser = getParserWithIncomingSuffix(null);
     // reading any key should return the default value
-    assertEquals(true, parser.getPart("def", true));
-    assertEquals(false, parser.getPart("def", false));
+    assertEquals(true, parser.get("def", true));
+    assertEquals(false, parser.get("def", false));
 
 
     // create UrlSuffixHelper with empty suffix in request
     parser = getParserWithIncomingSuffix("");
     // reading any key should return the default value
-    assertEquals(true, parser.getPart("def", true));
-    assertEquals(false, parser.getPart("def", false));
+    assertEquals(true, parser.get("def", true));
+    assertEquals(false, parser.get("def", false));
 
 
     // create UrlSuffixHelper with invalid boolean value
     parser = getParserWithIncomingSuffix("/abc=Ger");
     // reading the key should return *false*, as default value is only used if parameter is not set
-    assertEquals(true, parser.getPart("abc", true));
-    assertEquals(false, parser.getPart("abc", false));
+    assertEquals(true, parser.get("abc", true));
+    assertEquals(false, parser.get("abc", false));
   }
 
-  /**
-   * Test method for {@link SuffixParser#getPart(String, int)}
-   */
   @Test
-  public void testGetPartStringInt() {
+  public void testGetLongIntBooleanStringInt() {
     // create UrlSuffixHelper with single-part suffix in request
     SuffixParser parser = getParserWithIncomingSuffix("/abc=123");
     // reading existing key with any default value should return the right value
-    assertEquals(123, parser.getPart("abc", 123));
+    assertEquals(123, (int)parser.get("abc", 123));
     // reading a non-existing key should return the default value
-    assertEquals(456, parser.getPart("def", 456));
+    assertEquals(456, (int)parser.get("def", 456));
+    // test with type
+    assertEquals(123, (int)parser.get("abc", Integer.class));
+    assertEquals(0, (int)parser.get("def", Integer.class));
 
 
     // create UrlSuffixHelper with null suffix in request
     parser = getParserWithIncomingSuffix(null);
     // reading any key should return the default value
-    assertEquals(123, parser.getPart("def", 123));
+    assertEquals(123, (int)parser.get("def", 123));
 
 
     // create UrlSuffixHelper with empty suffix in request
     parser = getParserWithIncomingSuffix("");
     // reading any key should return the default value
-    assertEquals(true, parser.getPart("def", true));
-    assertEquals(false, parser.getPart("def", false));
+    assertEquals(true, parser.get("def", true));
+    assertEquals(false, parser.get("def", false));
 
 
     // create UrlSuffixHelper with invalid value in request
     parser = getParserWithIncomingSuffix("/abc=def");
     // reading any key should return the default value
-    assertEquals(123, parser.getPart("abc", 123));
-    assertEquals(123, parser.getPart("def", 123));
+    assertEquals(123, (int)parser.get("abc", 123));
+    assertEquals(123, (int)parser.get("def", 123));
 
 
     // create UrlSuffixHelper with empty value in request
     parser = getParserWithIncomingSuffix("/abc=");
     // reading any key should return the default value
-    assertEquals(123, parser.getPart("abc", 123));
-    assertEquals(123, parser.getPart("def", 123));
+    assertEquals(123, (int)parser.get("abc", 123));
+    assertEquals(123, (int)parser.get("def", 123));
   }
 
-  /**
-   * Test method for {@link SuffixParser#getPart(String, long)}
-   */
   @Test
-  public void testGetPartStringLong() {
+  public void testGetLongIntBooleanStringLong() {
     // create UrlSuffixHelper with single-part suffix in request
     SuffixParser parser = getParserWithIncomingSuffix("/abc=123");
     // reading existing key with any default value should return the right value
-    assertEquals(123L, parser.getPart("abc", 123L));
+    assertEquals(123L, (long)parser.get("abc", 123L));
     // reading a non-existing key should return the default value
-    assertEquals(456L, parser.getPart("def", 456L));
+    assertEquals(456L, (long)parser.get("def", 456L));
+    // test with type
+    assertEquals(123L, (long)parser.get("abc", Long.class));
+    assertEquals(0L, (long)parser.get("def", Long.class));
 
 
     // create UrlSuffixHelper with null suffix in request
     parser = getParserWithIncomingSuffix(null);
     // reading any key should return the default value
-    assertEquals(123L, parser.getPart("def", 123L));
+    assertEquals(123L, (long)parser.get("def", 123L));
 
 
     // create UrlSuffixHelper with empty suffix in request
     parser = getParserWithIncomingSuffix("");
     // reading any key should return the default value
-    assertEquals(true, parser.getPart("def", true));
-    assertEquals(false, parser.getPart("def", false));
+    assertEquals(true, parser.get("def", true));
+    assertEquals(false, parser.get("def", false));
 
 
     // create UrlSuffixHelper with invalid value in request
     parser = getParserWithIncomingSuffix("/abc=def");
     // reading any key should return the default value
-    assertEquals(123L, parser.getPart("abc", 123L));
-    assertEquals(123L, parser.getPart("def", 123L));
+    assertEquals(123L, (long)parser.get("abc", 123L));
+    assertEquals(123L, (long)parser.get("def", 123L));
 
 
     // create UrlSuffixHelper with empty value in request
     parser = getParserWithIncomingSuffix("/abc=");
     // reading any key should return the default value
-    assertEquals(123L, parser.getPart("abc", 123L));
-    assertEquals(123L, parser.getPart("def", 123L));
+    assertEquals(123L, (long)parser.get("abc", 123L));
+    assertEquals(123L, (long)parser.get("def", 123L));
   }
 
-  /**
-   * Test method for {@link SuffixParser#getResource()}
-   */
   @Test
-  public void testGetResource() {
+  public void testGetLongIntBooleanStringResource() {
 
     // create a page and a resource within the page
     Page currentPage = context.create().page("/content/a", "template", "title");
@@ -282,11 +273,8 @@ public class SuffixParserTest {
     assertNull(parser.getResource());
   }
 
-  /**
-   * Test method for {@link SuffixParser#getResource(String)}
-   */
   @Test
-  public void testGetResourceString() {
+  public void testGetLongIntBooleanStringResourceString() {
 
     // create a page that and a resource that within the page
     String resourceType = "theResourceType";
@@ -322,11 +310,8 @@ public class SuffixParserTest {
   }
 
 
-  /**
-   * Test method for {@link SuffixParser#getResource(Filter)}
-   */
   @Test
-  public void testGetResourceFilterOfResource() {
+  public void testGetLongIntBooleanStringResourceFilterOfResource() {
     // create a page and a resource within the page
     String resourceType = "theResourceType";
     Filter<Resource> filter = new ResourceTypeFilter(resourceType);
@@ -357,11 +342,8 @@ public class SuffixParserTest {
     assertNull(parser.getResource(filter));
   }
 
-  /**
-   * Test method for {@link SuffixParser#getResource(Filter, String)}
-   */
   @Test
-  public void testGetResourceFilterOfResourceString() {
+  public void testGetLongIntBooleanStringResourceFilterOfResourceString() {
     // create a page that and a resource that within the page
     final String resourceType = "theResourceType";
     Page basePage = context.create().page("/content/a", "template", "title");
@@ -400,11 +382,8 @@ public class SuffixParserTest {
     assertNull(suffixResource);
   }
 
-  /**
-   * Test method for {@link SuffixParser#getResources(Filter, String)}
-   */
   @Test
-  public void testGetResources() {
+  public void testGetLongIntBooleanStringResources() {
     // create a page with 4 resources
     final String resourceType = "theResourceType";
     Page basePage = context.create().page("/content/a", "template", "title");

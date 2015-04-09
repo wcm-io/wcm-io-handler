@@ -66,10 +66,54 @@ public class SuffixParser {
   /**
    * Extract the value of a named suffix part from this request's suffix
    * @param key key of the suffix part
-   * @param defaultValue the default value to return if suffix part not set
-   * @return the value of that named parameter (or null if not used)
+   * @param clazz Type expected for return value.
+   *          Only String, Boolean, Integer, Long are supported.
+   * @param <T> Parameter type.
+   * @return the value of that named parameter (or the default value if not used)
    */
-  public String getPart(String key, String defaultValue) {
+  @SuppressWarnings("unchecked")
+  public <T> T get(String key, Class<T> clazz) {
+    if (clazz == String.class) {
+      return (T)getString(key, (String)null);
+    }
+    if (clazz == Boolean.class) {
+      return (T)(Boolean)getBoolean(key, false);
+    }
+    if (clazz == Integer.class) {
+      return (T)(Integer)getInt(key, 0);
+    }
+    if (clazz == Long.class) {
+      return (T)(Long)getLong(key, 0L);
+    }
+    throw new IllegalArgumentException("Unsupported type: " + clazz.getName());
+  }
+
+  /**
+   * Extract the value of a named suffix part from this request's suffix
+   * @param key key of the suffix part
+   * @param defaultValue the default value to return if suffix part not set.
+   *          Only String, Boolean, Integer, Long are supported.
+   * @param <T> Parameter type.
+   * @return the value of that named parameter (or the default value if not used)
+   */
+  @SuppressWarnings("unchecked")
+  public <T> T get(String key, T defaultValue) {
+    if (defaultValue instanceof String || defaultValue == null) {
+      return (T)getString(key, (String)defaultValue);
+    }
+    if (defaultValue instanceof Boolean) {
+      return (T)(Boolean)getBoolean(key, (Boolean)defaultValue);
+    }
+    if (defaultValue instanceof Integer) {
+      return (T)(Integer)getInt(key, (Integer)defaultValue);
+    }
+    if (defaultValue instanceof Long) {
+      return (T)(Long)getLong(key, (Long)defaultValue);
+    }
+    throw new IllegalArgumentException("Unsupported type: " + defaultValue.getClass().getName());
+  }
+
+  private String getString(String key, String defaultValue) {
     String value = findSuffixPartByKey(key);
     if (value == null) {
       return defaultValue;
@@ -77,13 +121,7 @@ public class SuffixParser {
     return value;
   }
 
-  /**
-   * Extract the value of a named boolean suffix part from this request's suffix
-   * @param key key of the suffix part
-   * @param defaultValue the default value to return if suffix part not set or not a boolean
-   * @return the value of that named parameter (or null if not used)
-   */
-  public boolean getPart(String key, boolean defaultValue) {
+  private boolean getBoolean(String key, boolean defaultValue) {
     String value = findSuffixPartByKey(key);
     if (value == null) {
       return defaultValue;
@@ -101,13 +139,7 @@ public class SuffixParser {
     return defaultValue;
   }
 
-  /**
-   * Extract the value of a named numerical suffix part from this request's suffix
-   * @param key key of the suffix part
-   * @param defaultValue the default value to return if suffix part not set
-   * @return the value of that named parameter (or null if not used)
-   */
-  public int getPart(String key, int defaultValue) {
+  private int getInt(String key, int defaultValue) {
     String value = findSuffixPartByKey(key);
     if (value == null) {
       return defaultValue;
@@ -115,13 +147,7 @@ public class SuffixParser {
     return NumberUtils.toInt(value, defaultValue);
   }
 
-  /**
-   * Extract the value of a named numerical suffix part from this request's suffix
-   * @param key key of the suffix part
-   * @param defaultValue the default value to return if suffix part not set
-   * @return the value of that named parameter (or null if not used)
-   */
-  public long getPart(String key, long defaultValue) {
+  private long getLong(String key, long defaultValue) {
     String value = findSuffixPartByKey(key);
     if (value == null) {
       return defaultValue;
