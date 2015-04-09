@@ -47,15 +47,15 @@ import com.day.image.font.AbstractFont;
  * Note: most of the values used for scaling are the result of experiments, how the image looks nice.
  */
 @SlingServlet(
-    paths = DummyImageServlet.PATH,
+    resourceTypes = "/apps/wcm-io/handler/media/components/dummyImage",
     extensions = FileExtension.PNG)
 public final class DummyImageServlet extends AbstractImageServlet {
   private static final long serialVersionUID = 1L;
 
   /**
-   * Servlet path
+   * Dummy image content path
    */
-  public static final String PATH = "/apps/wcm-io/handler/media/bin/dummyimage";
+  public static final String PATH = "/apps/wcm-io/handler/media/content/dummyImage";
 
   /**
    * Suffix for width
