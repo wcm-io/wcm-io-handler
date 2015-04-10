@@ -21,19 +21,23 @@ package io.wcm.handler.media.impl;
 
 import static org.junit.Assert.assertEquals;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.url.suffix.SuffixBuilder;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-// TODO: enable this unit tests and test futher variants when AEM mocks supports mocking Designer
-@Ignore
+import com.day.image.Layer;
+
 public class DummyImageServletTest {
 
   @Rule
@@ -51,6 +55,40 @@ public class DummyImageServletTest {
   public void testGet_NoSuffix() throws Exception {
     underTest.service(context.request(), context.response());
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertResponseLayerDimension(1, 1);
+  }
+
+  @Test
+  public void testGet_WidthHeight() throws Exception {
+    ((MockRequestPathInfo)context.request().getRequestPathInfo()).setSuffix(new SuffixBuilder()
+    .put(DummyImageServlet.SUFFIX_WIDTH, 100)
+    .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
+    .build());
+
+    underTest.service(context.request(), context.response());
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertResponseLayerDimension(100, 50);
+  }
+
+  @Test
+  public void testGet_WidthHeightName() throws Exception {
+    ((MockRequestPathInfo)context.request().getRequestPathInfo()).setSuffix(new SuffixBuilder()
+    .put(DummyImageServlet.SUFFIX_WIDTH, 100)
+    .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
+    .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, "myName")
+    .build());
+
+    underTest.service(context.request(), context.response());
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertResponseLayerDimension(100, 50);
+  }
+
+  private void assertResponseLayerDimension(int width, int height) throws IOException {
+    try (InputStream is = new ByteArrayInputStream(context.response().getOutput())) {
+      Layer layer = new Layer(is);
+      assertEquals(width, layer.getWidth());
+      assertEquals(height, layer.getHeight());
+    }
   }
 
 }
