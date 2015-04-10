@@ -15,25 +15,41 @@ The URL Handler bundle provides two classes to help managing parameters in suffi
 
 ### SuffixBuilder
 
-// TODO
+Using a builder pattern you can put parameters into the suffix.
 
-Example:
+Examples:
 
 ```java
-// TODO
+// Suffix with some params
+String suffix = new SuffixBuilder().put("param1", "value1").put("param2", "value2").build();
+
+// Params with special chars
+String suffix = new SuffixBuilder().put("param1", "25,00 €").put("param2", "x=1!").build();
+
+// Suffix with path to resource relative to page resource (e.g. inside a page)
+String suffix = new SuffixBuilder().resource(myResource, currentPage.getContentResource());
 ```
+
+Additionally it is possible it instantiate a SuffixBuilder with special "state keeping" strategies that allow inherit all of a certain set of suffix parameters from request to request. See [JavaDocs][suffix-builder] for details.
 
 
 ### SuffixParser
 
+The suffix parser allows to get the parameters from the suffix.
 
-// TODO
-
-Example:
+Examples:
 
 ```java
-// TODO
+// Suffix with some params
+SuffixParser parser = new SuffixParser(request);
+String param1 = parser.get("param1", String.class);
+String param2 = parser.get("param2", "defaultValue");
+
+// Suffix with path to resource relative to page resource (e.g. inside a page)
+Resource myResource = parser.getResource(currentPage.getContentResource());
 ```
+
+The parser support different data types and optional filter strategies to validate/filter the resources that are referenced in the suffix. See [JavaDocs][suffix-parser] for details.
 
 
 
