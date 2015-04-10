@@ -64,7 +64,7 @@ public final class SuffixBuilder {
   private final List<String> resourcePaths = new ArrayList<>();
 
   /**
-   * Create a {@link SuffixBuilder} which discards all existing suffix state when constructing a new suffix).
+   * Create a {@link SuffixBuilder} which discards all existing suffix state when constructing a new suffix.
    */
   public SuffixBuilder() {
     this.initialSuffixParts = new ArrayList<>();
