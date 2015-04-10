@@ -33,7 +33,7 @@ import org.junit.Test;
 
 public class MediaFileServletTest {
 
-  private static final long EXPECTED_CONTENT_LENGTH = 25918;
+  private static final long EXPECTED_CONTENT_LENGTH = 15471;
 
   @Rule
   public AemContext context = AppAemContext.newAemContext();

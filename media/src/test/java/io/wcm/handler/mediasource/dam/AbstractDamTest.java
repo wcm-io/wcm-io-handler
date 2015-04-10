@@ -48,6 +48,9 @@ public abstract class AbstractDamTest {
   // a media item with three renditions of the 'standard_image' rendition group
   protected static final String MEDIAITEM_PATH_STANDARD = ROOTPATH_DAM + "/standard.jpg";
 
+  // a media item with one rendition in 16:10 format
+  protected static final String MEDIAITEM_PATH_16_10 = ROOTPATH_DAM + "/sixteen-ten.jpg";
+
   // path to a media item that does not exist
   protected static final String MEDIAITEM_PATH_NONEXISTANT = ROOTPATH_DAM + "/non_existant.jpg";
 

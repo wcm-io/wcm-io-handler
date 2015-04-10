@@ -494,7 +494,7 @@ public final class DummyMediaFormats {
   /* format for testing ratio validation */
   public static final MediaFormat RATIO = create("ratio", APPLICATION_ID)
       .label("Ratio (16:10)")
-      .ratio(1.6)
+      .ratio(16, 10)
       .extensions("gif","jpg","png")
       .build();
 

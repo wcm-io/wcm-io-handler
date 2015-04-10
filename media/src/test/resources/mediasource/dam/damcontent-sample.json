@@ -105,6 +105,31 @@
     }
   },
 
+  "sixteen-ten.jpg": {
+    "jcr:primaryType":"dam:Asset",
+    "jcr:content": {
+      "jcr:primaryType":"dam:AssetContent",
+      "metadata": {
+        "jcr:primaryType": "nt:unstructured",
+        "dc:format": "image/jpeg",
+        "dam:MIMEtype": "image/jpeg",
+        "tiff:ImageWidth": 1600,
+        "tiff:ImageLength": 1000,
+        "dc:title": "16:10 Bild"
+      },
+      "renditions": {
+        "jcr:primaryType":"nt:folder",
+        "original": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        }
+      }
+    }
+  },
+
   "imageNoAltNoDimensions.jpg": {
     "jcr:primaryType":"dam:Asset",
     "jcr:content": {

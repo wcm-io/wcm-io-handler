@@ -25,6 +25,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_STANDARD;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOLZAUTO_BANNER;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOLZAUTO_CUTOUT_13PLUS;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT;
@@ -45,6 +46,8 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
@@ -87,6 +90,7 @@ public class InlineMediaSourceTest {
   private Resource mediaInlineResource;
   private Resource mediaInlineWithFileResource;
   private Resource mediaInlineSampleImageResource;
+  private Resource mediaInlineSampleImageResource_16_10;
   private Resource emptyResource;
 
   protected Adaptable adaptable() {
@@ -129,6 +133,14 @@ public class InlineMediaSourceTest {
     context.load().binaryResource("/sample_image_215x102.jpg",
         unstructuredNodeMediaInlineSampleImage.getPath() + "/" + MediaNameConstants.NN_MEDIA_INLINE, ContentType.JPEG);
 
+    // prepare inline media object with real image binary data to test scaling in 16:10 format
+    Resource unstructuredNodeMediaInlineSampleImage_16_10 = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage16_10",
+        ImmutableValueMap.builder()
+        .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "sample_image_400x250.jpg")
+        .build());
+    context.load().binaryResource("/sample_image_400x250.jpg",
+        unstructuredNodeMediaInlineSampleImage_16_10.getPath() + "/" + MediaNameConstants.NN_MEDIA_INLINE, ContentType.JPEG);
+
     // prepare invalid resource
     Resource emptyNode = context.resourceResolver().create(contentNode, "emptyNode", ValueMap.EMPTY);
 
@@ -139,6 +151,7 @@ public class InlineMediaSourceTest {
     mediaInlineResource = context.resourceResolver().getResource(unstructuredNodeMediaInline.getPath());
     mediaInlineWithFileResource = context.resourceResolver().getResource(unstructuredNodeMediaInlineWithFile.getPath());
     mediaInlineSampleImageResource = context.resourceResolver().getResource(unstructuredNodeMediaInlineSampleImage.getPath());
+    mediaInlineSampleImageResource_16_10 = context.resourceResolver().getResource(unstructuredNodeMediaInlineSampleImage_16_10.getPath());
     emptyResource = context.resourceResolver().getResource(emptyNode.getPath());
 
   }
@@ -289,7 +302,7 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.path", ROOTPATH_CONTENT + "/jcr:content/resourceMediaInlineSampleImage/mediaInline", rendition.getPath());
     assertEquals("rendition.filename", "sample_image_215x102.jpg", rendition.getFileName());
     assertEquals("rendition.fileextension", "jpg", rendition.getFileExtension());
-    assertEquals("rendition.filesize", 25918, rendition.getFileSize());
+    assertEquals("rendition.filesize", 15471, rendition.getFileSize());
     assertEquals("rendition.width", 215, rendition.getWidth());
     assertEquals("rendition.height", 102, rendition.getHeight());
 
@@ -629,6 +642,49 @@ public class InlineMediaSourceTest {
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.file/sample_image_215x102.jpg",
         renditions.get(1).getUrl());
     assertEquals(SHOWROOM_CONTROLS_SCALE1, renditions.get(1).getMediaFormat());
+  }
+
+  @Test
+  public void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new ResponsiveMediaFormatsBuilder(RATIO)
+    .breakpoint("B1", 160, 100)
+    .breakpoint("B2", 320, 200)
+    .build());
+
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10, mediaArgs).build();
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 2, media.getRenditions().size());
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    Rendition rendition0 = renditions.get(0);
+    assertEquals("rendition.mediaUrl.1",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.160.100.file/sample_image_400x250.jpg",
+        rendition0.getUrl());
+    assertEquals(160, rendition0.getWidth());
+    assertEquals(100, rendition0.getHeight());
+
+    MediaFormat mediaFormat0 = renditions.get(0).getMediaFormat();
+    assertEquals(RATIO.getLabel(), mediaFormat0.getLabel());
+    assertEquals(RATIO.getRatio(), mediaFormat0.getRatio(), 0.001d);
+    assertEquals(160, mediaFormat0.getWidth());
+    assertEquals(100, mediaFormat0.getHeight());
+    assertEquals("B1", mediaFormat0.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
+
+    Rendition rendition1 = renditions.get(1);
+    assertEquals("rendition.mediaUrl.2",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.320.200.file/sample_image_400x250.jpg",
+        rendition1.getUrl());
+    assertEquals(320, rendition1.getWidth());
+    assertEquals(200, rendition1.getHeight());
+
+    MediaFormat mediaFormat1 = renditions.get(1).getMediaFormat();
+    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(320, mediaFormat1.getWidth());
+    assertEquals(200, mediaFormat1.getHeight());
+    assertEquals("B2", mediaFormat1.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
   }
 
 }
