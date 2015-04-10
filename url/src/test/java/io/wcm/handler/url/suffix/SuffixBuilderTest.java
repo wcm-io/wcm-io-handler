@@ -291,7 +291,7 @@ public class SuffixBuilderTest {
 
   /**
    * tests escaping/unescaping functionality by constructing complex suffix with
-   * {@link SuffixBuilder#resources(Iterable, Resource)} and then decomposing it using
+   * {@link SuffixBuilder#resources(List, Resource)} and then decomposing it using
    * {@link SuffixParser#get(String, String)} and {@link SuffixParser#getResource(Filter)}
    * @throws UnsupportedEncodingException
    */

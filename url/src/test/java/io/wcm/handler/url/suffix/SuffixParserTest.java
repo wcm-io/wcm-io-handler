@@ -279,12 +279,11 @@ public class SuffixParserTest {
     // create a page that and a resource that within the page
     String resourceType = "theResourceType";
     Page basePage = context.create().page("/content/a", "template", "title");
-    String basePath = basePage.getContentResource().getPath();
     Resource targetResource = createResource("/content/a/jcr:content/b/c", resourceType);
 
     // get the resource by path (relative to the page) and resource type filter
     SuffixParser parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c");
-    Resource suffixResource = parser.getResource(basePath);
+    Resource suffixResource = parser.getResource(basePage.getContentResource());
 
     // check that the right target resource is found
     assertNotNull(suffixResource);
@@ -293,20 +292,16 @@ public class SuffixParserTest {
 
     // don't crash if a non-existing path specified in suffix
     parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "c" + ESCAPED_SLASH + "d");
-    assertNull(parser.getResource(basePath));
+    assertNull(parser.getResource(basePage.getContentResource()));
 
     // don't crash with null suffix
     parser = getParserWithIncomingSuffix(null);
-    assertNull(parser.getResource(basePath));
+    assertNull(parser.getResource(basePage.getContentResource()));
 
 
-    // don't crash if a non-existing path is specified as base path
+    // don't crash if a null resource is specified as base path - use the current page as base
     parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c", basePage);
-    assertNull(parser.getResource("/does/not/exist"));
-
-    // don't crash if a null path is specified as base path - use the current page as base
-    parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c", basePage);
-    assertNotNull(parser.getResource((String)null));
+    assertNotNull(parser.getResource((Resource)null));
   }
 
 
@@ -347,22 +342,19 @@ public class SuffixParserTest {
     // create a page that and a resource that within the page
     final String resourceType = "theResourceType";
     Page basePage = context.create().page("/content/a", "template", "title");
-    String basePath = basePage.getContentResource().getPath();
     Resource targetResource = createResource("/content/a/jcr:content/b/c", resourceType);
 
     // filter that only includes resources named "c";
     Filter<Resource> cFilter = new Filter<Resource>() {
-
       @Override
       public boolean includes(Resource pResource) {
         return pResource.getPath().endsWith("/c");
       }
-
     };
 
     // get the resource by path (relative to the page) using the "c" filter
     SuffixParser parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c");
-    Resource suffixResource = parser.getResource(cFilter, basePath);
+    Resource suffixResource = parser.getResource(cFilter, basePage.getContentResource());
     // check that the /content/a/jcr:content/b/c is found
     assertNotNull(suffixResource);
     assertEquals(targetResource.getPath(), suffixResource.getPath());
@@ -370,14 +362,14 @@ public class SuffixParserTest {
 
     // get the "b" resource (relative to the page) using the "c" filter
     parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b");
-    suffixResource = parser.getResource(cFilter, basePath);
+    suffixResource = parser.getResource(cFilter, basePage.getContentResource());
     // that resource doesn't match the filter
     assertNull(suffixResource);
 
 
     // get a non existing resource (relative to the page) using the "c" filter
     parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "1" + ESCAPED_SLASH + "c");
-    suffixResource = parser.getResource(cFilter, basePath);
+    suffixResource = parser.getResource(cFilter, basePage.getContentResource());
     // that resource would match the filter but doesn't exist
     assertNull(suffixResource);
   }
@@ -408,7 +400,7 @@ public class SuffixParserTest {
         + SUFFIX_PART_DELIMITER + "b" + ESCAPED_SLASH + "d"
         + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "c"
         + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "d");
-    List<Resource> suffixResources = parser.getResources(cFilter, basePath);
+    List<Resource> suffixResources = parser.getResources(cFilter, basePage.getContentResource());
     // check that the two resources named c are found
     assertNotNull(suffixResources);
     assertEquals(2, suffixResources.size());
@@ -421,7 +413,7 @@ public class SuffixParserTest {
         + SUFFIX_PART_DELIMITER + "b" + ESCAPED_SLASH + "d"
         + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "c"
         + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "d");
-    List<Resource> allResources = parser.getResources(null, basePath);
+    List<Resource> allResources = parser.getResources(null, basePage.getContentResource());
     // check that all resources are found
     assertNotNull(allResources);
     assertEquals(4, allResources.size());
@@ -435,7 +427,7 @@ public class SuffixParserTest {
     parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c"
         + SUFFIX_PART_DELIMITER + "e" + ESCAPED_SLASH + "c"
         + SUFFIX_PART_DELIMITER + "e" + ESCAPED_SLASH + "d");
-    suffixResources = parser.getResources(cFilter, basePath);
+    suffixResources = parser.getResources(cFilter, basePage.getContentResource());
     // check that an only the existing resource b/c is found
     assertNotNull(suffixResources);
     assertEquals(1, suffixResources.size());

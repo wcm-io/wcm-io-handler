@@ -181,16 +181,16 @@ public final class SuffixParser {
    * @return the Resource or null if no such resource exists
    */
   public Resource getResource() {
-    return getResource((Filter<Resource>)null, null);
+    return getResource((Filter<Resource>)null, (Resource)null);
   }
 
   /**
    * Parse the suffix as resource paths and return the first resource that exists
-   * @param basePath the suffix path will be resolved relative to this path (null for current page's jcr:content node)
+   * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return the resource or null if no such resource was selected by suffix
    */
-  public Resource getResource(String basePath) {
-    return getResource((Filter<Resource>)null, basePath);
+  public Resource getResource(Resource baseResource) {
+    return getResource((Filter<Resource>)null, baseResource);
   }
 
   /**
@@ -200,17 +200,17 @@ public final class SuffixParser {
    * @return the resource or null if no such resource was selected by suffix
    */
   public Resource getResource(Filter<Resource> filter) {
-    return getResource(filter, (String)null);
+    return getResource(filter, (Resource)null);
   }
 
   /**
-   * Get the first item returned by {@link #getResources(Filter, String)} or null if list is empty
+   * Get the first item returned by {@link #getResources(Filter, Resource)} or null if list is empty
    * @param filter the resource filter
-   * @param basePath the suffix path is relative to this path (null for current page's jcr:content node)
+   * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return the first {@link Resource} or null
    */
-  public Resource getResource(Filter<Resource> filter, String basePath) {
-    List<Resource> suffixResources = getResources(filter, basePath);
+  public Resource getResource(Filter<Resource> filter, Resource baseResource) {
+    List<Resource> suffixResources = getResources(filter, baseResource);
     if (suffixResources.isEmpty()) {
       return null;
     }
@@ -220,26 +220,49 @@ public final class SuffixParser {
   }
 
   /**
-   * Get the resources selected in the suffix of the URL
-   * @param filter optional filter to select only specific resources
-   * @param basePath the suffix path is relative to this path (null for current page's jcr:content node)
+   * Get the resources within the current page selected in the suffix of the URL
    * @return a list containing the Resources
    */
-  public List<Resource> getResources(Filter<Resource> filter, String basePath) {
+  public List<Resource> getResources() {
+    return getResources((Filter<Resource>)null, (Resource)null);
+  }
+
+  /**
+   * Get the resources selected in the suffix of the URL
+   * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
+   * @return a list containing the Resources
+   */
+  public List<Resource> getResources(Resource baseResource) {
+    return getResources((Filter<Resource>)null, baseResource);
+  }
+
+  /**
+   * Get the resources selected in the suffix of the URL
+   * @param filter optional filter to select only specific resources
+   * @return a list containing the Resources
+   */
+  public List<Resource> getResources(Filter<Resource> filter) {
+    return getResources(filter, (Resource)null);
+  }
+
+  /**
+   * Get the resources selected in the suffix of the URL
+   * @param filter optional filter to select only specific resources
+   * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
+   * @return a list containing the Resources
+   */
+  public List<Resource> getResources(Filter<Resource> filter, Resource baseResource) {
 
     // resolve base path or fallback to current page's content if not specified
-    Resource baseResource;
-    if (StringUtils.isNotBlank(basePath)) {
-      baseResource = request.getResourceResolver().getResource(basePath);
-    }
-    else {
+    Resource baseResourceToUse = baseResource;
+    if (baseResourceToUse == null) {
       PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
       Page currentPage = pageManager.getContainingPage(request.getResource());
       if (currentPage != null) {
-        baseResource = currentPage.getContentResource();
+        baseResourceToUse = currentPage.getContentResource();
       }
       else {
-        baseResource = request.getResource();
+        baseResourceToUse = request.getResource();
       }
     }
 
@@ -258,7 +281,7 @@ public final class SuffixParser {
       String decodedPath = decodeResourcePathPart(path);
 
       // lookup the resource specified by the path (which is relative to the current page's content resource)
-      Resource resource = request.getResourceResolver().getResource(baseResource, decodedPath);
+      Resource resource = request.getResourceResolver().getResource(baseResourceToUse, decodedPath);
       if (resource == null) {
         // no resource found with given path, continue with next path in suffix
         continue;

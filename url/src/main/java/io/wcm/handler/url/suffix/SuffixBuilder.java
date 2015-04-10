@@ -221,7 +221,7 @@ public final class SuffixBuilder {
    * @param baseResource base resource to construct relative path
    * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
    */
-  public SuffixBuilder resources(Iterable<Resource> resources, Resource baseResource) {
+  public SuffixBuilder resources(List<Resource> resources, Resource baseResource) {
     for (Resource resource : resources) {
       resource(resource, baseResource);
     }
