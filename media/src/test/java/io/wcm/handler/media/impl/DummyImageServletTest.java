@@ -31,7 +31,6 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,7 +47,7 @@ public class DummyImageServletTest {
   @Before
   public void setUp() {
     underTest = new DummyImageServlet();
-    ((MockRequestPathInfo)context.request().getRequestPathInfo()).setExtension(FileExtension.PNG);
+    context.requestPathInfo().setExtension(FileExtension.PNG);
   }
 
   @Test
@@ -60,7 +59,7 @@ public class DummyImageServletTest {
 
   @Test
   public void testGet_WidthHeight() throws Exception {
-    ((MockRequestPathInfo)context.request().getRequestPathInfo()).setSuffix(new SuffixBuilder()
+    context.requestPathInfo().setSuffix(new SuffixBuilder()
     .put(DummyImageServlet.SUFFIX_WIDTH, 100)
     .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
     .build());
@@ -72,7 +71,7 @@ public class DummyImageServletTest {
 
   @Test
   public void testGet_WidthHeightName() throws Exception {
-    ((MockRequestPathInfo)context.request().getRequestPathInfo()).setSuffix(new SuffixBuilder()
+    context.requestPathInfo().setSuffix(new SuffixBuilder()
     .put(DummyImageServlet.SUFFIX_WIDTH, 100)
     .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
     .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, "myName")

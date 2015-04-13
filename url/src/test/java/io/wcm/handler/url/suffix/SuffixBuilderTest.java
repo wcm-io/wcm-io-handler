@@ -43,7 +43,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.JcrResourceConstants;
-import org.apache.sling.testing.mock.sling.servlet.MockRequestPathInfo;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -102,7 +101,7 @@ public class SuffixBuilderTest {
         throw new RuntimeException("Unsupported encoding.", ex);
       }
     }
-    ((MockRequestPathInfo)context.request().getRequestPathInfo()).setSuffix(decodedSuffix);
+    context.requestPathInfo().setSuffix(decodedSuffix);
 
     if (currentPage != null) {
       context.currentPage(currentPage);
