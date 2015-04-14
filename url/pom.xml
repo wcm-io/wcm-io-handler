@@ -57,6 +57,12 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>

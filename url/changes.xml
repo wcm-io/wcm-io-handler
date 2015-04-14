@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert" issue="WCMIO-69">
         Add SuffixBuilder and SuffixParser.
       </action>
+      <action type="add" dev="sseifert">
+        Add Sling Rewriter Transformer "wcm-io-urlhandler-externalizer" for externalizing URLs in markup.
+      </action>
     </release>
 
     <release version="0.5.0" date="2014-11-05">

@@ -18,6 +18,7 @@ URL resolving and processing.
 * [Usage][usage]
 * [Suffix Builder and Parser][suffix-builder-parser]
 * [Integrator Template Mode][integrator]
+* [Sling Rewriter Integration][rewriter]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -33,11 +34,13 @@ The URL Handler provides:
 * Rewrites URLs to current site
 * [Suffix Builder and Parser][suffix-builder-parser] for passing around information via Sling Suffix string
 * Supports externalizing URLs for [Integrator Template Mode][integrator] with placeholders or Full URLs
+* Supports externalizing URLs in generated markup via [Sling Rewriter][rewriter]
 
 
 [usage]: usage.html
 [suffix-builder-parser]: suffix-builder-parser.html
 [integrator]: integrator.html
+[rewriter]: rewriter.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [config]: ../../config/
