@@ -45,14 +45,34 @@ Example:
 Additional remarks:
 
 * You can set define an additional property to apply the configuration only to certain resource types or resource super types. Example:
+
 ```json
 "resourceTypes": [
   "/apps/myApp/base/components/global/page"
-],
+]
 ```
-* You can remove some or all of the AEM-default transformers if you do not need them.
-* If you want to rewrite uncommon tag names like `<use xlink:href="...">` you may have to use the Sling generator `html-generator` instead of the AEM-built-in `htmlparser`.
 
+* You can remove some or all of the AEM-default transformers if you do not need them.
+* If you want to rewrite uncommon tag names like `<use xlink:href="...">` you may have to update the configuration of the AEM-built-in `htmlparser` generator. Example:
+
+```
+"generator-htmlparser": {
+  "includeTags": [
+    "A",
+    "/A",
+    "IMG",
+    "AREA",
+    "FORM",
+    "BASE",
+    "LINK",
+    "SCRIPT",
+    "BODY",
+    "/BODY",
+    "USE",
+    "/USE"
+  ]
+}
+```
 
 
 ### Configuring the wcm-io-urlhandler-externalizer
