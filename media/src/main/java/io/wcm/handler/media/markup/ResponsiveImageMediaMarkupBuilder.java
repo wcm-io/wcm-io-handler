@@ -70,11 +70,11 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
     HtmlElement<?> mediaElement = getImageElement(media);
 
     // set responsive image sources
-    JSONArray sources = getResponsiveImageSources(media.getRenditions());
-    setResponsiveImageSource(mediaElement, sources);
+    JSONArray sources = getResponsiveImageSources(media);
+    setResponsiveImageSource(mediaElement, sources, media);
 
     // set additional attributes
-    setAdditionalAttributes(mediaElement, media.getMediaRequest().getMediaArgs());
+    setAdditionalAttributes(mediaElement, media);
 
     // further processing in edit or preview mode
     applyWcmMarkup(mediaElement, media);
@@ -105,23 +105,25 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
 
   /**
    * Collect responsive JSON metadata for all renditions as image sources.
-   * @param renditions Renditions
+   * @param media Media
    * @return JSON metadata
    */
-  protected JSONArray getResponsiveImageSources(Collection<Rendition> renditions) {
+  protected JSONArray getResponsiveImageSources(Media media) {
+    Collection<Rendition> renditions = media.getRenditions();
     JSONArray sources = new JSONArray();
     for (Rendition rendition : renditions) {
-      sources.put(toReponsiveImageSource(rendition));
+      sources.put(toReponsiveImageSource(media, rendition));
     }
     return sources;
   }
 
   /**
    * Build JSON metadata for one rendition as image source.
+   * @param media Media
    * @param rendition Rendition
    * @return JSON metadata
    */
-  protected JSONObject toReponsiveImageSource(Rendition rendition) {
+  protected JSONObject toReponsiveImageSource(Media media, Rendition rendition) {
     try {
       JSONObject source = new JSONObject();
       MediaFormat mediaFormat = rendition.getMediaFormat();
@@ -138,8 +140,9 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
    * Set attribute on media element for responsive image sources
    * @param mediaElement Media element
    * @param responsiveImageSources Responsive image sources JSON metadata
+   * @param media Media
    */
-  protected void setResponsiveImageSource(HtmlElement<?> mediaElement, JSONArray responsiveImageSources) {
+  protected void setResponsiveImageSource(HtmlElement<?> mediaElement, JSONArray responsiveImageSources, Media media) {
     mediaElement.setData(PROP_RESPONSIVE_SOURCES, responsiveImageSources.toString());
   }
 
@@ -158,4 +161,5 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
     String imageSources = img.getData(PROP_RESPONSIVE_SOURCES);
     return StringUtils.isNotBlank(imageSources);
   }
+
 }

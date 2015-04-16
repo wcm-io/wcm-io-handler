@@ -86,7 +86,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
     .addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
 
     // set additional attributes
-    setAdditionalAttributes(image, media.getMediaRequest().getMediaArgs());
+    setAdditionalAttributes(image, media);
 
     // enable drag&drop for media source - if none is specified use first one defined in config
     MediaSource mediaSource = media.getMediaSource();

@@ -80,11 +80,11 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
     HtmlElement<?> mediaElement = getImageElement(media);
 
     // set responsive image sources
-    JSONArray sources = getResponsiveImageSources(media.getMediaRequest().getMediaArgs().getMediaFormats());
-    setResponsiveImageSource(mediaElement, sources);
+    JSONArray sources = getResponsiveImageSources(media);
+    setResponsiveImageSource(mediaElement, sources, media);
 
     // set additional attributes
-    setAdditionalAttributes(mediaElement, media.getMediaRequest().getMediaArgs());
+    setAdditionalAttributes(mediaElement, media);
 
     // enable drag&drop for media source - if none is specified use first one defined in config
     MediaSource mediaSource = media.getMediaSource();
@@ -111,27 +111,26 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
 
   /**
    * Collect responsive JSON metadata for all renditions as image sources.
-   * @param mediaFormats Media formats
+   * @param media Media
    * @return JSON metadata
    */
-  protected JSONArray getResponsiveImageSources(MediaFormat[] mediaFormats) {
+  protected JSONArray getResponsiveImageSources(Media media) {
+    MediaFormat[] mediaFormats = media.getMediaRequest().getMediaArgs().getMediaFormats();
     JSONArray sources = new JSONArray();
     for (MediaFormat mediaFormat : mediaFormats) {
-      sources.put(toReponsiveImageSource(mediaFormat));
+      sources.put(toReponsiveImageSource(media, mediaFormat));
     }
     return sources;
   }
 
   /**
    * Build JSON metadata for one rendition as image source.
+   * @param media Media
    * @param mediaFormat Media format
    * @return JSON metadata
    */
-  protected JSONObject toReponsiveImageSource(MediaFormat mediaFormat) {
-    String url = urlHandler.get(DummyImageServlet.PATH)
-        .extension(FileExtension.PNG)
-        .suffix(buildDummyServletSuffix(mediaFormat))
-        .build();
+  protected JSONObject toReponsiveImageSource(Media media, MediaFormat mediaFormat) {
+    String url = buildDummyImageUrl(mediaFormat);
     try {
       JSONObject source = new JSONObject();
       source.put(MediaNameConstants.PROP_BREAKPOINT, mediaFormat.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
@@ -143,20 +142,30 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
     }
   }
 
-  private String buildDummyServletSuffix(MediaFormat format) {
-    return new SuffixBuilder()
+  /**
+   * Build Dummy/Placeholder image URL
+   * @param format Media format
+   * @return Dummy image URL
+   */
+  protected final String buildDummyImageUrl(MediaFormat format) {
+    String suffix = new SuffixBuilder()
     .put(DummyImageServlet.SUFFIX_WIDTH, format.getWidth())
     .put(DummyImageServlet.SUFFIX_HEIGHT, format.getHeight())
     .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, format.getLabel())
     .build();
+    return urlHandler.get(DummyImageServlet.PATH)
+        .extension(FileExtension.PNG)
+        .suffix(suffix)
+        .build();
   }
 
   /**
    * Set attribute on media element for responsive image sources
    * @param mediaElement Media element
    * @param responsiveImageSources Responsive image sources JSON metadata
+   * @param media Media
    */
-  protected void setResponsiveImageSource(HtmlElement<?> mediaElement, JSONArray responsiveImageSources) {
+  protected void setResponsiveImageSource(HtmlElement<?> mediaElement, JSONArray responsiveImageSources, Media media) {
     mediaElement.setData(ResponsiveImageMediaMarkupBuilder.PROP_RESPONSIVE_SOURCES, responsiveImageSources.toString());
   }
 

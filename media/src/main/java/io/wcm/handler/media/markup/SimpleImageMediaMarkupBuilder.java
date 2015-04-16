@@ -56,7 +56,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     HtmlElement<?> mediaElement = getImageElement(media);
 
     // set additional attributes
-    setAdditionalAttributes(mediaElement, media.getMediaRequest().getMediaArgs());
+    setAdditionalAttributes(mediaElement, media);
 
     // further processing in edit or preview mode
     applyWcmMarkup(mediaElement, media);

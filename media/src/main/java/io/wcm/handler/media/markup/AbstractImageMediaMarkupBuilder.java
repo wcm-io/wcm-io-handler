@@ -84,9 +84,10 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
   /**
    * Set additional attributes on the media element from the MediaArgs properties.
    * @param mediaElement Media element
-   * @param mediaArgs Media args
+   * @param media Media
    */
-  protected void setAdditionalAttributes(HtmlElement<?> mediaElement, MediaArgs mediaArgs) {
+  protected void setAdditionalAttributes(HtmlElement<?> mediaElement, Media media) {
+    MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     for (Entry<String, Object> entry : mediaArgs.getProperties().entrySet()) {
       if (StringUtils.equals(entry.getKey(), MediaNameConstants.PROP_CSS_CLASS)) {
         mediaElement.addCssClass(entry.getValue().toString());
