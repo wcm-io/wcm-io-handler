@@ -20,6 +20,7 @@
 package io.wcm.handler.url.impl.modes;
 
 import static org.junit.Assert.assertNull;
+import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.util.RunMode;
@@ -28,6 +29,11 @@ import org.junit.Test;
 
 public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
 
+  @Override
+  protected UrlMode urlMode() {
+    return UrlModes.NO_HOSTNAME;
+  }
+
   /**
    * Test with site urls
    */
@@ -35,14 +41,14 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
   public void testSiteUrls() {
 
     context.runMode(RunMode.PUBLISH);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 
@@ -55,14 +61,14 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
     setSiteConfigNoUrl();
 
     context.runMode(RunMode.PUBLISH);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 
@@ -76,14 +82,14 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
     context.currentPage(integratorPageSimple);
 
     context.runMode(RunMode.PUBLISH);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 
@@ -97,14 +103,14 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
     context.currentPage(integratorPageSimpleSecure);
 
     context.runMode(RunMode.PUBLISH);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 
@@ -118,14 +124,14 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
     context.currentPage(integratorPageExtended);
 
     context.runMode(RunMode.PUBLISH);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(UrlModes.NO_HOSTNAME.getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 

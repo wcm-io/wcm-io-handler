@@ -38,8 +38,10 @@ public final class UrlModes {
   /**
    * Default mode: Does generate a full externalized URL only if both siteUrl and siteUrlSecure parameter
    * are set in context-specific configuration. If not set, only URLs without hostname are generated.
+   * <p>
    * If the target is an internal content page, siteUrl or siteUrlSecure is chosen automatically depending on the secure
    * state of the page.
+   * </p>
    */
   public static final UrlMode DEFAULT = new DefaultUrlMode();
 
@@ -51,27 +53,88 @@ public final class UrlModes {
 
   /**
    * Enforce the generation of a full URL with protocol and hostname.
+   * <p>
    * If the target is an internal content page, siteUrl or siteUrlSecure is chosen automatically depending on the secure
    * state of page.
+   * </p>
+   * <p>
+   * On author instance always the author URL is used.
+   * </p>
    */
-  public static final UrlMode FULL_URL = new FullUrlUrlMode();
+  public static final UrlMode FULL_URL = new FullUrlUrlMode(false);
 
   /**
    * Enforce the generation of a full URL with protocol and hostname and non-secure mode.
+   * <p>
+   * On author instance always the author URL is used.
+   * </p>
    */
-  public static final UrlMode FULL_URL_FORCENONSECURE = new FullUrlForceNonSecureUrlMode();
+  public static final UrlMode FULL_URL_FORCENONSECURE = new FullUrlForceNonSecureUrlMode(false);
 
   /**
    * Enforce the generation of a full URL with protocol and hostname and secure mode.
+   * <p>
    * If siteUrlSecure is not set, siteUrl is used.
+   * </p>
+   * <p>
+   * On author instance always the author URL is used.
+   * </p>
    */
-  public static final UrlMode FULL_URL_FORCESECURE = new FullUrlForceSecureUrlMode();
+  public static final UrlMode FULL_URL_FORCESECURE = new FullUrlForceSecureUrlMode(false);
 
   /**
    * Enforce the generation of a full URL with hostname and "//" as protocol (protocol-relative mode).
-   * Using "//" instead of "http://" or "https://" results in using the same protocol as the current request
-   * in the browser.
+   * <p>
+   * Using "//" instead of "http://" or "https://" results in using the same protocol as the current request in the
+   * browser.
+   * </p>
+   * <p>
+   * On author instance always the author URL is used.
+   * </p>
    */
-  public static final UrlMode FULL_URL_PROTOCOLRELATIVE = new FullUrlProtocolRelativeUrlMode();
+  public static final UrlMode FULL_URL_PROTOCOLRELATIVE = new FullUrlProtocolRelativeUrlMode(false);
+
+  /**
+   * Enforce the generation of a full URL with protocol and hostname.
+   * <p>
+   * If the target is an internal content page, siteUrl or siteUrlSecure is chosen automatically depending on the secure
+   * state of page.
+   * </p>
+   * <p>
+   * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
+   * </p>
+   */
+  public static final UrlMode FULL_URL_PUBLISH = new FullUrlUrlMode(true);
+
+  /**
+   * Enforce the generation of a full URL with protocol and hostname and non-secure mode.
+   * <p>
+   * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
+   * </p>
+   */
+  public static final UrlMode FULL_URL_PUBLISH_FORCENONSECURE = new FullUrlForceNonSecureUrlMode(true);
+
+  /**
+   * Enforce the generation of a full URL with protocol and hostname and secure mode.
+   * <p>
+   * If siteUrlSecure is not set, siteUrl is used.
+   * </p>
+   * <p>
+   * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
+   * </p>
+   */
+  public static final UrlMode FULL_URL_PUBLISH_FORCESECURE = new FullUrlForceSecureUrlMode(true);
+
+  /**
+   * Enforce the generation of a full URL with hostname and "//" as protocol (protocol-relative mode).
+   * <p>
+   * Using "//" instead of "http://" or "https://" results in using the same protocol as the current request in the
+   * browser.
+   * </p>
+   * <p>
+   * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
+   * </p>
+   */
+  public static final UrlMode FULL_URL_PUBLISH_PROTOCOLRELATIVE = new FullUrlProtocolRelativeUrlMode(true);
 
 }

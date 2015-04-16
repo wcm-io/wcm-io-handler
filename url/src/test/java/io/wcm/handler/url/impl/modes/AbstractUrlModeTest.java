@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.url.impl.modes;
 
+import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 import io.wcm.handler.url.integrator.IntegratorNameConstants;
 import io.wcm.handler.url.integrator.IntegratorProtocol;
@@ -99,5 +100,7 @@ public abstract class AbstractUrlModeTest {
   protected void setSiteConfigNoUrl() {
     MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", ImmutableValueMap.of());
   }
+
+  protected abstract UrlMode urlMode();
 
 }

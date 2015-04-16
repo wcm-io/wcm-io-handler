@@ -29,11 +29,11 @@ import io.wcm.wcm.commons.util.RunMode;
 
 import org.junit.Test;
 
-public class DefaultUrlModeTest extends AbstractUrlModeTest {
+public class FullUrlPublishProtocolRelativeUrlModeTest extends AbstractUrlModeTest {
 
   @Override
   protected UrlMode urlMode() {
-    return UrlModes.DEFAULT;
+    return UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE;
   }
 
   /**
@@ -43,14 +43,14 @@ public class DefaultUrlModeTest extends AbstractUrlModeTest {
   public void testSiteUrls() {
 
     context.runMode(RunMode.PUBLISH);
-    assertEquals("http://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertEquals("//de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertEquals("//de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 
@@ -84,14 +84,14 @@ public class DefaultUrlModeTest extends AbstractUrlModeTest {
     context.currentPage(integratorPageSimple);
 
     context.runMode(RunMode.PUBLISH);
-    assertEquals("http://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertEquals("http://de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertEquals("//de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertEquals("https://author.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertEquals("//de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 
@@ -105,14 +105,14 @@ public class DefaultUrlModeTest extends AbstractUrlModeTest {
     context.currentPage(integratorPageSimpleSecure);
 
     context.runMode(RunMode.PUBLISH);
-    assertEquals("http://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertEquals("https://de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertEquals("//de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
     context.runMode(RunMode.AUTHOR);
-    assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
-    assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
-    assertEquals("https://author.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
+    assertEquals("//de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
+    assertEquals("//de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
   }
 

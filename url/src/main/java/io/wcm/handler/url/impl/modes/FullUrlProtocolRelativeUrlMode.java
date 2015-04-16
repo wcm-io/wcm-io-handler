@@ -40,6 +40,15 @@ import com.day.cq.wcm.api.Page;
  */
 public final class FullUrlProtocolRelativeUrlMode extends AbstractUrlMode {
 
+  private final boolean forcePublish;
+
+  /**
+   * @param forcePublish Force to select publish URLs even on author instance
+   */
+  public FullUrlProtocolRelativeUrlMode(boolean forcePublish) {
+    this.forcePublish = forcePublish;
+  }
+
   @Override
   public String getId() {
     return "FULL_URL_PROTOCOLRELATIVE";
@@ -64,7 +73,7 @@ public final class FullUrlProtocolRelativeUrlMode extends AbstractUrlMode {
     UrlConfig config = getUrlConfigForTarget(adaptable, targetPage);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+    if (!forcePublish && RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
       return config.getSiteUrlAuthor();
     }
 
@@ -85,7 +94,7 @@ public final class FullUrlProtocolRelativeUrlMode extends AbstractUrlMode {
     UrlConfig config = getUrlConfigForTarget(adaptable, targetResource);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+    if (!forcePublish && RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
       return config.getSiteUrlAuthor();
     }
 

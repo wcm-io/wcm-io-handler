@@ -30,6 +30,9 @@
       <action type="add" dev="sseifert">
         Add Sling Rewriter Transformer "wcm-io-urlhandler-externalizer" for externalizing URLs in markup.
       </action>
+      <action type="add" dev="sseifert">
+        Add four new URL modes: FULL_URL_PUBLISH, FULL_URL_PUBLISH_FORCENONSECURE, FULL_URL_PUBLISH_FORCESECURE, FULL_URL_PUBLISH_PROTOCOLRELATIVE.
+      </action>
     </release>
 
     <release version="0.5.0" date="2014-11-05">

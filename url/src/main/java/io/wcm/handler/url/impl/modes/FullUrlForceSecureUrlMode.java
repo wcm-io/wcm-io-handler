@@ -37,6 +37,15 @@ import com.day.cq.wcm.api.Page;
  */
 public final class FullUrlForceSecureUrlMode extends AbstractUrlMode {
 
+  private final boolean forcePublish;
+
+  /**
+   * @param forcePublish Force to select publish URLs even on author instance
+   */
+  public FullUrlForceSecureUrlMode(boolean forcePublish) {
+    this.forcePublish = forcePublish;
+  }
+
   @Override
   public String getId() {
     return "FULL_URL_FORCESECURE";
@@ -55,7 +64,7 @@ public final class FullUrlForceSecureUrlMode extends AbstractUrlMode {
     UrlConfig config = getUrlConfigForTarget(adaptable, targetPage);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+    if (!forcePublish && RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
       return config.getSiteUrlAuthor();
     }
 
@@ -76,7 +85,7 @@ public final class FullUrlForceSecureUrlMode extends AbstractUrlMode {
     UrlConfig config = getUrlConfigForTarget(adaptable, targetResource);
 
     // in author mode return author site url
-    if (RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
+    if (!forcePublish && RunMode.isAuthor(runModes) && config.hasSiteUrlAuthor()) {
       return config.getSiteUrlAuthor();
     }
 
