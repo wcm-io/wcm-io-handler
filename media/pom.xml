@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>0.7.0</version>
+  <version>0.7.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Media Handler</name>
@@ -41,7 +41,7 @@
     <connection>scm:git:https://github.com/wcm-io/wcm-io.git</connection>
     <developerConnection>scm:git:https://github.com/wcm-io/wcm-io.git</developerConnection>
     <url>https://github.com/wcm-io/wcm-io</url>
-    <tag>io.wcm.handler.media-0.7.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
