@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.parent</artifactId>
-  <version>0.5.1-SNAPSHOT</version>
+  <version>0.5.2</version>
   <packaging>pom</packaging>
 
   <name>Handler</name>
@@ -41,7 +41,7 @@
     <connection>scm:git:https://github.com/wcm-io/wcm-io.git</connection>
     <developerConnection>scm:git:https://github.com/wcm-io/wcm-io.git</developerConnection>
     <url>https://github.com/wcm-io/wcm-io</url>
-    <tag>HEAD</tag>
+    <tag>io.wcm.handler.parent-0.5.2</tag>
   </scm>
 
   <properties>
