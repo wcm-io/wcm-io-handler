@@ -33,7 +33,6 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.models.annotations.AemObject;
 
 import java.util.List;
 
@@ -42,8 +41,6 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
-
-import com.day.cq.wcm.api.Page;
 
 /**
  * Default Implementation of a {@link MediaHandler}.
@@ -59,8 +56,6 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
-  @AemObject
-  private Page currentPage;
 
   @Override
   public MediaBuilder get(Resource resource) {
@@ -129,7 +124,7 @@ public final class MediaHandlerImpl implements MediaHandler {
         MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
         media = processor.process(media);
         if (media == null) {
-          throw new RuntimeException("MediaPreProcessor '" + processor + "' returned null, page '" + currentPage.getPath() + "'.");
+          throw new RuntimeException("MediaPreProcessor '" + processor + "' returned null, request: " + mediaRequest);
         }
       }
     }
@@ -138,7 +133,7 @@ public final class MediaHandlerImpl implements MediaHandler {
     if (mediaSource != null) {
       media = mediaSource.resolveMedia(media);
       if (media == null) {
-        throw new RuntimeException("MediaType '" + mediaSource + "' returned null, page '" + currentPage.getPath() + "'.");
+        throw new RuntimeException("MediaType '" + mediaSource + "' returned null, request: " + mediaRequest);
       }
     }
     else {
@@ -164,7 +159,7 @@ public final class MediaHandlerImpl implements MediaHandler {
         MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
         media = processor.process(media);
         if (media == null) {
-          throw new RuntimeException("MediaPostProcessor '" + processor + "' returned null, page '" + currentPage.getPath() + "'.");
+          throw new RuntimeException("MediaPostProcessor '" + processor + "' returned null, request: " + mediaRequest);
         }
       }
     }
