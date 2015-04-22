@@ -27,6 +27,9 @@
       <action type="fix" dev="sseifert">
         Allow MediaHandler to be used outside a Page context (e.g. adapting from a DAM asset resource).
       </action>
+      <action type="fix" dev="sseifert">
+        Do not return rendition file size for virtual renditions (it's wrong to return the DAM rendition size, and too costly to calculate the real size).
+      </action>
     </release>
 
     <release version="0.7.0" date="2015-04-17">

@@ -140,6 +140,13 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   /**
+   * @return File size
+   */
+  public long getFileSize() {
+    return this.rendition.getSize();
+  }
+
+  /**
    * @return File extension
    */
   public String getFileExtension() {

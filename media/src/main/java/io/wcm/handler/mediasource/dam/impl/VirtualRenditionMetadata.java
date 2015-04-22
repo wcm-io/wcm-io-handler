@@ -51,6 +51,12 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
+  public long getFileSize() {
+    // no size for virutal renditions
+    return 0L;
+  }
+
+  @Override
   public long getWidth() {
     return this.width;
   }

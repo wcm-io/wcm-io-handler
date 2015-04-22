@@ -114,7 +114,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
   @Override
   public long getFileSize() {
     if (this.rendition != null) {
-      return this.rendition.getRendition().getSize();
+      return this.rendition.getFileSize();
     }
     else {
       return 0L;
