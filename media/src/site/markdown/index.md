@@ -9,7 +9,7 @@ Media resolving, processing and markup generation.
 <dependency>
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>0.7.0</version>
+  <version>0.7.2</version>
 </dependency>
 ```
 
