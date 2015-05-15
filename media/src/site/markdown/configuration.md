@@ -7,7 +7,7 @@ The DAM source implementation for Media Handler required a background services t
 This service needs a service user mapping for the factory configuration `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended` with an entry like this:
 
 ```
-user.mapping="[io.wcm.handler.media=damuser]"
+user.mapping="[io.wcm.handler.media=idsjobprocessor]"
 ```
 
-You should assign a user that has read/write permissions on `/content/dam`.
+This configuration is only required on Author instances. In this case an existing user "idsjobprocessor" from AEM 6.1 is re-used, alternatively you can create a new system user that has read/write permissions on `/content/dam`.
