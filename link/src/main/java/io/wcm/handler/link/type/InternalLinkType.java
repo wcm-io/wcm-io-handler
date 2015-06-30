@@ -26,6 +26,7 @@ import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.type.helpers.LinkResolveCounter;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.models.annotations.AemObject;
@@ -197,10 +198,6 @@ public final class InternalLinkType extends AbstractLinkType {
 
     // check of maximum recursive calls via threadlocal to avoid endless loops, return invalid link if one is detected
     LinkResolveCounter linkResolveCounter = LinkResolveCounter.get();
-    if (linkResolveCounter == null) {
-      linkResolveCounter = new LinkResolveCounter();
-      LinkResolveCounter.getThreadLocal().set(linkResolveCounter);
-    }
     try {
       linkResolveCounter.increaseCount();
 
@@ -215,9 +212,6 @@ public final class InternalLinkType extends AbstractLinkType {
     }
     finally {
       linkResolveCounter.decreaseCount();
-      if (linkResolveCounter.getCount() == 0) {
-        LinkResolveCounter.getThreadLocal().remove();
-      }
     }
   }
 

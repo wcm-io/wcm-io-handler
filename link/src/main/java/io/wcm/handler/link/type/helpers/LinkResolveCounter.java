@@ -17,14 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link.type;
+package io.wcm.handler.link.type.helpers;
 
 /**
  * Counts number of recursive link resolve requests to detect endless loops.
+ * Max. 5 hops are allowed in {@link #isMaximumReached()} method.
  */
-class LinkResolveCounter {
+public final class LinkResolveCounter {
 
-  private static final ThreadLocal<LinkResolveCounter> THREAD_LOCAL = new ThreadLocal<LinkResolveCounter>();
+  private static final ThreadLocal<LinkResolveCounter> THREAD_LOCAL = new ThreadLocal<LinkResolveCounter>() {
+    @Override
+    protected LinkResolveCounter initialValue() {
+      return new LinkResolveCounter();
+    }
+  };
 
   /**
    * Maximum number of "recursion hops" allowed for link resolving.
@@ -49,12 +55,16 @@ class LinkResolveCounter {
 
   /**
    * Decrease counter by 1.
+   * If 0 is reached the counter instance is removed from the current thread.
    */
   public void decreaseCount() {
     if (this.count == 0) {
       throw new RuntimeException("Cannot decrease, counter is already 0.");
     }
     this.count--;
+    if (this.count == 0) {
+      THREAD_LOCAL.remove();
+    }
   }
 
   /**
@@ -65,14 +75,11 @@ class LinkResolveCounter {
   }
 
   /**
-   * @return Counter for current request/thread
+   * @return Counter for current request/thread.
+   *         If instance was not set in thread before it is newly created and attached to the current thread.
    */
   public static LinkResolveCounter get() {
     return THREAD_LOCAL.get();
-  }
-
-  static ThreadLocal<LinkResolveCounter> getThreadLocal() {
-    return THREAD_LOCAL;
   }
 
 }
