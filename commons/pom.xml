@@ -38,9 +38,9 @@
   <description>Functionality shared by the handler implementations.</description>
 
   <scm>
-    <connection>scm:git:https://github.com/wcm-io/wcm-io.git</connection>
-    <developerConnection>scm:git:https://github.com/wcm-io/wcm-io.git</developerConnection>
-    <url>https://github.com/wcm-io/wcm-io</url>
+    <connection>scm:git:https://github.com/wcm-io/wcm-io-handler.git</connection>
+    <developerConnection>scm:git:https://github.com/wcm-io/wcm-io-handler.git</developerConnection>
+    <url>https://github.com/wcm-io/wcm-io-handler</url>
     <tag>HEAD</tag>
   </scm>
 
