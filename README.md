@@ -1,6 +1,6 @@
 <img src="http://wcm.io/images/favicon-16@2x.png"/> wcm.io Handler
 ======
-[![Build Status](https://travis-ci.org/wcm-io/wcm-io-handler.png?branch=master)](https://travis-ci.org/wcm-io/wcm-io-handler)
+[![Build Status](https://travis-ci.org/wcm-io/wcm-io-handler.png?branch=develop)](https://travis-ci.org/wcm-io/wcm-io-handler)
 
 Link, Media and RichText Handler infrastructure for AEM applications.
 
