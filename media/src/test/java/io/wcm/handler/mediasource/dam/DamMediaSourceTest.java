@@ -50,6 +50,7 @@ import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.integrator.IntegratorHandler;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 import java.util.List;
 
@@ -275,6 +276,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("width set?", 450, img.getAttributeValueAsInteger("width"));
     assertEquals("height set?", 213, img.getAttributeValueAsInteger("height"));
     assertEquals(EDITORIAL_2COL, media.getRendition().getMediaFormat());
+    assertEquals(ContentType.JPEG, media.getRendition().getMimeType());
   }
 
   @Test

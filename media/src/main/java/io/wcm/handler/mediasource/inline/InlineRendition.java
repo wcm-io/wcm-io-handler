@@ -388,6 +388,11 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  public String getMimeType() {
+    return JcrBinary.getMimeType(this.resource);
+  }
+
+  @Override
   public Date getModificationDate() {
     return ModificationDate.get(this.resource);
   }

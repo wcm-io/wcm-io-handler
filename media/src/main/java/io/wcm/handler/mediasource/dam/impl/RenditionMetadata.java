@@ -154,6 +154,13 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   /**
+   * @return Mime type
+   */
+  public String getMimeType() {
+    return this.rendition.getMimeType();
+  }
+
+  /**
    * @return Image width
    */
   public long getWidth() {
