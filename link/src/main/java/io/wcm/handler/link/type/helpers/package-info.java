@@ -20,5 +20,5 @@
 /**
  * Convenience classes for implementing link types.
  */
-@org.osgi.annotation.versioning.Version("0.5.0")
+@org.osgi.annotation.versioning.Version("0.6.0")
 package io.wcm.handler.link.type.helpers;
