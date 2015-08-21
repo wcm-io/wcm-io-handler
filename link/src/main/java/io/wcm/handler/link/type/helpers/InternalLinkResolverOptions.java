@@ -29,8 +29,10 @@ public final class InternalLinkResolverOptions {
 
   private String primaryLinkRefProperty = LinkNameConstants.PN_LINK_CONTENT_REF;
   private boolean rewritePathToContext = true;
+  private boolean useTargetContext;
 
   /**
+   * Primary ink reference property.
    * @return Name of the property in which the primary link reference is stored
    */
   public String getPrimaryLinkRefProperty() {
@@ -38,6 +40,7 @@ public final class InternalLinkResolverOptions {
   }
 
   /**
+   * Primary ink reference property.
    * @param value Name of the property in which the primary link reference is stored
    * @return this
    */
@@ -47,6 +50,7 @@ public final class InternalLinkResolverOptions {
   }
 
   /**
+   * Rewrite path to context.
    * @return If set to true it is ensured that all links target only pages inside the same inner-most configuration
    *         scope, which is usually the same site/language. All link paths referencing pages outside this content
    *         subtree are rewritten via {@link UrlHandler#rewritePathToContext(String)} with the root path of the
@@ -57,6 +61,7 @@ public final class InternalLinkResolverOptions {
   }
 
   /**
+   * Rewrite path to context.
    * @param value If set to true it is ensured that all links target only pages inside the same inner-most configuration
    *          scope, which is usually the same site/language. All link paths referencing pages outside this content
    *          subtree are rewritten via {@link UrlHandler#rewritePathToContext(String)} with the root path of the
@@ -65,6 +70,32 @@ public final class InternalLinkResolverOptions {
    */
   public InternalLinkResolverOptions rewritePathToContext(boolean value) {
     this.rewritePathToContext = value;
+    return this;
+  }
+
+
+  /**
+   * User target context for URL building.
+   * @return If set to true an {@link io.wcm.handler.url.UrlHandler} with configuration from the configuration scope
+   *         (e.g. site/language) from the target page is used to build the link URL to the internal page, and not the
+   *         URL handler of the current resource's configuration scope (site/language). This makes only sense if
+   *         additional the flag "rewritePathToContext" is set to false.
+   */
+  public boolean isUseTargetContext() {
+    return this.useTargetContext;
+  }
+
+  /**
+   * User target context for URL building.
+   * @param value If set to true an {@link io.wcm.handler.url.UrlHandler} with configuration from the configuration
+   *          scope
+   *          (e.g. site/language) from the target page is used to build the link URL to the internal page, and not the
+   *          URL handler of the current resource's configuration scope (site/language). This makes only sense if
+   *          additional the flag "rewritePathToContext" is set to false.
+   * @return this
+   */
+  public InternalLinkResolverOptions useTargetContext(boolean value) {
+    this.useTargetContext = value;
     return this;
   }
 

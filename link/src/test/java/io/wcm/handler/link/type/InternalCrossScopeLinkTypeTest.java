@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2015 wcm.io
+ * Copyright (C) 2014 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link.type.helpers;
+package io.wcm.handler.link.type;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.testcontext.DummyAppTemplate;
-import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -38,14 +38,18 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.day.cq.wcm.api.Page;
+
 /**
- * Most of the logic of {@link InternalLinkResolver} is tested in the InternalLinkTypeTest.
- * This tests only some special feature not used by InternalLinkType.
+ * Test {@link InternalCrossScopeLinkType} methods.
+ * Most of the test cases are identical to {@link InternalLinkTypeTest}, so they are not duplicated here.
  */
-public class InternalLinkResolverTest {
+public class InternalCrossScopeLinkTypeTest {
 
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
+
+  private Page targetPage;
 
   protected Adaptable adaptable() {
     return context.request();
@@ -59,54 +63,47 @@ public class InternalLinkResolverTest {
         DummyAppTemplate.CONTENT.getTemplatePath()));
 
     // create internal pages for unit tests
-    context.create().page("/content/unittest/de_test/brand/de/section/content",
+    targetPage = context.create().page("/content/unittest/de_test/brand/de/section/content",
         DummyAppTemplate.CONTENT.getTemplatePath());
     context.create().page("/content/unittest/en_test/brand/en/section/content",
         DummyAppTemplate.CONTENT.getTemplatePath());
 
   }
 
-
   @Test
-  public void testTargetPage_RewritePathToContext() {
-    InternalLinkResolver resolver = AdaptTo.notNull(adaptable(), InternalLinkResolver.class);
+  public void testTargetPage() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+        .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
+        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
         .build());
 
-    LinkRequest linkRequest = new LinkRequest(linkResource, null, null);
-    Link link = new Link(new InternalLinkType(), linkRequest);
-
-    link = resolver.resolveLink(link, new InternalLinkResolverOptions()
-    .rewritePathToContext(true));
+    Link link = linkHandler.get(linkResource).build();
 
     assertTrue("link valid", link.isValid());
     assertFalse("link ref invalid", link.isLinkReferenceInvalid());
     assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
   @Test
-  public void testTargetPageOtherSite_NoRewritePathToContext() {
-    InternalLinkResolver resolver = AdaptTo.notNull(adaptable(), InternalLinkResolver.class);
+  public void testTargetPageOtherSite() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+        .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
         .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
         .build());
 
-    LinkRequest linkRequest = new LinkRequest(linkResource, null, null);
-    Link link = new Link(new InternalLinkType(), linkRequest);
-
-    link = resolver.resolveLink(link, new InternalLinkResolverOptions()
-    .rewritePathToContext(false));
+    Link link = linkHandler.get(linkResource).build();
 
     assertTrue("link valid", link.isValid());
     assertEquals("link url", "http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html",
         link.getUrl());
+    assertNotNull("anchor", link.getAnchor());
   }
 
 }

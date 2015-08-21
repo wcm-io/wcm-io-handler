@@ -27,6 +27,7 @@ import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;
@@ -132,10 +133,20 @@ public final class InternalLinkResolver {
       targetPage = getTargetPage(targetPath, options);
     }
 
+    UrlHandlerConfig resolvingUrlHandlerConfig = urlHandlerConfig;
+    UrlHandler resolvingUrlHandler = urlHandler;
+
+    // use URL handler from target context for link URL building
+    if (targetPage != null && options.isUseTargetContext() && !options.isRewritePathToContext()) {
+      Resource resource = targetPage.getContentResource();
+      resolvingUrlHandlerConfig = AdaptTo.notNull(resource, UrlHandlerConfig.class);
+      resolvingUrlHandler = AdaptTo.notNull(resource, UrlHandler.class);
+    }
+
     // if target page is a redirect or integrator page recursively resolve link to which the redirect points to
     // (skip this redirection if edit mode is active)
     if (targetPage != null
-        && (linkHandlerConfig.isRedirect(targetPage) || urlHandlerConfig.isIntegrator(targetPage))
+        && (linkHandlerConfig.isRedirect(targetPage) || resolvingUrlHandlerConfig.isIntegrator(targetPage))
         && wcmMode != WCMMode.EDIT) {
       return recursiveResolveLink(targetPage, link);
     }
@@ -157,7 +168,7 @@ public final class InternalLinkResolver {
       fragment = props.get(LinkNameConstants.PN_LINK_FRAGMENT, fragment);
 
       // build link url
-      linkUrl = urlHandler.get(targetPage)
+      linkUrl = resolvingUrlHandler.get(targetPage)
           .selectors(selectors)
           .extension(fileExtension)
           .suffix(suffix)

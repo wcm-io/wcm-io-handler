@@ -56,6 +56,11 @@ public final class AppAemContext {
    */
   public static final String ROOTPATH_CONTENT = "/content/unittest/de_test/brand/de";
 
+  /**
+   * Content root path for another site
+   */
+  public static final String ROOTPATH_CONTENT_OTHER_SITE = "/content/unittest/en_test/brand/en";
+
   private AppAemContext() {
     // static methods only
   }
@@ -125,6 +130,16 @@ public final class AppAemContext {
           .put(UrlParams.SITE_URL_SECURE.getName(), "https://www.dummysite.org")
           .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
           .build());
+
+      // create site root page and site config for other site
+      context.create().page(ROOTPATH_CONTENT_OTHER_SITE,
+          DummyAppTemplate.CONTENT.getTemplatePath());
+      MockConfig.writeConfiguration(context, ROOTPATH_CONTENT_OTHER_SITE,
+          ImmutableValueMap.builder()
+              .put(UrlParams.SITE_URL.getName(), "http://en.dummysite.org")
+              .put(UrlParams.SITE_URL_SECURE.getName(), "https://en.dummysite.org")
+              .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
+              .build());
     }
 
   }
