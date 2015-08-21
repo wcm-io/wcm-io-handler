@@ -63,6 +63,11 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   long getFileSize();
 
   /**
+   * @return Mime type of the renditions source binary.
+   */
+  String getMimeType();
+
+  /**
    * @return Media format that matches with the resolved rendition. Null if no media format was specified for resolving.
    */
   MediaFormat getMediaFormat();

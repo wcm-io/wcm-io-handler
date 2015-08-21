@@ -122,6 +122,16 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  public String getMimeType() {
+    if (this.rendition != null) {
+      return this.rendition.getMimeType();
+    }
+    else {
+      return null;
+    }
+  }
+
+  @Override
   public Date getModificationDate() {
     if (this.rendition != null) {
       return ModificationDate.get(this.rendition.getRendition().adaptTo(Resource.class));

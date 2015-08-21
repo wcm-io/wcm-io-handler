@@ -191,6 +191,7 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.filesize", DUMMY_BINARY.length, rendition.getFileSize());
     assertEquals("rendition.width", 0, rendition.getWidth());
     assertEquals("rendition.height", 0, rendition.getHeight());
+    assertEquals("rendition.mimetype", ContentType.OCTET_STREAM, rendition.getMimeType());
   }
 
   @Test
@@ -218,6 +219,7 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.filesize", DUMMY_BINARY.length, rendition.getFileSize());
     assertEquals("rendition.width", 0, rendition.getWidth());
     assertEquals("rendition.height", 0, rendition.getHeight());
+    assertEquals("rendition.mimetype", ContentType.OCTET_STREAM, rendition.getMimeType());
   }
 
   @Test
