@@ -21,7 +21,14 @@ package io.wcm.handler.link.testcontext;
 
 import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
+import io.wcm.handler.link.type.ExternalLinkType;
+import io.wcm.handler.link.type.InternalCrossScopeLinkType;
+import io.wcm.handler.link.type.InternalLinkType;
+import io.wcm.handler.link.type.MediaLinkType;
+
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -30,6 +37,7 @@ import org.apache.sling.models.annotations.Model;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Dummy link configuration
@@ -39,6 +47,18 @@ import com.day.cq.wcm.api.Page;
 }, adapters = LinkHandlerConfig.class)
 @Application(AppAemContext.APPLICATION_ID)
 public class DummyLinkHandlerConfig extends AbstractLinkHandlerConfig {
+
+  private static final List<Class<? extends LinkType>> LINK_TYPES = ImmutableList.<Class<? extends LinkType>>of(
+      InternalLinkType.class,
+      InternalCrossScopeLinkType.class,
+      ExternalLinkType.class,
+      MediaLinkType.class
+      );
+
+  @Override
+  public List<Class<? extends LinkType>> getLinkTypes() {
+    return LINK_TYPES;
+  }
 
   @Override
   public boolean isValidLinkTarget(Page page) {

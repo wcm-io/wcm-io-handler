@@ -25,7 +25,6 @@ import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.type.helpers.InternalLinkResolver;
 import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
-import io.wcm.handler.url.UrlHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,30 +38,29 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for internal links.
+ * Implementation of {@link io.wcm.handler.link.spi.LinkType} for internal links with supports
+ * links between different configuration scopes (which normally relates to different sites/languages).
  * Internal links are links to content pages inside the CMS.
  * <p>
- * This link type ensures all links target only pages inside the same inner-most configuration scope, which is usually
- * the same site/language. All link paths referencing pages outside this content subtree are rewritten via
- * {@link UrlHandler#rewritePathToContext(String)} with the root path of the inner-most configuration scope/site and
- * then resolved.
+ * This link type ensures that links that are referenced from other configuration scopes (sites/languages) are resolved
+ * using the URL handler configuration of the target scope, e.g. with the Site URL from the other site.
  * </p>
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class InternalLinkType extends AbstractLinkType {
+public final class InternalCrossScopeLinkType extends AbstractLinkType {
 
   /**
    * Link type ID
    */
-  public static final String ID = "internal";
+  public static final String ID = "internalCrossScope";
 
   private final InternalLinkResolverOptions resolverOptions = new InternalLinkResolverOptions()
   .primaryLinkRefProperty(getPrimaryLinkRefProperty())
-  .rewritePathToContext(true)
-  .useTargetContext(false);
+  .rewritePathToContext(false)
+  .useTargetContext(true);
 
   @Self
   private InternalLinkResolver internalLinkResolver;
