@@ -53,7 +53,6 @@ import com.day.cq.wcm.api.WCMMode;
  * <p>
  * The link resolving process can be customized by providing a customized {@link InternalLinkResolverOptions} object.
  * </p>
- * </p>
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
