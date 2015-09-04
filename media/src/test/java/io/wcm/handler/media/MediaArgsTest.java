@@ -34,6 +34,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -171,7 +172,9 @@ public class MediaArgsTest {
     mediaArgs.fixedHeight(20);
     mediaArgs.forceDownload(true);
     mediaArgs.altText("altText");
+    mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
+    mediaArgs.includeAssetThumbnails(true);
     mediaArgs.dragDropSupport(DragDropSupport.NEVER);
     mediaArgs.properties(props);
 
@@ -191,7 +194,9 @@ public class MediaArgsTest {
     assertEquals(mediaArgs.getFixedHeight(), clone.getFixedHeight());
     assertEquals(mediaArgs.isForceDownload(), clone.isForceDownload());
     assertEquals(mediaArgs.getAltText(), clone.getAltText());
+    assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
+    assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());
     assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());
     assertEquals(ImmutableValueMap.copyOf(mediaArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
@@ -211,9 +216,7 @@ public class MediaArgsTest {
   @Test
   public void testToString() throws Exception {
     MediaArgs mediaArgs = new MediaArgs().altText("abc");
-    assertEquals(
-        "MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,altText=abc,dummyImage=true,dragDropSupport=AUTO]",
-        mediaArgs.toString());
+    assertTrue(StringUtils.contains(mediaArgs.toString(), "abc"));
   }
 
 }

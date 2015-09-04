@@ -26,7 +26,7 @@
             "jcr:primaryType":"nt:resource"
           }
         },
-        "cq5dam.web.215.102.jpg": {
+        "cq5dam.thumbnail.215.102.jpg": {
           "jcr:primaryType":"nt:file",
           "jcr:content": {
             "jcr:mimeType":"image/jpeg",
@@ -71,7 +71,7 @@
       },
       "renditionsMetadata": {
         "jcr:primaryType":"nt:unstructured",
-        "cq5dam.web.215.102.jpg": {
+        "cq5dam.thumbnail.215.102.jpg": {
           "jcr:primaryType":"nt:unstructured",
           "imageWidth": 215,
           "imageHeight": 102
@@ -174,7 +174,7 @@
             "jcr:primaryType":"nt:resource"
           }
         },
-        "cq5dam.web.215.102.jpg": {
+        "cq5dam.thumbnail.215.102.jpg": {
           "jcr:primaryType":"nt:file",
           "jcr:content": {
             "jcr:mimeType":"image/jpeg",
