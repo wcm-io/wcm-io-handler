@@ -17,8 +17,18 @@
  * limitations under the License.
  * #L%
  */
+package io.wcm.handler.link.type;
+
+import org.apache.sling.api.adapter.Adaptable;
+
 /**
- * Media Handler API.
+ * Test {@link InternalCrossScopeLinkType} methods.
  */
-@org.osgi.annotation.versioning.Version("0.9.0")
-package io.wcm.handler.media;
+public class InternalCrossScopeLinkTypeWithoutRequestTest extends InternalCrossScopeLinkTypeTest {
+
+  @Override
+  protected Adaptable adaptable() {
+    return context.currentResource();
+  }
+
+}

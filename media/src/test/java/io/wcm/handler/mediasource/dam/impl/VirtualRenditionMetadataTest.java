@@ -42,13 +42,13 @@ public class VirtualRenditionMetadataTest extends AbstractDamTest {
 
   @Before
   public void setUp() throws Exception {
-    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.web.215.102.jpg";
+    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.thumbnail.215.102.jpg";
     context.resourceResolver().delete(context.resourceResolver().getResource(path));
     context.load().binaryFile("/sample_image_215x102.jpg", path);
 
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     Asset asset = media.getAsset().adaptTo(Asset.class);
-    rendition = asset.getRendition("cq5dam.web.215.102.jpg");
+    rendition = asset.getRendition("cq5dam.thumbnail.215.102.jpg");
     underTest = new VirtualRenditionMetadata(rendition, 108, 51);
   }
 

@@ -62,12 +62,12 @@ class DefaultRenditionHandler implements RenditionHandler {
   /**
    * @return All renditions that are available for this asset
    */
-  Set<RenditionMetadata> getAvailableRenditions() {
+  Set<RenditionMetadata> getAvailableRenditions(MediaArgs mediaArgs) {
     if (this.renditions == null) {
       // gather rendition infos of all renditions and sort them by size (smallest or virtual crop rendition first)
       Set<RenditionMetadata> candidates = new TreeSet<RenditionMetadata>();
       for (Rendition rendition : asset.getRenditions()) {
-        addRendition(candidates, rendition);
+        addRendition(candidates, rendition, mediaArgs);
       }
       candidates = postProcessCandidates(candidates);
       this.renditions = ImmutableSet.<RenditionMetadata>copyOf(candidates);
@@ -89,9 +89,10 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param candidates
    * @param rendition
    */
-  private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition) {
-    // ignore CQ thumbnail renditions
-    if (!StringUtils.startsWith(rendition.getName(), DamConstants.PREFIX_ASSET_THUMBNAIL + ".")) {
+  private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
+    // ignore CQ thumbnail renditions (unless explicitly enabled in mediaargs)
+    if (mediaArgs.isIncludeAssetThumbnails()
+        || !StringUtils.startsWith(rendition.getName(), DamConstants.PREFIX_ASSET_THUMBNAIL + ".")) {
       RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
       candidates.add(renditionMetadata);
     }
@@ -111,10 +112,10 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param fileExtensions List of file extensions
    * @return Matching renditions
    */
-  private Set<RenditionMetadata> getRendtionsMatchingFileExtensions(String[] fileExtensions) {
+  private Set<RenditionMetadata> getRendtionsMatchingFileExtensions(String[] fileExtensions, MediaArgs mediaArgs) {
 
     // if no file extension restriction get all renditions
-    Set<RenditionMetadata> allRenditions = getAvailableRenditions();
+    Set<RenditionMetadata> allRenditions = getAvailableRenditions(mediaArgs);
     if (fileExtensions == null || fileExtensions.length == 0) {
       return allRenditions;
     }
@@ -153,7 +154,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     boolean isSizeMatchingRequest = isSizeMatchingRequest(mediaArgs, requestedFileExtensions);
 
     // get rendition candidates matching for file extensions
-    Set<RenditionMetadata> candidates = getRendtionsMatchingFileExtensions(requestedFileExtensions);
+    Set<RenditionMetadata> candidates = getRendtionsMatchingFileExtensions(requestedFileExtensions, mediaArgs);
 
     // if request does not contain any size restrictions return original image or first by filename matching rendition
     if (!isSizeMatchingRequest) {

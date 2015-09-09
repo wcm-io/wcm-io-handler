@@ -83,7 +83,7 @@ public class InternalLinkTypeTest {
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
+        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
         .build());
 
     Link link = linkHandler.get(linkResource).build();
@@ -102,7 +102,7 @@ public class InternalLinkTypeTest {
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
         .build());
 
     Link link = linkHandler.get(linkResource).build();

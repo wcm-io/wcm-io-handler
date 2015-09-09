@@ -19,8 +19,9 @@
  */
 package io.wcm.handler.media;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 public class MediaRequestTest {
@@ -28,9 +29,7 @@ public class MediaRequestTest {
   @Test
   public void testToString() {
     MediaRequest request = new MediaRequest("/path", null);
-    assertEquals(
-        "MediaRequest[mediaRef=/path,mediaArgs=MediaArgs[mediaFormatsMandatory=false,fixedWidth=0,fixedHeight=0,forceDownload=false,dummyImage=true,dragDropSupport=AUTO]]",
-        request.toString());
+    assertTrue(StringUtils.contains(request.toString(), "/path"));
   }
 
 }

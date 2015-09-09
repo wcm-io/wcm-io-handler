@@ -55,7 +55,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
     originalRendition = new RenditionMetadata(asset.getRendition("original"));
     assertNotNull(originalRendition);
 
-    originalRenditionCopy = new RenditionMetadata(asset.getRendition("cq5dam.web.215.102.jpg"));
+    originalRenditionCopy = new RenditionMetadata(asset.getRendition("cq5dam.thumbnail.215.102.jpg"));
     assertNotNull(originalRenditionCopy);
 
     smallestRendition = new RenditionMetadata(asset.getRendition("cq5dam.web.450.213.jpg"));
@@ -154,7 +154,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   @Test
   public void testAdaptTo() throws Exception {
     loadImageBinary_originalRenditionCopy();
-    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.web.215.102.jpg";
+    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.thumbnail.215.102.jpg";
 
     Rendition damRendition = originalRenditionCopy.adaptTo(Rendition.class);
     assertEquals(path, damRendition.getPath());
@@ -178,7 +178,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   }
 
   private void loadImageBinary_originalRenditionCopy() throws PersistenceException {
-    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.web.215.102.jpg";
+    String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.thumbnail.215.102.jpg";
     context.resourceResolver().delete(context.resourceResolver().getResource(path));
     context.load().binaryFile("/sample_image_215x102.jpg", path);
   }

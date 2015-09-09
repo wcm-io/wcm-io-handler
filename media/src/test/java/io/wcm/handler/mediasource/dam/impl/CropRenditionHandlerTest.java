@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 import org.junit.Before;
@@ -51,16 +52,24 @@ public class CropRenditionHandlerTest extends AbstractDamTest {
   }
 
   /**
-   * Tests if the candidates contain 8 renditions
+   * Tests if the candidates contain 7 renditions (without asset thumbnails)
    */
   @Test
   public void testNumberOfCandidates() {
-    assertEquals("there must be two candidates", 8, underTest.getAvailableRenditions().size());
+    assertEquals("candidates without thumbnails", 7, underTest.getAvailableRenditions(new MediaArgs()).size());
+  }
+
+  /**
+   * Tests if the candidates contain 8 renditions (with asset thumbnails)
+   */
+  @Test
+  public void testNumberOfCandidatesWithThumbnails() {
+    assertEquals("candidates with thumbnails", 8, underTest.getAvailableRenditions(new MediaArgs().includeAssetThumbnails(true)).size());
   }
 
   @Test
   public void testFirstCandidateIsVirtualRendition() {
-    RenditionMetadata virtualRendition = underTest.getAvailableRenditions().iterator().next();
+    RenditionMetadata virtualRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/test/standard.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpg.image_file.960.315.0,0,960,315.file/cq5dam.web.1280.1280.jpg",
         virtualRendition.getMediaPath(false));
   }
@@ -70,7 +79,7 @@ public class CropRenditionHandlerTest extends AbstractDamTest {
    */
   @Test
   public void testCandidatesContainOriginalRendition() {
-    assertTrue("candidates must contain original rendition", underTest.getAvailableRenditions().contains(originalRendition));
+    assertTrue("candidates must contain original rendition", underTest.getAvailableRenditions(new MediaArgs()).contains(originalRendition));
   }
 
 }
