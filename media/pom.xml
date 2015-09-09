@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.9.0</version>
   <packaging>bundle</packaging>
 
   <name>Media Handler</name>
