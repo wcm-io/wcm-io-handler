@@ -28,6 +28,9 @@
         Add new (optional) link type "InternalCrossScopeLinkType, which is a variant of InternalLinkType that supports links to other configuration scopes (sites/languages).
         The main logic of both link type implementation is moved to a new class InternalLinkResolver which can be reused by custom link type implementations.
       </action>
+      <action type="fix" dev="sseifert">
+        LinkHandler implementation: Make sure current page is optional to support handler in non-request scenarios as well.
+      </action>
     </release>
 
     <release version="0.6.0" date="2015-07-07">

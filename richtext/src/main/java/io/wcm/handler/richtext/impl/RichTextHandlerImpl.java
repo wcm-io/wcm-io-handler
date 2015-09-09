@@ -61,7 +61,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
 
   @Self
   private RewriteContentHandler rewriteContentHandler;
-  @AemObject
+  @AemObject(optional = true)
   private Page currentPage;
 
   @Override
