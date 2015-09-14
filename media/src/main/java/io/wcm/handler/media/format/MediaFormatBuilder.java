@@ -268,7 +268,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
-   * @param value Ranking for controlling priority in auto-detection
+   * @param value Ranking for controlling priority in auto-detection. Lowest value = highest priority.
    * @return this
    */
   public MediaFormatBuilder ranking(int value) {

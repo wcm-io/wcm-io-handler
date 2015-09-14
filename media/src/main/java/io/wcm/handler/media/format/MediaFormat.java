@@ -249,7 +249,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
-   * @return Ranking for auto-detection
+   * @return Ranking for auto-detection. Lowest value = highest priority.
    */
   public long getRanking() {
     return this.ranking;
