@@ -9,7 +9,7 @@ RichText processing and markup generation.
 <dependency>
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.richtext</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.2</version>
 </dependency>
 ```
 

@@ -52,7 +52,7 @@ public final class LinkHandlerImpl implements LinkHandler {
   private Adaptable adaptable;
   @Self
   private LinkHandlerConfig linkHandlerConfig;
-  @AemObject
+  @AemObject(optional = true)
   private Page currentPage;
 
   @Override
@@ -99,7 +99,7 @@ public final class LinkHandlerImpl implements LinkHandler {
         LinkProcessor processor = AdaptTo.notNull(adaptable, processorClass);
         link = processor.process(link);
         if (link == null) {
-          throw new RuntimeException("LinkPreProcessor '" + processor + "' returned null, page '" + currentPage.getPath() + "'.");
+          throw new RuntimeException("LinkPreProcessor '" + processor + "' returned null, page '" + (currentPage != null ? currentPage.getPath() : "-") + "'.");
         }
       }
     }
@@ -108,7 +108,7 @@ public final class LinkHandlerImpl implements LinkHandler {
     if (linkType != null) {
       link = linkType.resolveLink(link);
       if (link == null) {
-        throw new RuntimeException("LinkType '" + linkType + "' returned null, page '" + currentPage.getPath() + "'.");
+        throw new RuntimeException("LinkType '" + linkType + "' returned null, page '" + (currentPage != null ? currentPage.getPath() : "-") + "'.");
       }
     }
 
@@ -131,7 +131,7 @@ public final class LinkHandlerImpl implements LinkHandler {
         LinkProcessor processor = AdaptTo.notNull(adaptable, processorClass);
         link = processor.process(link);
         if (link == null) {
-          throw new RuntimeException("LinkPostProcessor '" + processor + "' returned null, page '" + currentPage.getPath() + "'.");
+          throw new RuntimeException("LinkPostProcessor '" + processor + "' returned null, page '" + (currentPage != null ? currentPage.getPath() : "-") + "'.");
         }
       }
     }
