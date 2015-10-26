@@ -26,6 +26,8 @@ import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.sling.rewriter.ProcessingComponentConfiguration;
@@ -40,8 +42,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-
-import com.google.common.collect.ImmutableMap;
+import org.xml.sax.SAXException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UrlExternalizerTransformerTest {
@@ -80,57 +81,71 @@ public class UrlExternalizerTransformerTest {
   }
 
   @Test
-  public void testRewriteUnknownElement() throws Exception {
-    callTransformer("unknownElement", ImmutableMap.of("attr1", "/my/url"));
-    verifyTransformer("unknownElement", ImmutableMap.of("attr1", "/my/url"));
+  public void testRewriteUnknownElement() {
+    callTransformer("unknownElement", "attr1", "/my/url");
+    verifyTransformer("unknownElement", "attr1", "/my/url");
   }
 
   @Test
-  public void testRewriteUnknownElement_IntegratorTemplateMode() throws Exception {
+  public void testRewriteUnknownElement_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
-    callTransformer("unknownElement", ImmutableMap.of("attr1", "/my/url"));
-    verifyTransformer("unknownElement", ImmutableMap.of("attr1", "/my/url"));
+    callTransformer("unknownElement", "attr1", "/my/url");
+    verifyTransformer("unknownElement", "attr1", "/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement() throws Exception {
-    callTransformer("element1", ImmutableMap.of("attr1", "/my/url"));
-    verifyTransformer("element1", ImmutableMap.of("attr1", "/my/url"));
+  public void testRewriteKnownElement() {
+    callTransformer("element1", "attr1", "/my/url");
+    verifyTransformer("element1", "attr1", "/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement_IntegratorTemplateMode() throws Exception {
+  public void testRewriteKnownElement_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
-    callTransformer("element1", ImmutableMap.of("attr1", "/my/url"));
-    verifyTransformer("element1", ImmutableMap.of("attr1", "http://de.dummysite.org/my/url"));
+    callTransformer("element1", "attr1", "/my/url");
+    verifyTransformer("element1", "attr1", "http://de.dummysite.org/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement_MissingAttr_IntegratorTemplateMode() throws Exception {
+  public void testRewriteKnownElement_MissingAttr_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
-    callTransformer("element1", ImmutableMap.of("attr5", "/my/url"));
-    verifyTransformer("element1", ImmutableMap.of("attr5", "/my/url"));
+    callTransformer("element1", "attr5", "/my/url");
+    verifyTransformer("element1", "attr5", "/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement_EmptyAttr_IntegratorTemplateMode() throws Exception {
+  public void testRewriteKnownElement_EmptyAttr_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
-    callTransformer("element1", ImmutableMap.of("attr1", ""));
-    verifyTransformer("element1", ImmutableMap.of("attr1", ""));
+    callTransformer("element1", "attr1", "");
+    verifyTransformer("element1", "attr1", "");
   }
 
-  private void callTransformer(String elementName, Map<String, String> attributes) throws Exception {
-    underTest.init(processingContext, processingComponentConfiguration);
-    underTest.startElement(null, elementName, null, toAttributes(attributes));
+  private void callTransformer(String elementName, String... attributes) {
+    try {
+      underTest.init(processingContext, processingComponentConfiguration);
+      underTest.startElement(null, elementName, null, toAttributes(attributes));
+    }
+    catch (IOException | SAXException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
-  private void verifyTransformer(String elementName, Map<String, String> attributes) throws Exception {
-    verify(contentHandler).startElement(null, elementName, null, toAttributes(attributes));
+  private void verifyTransformer(String elementName, String... attributes) {
+    try {
+      verify(contentHandler).startElement(null, elementName, null, toAttributes(attributes));
+    }
+    catch (SAXException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
-  private Attributes toAttributes(Map<String, String> attributes) {
+  private Attributes toAttributes(String... attributes) {
+    Map<String, String> attributesMap = new HashMap<>();
+    for (int i = 0; i < attributes.length - 1; i += 2) {
+      attributesMap.put(attributes[i], attributes[i + 1]);
+    }
     ComparableAttributes attrs = new ComparableAttributes();
-    for (Map.Entry<String, String> entry : attributes.entrySet()) {
+    for (Map.Entry<String, String> entry : attributesMap.entrySet()) {
       attrs.addAttribute(null, entry.getKey(), entry.getKey(), "xs:string", entry.getValue());
     }
     return attrs;
