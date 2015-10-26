@@ -120,6 +120,18 @@ public class UrlExternalizerTransformerTest {
     verifyTransformer("element1", "attr1", "");
   }
 
+  @Test
+  public void testRewriteWithSpecialChars() {
+    callTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&param2=with%26amp");
+    verifyTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&param2=with%26amp");
+  }
+
+  @Test
+  public void testRewriteWithSpecialCharsAndHtmlEscaping() {
+    callTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&amp;param2=with%26amp");
+    verifyTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&amp;param2=with%26amp");
+  }
+
   private void callTransformer(String elementName, String... attributes) {
     try {
       underTest.init(processingContext, processingComponentConfiguration);
