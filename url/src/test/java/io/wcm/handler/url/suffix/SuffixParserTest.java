@@ -433,4 +433,12 @@ public class SuffixParserTest {
     assertEquals(resourceBC.getPath(), suffixResources.get(0).getPath());
   }
 
+  @Test
+  public void testTag() {
+    String tagId = "test:tag1/tag11";
+    String suffix = new SuffixBuilder().put("tag", tagId).build();
+    context.requestPathInfo().setSuffix(suffix);
+    assertEquals(tagId, new SuffixParser(context.request()).get("tag", String.class));
+  }
+
 }

@@ -30,6 +30,9 @@
       <action type="fix" dev="sseifert">
         SuffixBuilder: Accept only value types supported by SuffixParser as well.
       </action>
+      <action type="fix" dev="sseifert">
+        SuffixBuilder: Do not URLencode suffix parts; this is already done by URL handler.
+      </action>
     </release>
 
     <release version="0.6.0" date="2015-04-17">

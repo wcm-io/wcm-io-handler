@@ -19,14 +19,13 @@
  */
 package io.wcm.handler.url.suffix.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
+import org.apache.commons.lang3.text.translate.EntityArrays;
+import org.apache.commons.lang3.text.translate.LookupTranslator;
 import org.apache.sling.api.resource.Resource;
 
 /**
@@ -57,32 +56,46 @@ public final class UrlSuffixUtil {
   /**
    * Map with special chars and their replacements that are escaped with special ~ and hexcode
    */
-  public static final Map<String, String> SPECIAL_CHARS_ESCAPEMAP;
-  static {
-    final Map<String, String> map = new HashMap<>();
-
+  private static final String[][] SPECIAL_CHARS_MAPPING = {
     // escape delimiter chars
-    map.put(Character.toString(SUFFIX_PART_DELIMITER), ESCAPE_DELIMITER + hexCode(SUFFIX_PART_DELIMITER));
-    map.put(Character.toString(KEY_VALUE_DELIMITER), ESCAPE_DELIMITER + hexCode(KEY_VALUE_DELIMITER));
-
+    {
+      Character.toString(SUFFIX_PART_DELIMITER), ESCAPE_DELIMITER + hexCode(SUFFIX_PART_DELIMITER)
+    },
+    {
+      Character.toString(KEY_VALUE_DELIMITER), ESCAPE_DELIMITER + hexCode(KEY_VALUE_DELIMITER)
+    },
     // '.' must be custom-escaped (if no file extension is added to suffix,
     // anything after a dot would be interpreted as file extension during parsing)
-    map.put(Character.toString('.'), ESCAPE_DELIMITER + hexCode('.'));
-
+    {
+      Character.toString('.'), ESCAPE_DELIMITER + hexCode('.')
+    },
     // escape '%' to avoid confusion with URL escaping
-    map.put(Character.toString('%'), ESCAPE_DELIMITER + hexCode('%'));
-
+    {
+      Character.toString('%'), ESCAPE_DELIMITER + hexCode('%')
+    },
     // '/' must be custom-escaped (dispatcher/webserver may filter out/misinterpret urls with unescaped slashes)
-    map.put(Character.toString('/'), ESCAPE_DELIMITER + hexCode('/'));
-
+    {
+      Character.toString('/'), ESCAPE_DELIMITER + hexCode('/')
+    },
     // escape ':'
-    map.put(Character.toString(':'), ESCAPE_DELIMITER + hexCode(':'));
+    {
+      Character.toString(':'), ESCAPE_DELIMITER + hexCode(':')
+    },
+    // escape ' ' as well (singular problem occurred once)
+    {
+      Character.toString(' '), ESCAPE_DELIMITER + hexCode(' ')
+    }
+  };
 
-    // escape ' ' as well (singular problem occured once)
-    map.put(Character.toString(' '), ESCAPE_DELIMITER + hexCode(' '));
+  /**
+   * Escape special chars for suffix.
+   */
+  private static final CharSequenceTranslator ESCAPE_SPECIAL_CHARS = new LookupTranslator(SPECIAL_CHARS_MAPPING);
 
-    SPECIAL_CHARS_ESCAPEMAP = Collections.unmodifiableMap(map);
-  }
+  /**
+   * Unesacpe special chars in suffix.
+   */
+  private static final CharSequenceTranslator UNESCAPE_SPECIAL_CHARS = new LookupTranslator(EntityArrays.invert(SPECIAL_CHARS_MAPPING));
 
   private UrlSuffixUtil() {
     // static methods only
@@ -103,14 +116,7 @@ public final class UrlSuffixUtil {
    * @return Encodes path part
    */
   public static String encodeResourcePathPart(String relativePath) {
-    String encodedPath = relativePath;
-
-    // escape special chars
-    for (Map.Entry<String, String> entry : SPECIAL_CHARS_ESCAPEMAP.entrySet()) {
-      encodedPath = StringUtils.replace(encodedPath, entry.getKey(), entry.getValue());
-    }
-
-    return encodedPath;
+    return ESCAPE_SPECIAL_CHARS.translate(relativePath);
   }
 
   /**
@@ -119,14 +125,7 @@ public final class UrlSuffixUtil {
    * @return Decoded path part
    */
   public static String decodeResourcePathPart(String suffixPart) {
-    String unencodedPath = suffixPart;
-
-    // un-escape special chars
-    for (Map.Entry<String, String> entry : SPECIAL_CHARS_ESCAPEMAP.entrySet()) {
-      unencodedPath = StringUtils.replace(unencodedPath, entry.getValue(), entry.getKey());
-    }
-
-    return unencodedPath;
+    return UNESCAPE_SPECIAL_CHARS.translate(suffixPart);
   }
 
   /**
@@ -135,22 +134,7 @@ public final class UrlSuffixUtil {
    * @return Encoded string
    */
   public static String encodeKeyValuePart(String string) {
-    try {
-      String encoded = string;
-
-      // escape special chars
-      for (Map.Entry<String, String> entry : SPECIAL_CHARS_ESCAPEMAP.entrySet()) {
-        encoded = StringUtils.replace(encoded, entry.getKey(), entry.getValue());
-      }
-
-      // fully URL encode the Key/value to allow arbitrary Strings
-      encoded = URLEncoder.encode(encoded, CharEncoding.UTF_8);
-
-      return encoded;
-    }
-    catch (UnsupportedEncodingException ex) {
-      throw new RuntimeException("utf-8 not supported on this system", ex);
-    }
+    return ESCAPE_SPECIAL_CHARS.translate(string);
   }
 
   /**
@@ -161,13 +145,7 @@ public final class UrlSuffixUtil {
   public static String decodeValue(String suffixPart) {
     // value is the part *after* KEY_VALUE_DELIMITER
     String value = StringUtils.substringAfter(suffixPart, Character.toString(KEY_VALUE_DELIMITER));
-
-    // un-escape special chars
-    for (Map.Entry<String, String> entry : SPECIAL_CHARS_ESCAPEMAP.entrySet()) {
-      value = StringUtils.replace(value, entry.getValue(), entry.getKey());
-    }
-
-    return value;
+    return UNESCAPE_SPECIAL_CHARS.translate(value);
   }
 
   /**
@@ -178,13 +156,7 @@ public final class UrlSuffixUtil {
   public static String decodeKey(String suffixPart) {
     // key is the part *before* KEY_VALUE_DELIMITER
     String key = StringUtils.substringBefore(suffixPart, Character.toString(KEY_VALUE_DELIMITER));
-
-    // un-escape special chars
-    for (Map.Entry<String, String> entry : SPECIAL_CHARS_ESCAPEMAP.entrySet()) {
-      key = StringUtils.replace(key, entry.getValue(), entry.getKey());
-    }
-
-    return key;
+    return UNESCAPE_SPECIAL_CHARS.translate(key);
   }
 
   /**
