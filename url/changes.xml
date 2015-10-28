@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="0.6.2" date="2015-10-28">
+      <action type="add" dev="sseifert">
+        Sling Rewriter Transformer "wcm-io-urlhandler-externalizer": Make sure URLs are not double-escaped when they contain special chars like spaces and ampersands.
+      </action>
+      <action type="fix" dev="sseifert">
+        SuffixBuilder: Accept only value types supported by SuffixParser as well.
+      </action>
+      <action type="fix" dev="sseifert">
+        SuffixBuilder: Do not URLencode suffix parts; this is already done by URL handler.
+      </action>
+    </release>
+
     <release version="0.6.0" date="2015-04-17">
       <action type="add" dev="sseifert" issue="WCMIO-69">
         Add SuffixBuilder and SuffixParser.

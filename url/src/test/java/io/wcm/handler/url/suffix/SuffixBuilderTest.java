@@ -164,7 +164,6 @@ public class SuffixBuilderTest {
     assertEquals("abc=123", suffix);
   }
 
-
   @Test
   public void testPageStringLong() {
     // construct suffix with numerical key/value-pair
@@ -190,6 +189,27 @@ public class SuffixBuilderTest {
     assertEquals("abc=false", suffix);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testValueInvalidType() {
+    String key = "abc";
+    Object value = new Object();
+    getBuilder().put(key, value).build();
+  }
+
+  @Test
+  public void testNullValue() {
+    String key = "abc";
+    String value = null;
+    String suffix = getBuilder().put(key, value).build();
+    assertEquals("", suffix);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNullKey() {
+    String key = null;
+    String value = "abc";
+    getBuilder().put(key, value).build();
+  }
 
   @Test
   public void testPageResourceResource() {

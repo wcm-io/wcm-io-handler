@@ -186,7 +186,13 @@ public final class SuffixBuilder {
    * @return this
    */
   public SuffixBuilder put(String key, Object value) {
-    parameterMap.put(key, value);
+    if (key == null) {
+      throw new IllegalArgumentException("Key must not be null");
+    }
+    if (value != null) {
+      validateValueType(value);
+      parameterMap.put(key, value);
+    }
     return this;
   }
 
@@ -196,8 +202,21 @@ public final class SuffixBuilder {
    * @return this
    */
   public SuffixBuilder putAll(Map<String, Object> map) {
-    this.parameterMap.putAll(map);
+    for (Map.Entry<String, Object> entry : map.entrySet()) {
+      put(entry.getKey(), entry.getValue());
+    }
     return this;
+  }
+
+  private void validateValueType(Object value) {
+    Class clazz = value.getClass();
+    boolean isValid = (clazz == String.class
+        || clazz == Boolean.class
+        || clazz == Integer.class
+        || clazz == Long.class);
+    if (!isValid) {
+      throw new IllegalArgumentException("Unsupported value type: " + clazz.getName());
+    }
   }
 
   /**

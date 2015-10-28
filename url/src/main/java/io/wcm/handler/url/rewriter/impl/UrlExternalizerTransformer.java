@@ -21,9 +21,12 @@ package io.wcm.handler.url.rewriter.impl;
 
 import io.wcm.handler.url.UrlHandler;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import org.apache.cocoon.xml.sax.AbstractSAXPipe;
 import org.apache.cocoon.xml.sax.AttributesImpl;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.rewriter.ProcessingComponentConfiguration;
 import org.apache.sling.rewriter.ProcessingContext;
@@ -84,11 +87,25 @@ class UrlExternalizerTransformer extends AbstractSAXPipe implements Transformer 
       return;
     }
 
-    // remove escaping
-    url = StringEscapeUtils.unescapeHtml4(url);
+    // split off query string or fragment that may be appended to the URL
+    String urlRemainder = null;
+    int urlRemainderPos = StringUtils.indexOfAny(url, '?', '#');
+    if (urlRemainderPos >= 0) {
+      urlRemainder = url.substring(urlRemainderPos);
+      url = url.substring(0, urlRemainderPos);
+    }
+
+    // decode URL (without URL remainder)
+    try {
+      url = URLDecoder.decode(url, CharEncoding.UTF_8);
+    }
+    catch (UnsupportedEncodingException ex) {
+      throw new RuntimeException("Unsupported encoding.", ex);
+    }
 
     // externalize URL (if it is not already externalized)
-    String rewrittenUrl = urlHandler.get(url).buildExternalResourceUrl();
+    String rewrittenUrl = urlHandler.get(url).buildExternalResourceUrl()
+        + (urlRemainder != null ? urlRemainder : "");
 
     if (StringUtils.equals(url, rewrittenUrl)) {
       log.debug("Rewrite element {}: Skip - URL is already externalized: {}", name, url);
