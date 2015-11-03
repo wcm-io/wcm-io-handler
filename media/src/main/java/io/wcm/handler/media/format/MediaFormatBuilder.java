@@ -72,12 +72,39 @@ public final class MediaFormatBuilder {
    * Create a new media format builder.
    * @param name Media format name. Only characters, numbers, hyphen and underline are allowed.
    * @param applicationId Application id
-   * @return Media foramt builder
+   * @return Media format builder
    */
   public static MediaFormatBuilder create(String name, String applicationId) {
     return new MediaFormatBuilder()
-    .name(name)
-    .applicationId(applicationId);
+        .name(name)
+        .applicationId(applicationId);
+  }
+
+  /**
+   * Create a new media format builder based on an existing media format.
+   * @param mediaFormat Media format from which data is copied
+   * @return Media format builder
+   */
+  public static MediaFormatBuilder create(MediaFormat mediaFormat) {
+    return new MediaFormatBuilder()
+        .name(mediaFormat.getName())
+        .applicationId(mediaFormat.getApplicationId())
+        .label(mediaFormat.getLabel())
+        .description(mediaFormat.getDescription())
+        .width(mediaFormat.getWidth())
+        .minWidth(mediaFormat.getMinWidth())
+        .maxWidth(mediaFormat.getMaxWidth())
+        .height(mediaFormat.getHeight())
+        .minHeight(mediaFormat.getMinHeight())
+        .maxHeight(mediaFormat.getMaxHeight())
+        .ratio(mediaFormat.getRatio())
+        .ratio(mediaFormat.getRatioWidth(), mediaFormat.getRatioHeight())
+        .fileSizeMax(mediaFormat.getFileSizeMax())
+        .extensions(mediaFormat.getExtensions())
+        .renditionGroup(mediaFormat.getRenditionGroup())
+        .internal(mediaFormat.isInternal())
+        .ranking((int)mediaFormat.getRanking())
+        .properties(mediaFormat.getProperties());
   }
 
   /**
@@ -245,7 +272,7 @@ public final class MediaFormatBuilder {
    * @return this
    */
   public MediaFormatBuilder extensions(String... value) {
-    this.extensions = value;
+    this.extensions = value.clone();
     return this;
   }
 

@@ -25,8 +25,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -53,7 +58,7 @@ public class MediaFormatBuilderTest {
     assertEquals("name1", mf.getName());
     assertEquals("label1", mf.getLabel());
     assertEquals("description1", mf.getDescription());
-    assertEquals(800, mf.getWidth()        );
+    assertEquals(800, mf.getWidth());
     assertEquals(600, mf.getHeight());
     assertEquals(1.333d, mf.getRatio(), 0.0001d);
     assertEquals(10000L, mf.getFileSizeMax());
@@ -124,6 +129,102 @@ public class MediaFormatBuilderTest {
     assertEquals("name3", mf.getName());
     assertEquals(1000, mf.getWidth());
     assertEquals(500, mf.getHeight());
+  }
+
+  /**
+   * test if {@link io.wcm.handler.media.format.MediaFormatBuilder#create(io.wcm.handler.media.format.MediaFormat)}
+   * copies all data
+   * @throws IllegalAccessException on reflection errors
+   * @throws IllegalAccessException on reflection errors
+   * @throws InvocationTargetException on reflection errors
+   */
+  @Test
+  public void testBuilder_variant5() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    MediaFormat mfOriginal = getFullFeaturedMediaFormat();
+    MediaFormat mfNew = MediaFormatBuilder.create(mfOriginal).build();
+
+    for (Method method : MediaFormat.class.getMethods()) {
+      if (StringUtils.startsWith(method.getName(), "get")) {
+        if (method.getReturnType() == String[].class) {
+          assertArrayEquals("assert method " + method.getName(), (String[])method.invoke(mfOriginal, new Object[0]),
+              (String[])method.invoke(mfNew, new Object[0]));
+        }
+        else {
+          assertEquals("assert method " + method.getName(), method.invoke(mfOriginal, new Object[0]), method.invoke(mfNew, new Object[0]));
+        }
+      }
+    }
+  }
+
+  /**
+   * test unmodifiable extensions
+   */
+  @Test
+  public void testExtensions() {
+    final String unmodifiableExtension = "png";
+    String[] extensionsSource = {
+        unmodifiableExtension
+    };
+
+    MediaFormat mf = MediaFormatBuilder.create("name", APP_ID)
+        .extensions(extensionsSource)
+        .build();
+
+    // source modification should have no effect
+    extensionsSource[0] = "ThisModificationShouldHaveNoEffect";
+    assertEquals(unmodifiableExtension, mf.getExtensions()[0]);
+
+    // now modify the returned extensions, should have no effect
+    mf.getExtensions()[0] = "ThisModificationShouldHaveNoEffect";
+    assertEquals(unmodifiableExtension, mf.getExtensions()[0]);
+  }
+
+  /**
+   * test the {@link #getFullFeaturedMediaFormat()} method if really everything is set
+   * @throws IllegalAccessException on reflection errors
+   * @throws IllegalArgumentException on reflection errors
+   * @throws InvocationTargetException on reflection errors
+   */
+  @Test
+  public void fullFeaturedMediaFormatTest() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    MediaFormat mf = getFullFeaturedMediaFormat();
+
+    for (Method method : MediaFormat.class.getMethods()) {
+      if (StringUtils.startsWith(method.getName(), "get")) {
+        Assert.assertNotNull("assert method " + method.getName(), method.invoke(mf, new Object[0]));
+      }
+    }
+  }
+
+  /**
+   * helper method to get a media format with all data set.
+   * @return media format
+   */
+  protected MediaFormat getFullFeaturedMediaFormat() {
+    Map<String, Object> properties = new HashMap<>();
+    properties.put("key1", "value1");
+    return MediaFormatBuilder.create()
+        .name("name")
+        .applicationId(APP_ID)
+        .label("label")
+        .description("description")
+        .width(1)
+        .minWidth(2)
+        .maxWidth(3)
+        .height(4)
+        .minHeight(5)
+        .maxHeight(6)
+        .ratio(7)
+        .ratio(8, 9)
+        .fileSizeMax(10)
+        .extensions(new String[] {
+            "png"
+        })
+        .renditionGroup("renditionGroup")
+        .internal(true)
+        .ranking(11)
+        .properties(properties)
+        .build();
   }
 
   @Test(expected = IllegalArgumentException.class)
