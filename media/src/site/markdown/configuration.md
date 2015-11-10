@@ -10,4 +10,4 @@ This service needs a service user mapping for the factory configuration `org.apa
 user.mapping="[io.wcm.handler.media=idsjobprocessor]"
 ```
 
-This configuration is only required on Author instances. In this case an existing user "idsjobprocessor" from AEM 6.1 is re-used, alternatively you can create a new system user that has read/write permissions on `/content/dam`.
+This configuration is only required on Author instances. In this example an existing user "idsjobprocessor" from AEM 6.1 is re-used, you should create a new system user that has read/write permissions on `/content/dam`.
