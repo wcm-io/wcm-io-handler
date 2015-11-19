@@ -132,6 +132,12 @@ public class UrlExternalizerTransformerTest {
     verifyTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&amp;param2=with%26amp");
   }
 
+  @Test
+  public void testRewriteAnchorOnly() {
+    callTransformer("element1", "attr1", "#my-anchor");
+    verifyTransformer("element1", "attr1", "#my-anchor");
+  }
+
   private void callTransformer(String elementName, String... attributes) {
     try {
       underTest.init(processingContext, processingComponentConfiguration);

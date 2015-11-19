@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="0.6.4" date="not released">
+      <action type="fix" dev="sseifert">
+        Sling Rewriter Transformer "wcm-io-urlhandler-externalizer": Make sure URLs consisting only of an anchor tag (e.g. #myanchor) get not corrupted.
+      </action>
+    </release>
+
     <release version="0.6.2" date="2015-10-28">
       <action type="add" dev="sseifert">
         Sling Rewriter Transformer "wcm-io-urlhandler-externalizer": Make sure URLs are not double-escaped when they contain special chars like spaces and ampersands.
