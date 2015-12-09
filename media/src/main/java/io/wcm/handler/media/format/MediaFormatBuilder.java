@@ -245,7 +245,7 @@ public final class MediaFormatBuilder {
    * @return this
    */
   public MediaFormatBuilder extensions(String... value) {
-    this.extensions = value.clone();
+    this.extensions = value != null ? value.clone() : null;
     return this;
   }
 

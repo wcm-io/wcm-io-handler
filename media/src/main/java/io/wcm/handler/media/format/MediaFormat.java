@@ -231,7 +231,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * @return Allowed file extensions
    */
   public String[] getExtensions() {
-    return this.extensions.clone();
+    return this.extensions != null ? this.extensions.clone() : null;
   }
 
   /**
