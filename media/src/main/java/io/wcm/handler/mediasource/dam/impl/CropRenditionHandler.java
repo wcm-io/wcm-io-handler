@@ -19,10 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.CropDimension;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -30,6 +28,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 import com.day.cq.dam.api.Asset;
+
+import io.wcm.handler.media.CropDimension;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -44,7 +45,7 @@ class CropRenditionHandler extends DefaultRenditionHandler {
    * @param asset DAM asset
    * @param cropDimension Crop dimension
    */
-  public CropRenditionHandler(Asset asset, CropDimension cropDimension) {
+  CropRenditionHandler(Asset asset, CropDimension cropDimension) {
     super(asset);
     this.cropDimension = cropDimension;
     assetFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
@@ -58,7 +59,7 @@ class CropRenditionHandler extends DefaultRenditionHandler {
    */
   @Override
   protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
-    TreeSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);
+    NavigableSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);
     Iterator<RenditionMetadata> descendingIterator = processedCandidates.descendingIterator();
     VirtualCropRenditionMetadata cropRendition = null;
     while (descendingIterator.hasNext()) {

@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.impl.ImageFileServlet;
-import io.wcm.handler.media.impl.MediaFileServlet;
-
 import java.io.InputStream;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,6 +26,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
+
+import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.MediaFileServlet;
 
 /**
  * Virtual rendition that is downscaling from an existing rendition.
@@ -38,7 +38,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   private final long width;
   private final long height;
 
-  public VirtualRenditionMetadata(Rendition rendition, long width, long height) {
+  VirtualRenditionMetadata(Rendition rendition, long width, long height) {
     super(rendition);
     this.width = width;
     this.height = height;
@@ -92,10 +92,10 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   @Override
   public int hashCode() {
     return new HashCodeBuilder()
-    .append(this.getRendition().getPath())
-    .append(width)
-    .append(height)
-    .hashCode();
+        .append(this.getRendition().getPath())
+        .append(width)
+        .append(height)
+        .hashCode();
   }
 
   @Override
@@ -105,10 +105,10 @@ class VirtualRenditionMetadata extends RenditionMetadata {
     }
     VirtualRenditionMetadata other = (VirtualRenditionMetadata)obj;
     return new EqualsBuilder()
-    .append(this.getRendition().getPath(), other.getRendition().getPath())
-    .append(this.width, other.width)
-    .append(this.height, other.height)
-    .build();
+        .append(this.getRendition().getPath(), other.getRendition().getPath())
+        .append(this.width, other.width)
+        .append(this.height, other.height)
+        .build();
   }
 
 }

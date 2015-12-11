@@ -19,11 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,6 +34,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -52,7 +51,7 @@ class DefaultRenditionHandler implements RenditionHandler {
   /**
    * @param asset DAM asset
    */
-  public DefaultRenditionHandler(Asset asset) {
+  DefaultRenditionHandler(Asset asset) {
     this.asset = asset;
 
     Rendition damOriginalRendition = asset.getOriginal();

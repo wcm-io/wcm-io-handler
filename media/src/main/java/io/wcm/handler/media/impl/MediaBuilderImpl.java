@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.impl;
 
+import org.apache.sling.api.resource.Resource;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
@@ -26,8 +28,6 @@ import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
-
-import org.apache.sling.api.resource.Resource;
 
 /**
  * Default implementation or {@link MediaBuilder}.
@@ -43,19 +43,19 @@ final class MediaBuilderImpl implements MediaBuilder {
   private String refProperty;
   private String cropProperty;
 
-  public MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
+  MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
     this.resource = resource;
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
   }
 
-  public MediaBuilderImpl(String mediaRef, MediaHandlerImpl mediaHandler) {
+  MediaBuilderImpl(String mediaRef, MediaHandlerImpl mediaHandler) {
     this.resource = null;
     this.mediaRef = mediaRef;
     this.mediaHandler = mediaHandler;
   }
 
-  public MediaBuilderImpl(MediaRequest mediaRequest, MediaHandlerImpl mediaHandler) {
+  MediaBuilderImpl(MediaRequest mediaRequest, MediaHandlerImpl mediaHandler) {
     if (mediaRequest == null) {
       throw new IllegalArgumentException("Media request is null.");
     }
