@@ -19,15 +19,15 @@
  */
 package io.wcm.handler.url.impl;
 
-import io.wcm.handler.url.UrlBuilder;
-import io.wcm.handler.url.UrlMode;
-
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.UrlBuilder;
+import io.wcm.handler.url.UrlMode;
 
 /**
  * Default implementation or {@link UrlBuilder}.
@@ -51,7 +51,7 @@ final class UrlBuilderImpl implements UrlBuilder {
    * @param path Path for URL (without any hostname, scheme, extension, suffix etc.)
    * @param urlHandler Url handler instance
    */
-  public UrlBuilderImpl(String path, UrlHandlerImpl urlHandler) {
+  UrlBuilderImpl(String path, UrlHandlerImpl urlHandler) {
     this.path = path;
     this.resource = null;
     this.page = null;
@@ -62,7 +62,7 @@ final class UrlBuilderImpl implements UrlBuilder {
    * @param resource Resource
    * @param urlHandler Url handler instance
    */
-  public UrlBuilderImpl(Resource resource, UrlHandlerImpl urlHandler) {
+  UrlBuilderImpl(Resource resource, UrlHandlerImpl urlHandler) {
     this.path = resource != null ? resource.getPath() : null;
     this.resource = resource;
     this.page = null;
@@ -73,7 +73,7 @@ final class UrlBuilderImpl implements UrlBuilder {
    * @param page Page
    * @param urlHandler Url handler instance
    */
-  public UrlBuilderImpl(Page page, UrlHandlerImpl urlHandler) {
+  UrlBuilderImpl(Page page, UrlHandlerImpl urlHandler) {
     this.path = page != null ? page.getPath() : null;
     this.resource = null;
     this.page = page;
