@@ -1,0 +1,28 @@
+<div data-sly-use.redirect="io.wcm.handler.link.ui.Redirect"
+  data-sly-test="${redirect.renderPage}"
+  data-sly-unwrap><!DOCTYPE html>
+<html
+    data-sly-use.link="io.wcm.handler.link.ui.ResourceLink"
+    data-sly-use.clientLib="/libs/granite/sightly/templates/clientlib.html">
+  <head>
+    <title>${currentPage.title}</title>
+    <script data-sly-resource="${'.' @ resourceType='/apps/wcm-io/wcm/commons/components/global/wcmInit' }" data-sly-unwrap/>
+    <style data-sly-call="${clientLib.css @ categories='coralui2'}" data-sly-unwrap/>
+    <style>
+      body { margin: 15px; }
+    </style>
+  </head>
+  <body>
+    <h1>${currentPage.title}</h1>
+
+    <p data-sly-test="${link.valid}">
+      ${'io.wcm.handler.link.redirectInfo' @ i18n}
+      <a data-sly-attribute="${link.attributes}">${link.metadata.url}</a>
+    </p>
+
+    <p data-sly-test="${!link.valid}">
+      ${'io.wcm.handler.link.redirectMissing' @ i18n}
+    </p>
+  </body>
+</html>
+</div>

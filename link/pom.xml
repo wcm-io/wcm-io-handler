@@ -82,6 +82,9 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
+            <Sling-Initial-Content>
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/link
+            </Sling-Initial-Content>
             <Sling-Model-Packages>
               io.wcm.handler.link
             </Sling-Model-Packages>
@@ -102,6 +105,18 @@
             <id>validate-bundle</id>
             <goals>
               <goal>validate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>i18n-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>transform</goal>
             </goals>
           </execution>
         </executions>
