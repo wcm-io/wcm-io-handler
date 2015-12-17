@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert">
         Add default implementation of redirect template.
       </action>
+      <action type="update" dev="sseifert">
+        DefaultInternalLinkInheritUrlParamLinkPostProcessor: Add "wcmmode" as parameter, and activate it by default in AbstractLinkHandlerConfig.
+      </action>
     </release>
 
     <release version="0.7.0" date="2015-09-16">
