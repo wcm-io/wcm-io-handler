@@ -23,11 +23,14 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
   
-    <release version="0.9.2" date="not released">
+    <release version="0.10.0" date="not released">
+      <action type="add" dev="sseifert">
+        Add ResourceMedia sling model for UI views.
+      </action>
       <action type="fix" dev="bdang" issue="WHAN-14">
         Make the extensions array of an existing MediaFormat unmodifiable.
       </action>
-    </release>  
+    </release>
 
     <release version="0.9.0" date="2015-09-09">
       <action type="add" dev="sseifert" issue="WHAN-13">

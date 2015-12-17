@@ -21,6 +21,7 @@ package io.wcm.handler.media.testcontext;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
 import static io.wcm.handler.media.testcontext.AppAemContext.APPLICATION_ID;
+
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.format.MediaFormat;
 
@@ -55,40 +56,40 @@ public final class DummyMediaFormats {
       .internal(true)
       .build();
 
-  /* holzauto_cutout */
-  public static final MediaFormat HOLZAUTO_CUTOUT_LARGE = create("holzauto_cutout_large", APPLICATION_ID)
+  /* product_cutout */
+  public static final MediaFormat PRODUCT_CUTOUT_LARGE = create("product_cutout_large", APPLICATION_ID)
       .label("Carline Cutout large")
       .width(595)
       .height(229)
       .extensions("gif","jpg","png")
-      .renditionGroup("/apps/test/renditiongroup/holzauto_cutout")
+      .renditionGroup("/apps/test/renditiongroup/product_cutout")
       .build();
-  public static final MediaFormat HOLZAUTO_CUTOUT_2TO6 = create("holzauto_cutout_2to6", APPLICATION_ID)
+  public static final MediaFormat PRODUCT_CUTOUT_2TO6 = create("product_cutout_2to6", APPLICATION_ID)
       .label("Carline Cutout (scaled)")
       .width(305)
       .height(117)
       .extensions("gif","jpg","png")
-      .renditionGroup("/apps/test/renditiongroup/holzauto_cutout")
+      .renditionGroup("/apps/test/renditiongroup/product_cutout")
       .internal(true)
       .build();
-  public static final MediaFormat HOLZAUTO_CUTOUT_7TO12 = create("holzauto_cutout_7to12", APPLICATION_ID)
+  public static final MediaFormat PRODUCT_CUTOUT_7TO12 = create("product_cutout_7to12", APPLICATION_ID)
       .label("Carline Cutout (scaled)")
       .width(190)
       .height(73)
       .extensions("gif","jpg","png")
-      .renditionGroup("/apps/test/renditiongroup/holzauto_cutout")
+      .renditionGroup("/apps/test/renditiongroup/product_cutout")
       .internal(true)
       .build();
-  public static final MediaFormat HOLZAUTO_CUTOUT_13PLUS = create("holzauto_cutout_13plus", APPLICATION_ID)
+  public static final MediaFormat PRODUCT_CUTOUT_13PLUS = create("product_cutout_13plus", APPLICATION_ID)
       .label("Carline Cutout small")
       .width(120)
       .height(46)
       .extensions("gif","jpg","png")
-      .renditionGroup("/apps/test/renditiongroup/holzauto_cutout")
+      .renditionGroup("/apps/test/renditiongroup/product_cutout")
       .build();
 
-  /* holzauto_banner */
-  public static final MediaFormat HOLZAUTO_BANNER = create("holzauto_banner", APPLICATION_ID)
+  /* product_banner */
+  public static final MediaFormat PRODUCT_BANNER = create("product_banner", APPLICATION_ID)
       .label("Showroom Banner")
       .width(194)
       .height(40)

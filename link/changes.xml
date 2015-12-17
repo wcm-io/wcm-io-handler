@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert">
         Add default implementation of redirect template.
       </action>
+      <action type="add" dev="sseifert">
+        Add ResourceLink and Redirect sling model for UI views.
+      </action>
       <action type="update" dev="sseifert">
         DefaultInternalLinkInheritUrlParamLinkPostProcessor: Add "wcmmode" as parameter, and activate it by default in AbstractLinkHandlerConfig.
       </action>
