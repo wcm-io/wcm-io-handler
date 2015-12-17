@@ -74,7 +74,7 @@ Then you can use it inside your sightly template:
 
 ```html
 <div data-sly-use.link="com.myapp.ResourceLink" data-sly-unwrap>
-  <a data-sly-attribute="${link.attributes}" data-sly-test="{link.valid}">
+  <a data-sly-attribute="${link.attributes}" data-sly-test="${link.valid}">
     ${properties.linkTitle}
   </a>
 </div>
