@@ -36,7 +36,7 @@
 
             "redirectStatus": {
               "sling:resourceType": "granite/ui/components/foundation/include",
-              "jcr:title": "Redirect Link",
+              "jcr:title": "Redirect Status",
               "path": "/apps/wcm-io/handler/link/components/global/include/redirectStatus"
             },
 
