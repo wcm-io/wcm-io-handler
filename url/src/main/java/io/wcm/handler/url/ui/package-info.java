@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2015 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * Utilities and helpers.
+ * Sling model classes for UI views.
  */
 @org.osgi.annotation.versioning.Version("0.5.0")
-package io.wcm.handler.url.util;
+package io.wcm.handler.url.ui;

@@ -25,7 +25,7 @@
 
     <release version="0.7.0" date="not released">
       <action type="add" dev="sseifert">
-        Add SiteRoot model class to help detect site roots within a site (based on configuration root).
+        Add SiteRoot model for UI views.
       </action>
       <action type="fix" dev="sseifert">
         Sling Rewriter Transformer "wcm-io-urlhandler-externalizer": Make sure URLs consisting only of an anchor tag (e.g. #myanchor) get not corrupted.
