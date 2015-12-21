@@ -104,15 +104,12 @@ To resolve a media inside a Sightly template you can use a generic Sling Model f
 Sightly template example:
 
 ```html
-<sly data-sly-use.media="${'io.wcm.handler.media.ui.ResourceMedia' @ mediaFormat='content_480'}">
-
-  <figure class="image-small" data-sly-test="${media.valid}">
-    <a href="conference.shtml">
-      ${media.markup @ context='html'}
-    </a>
-  </figure>
-
-</sly>
+<sly data-sly-use.media="${'io.wcm.handler.media.ui.ResourceMedia' @ mediaFormat='content_480'}"/>
+<figure class="image-small" data-sly-test="${media.valid}">
+  <a href="conference.shtml">
+    ${media.markup @ context='html'}
+  </a>
+</figure>
 ```
 
 In this case the `${media.markup ...}` is replaced with the media markup of the media handler, which is not necessarily is an `img` element, but may be any markup (e.g. a `video` or `audio` or `div` element with custom markup).

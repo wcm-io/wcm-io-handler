@@ -49,11 +49,10 @@ To resolve a link inside a Sightly template you can use a generic Sling Model fo
 Sightly template example:
 
 ```html
-<sly data-sly-use.link="io.wcm.handler.link.ui.ResourceLink">
-  <a data-sly-attribute="${link.attributes}" data-sly-test="${link.valid}">
-    ${properties.linkTitle}
-  </a>
-</sly>
+<sly data-sly-use.link="io.wcm.handler.link.ui.ResourceLink"/>
+<a data-sly-attribute="${link.attributes}" data-sly-test="${link.valid}">
+  ${properties.linkTitle}
+</a>
 <div class="cq-placeholder" data-emptytext="${component.title}" data-sly-test="${!link.valid}"></div>
 ```
 

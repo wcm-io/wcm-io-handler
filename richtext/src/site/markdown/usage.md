@@ -44,9 +44,10 @@ To resolve a rich text inside a Sightly template you can use a generic Sling Mod
 Sightly template example:
 
 ```html
-<sly data-sly-use.richtext="io.wcm.handler.richtext.ui.ResourceRichText">
+<sly data-sly-use.richtext="io.wcm.handler.richtext.ui.ResourceRichText"/>
+<div>
   ${richtext.markup @ context='html'}
-</sly>
+</div>
 <div class="cq-placeholder" data-emptytext="${component.title}" data-sly-test="${!richtext.valid}"></div>
 ```
 
