@@ -35,6 +35,7 @@ The URL Handler provides:
 * [Suffix Builder and Parser][suffix-builder-parser] for passing around information via Sling Suffix string
 * Supports externalizing URLs for [Integrator Template Mode][integrator] with placeholders or Full URLs
 * Supports externalizing URLs in generated markup via [Sling Rewriter][rewriter]
+* Generic Sling Models for usage in views: [Sling Models][ui-package]
 
 
 [usage]: usage.html
@@ -44,3 +45,4 @@ The URL Handler provides:
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [config]: ../../config/
+[ui-package]: apidocs/io/wcm/handler/url/ui/package-summary.html

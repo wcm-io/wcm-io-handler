@@ -44,40 +44,16 @@ Further properties are defined in [LinkNameConstants][link-name-constants]. It i
 
 ### Using links in Sightly template
 
-To use the link handler inside a sightly template it is recommended to create a generic Sling Model for calling the handler:
+To resolve a link inside a Sightly template you can use a generic Sling Model for calling the handler: [ResourceLink](apidocs/io/wcm/handler/link/ui/ResourceLink.html)
 
-```java
-@Model(adaptables = SlingHttpServletRequest.class)
-public class ResourceLink {
-
-  @Self private LinkHandler linkHandler;
-  @SlingObject private Resource resource;
-  private Link link;
-
-  @PostConstruct
-  protected void activate() {
-    link = linkHandler.get(resource).build();
-  }
-
-  public boolean isValid() {
-    return link.isValid();
-  }
-
-  public Map<String, String> getAttributes() {
-    return link.getAnchorAttributes();
-  }
-
-}
-```
-
-Then you can use it inside your sightly template:
+Sightly template example:
 
 ```html
-<div data-sly-use.link="com.myapp.ResourceLink" data-sly-unwrap>
+<sly data-sly-use.link="io.wcm.handler.link.ui.ResourceLink">
   <a data-sly-attribute="${link.attributes}" data-sly-test="${link.valid}">
     ${properties.linkTitle}
   </a>
-</div>
+</sly>
 <div class="cq-placeholder" data-emptytext="${component.title}" data-sly-test="${!link.valid}"></div>
 ```
 

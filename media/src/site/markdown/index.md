@@ -32,6 +32,7 @@ The Media Handler provides:
 * Rendering virtual renditions to match the expected output format, optionally with cropping
 * Support for responsive images by rendering multiple renditions at once for each breakpoint
 * Pluggable media pre- and postprocessing to further tailoring the media handling process
+* Generic Sling Models for usage in views: [Sling Models][ui-package]
 
 
 [usage]: usage.html
@@ -39,3 +40,4 @@ The Media Handler provides:
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [url-handler]: ../url/
+[ui-package]: apidocs/io/wcm/handler/media/ui/package-summary.html

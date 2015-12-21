@@ -10,12 +10,19 @@ To build the markup of a rich text stored in repository:
 ```java
 RichTextHandler richTextHandler = request.adaptTo(RichTextHandler.class);
 
-// build markup for richtext stored in current resource (in a property named `text`)
+// build markup for richtext stored in current resource
 String markup = richTextHandler.get(resource).buildMarkup();
 
 // build markup for richtext passed as string
 String markup = richTextHandler.get(richTextString).buildMarkup();
 ```
+
+### Rich text properties in resource
+
+When the rich text is stored in a resource the property names used by the rich text in-place editor have to be used:
+
+* `text`: Property for storing the rich text XHTML markup
+* `textIsRich`: Denotes if the text property contains rich text (true) or plain text (false)
 
 
 ### Build HTML from plain text
@@ -32,38 +39,14 @@ String markup = richTextHandler.get(plainTextString).textMode(TextMode.PLAIN).bu
 
 ### Using rich text in Sightly template
 
-To use the richtext handler inside a sightly template it is recommended to create a generic Sling Model for calling the handler:
+To resolve a rich text inside a Sightly template you can use a generic Sling Model for calling the handler: [ResourceRichText](apidocs/io/wcm/handler/richtext/ui/ResourceRichText.html)
 
-```java
-@Model(adaptables = SlingHttpServletRequest.class)
-public class ResourceRichText {
-
-  @Self private RichTextHandler richTextHandler;
-  @SlingObject private Resource resource;
-  private String markup;
-
-  @PostConstruct
-  protected void activate() {
-    markup = richTextHandler.get(resource).buildMarkup();
-  }
-
-  public boolean isValid() {
-    return StringUtils.isNotBlank(markup);
-  }
-
-  public String getMarkup() {
-    return markup;
-  }
-
-}
-```
-
-Then you can use it inside your sightly template:
+Sightly template example:
 
 ```html
-<div data-sly-use.richtext="com.myapp.ResourceRichText" data-sly-unwrap>
+<sly data-sly-use.richtext="io.wcm.handler.richtext.ui.ResourceRichText">
   ${richtext.markup @ context='html'}
-</div>
+</sly>
 <div class="cq-placeholder" data-emptytext="${component.title}" data-sly-test="${!richtext.valid}"></div>
 ```
 
