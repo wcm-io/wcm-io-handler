@@ -53,13 +53,13 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.link</artifactId>
-      <version>0.5.0</version>
+      <version>0.7.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.media</artifactId>
-      <version>0.6.0</version>
+      <version>0.9.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
