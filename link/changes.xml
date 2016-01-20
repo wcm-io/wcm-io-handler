@@ -33,6 +33,9 @@
       <action type="update" dev="sseifert">
         DefaultInternalLinkInheritUrlParamLinkPostProcessor: Add "wcmmode" as parameter, and activate it by default in AbstractLinkHandlerConfig.
       </action>
+      <action type="update" dev="sseifert">
+        Set AEM API and OSGi dependencies to provided scope.
+      </action>
     </release>
 
     <release version="0.7.0" date="2015-09-16">

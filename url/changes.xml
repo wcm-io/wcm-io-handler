@@ -30,6 +30,9 @@
       <action type="fix" dev="sseifert">
         Sling Rewriter Transformer "wcm-io-urlhandler-externalizer": Make sure URLs consisting only of an anchor tag (e.g. #myanchor) get not corrupted.
       </action>
+      <action type="update" dev="sseifert">
+        Set AEM API and OSGi dependencies to provided scope.
+      </action>
     </release>
 
     <release version="0.6.2" date="2015-10-28">

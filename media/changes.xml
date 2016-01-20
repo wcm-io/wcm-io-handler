@@ -30,6 +30,9 @@
       <action type="fix" dev="bdang" issue="WHAN-14">
         Make the extensions array of an existing MediaFormat unmodifiable.
       </action>
+      <action type="update" dev="sseifert">
+        Set AEM API and OSGi dependencies to provided scope.
+      </action>
     </release>
 
     <release version="0.9.0" date="2015-09-09">

@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert">
         Add ResourceRichText and ResourceMultilineText sling model^s for UI views.
       </action>
+      <action type="update" dev="sseifert">
+        Set AEM API and OSGi dependencies to provided scope.
+      </action>
     </release>
 
     <release version="0.5.2" date="2015-09-16">
