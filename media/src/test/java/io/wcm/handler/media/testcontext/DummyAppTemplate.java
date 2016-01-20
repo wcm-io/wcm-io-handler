@@ -37,7 +37,7 @@ public enum DummyAppTemplate {
   private final String templatePath;
   private final String resourceType;
 
-  private DummyAppTemplate(String templatePath) {
+  DummyAppTemplate(String templatePath) {
     this.templatePath = templatePath;
 
     // build resource type from template path
@@ -46,13 +46,13 @@ public enum DummyAppTemplate {
     Matcher templateParts = TEMPLATE_PATH_PATTERN.matcher(templatePath);
     if (templateParts.matches()) {
       resourceTypeFromPath = "/apps/" + templateParts.group(1) + "/components" + StringUtils.defaultString(templateParts.group(2))
-          + "/page/" + templateParts.group(3);
+      + "/page/" + templateParts.group(3);
     }
 
     this.resourceType = resourceTypeFromPath;
   }
 
-  private DummyAppTemplate(String templatePath, String resourceType) {
+  DummyAppTemplate(String templatePath, String resourceType) {
     this.templatePath = templatePath;
     this.resourceType = resourceType;
   }

@@ -19,17 +19,17 @@
  */
 package io.wcm.handler.richtext.impl;
 
+import java.util.Collection;
+
+import org.apache.sling.api.resource.Resource;
+import org.jdom2.Content;
+
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.richtext.RichText;
 import io.wcm.handler.richtext.RichTextBuilder;
 import io.wcm.handler.richtext.RichTextRequest;
 import io.wcm.handler.richtext.TextMode;
 import io.wcm.handler.url.UrlMode;
-
-import java.util.Collection;
-
-import org.apache.sling.api.resource.Resource;
-import org.jdom2.Content;
 
 /**
  * Default implementation of {@link RichTextBuilder}.
@@ -47,7 +47,7 @@ final class RichTextBuilderImpl implements RichTextBuilder {
   /**
    * @param resource Resource
    */
-  public RichTextBuilderImpl(Resource resource, RichTextHandlerImpl richTextHandler) {
+  RichTextBuilderImpl(Resource resource, RichTextHandlerImpl richTextHandler) {
     this.resource = resource;
     this.text = null;
     this.richTextHandler = richTextHandler;
@@ -56,7 +56,7 @@ final class RichTextBuilderImpl implements RichTextBuilder {
   /**
    * @param text Raw text
    */
-  public RichTextBuilderImpl(String text, RichTextHandlerImpl richTextHandler) {
+  RichTextBuilderImpl(String text, RichTextHandlerImpl richTextHandler) {
     this.resource = null;
     this.text = text;
     this.richTextHandler = richTextHandler;

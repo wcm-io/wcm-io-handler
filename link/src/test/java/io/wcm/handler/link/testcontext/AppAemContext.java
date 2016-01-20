@@ -19,6 +19,11 @@
  */
 package io.wcm.handler.link.testcontext;
 
+import java.io.IOException;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.osgi.framework.Constants;
+
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
@@ -30,11 +35,6 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
 import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
-
-import java.io.IOException;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.osgi.framework.Constants;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -80,7 +80,7 @@ public final class AppAemContext {
 
     private final AemContextCallback testCallback;
 
-    public SetUpCallback(AemContextCallback testCallback) {
+    SetUpCallback(AemContextCallback testCallback) {
       this.testCallback = testCallback;
     }
 
@@ -136,10 +136,10 @@ public final class AppAemContext {
           DummyAppTemplate.CONTENT.getTemplatePath());
       MockConfig.writeConfiguration(context, ROOTPATH_CONTENT_OTHER_SITE,
           ImmutableValueMap.builder()
-              .put(UrlParams.SITE_URL.getName(), "http://en.dummysite.org")
-              .put(UrlParams.SITE_URL_SECURE.getName(), "https://en.dummysite.org")
-              .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
-              .build());
+          .put(UrlParams.SITE_URL.getName(), "http://en.dummysite.org")
+          .put(UrlParams.SITE_URL_SECURE.getName(), "https://en.dummysite.org")
+          .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
+          .build());
     }
 
   }

@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.link.impl;
 
+import org.apache.sling.api.resource.Resource;
+
+import com.day.cq.wcm.api.Page;
+
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkBuilder;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.url.UrlMode;
-
-import org.apache.sling.api.resource.Resource;
-
-import com.day.cq.wcm.api.Page;
 
 /**
  * Default implementation or {@link LinkBuilder}.
@@ -41,19 +41,19 @@ final class LinkBuilderImpl implements LinkBuilder {
   private final Page page;
   private LinkArgs linkArgs = new LinkArgs();
 
-  public LinkBuilderImpl(Resource resource, LinkHandlerImpl linkHandler) {
+  LinkBuilderImpl(Resource resource, LinkHandlerImpl linkHandler) {
     this.resource = resource;
     this.page = null;
     this.linkHandler = linkHandler;
   }
 
-  public LinkBuilderImpl(Page page, LinkHandlerImpl linkHandler) {
+  LinkBuilderImpl(Page page, LinkHandlerImpl linkHandler) {
     this.resource = null;
     this.page = page;
     this.linkHandler = linkHandler;
   }
 
-  public LinkBuilderImpl(LinkRequest linkRequest, LinkHandlerImpl linkHandler) {
+  LinkBuilderImpl(LinkRequest linkRequest, LinkHandlerImpl linkHandler) {
     if (linkRequest == null) {
       throw new IllegalArgumentException("Link request is null.");
     }

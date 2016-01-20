@@ -28,9 +28,11 @@ The Link Handler provides:
 * Pluggable link types (with default implementations for link to content pages, link to media assets, external links)
 * Pluggable markup builders for links
 * Pluggable link pre- and postprocessing to further tailoring the link handling process
+* Generic Sling Models for usage in views: [Sling Models][ui-package]
 
 
 [usage]: usage.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [url-handler]: ../url/
+[ui-package]: apidocs/io/wcm/handler/link/ui/package-summary.html

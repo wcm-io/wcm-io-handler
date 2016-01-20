@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.10</version>
     <relativePath />
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.parent</artifactId>
-  <version>0.5.7-SNAPSHOT</version>
+  <version>0.5.8</version>
   <packaging>pom</packaging>
 
   <name>Handler</name>
@@ -67,7 +67,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.wcm.commons</artifactId>
-      <version>0.5.6</version>
+      <version>0.6.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -103,15 +103,26 @@
     </dependency>
 
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.adobe.aem</groupId>
       <artifactId>aem-api</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock</artifactId>
-      <version>1.4.0</version>
+      <version>1.6.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -19,10 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.impl.ImageFileServlet;
-import io.wcm.handler.media.impl.MediaFileServlet;
-
 import java.io.InputStream;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -30,6 +26,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
+
+import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.MediaFileServlet;
 
 /**
  * Virtual rendition that is cropping and downscaling from an existing rendition.
@@ -40,7 +40,7 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
   private final long height;
   private final CropDimension cropDimension;
 
-  public VirtualCropRenditionMetadata(Rendition rendition, long width, long height, CropDimension cropDimension) {
+  VirtualCropRenditionMetadata(Rendition rendition, long width, long height, CropDimension cropDimension) {
     super(rendition);
     this.width = width;
     this.height = height;
@@ -103,11 +103,11 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
   @Override
   public int hashCode() {
     return new HashCodeBuilder()
-    .append(this.getRendition().getPath())
-    .append(width)
-    .append(height)
-    .append(cropDimension)
-    .hashCode();
+        .append(this.getRendition().getPath())
+        .append(width)
+        .append(height)
+        .append(cropDimension)
+        .hashCode();
   }
 
   @Override
@@ -117,11 +117,11 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
     }
     VirtualCropRenditionMetadata other = (VirtualCropRenditionMetadata)obj;
     return new EqualsBuilder()
-    .append(this.getRendition().getPath(), other.getRendition().getPath())
-    .append(this.width, other.width)
-    .append(this.height, other.height)
-    .append(this.cropDimension, other.cropDimension)
-    .build();
+        .append(this.getRendition().getPath(), other.getRendition().getPath())
+        .append(this.width, other.width)
+        .append(this.height, other.height)
+        .append(this.cropDimension, other.cropDimension)
+        .build();
   }
 
 }

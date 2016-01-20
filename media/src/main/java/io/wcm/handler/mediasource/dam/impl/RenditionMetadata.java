@@ -19,11 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.handler.media.impl.MediaFileServlet;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.io.InputStream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +33,11 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Wrapper class for rendition metadata retrieved from DAM rendition filenames.
@@ -54,7 +54,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   /**
    * @param rendition DAM rendition
    */
-  public RenditionMetadata(Rendition rendition) {
+  RenditionMetadata(Rendition rendition) {
     this.rendition = rendition;
 
     // check if rendition is original image
@@ -255,8 +255,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   @Override
   public int hashCode() {
     return new HashCodeBuilder()
-    .append(this.rendition.getPath())
-    .hashCode();
+        .append(this.rendition.getPath())
+        .hashCode();
   }
 
   @Override
@@ -266,8 +266,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
     RenditionMetadata other = (RenditionMetadata)obj;
     return new EqualsBuilder()
-    .append(this.rendition.getPath(), other.rendition.getPath())
-    .build();
+        .append(this.rendition.getPath(), other.rendition.getPath())
+        .build();
   }
 
   @Override

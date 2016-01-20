@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Linkhandler postprocessor to inherit URL parametres to internal links.
- * The list of URL parameters contains only "debugClientLibs".
+ * The list of URL parameters contains "debugClientLibs" and "wcmmode".
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -42,7 +42,8 @@ public final class DefaultInternalLinkInheritUrlParamLinkPostProcessor extends A
    * Default list of inheritable URL parameter names
    */
   public static final Set<String> DEFAULT_INHERIT_URL_PARAMETER_NAMES = ImmutableSet.of(
-      "debugClientLibs"
+      "debugClientLibs",
+      "wcmmode"
       );
 
   /**

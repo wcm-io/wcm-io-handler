@@ -33,7 +33,7 @@ class ResourceTypeFilter implements Filter<Resource> {
   /**
    * @param resourceType The resource type to be included
    */
-  public ResourceTypeFilter(String resourceType) {
+  ResourceTypeFilter(String resourceType) {
     this.resourceType = resourceType;
   }
 

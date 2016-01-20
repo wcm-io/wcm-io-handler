@@ -53,7 +53,7 @@ public class MediaFormatBuilderTest {
     assertEquals("name1", mf.getName());
     assertEquals("label1", mf.getLabel());
     assertEquals("description1", mf.getDescription());
-    assertEquals(800, mf.getWidth()        );
+    assertEquals(800, mf.getWidth());
     assertEquals(600, mf.getHeight());
     assertEquals(1.333d, mf.getRatio(), 0.0001d);
     assertEquals(10000L, mf.getFileSizeMax());
@@ -175,6 +175,29 @@ public class MediaFormatBuilderTest {
     assertEquals("value1", mf.getProperties().get("prop1", String.class));
     assertEquals("value2", mf.getProperties().get("prop2", String.class));
     assertEquals("value3", mf.getProperties().get("prop3", String.class));
+  }
+
+  /**
+   * test unmodifiable extensions
+   */
+  @Test
+  public void testExtensions() {
+    final String unmodifiableExtension = "png";
+    String[] extensionsSource = {
+        unmodifiableExtension
+    };
+
+    MediaFormat mf = MediaFormatBuilder.create("name", APP_ID)
+        .extensions(extensionsSource)
+        .build();
+
+    // source modification should have no effect
+    extensionsSource[0] = "ThisModificationShouldHaveNoEffect";
+    assertEquals(unmodifiableExtension, mf.getExtensions()[0]);
+
+    // now modify the returned extensions, should have no effect
+    mf.getExtensions()[0] = "ThisModificationShouldHaveNoEffect";
+    assertEquals(unmodifiableExtension, mf.getExtensions()[0]);
   }
 
 }

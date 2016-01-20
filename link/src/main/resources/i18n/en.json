@@ -1,0 +1,4 @@
+{
+  "io.wcm.handler.link.redirectInfo": "This page forwards to",
+  "io.wcm.handler.link.redirectMissing": "Please specify a redirect link in page properties."
+}

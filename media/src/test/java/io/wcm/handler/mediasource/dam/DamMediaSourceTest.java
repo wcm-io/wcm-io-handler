@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.dam;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOLZAUTO_CUTOUT_LARGE;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_LARGE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_TEASER_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
@@ -320,7 +320,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageSpecificMediaFormatCropInvalidWithoutFallback() {
     // create img element for rendition with standard_2col media format
-    MediaArgs args = new MediaArgs(HOLZAUTO_CUTOUT_LARGE);
+    MediaArgs args = new MediaArgs(PRODUCT_CUTOUT_LARGE);
     HtmlElement img = mediaHandler().get(parStandardMediaRefCrop, args).buildElement();
     assertNull("returned html element?", img);
   }

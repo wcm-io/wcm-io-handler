@@ -35,7 +35,7 @@ class UrlExternalizerTransformerConfig {
   static final String PN_REWRITE_ELEMENTS = "rewriteElements";
 
   private static final String[] REWRITE_ELEMENTS_DEFAULT = {
-    "img:src", "link:href", "script:src"
+      "img:src", "link:href", "script:src"
   };
 
   private static final String ELEMENT_ATTRIBUTE_SEPARATOR = ":";
@@ -44,7 +44,7 @@ class UrlExternalizerTransformerConfig {
 
   private static final Logger log = LoggerFactory.getLogger(UrlExternalizerTransformerConfig.class.getName());
 
-  public UrlExternalizerTransformerConfig(ValueMap config) {
+  UrlExternalizerTransformerConfig(ValueMap config) {
     this.elementAttributeNames = toElementAttributeNamesMap(config.get(PN_REWRITE_ELEMENTS, REWRITE_ELEMENTS_DEFAULT));
   }
 

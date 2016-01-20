@@ -23,8 +23,8 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_STANDARD;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOLZAUTO_BANNER;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOLZAUTO_CUTOUT_13PLUS;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_BANNER;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_13PLUS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
@@ -442,13 +442,13 @@ public class InlineMediaSourceTest {
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats with invalid aspect ratio
-    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(HOLZAUTO_BANNER)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(PRODUCT_BANNER)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
-    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(HOLZAUTO_CUTOUT_13PLUS)).refProperty("mediaInline").build();
+    media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(PRODUCT_CUTOUT_13PLUS)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
     assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());

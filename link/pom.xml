@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>0.5.6</version>
+    <version>0.5.7-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -53,13 +53,13 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.url</artifactId>
-      <version>0.5.0</version>
+      <version>0.6.3-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.media</artifactId>
-      <version>0.6.0</version>
+      <version>0.9.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -82,6 +82,9 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
+            <Sling-Initial-Content>
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/link
+            </Sling-Initial-Content>
             <Sling-Model-Packages>
               io.wcm.handler.link
             </Sling-Model-Packages>
@@ -102,6 +105,18 @@
             <id>validate-bundle</id>
             <goals>
               <goal>validate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>io.wcm.maven.plugins</groupId>
+        <artifactId>i18n-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>transform</goal>
             </goals>
           </execution>
         </executions>

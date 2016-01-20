@@ -104,8 +104,15 @@ class UrlExternalizerTransformer extends AbstractSAXPipe implements Transformer 
     }
 
     // externalize URL (if it is not already externalized)
-    String rewrittenUrl = urlHandler.get(url).buildExternalResourceUrl()
-        + (urlRemainder != null ? urlRemainder : "");
+    String rewrittenUrl = urlHandler.get(url).buildExternalResourceUrl();
+    if (urlRemainder != null) {
+      if (rewrittenUrl == null) {
+        rewrittenUrl = urlRemainder;
+      }
+      else {
+        rewrittenUrl += urlRemainder;
+      }
+    }
 
     if (StringUtils.equals(url, rewrittenUrl)) {
       log.debug("Rewrite element {}: Skip - URL is already externalized: {}", name, url);

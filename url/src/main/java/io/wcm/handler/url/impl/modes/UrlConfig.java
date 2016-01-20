@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import io.wcm.config.api.Configuration;
-import io.wcm.handler.url.UrlParams;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
+
+import io.wcm.config.api.Configuration;
+import io.wcm.handler.url.UrlParams;
 
 /**
  * Helper class for accessing site url configuration in URL mode implementation.
@@ -35,7 +35,7 @@ class UrlConfig {
   private final String siteUrlSecure;
   private final String siteUrlAuthor;
 
-  public UrlConfig(Adaptable adaptable) {
+  UrlConfig(Adaptable adaptable) {
     this.config = adaptable.adaptTo(Configuration.class);
     if (this.config != null) {
       this.siteUrl = config.get(UrlParams.SITE_URL);

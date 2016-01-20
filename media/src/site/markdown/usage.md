@@ -99,50 +99,20 @@ A custom markup builder can then generated the image tag with metadata for all b
 
 ### Using media in Sightly template
 
-To use the media handler inside a sightly template it is recommended to create a generic Sling Model for calling the handler:
+To resolve a media inside a Sightly template you can use a generic Sling Model for calling the handler: [ResourceMedia](apidocs/io/wcm/handler/media/ui/ResourceMedia.html)
 
-```java
-@Model(adaptables = SlingHttpServletRequest.class)
-public class ResourceMedia {
-
-  @RequestAttribute private String mediaFormat;
-  @Self private MediaHandler mediaHandler;
-  @SlingObject private Resource resource;
-
-  private Media media;
-
-  @PostConstruct
-  protected void activate() {
-    media = mediaHandler.get(resource, new MediaArgs(mediaFormat)).build();
-  }
-
-  public boolean isValid() {
-    return media.isValid();
-  }
-
-  public String getMarkup() {
-    return media.getMarkup();
-  }
-
-}
-```
-
-Then you can use it inside your sightly template:
+Sightly template example:
 
 ```html
-<div class="box-padding"
-    data-sly-use.media="${'com.myapp.ResourceMedia' @ mediaFormat='content_480'}">
-
-  <figure class="image-small" data-sly-test="${media.valid}">
-    <a href="conference.shtml">
-      <img data-sly-unwrap data-sly-text="${media.markup @ context='html'}"/>
-    </a>
-  </figure>
-
-</div>
+<sly data-sly-use.media="${'io.wcm.handler.media.ui.ResourceMedia' @ mediaFormat='content_480'}"/>
+<figure class="image-small" data-sly-test="${media.valid}">
+  <a href="conference.shtml">
+    ${media.markup @ context='html'}
+  </a>
+</figure>
 ```
 
-In this case the dummy `<img/>` is replaced with the media markup of the media handler, which is not necessarily is an `img` element, but may be any markup (e.g. a `video` or `audio` or `div` element with custom markup).
+In this case the `${media.markup ...}` is replaced with the media markup of the media handler, which is not necessarily is an `img` element, but may be any markup (e.g. a `video` or `audio` or `div` element with custom markup).
 
 
 ### Configuring and tailoring the media resolving process

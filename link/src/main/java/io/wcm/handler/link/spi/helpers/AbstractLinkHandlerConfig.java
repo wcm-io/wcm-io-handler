@@ -19,8 +19,16 @@
  */
 package io.wcm.handler.link.spi.helpers;
 
+import java.util.List;
+
+import org.osgi.annotation.versioning.ConsumerType;
+
+import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
+
 import io.wcm.handler.link.markup.DummyLinkMarkupBuilder;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
+import io.wcm.handler.link.processor.DefaultInternalLinkInheritUrlParamLinkPostProcessor;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
 import io.wcm.handler.link.spi.LinkProcessor;
@@ -28,13 +36,6 @@ import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
-
-import java.util.List;
-
-import org.osgi.annotation.versioning.ConsumerType;
-
-import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Default implementation of configuration options of {@link LinkHandlerConfig} interface.
@@ -52,6 +53,9 @@ public abstract class AbstractLinkHandlerConfig implements LinkHandlerConfig {
       SimpleLinkMarkupBuilder.class,
       DummyLinkMarkupBuilder.class
       );
+
+  private static final List<Class<? extends LinkProcessor>> POST_PROCESSORS = ImmutableList.<Class<? extends LinkProcessor>>of(
+      DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
   @Override
   public List<Class<? extends LinkType>> getLinkTypes() {
@@ -71,8 +75,7 @@ public abstract class AbstractLinkHandlerConfig implements LinkHandlerConfig {
 
   @Override
   public List<Class<? extends LinkProcessor>> getPostProcessors() {
-    // no processors
-    return ImmutableList.of();
+    return POST_PROCESSORS;
   }
 
   @Override

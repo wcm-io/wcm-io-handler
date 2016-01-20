@@ -19,6 +19,11 @@
  */
 package io.wcm.handler.media.testcontext;
 
+import java.io.IOException;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.osgi.framework.Constants;
+
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
@@ -31,11 +36,6 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
 import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
-
-import java.io.IOException;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.osgi.framework.Constants;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -76,7 +76,7 @@ public final class AppAemContext {
 
     private final AemContextCallback testCallback;
 
-    public SetUpCallback(AemContextCallback testCallback) {
+    SetUpCallback(AemContextCallback testCallback) {
       this.testCallback = testCallback;
     }
 
