@@ -23,6 +23,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.commons.json.JSONArray;
+import org.apache.sling.commons.json.JSONException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.day.cq.wcm.api.WCMMode;
+import com.google.common.collect.ImmutableList;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Asset;
@@ -38,19 +52,6 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import com.day.cq.wcm.api.WCMMode;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link DummyResponsiveImageMediaMarkupBuilder}
@@ -160,11 +161,11 @@ public class DummyResponsiveImageMediaMarkupBuilderTest {
     assertEquals(2, sources.length());
 
     assertEquals("L1", sources.getJSONObject(0).get(MediaNameConstants.PROP_BREAKPOINT));
-    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=540/mf=Responsive%7E2032%7E3A9/width=1920.png",
+    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=540/mf=Responsive~2032~3A9/width=1920.png",
         sources.getJSONObject(0).get("src"));
 
     assertEquals("M1", sources.getJSONObject(1).get(MediaNameConstants.PROP_BREAKPOINT));
-    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=360/mf=Responsive%7E2032%7E3A9/width=1281.png",
+    assertEquals(DummyImageServlet.PATH + ".suffix.png/height=360/mf=Responsive~2032~3A9/width=1281.png",
         sources.getJSONObject(1).get("src"));
     assertEquals("alt", null, image.getAttributeValue("alt"));
 
