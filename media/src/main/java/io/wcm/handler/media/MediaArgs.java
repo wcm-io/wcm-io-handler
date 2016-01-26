@@ -19,11 +19,6 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.markup.DragDropSupport;
-import io.wcm.handler.url.UrlMode;
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +29,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.markup.DragDropSupport;
+import io.wcm.handler.url.UrlMode;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds parameters to influence the media resolving process.
@@ -94,7 +94,12 @@ public final class MediaArgs implements Cloneable {
    * @return this
    */
   public MediaArgs mediaFormats(MediaFormat... values) {
-    this.mediaFormats = values;
+    if (values == null || values.length == 0) {
+      this.mediaFormats = null;
+    }
+    else {
+      this.mediaFormats = values;
+    }
     return this;
   }
 
@@ -160,7 +165,12 @@ public final class MediaArgs implements Cloneable {
    * @return this
    */
   public MediaArgs mediaFormatNames(String... values) {
-    this.mediaFormatNames = values;
+    if (values == null || values.length == 0) {
+      this.mediaFormatNames = null;
+    }
+    else {
+      this.mediaFormatNames = values;
+    }
     return this;
   }
 
@@ -205,7 +215,12 @@ public final class MediaArgs implements Cloneable {
    * @return this
    */
   public MediaArgs fileExtensions(String... values) {
-    this.fileExtensions = values;
+    if (values == null || values.length == 0) {
+      this.fileExtensions = null;
+    }
+    else {
+      this.fileExtensions = values;
+    }
     return this;
   }
 
