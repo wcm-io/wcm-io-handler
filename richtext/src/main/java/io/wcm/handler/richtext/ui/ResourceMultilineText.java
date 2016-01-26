@@ -52,12 +52,13 @@ public class ResourceMultilineText {
   private String markup;
 
   @PostConstruct
-  protected void activate() {
+  private void activate() {
     String plainTextString = resource.getValueMap().get(propertyName, String.class);
     markup = richTextHandler.get(plainTextString).textMode(TextMode.PLAIN).buildMarkup();
   }
 
   /**
+   * Returns true if multi-line text is present and valid.
    * @return Text is valid
    */
   public boolean isValid() {
@@ -65,6 +66,7 @@ public class ResourceMultilineText {
   }
 
   /**
+   * Returns the formatted text as XHTML markup.
    * @return Text markup
    */
   public String getMarkup() {

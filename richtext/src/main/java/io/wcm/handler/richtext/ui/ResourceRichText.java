@@ -51,12 +51,13 @@ public class ResourceRichText {
   private String markup;
 
   @PostConstruct
-  protected void activate() {
+  private void activate() {
     String xhtmlString = resource.getValueMap().get(propertyName, String.class);
     markup = richTextHandler.get(xhtmlString).buildMarkup();
   }
 
   /**
+   * Returns true if rich text is present and valid.
    * @return Rich text is valid
    */
   public boolean isValid() {
@@ -64,6 +65,7 @@ public class ResourceRichText {
   }
 
   /**
+   * Returns the formatted text as XHTML markup.
    * @return Rich text markup
    */
   public String getMarkup() {

@@ -54,7 +54,7 @@ public class ResourceMedia {
   private Media media;
 
   @PostConstruct
-  protected void activate() {
+  private void activate() {
     MediaBuilder builder = mediaHandler.get(resource);
 
     if (StringUtils.isNotEmpty(mediaFormat)) {
@@ -69,13 +69,16 @@ public class ResourceMedia {
   }
 
   /**
-   * @return Media metadata
+   * Returns a {@link Media} object with the metadata of the resolved media.
+   * Result is never null, check for validness with the {@link Media#isValid()} method.
+   * @return Media
    */
   public Media getMetadata() {
     return media;
   }
 
   /**
+   * Returns true if the media was resolved successful.
    * @return Media is valid
    */
   public boolean isValid() {
@@ -83,6 +86,8 @@ public class ResourceMedia {
   }
 
   /**
+   * Returns the XHTML markup for the resolved media object.
+   * This is in most cases an img element, but may also contain other arbitrary markup.
    * @return Media markup
    */
   public String getMarkup() {
