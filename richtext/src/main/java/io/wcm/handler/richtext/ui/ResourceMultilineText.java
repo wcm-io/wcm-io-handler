@@ -36,6 +36,12 @@ import io.wcm.handler.richtext.TextMode;
 
 /**
  * Generic resource-based model for rendering plain text with line breaks.
+ * <p>
+ * Optional use parameters when referencing model from Sightly template:
+ * </p>
+ * <ul>
+ * <li><code>propertyName</code>: Property name in which the text is stored in the resource</li>
+ * </ul>
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceMultilineText {

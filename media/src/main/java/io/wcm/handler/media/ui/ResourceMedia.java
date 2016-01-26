@@ -35,7 +35,13 @@ import io.wcm.handler.media.MediaHandler;
 
 /**
  * Generic resource-based media model.
- * Optional parameters: mediaFormat, cssClass.
+ * <p>
+ * Optional use parameters when referencing model from Sightly template:
+ * </p>
+ * <ul>
+ * <li><code>mediaFormat</code>: Media format name to restrict the allowed media items</li>
+ * <li><code>cssClass</code>: CSS classes to be applied on the generated media element (most cases img element)</li>
+ * </ul>
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceMedia {
