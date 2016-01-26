@@ -19,6 +19,16 @@
  */
 package io.wcm.handler.media.impl;
 
+import java.util.List;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
@@ -34,14 +44,6 @@ import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
-import java.util.List;
-
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
-
 /**
  * Default Implementation of a {@link MediaHandler}.
  */
@@ -56,6 +58,8 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
+
+  private Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
   public MediaBuilder get(Resource resource) {
@@ -99,9 +103,6 @@ public final class MediaHandlerImpl implements MediaHandler {
    */
   Media processRequest(final MediaRequest mediaRequest) {
 
-    // resolve media format names to media formats
-    resolveMediaFormats(mediaRequest.getMediaArgs());
-
     // detect media source
     MediaSource mediaSource = null;
     List<Class<? extends MediaSource>> mediaTypes = mediaHandlerConfig.getSources();
@@ -116,6 +117,12 @@ public final class MediaHandlerImpl implements MediaHandler {
       }
     }
     Media media = new Media(mediaSource, mediaRequest);
+
+    // resolve media format names to media formats
+    if (!resolveMediaFormats(mediaRequest.getMediaArgs())) {
+      media.setMediaInvalidReason(MediaInvalidReason.INVALID_MEDIA_FORMAT);
+      return media;
+    }
 
     // preprocess media request before resolving
     List<Class<? extends MediaProcessor>> mediaPreProcessors = mediaHandlerConfig.getPreProcessors();
@@ -193,26 +200,30 @@ public final class MediaHandlerImpl implements MediaHandler {
    * Resolve media format names to media formats so all downstream logic has only to handle the resolved media formats.
    * If resolving fails an exception is thrown.
    * @param mediaArgs Media args
+   * @return true if resolving was successful.
    */
-  private void resolveMediaFormats(MediaArgs mediaArgs) {
+  private boolean resolveMediaFormats(MediaArgs mediaArgs) {
     // resolved media formats already set? done.
     if (mediaArgs.getMediaFormats() != null) {
-      return;
+      return true;
     }
     // no media format names present? done.
     if (mediaArgs.getMediaFormatNames() == null) {
-      return;
+      return true;
     }
     String[] mediaFormatNames = mediaArgs.getMediaFormatNames();
     MediaFormat[] mediaFormats = new MediaFormat[mediaFormatNames.length];
+    boolean resolutionSuccessful = true;
     for (int i = 0; i < mediaFormatNames.length; i++) {
       mediaFormats[i] = mediaFormatHandler.getMediaFormat(mediaFormatNames[i]);
       if (mediaFormats[i] == null) {
-        throw new RuntimeException("Media format name '" + mediaFormatNames[i] + "' is invalid.");
+        log.warn("Media format name '" + mediaFormatNames[i] + "' is invalid.");
+        resolutionSuccessful = false;
       }
     }
     mediaArgs.mediaFormats(mediaFormats);
     mediaArgs.mediaFormatNames((String[])null);
+    return resolutionSuccessful;
   }
 
 }

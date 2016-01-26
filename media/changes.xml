@@ -36,6 +36,9 @@
       <action type="fix" dev="sseifert">
         MediaArgs: interpret empty array for varargs parameter as null array.
       </action>
+      <action type="update" dev="sseifert">
+        MediaHandler: Introduce new INVALID_MEDIA_FORMAT media invalid reason which is returned when invalid media format names are given.
+      </action>
     </release>
 
     <release version="0.9.0" date="2015-09-09">

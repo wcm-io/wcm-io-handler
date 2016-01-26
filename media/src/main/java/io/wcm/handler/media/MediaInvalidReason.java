@@ -48,6 +48,11 @@ public enum MediaInvalidReason {
   /**
    * No media source found for handling the given (or empty) media request
    */
-  NO_MEDIA_SOURCE
+  NO_MEDIA_SOURCE,
+
+  /**
+   * One or all of the given media format names were invalid.
+   */
+  INVALID_MEDIA_FORMAT
 
 }
