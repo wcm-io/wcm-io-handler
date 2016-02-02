@@ -2,16 +2,8 @@
 
 Functionality shared by the handler implementations.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.commons/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.commons)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.handler.commons</artifactId>
-  <version>0.5.0</version>
-</dependency>
-```
 
 ### Documentation
 

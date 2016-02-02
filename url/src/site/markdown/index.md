@@ -2,16 +2,8 @@
 
 URL resolving and processing.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.handler.url</artifactId>
-  <version>0.6.2</version>
-</dependency>
-```
 
 ### Documentation
 
