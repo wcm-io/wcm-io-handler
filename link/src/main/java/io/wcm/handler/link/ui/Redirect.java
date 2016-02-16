@@ -39,7 +39,7 @@ import io.wcm.handler.link.LinkHandler;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
- * Sets redirect header.
+ * Sets HTTP status and 'location' header for server-side redirect.
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class Redirect {
@@ -58,7 +58,7 @@ public class Redirect {
   private boolean renderPage = true;
 
   @PostConstruct
-  protected void activate() throws IOException {
+  private void activate() throws IOException {
     // resolve link of redirect page
     String redirectUrl = linkHandler.get(resource).buildUrl();
 

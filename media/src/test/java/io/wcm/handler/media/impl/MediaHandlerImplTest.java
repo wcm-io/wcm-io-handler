@@ -33,6 +33,7 @@ import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.format.MediaFormat;
@@ -129,13 +130,16 @@ public class MediaHandlerImplTest {
     assertNull(mediaFormatNames);
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void testFailedMediaFormatResolving() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
         new MediaArgs("invalid_media_format"));
-    mediaHandler.get(mediaRequest).build();
+    Media media = mediaHandler.get(mediaRequest).build();
+
+    assertFalse(media.isValid());
+    assertEquals(MediaInvalidReason.INVALID_MEDIA_FORMAT, media.getMediaInvalidReason());
   }
 
   @Test

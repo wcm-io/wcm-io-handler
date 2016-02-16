@@ -36,6 +36,12 @@ import io.wcm.handler.richtext.TextMode;
 
 /**
  * Generic resource-based model for rendering plain text with line breaks.
+ * <p>
+ * Optional use parameters when referencing model from Sightly template:
+ * </p>
+ * <ul>
+ * <li><code>propertyName</code>: Property name in which the text is stored in the resource</li>
+ * </ul>
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceMultilineText {
@@ -52,12 +58,13 @@ public class ResourceMultilineText {
   private String markup;
 
   @PostConstruct
-  protected void activate() {
+  private void activate() {
     String plainTextString = resource.getValueMap().get(propertyName, String.class);
     markup = richTextHandler.get(plainTextString).textMode(TextMode.PLAIN).buildMarkup();
   }
 
   /**
+   * Returns true if multi-line text is present and valid.
    * @return Text is valid
    */
   public boolean isValid() {
@@ -65,6 +72,7 @@ public class ResourceMultilineText {
   }
 
   /**
+   * Returns the formatted text as XHTML markup.
    * @return Text markup
    */
   public String getMarkup() {

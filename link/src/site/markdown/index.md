@@ -2,16 +2,8 @@
 
 Link resolving, processing and markup generation.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.link/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.link)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.handler.link</artifactId>
-  <version>0.7.0</version>
-</dependency>
-```
 
 ### Documentation
 

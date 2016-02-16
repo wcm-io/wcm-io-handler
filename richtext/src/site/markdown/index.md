@@ -2,16 +2,8 @@
 
 RichText processing and markup generation.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.richtext/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.richtext)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.handler.richtext</artifactId>
-  <version>0.5.2</version>
-</dependency>
-```
 
 ### Documentation
 

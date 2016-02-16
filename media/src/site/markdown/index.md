@@ -2,16 +2,8 @@
 
 Media resolving, processing and markup generation.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.media/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.media)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm</groupId>
-  <artifactId>io.wcm.handler.media</artifactId>
-  <version>0.9.0</version>
-</dependency>
-```
 
 ### Documentation
 

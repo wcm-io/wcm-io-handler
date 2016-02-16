@@ -46,11 +46,13 @@ public class ResourceLink {
   private Link link;
 
   @PostConstruct
-  protected void activate() {
+  private void activate() {
     link = linkHandler.get(resource).build();
   }
 
   /**
+   * Returns a {@link Link} object with the metadata of the resolved link.
+   * Result is never null, check for validness with the {@link Link#isValid()} method.
    * @return Link
    */
   public Link getMetadata() {
@@ -58,6 +60,7 @@ public class ResourceLink {
   }
 
   /**
+   * Returns true if the link was resolved successful.
    * @return Link is valid
    */
   public boolean isValid() {
@@ -65,6 +68,7 @@ public class ResourceLink {
   }
 
   /**
+   * Returns a map of attributes which can be applied to a HTML anchor element.
    * @return Anchor attributes
    */
   public Map<String, String> getAttributes() {

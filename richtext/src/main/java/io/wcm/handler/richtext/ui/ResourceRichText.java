@@ -35,6 +35,12 @@ import io.wcm.handler.richtext.RichTextNameConstants;
 
 /**
  * Generic resource-based model for rendering formatted XHTML rich text.
+ * <p>
+ * Optional use parameters when referencing model from Sightly template:
+ * </p>
+ * <ul>
+ * <li><code>propertyName</code>: Property name in which the text is stored in the resource</li>
+ * </ul>
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceRichText {
@@ -51,12 +57,13 @@ public class ResourceRichText {
   private String markup;
 
   @PostConstruct
-  protected void activate() {
+  private void activate() {
     String xhtmlString = resource.getValueMap().get(propertyName, String.class);
     markup = richTextHandler.get(xhtmlString).buildMarkup();
   }
 
   /**
+   * Returns true if rich text is present and valid.
    * @return Rich text is valid
    */
   public boolean isValid() {
@@ -64,6 +71,7 @@ public class ResourceRichText {
   }
 
   /**
+   * Returns the formatted text as XHTML markup.
    * @return Rich text markup
    */
   public String getMarkup() {
