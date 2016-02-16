@@ -73,19 +73,19 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.sling.commons</artifactId>
-      <version>0.6.2</version>
+      <version>0.6.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.config.api</artifactId>
-      <version>0.5.2</version>
+      <version>0.5.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.config.editor</artifactId>
-      <version>0.5.6</version>
+      <version>0.6.2</version>
       <scope>compile</scope>
     </dependency>
 
@@ -122,7 +122,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock</artifactId>
-      <version>1.6.2</version>
+      <version>1.7.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
