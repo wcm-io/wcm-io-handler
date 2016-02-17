@@ -27,13 +27,6 @@ import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeValue;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.getRelativePath;
-import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
-import io.wcm.handler.url.suffix.impl.FilterOperators;
-import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +45,14 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.Filter;
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
+import io.wcm.handler.url.suffix.impl.FilterOperators;
+import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
 
 /**
  * Builds suffixes to be used in Sling URLs and that can be parsed with {@link SuffixParser}.
@@ -87,6 +88,7 @@ public final class SuffixBuilder {
    * @param request Sling request
    * @param suffixPartFilter the filter that is called for each suffix part
    */
+  // TODO: Public wcm.io API should not depend on com.day.cq.commons.Filter - create a own interface instead
   public SuffixBuilder(SlingHttpServletRequest request, Filter<String> suffixPartFilter) {
     this(request, new FilteringSuffixStateStrategy(suffixPartFilter));
   }

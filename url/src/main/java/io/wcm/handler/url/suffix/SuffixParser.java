@@ -61,6 +61,7 @@ public final class SuffixParser {
    * @param request Sling request
    * @param suffixPartFilter the filter that is called for each suffix part
    */
+  // TODO: Public wcm.io API should not depend on com.day.cq.commons.Filter - create a own interface instead
   public SuffixParser(SlingHttpServletRequest request, Filter<String> suffixPartFilter) {
     this.request = request;
   }

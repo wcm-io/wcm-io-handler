@@ -41,6 +41,7 @@ public final class FilteringSuffixStateStrategy implements SuffixStateKeepingStr
   /**
    * @param suffixPartFilter the {@link Filter} that defines
    */
+  // TODO: Public wcm.io API should not depend on com.day.cq.commons.Filter - create a own interface instead
   public FilteringSuffixStateStrategy(Filter<String> suffixPartFilter) {
     this.suffixPartFilter = suffixPartFilter;
   }

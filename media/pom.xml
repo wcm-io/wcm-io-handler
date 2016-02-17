@@ -98,6 +98,12 @@
             <!-- include application path as intial content -->
             <Sling-Initial-Content>SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media</Sling-Initial-Content>
 
+            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
+            <Import-Package>
+              com.day.cq.commons;version="[5.7,7)",
+              *
+            </Import-Package>
+
           </instructions>
         </configuration>
       </plugin>
