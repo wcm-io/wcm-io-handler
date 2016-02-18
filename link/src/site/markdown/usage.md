@@ -14,7 +14,7 @@ LinkHandler linkHandler = request.adaptTo(LinkHandler.class);
 Link link = linkHandler.get(resource).build();
 
 // build link targeting the given content page with a different selector and extension
-Link link = linkHandler.get(contentPage).selector("sel1").extension("json").build();
+Link link = linkHandler.get(contentPage).selector("sel1").extension("pdf").build();
 
 // check if link is valid and get markup
 if (link.isValid()) {

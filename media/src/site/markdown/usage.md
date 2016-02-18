@@ -14,7 +14,7 @@ MediaHandler mediaHandler = request.adaptTo(MediaHandler.class);
 Media media = mediaHandler.get(resource).build();
 
 // build media referenced by path with a specific media format
-Media media = mediaHandler.get("/content/dam/sample/asset1.jpg").mediaFormat(MediaFormats.FORMAT1).build();
+Media media = mediaHandler.get("/content/dam/sample/asset1.jpg").mediaFormat(MediaFormats.MF_16_9).build();
 
 // check if media is valid and get markup
 if (media.isValid()) {
@@ -55,8 +55,8 @@ public static final MediaFormat CONTENT_480 = MediaFormatBuilder.create("content
 It is also possible to define a format which matches certain min/max-sizes and a ratio:
 
 ```java
-public static final MediaFormat GALLERY_LARGE = create("galleryLarge", APPLICATION_ID)
-    .label("Gallery Large")
+public static final MediaFormat MF_16_9 = create("mf_16_9", APPLICATION_ID)
+    .label("16:9 Image")
     .minWidth(1000)
     .minHeight(500)
     .ratio(2.0d)
