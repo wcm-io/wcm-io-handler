@@ -441,4 +441,91 @@ public class SuffixParserTest {
     assertEquals(tagId, new SuffixParser(context.request()).get("tag", String.class));
   }
 
+  @Test
+  public void testGetLongIntBooleanStringPageFilterOfPage() {
+    // create a page and a resource within the page
+    String resourceType = "cq:Page";
+    Filter<Resource> filter = new ResourceTypeFilter(resourceType);
+    Page currentPage = context.create().page("/content/a", "template", "title");
+    Page targetPage = context.create().page("/content/a/b/c", "template", "title");
+
+    // get the resource by path (relative to current page) and resource type filter
+    SuffixParser parser = getParserWithIncommingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c", currentPage);
+    Page suffixPage = parser.getPage(filter);
+    // check that the right target resource is found
+    assertNotNull(suffixPage);
+    assertEquals(targetPage.getPath(), suffixPage.getPath());
+
+    // get the suffix resource with the wrong resource type
+    suffixPage = parser.getPage(new ResourceTypeFilter("wrong resourcetype"));
+    // check that no resource is found, despite the path being correct
+    assertNull(suffixPage);
+
+    // don't crash if a non-existing path specified in suffix
+    parser = getParserWithIncommingSuffix(ESCAPED_SLASH + "c" + ESCAPED_SLASH + "d", currentPage);
+    assertNull(parser.getPage(filter));
+
+    // don't crash with null suffix
+    parser = getParserWithIncommingSuffix(null, currentPage);
+    assertNull(parser.getPage(filter));
+  }
+
+  @Test
+  public void testGetLongIntBooleanStringPages() {
+    // create a page with 4 resources
+    Page basePage = context.create().page("/content/a", "template", "title");
+    String basePath = basePage.getPath();
+    Page pageBC = context.create().page(basePath + "/b/c", "template", "title");
+    Page pageBD = context.create().page(basePath + "/b/d", "template", "title");
+    Page pageCC = context.create().page(basePath + "/c/c", "template", "title");
+    Page pageCD = context.create().page(basePath + "/c/d", "template", "title");
+
+    // filter that only includes resources named "c";
+    Filter<Resource> cFilter = new Filter<Resource>() {
+
+      @Override
+      public boolean includes(Resource pResource) {
+        return pResource.getPath().endsWith("/c");
+      }
+
+    };
+
+    // get these resources from suffix
+    SuffixParser parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c"
+            + SUFFIX_PART_DELIMITER + "b" + ESCAPED_SLASH + "d"
+            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "c"
+            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "d");
+    List<Page> suffixPages = parser.getPages(cFilter, basePage);
+    // check that the two resources named c are found
+    assertNotNull(suffixPages);
+    assertEquals(2, suffixPages.size());
+    assertEquals(pageBC.getPath(), suffixPages.get(0).getPath());
+    assertEquals(pageCC.getPath(), suffixPages.get(1).getPath());
+
+    // test that all four resources are found if no filter is used
+    parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c"
+            + SUFFIX_PART_DELIMITER + "b" + ESCAPED_SLASH + "d"
+            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "c"
+            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "d");
+    List<Page> allPages = parser.getPages(null, basePage);
+    // check that all resources are found
+    assertNotNull(allPages);
+    assertEquals(4, allPages.size());
+    assertEquals(pageBC.getPath(), allPages.get(0).getPath());
+    assertEquals(pageBD.getPath(), allPages.get(1).getPath());
+    assertEquals(pageCC.getPath(), allPages.get(2).getPath());
+    assertEquals(pageCD.getPath(), allPages.get(3).getPath());
+
+    // test with non-existent resources in suffix
+    parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c"
+            + SUFFIX_PART_DELIMITER + "e" + ESCAPED_SLASH + "c"
+            + SUFFIX_PART_DELIMITER + "e" + ESCAPED_SLASH + "d");
+    suffixPages = parser.getPages(cFilter, basePage);
+    // check that an only the existing resource b/c is found
+    assertNotNull(suffixPages);
+    assertEquals(1, suffixPages.size());
+    assertEquals(pageBC.getPath(), suffixPages.get(0).getPath());
+  }
+
+
 }

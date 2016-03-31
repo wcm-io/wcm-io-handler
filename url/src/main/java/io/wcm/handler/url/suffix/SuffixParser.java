@@ -266,7 +266,78 @@ public final class SuffixParser {
         baseResourceToUse = request.getResource();
       }
     }
+    return getResourcesWithBaseResource(filter, baseResourceToUse);
+  }
 
+  /**
+   * Parse the suffix as page paths and return the first page that exists
+   *
+   * @param basePage the suffix page is relative to this page path (null for current page)
+   * @return the page or null if no such page was selected by suffix
+   */
+  public Page getPage(Page basePage) {
+    return getPage((Filter)null, basePage);
+  }
+
+  /**
+   * Parse the suffix as page paths, return the first page from the suffix (relativ to the current page) that matches the given filter.
+   *
+   * @param filter a filter that selects only the page you're interested in.
+   * @return the page or null if no such page was selected by suffix
+   */
+  public Page getPage(Filter<Resource> filter) {
+    return getPage(filter, (Page)null);
+  }
+
+  /**
+   * Get the first item returned by {@link #getPages(Filter, Page)} or null if list is empty
+   *
+   * @param filter the resource filter
+   * @param basePage the suffix path is relative to this page path (null for current page)
+   * @return the first {@link Page} or null
+   */
+  public Page getPage(Filter<Resource> filter, Page basePage) {
+    List<Page> suffixResources = getPages(filter, basePage);
+    if (suffixResources.isEmpty()) {
+      return null;
+    }
+    else {
+      return suffixResources.get(0);
+    }
+  }
+
+  /**
+   * Get the pages selected in the suffix of the URL
+   *
+   * @param filter optional filter to select only specific pages
+   * @param basePage the suffix path is relative to this page path (null for current page)
+   * @return a list containing the Pages
+   */
+  public List<Page> getPages(Filter<Resource> filter, Page basePage) {
+    Resource baseResourceToUse = null;
+    if (basePage == null) {
+      PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
+      Page currentPage = pageManager.getContainingPage(request.getResource());
+      if (currentPage != null) {
+        baseResourceToUse = currentPage.adaptTo(Resource.class);
+      }
+    }
+    else {
+      baseResourceToUse = basePage.adaptTo(Resource.class);
+    }
+    // convert resources back to pages
+    List<Resource> resources = getResourcesWithBaseResource(filter, baseResourceToUse);
+    List<Page> pages = new ArrayList<>();
+    for (Resource resource : resources) {
+      Page page = resource.adaptTo(Page.class);
+      if (page != null) {
+        pages.add(page);
+      }
+    }
+    return pages;
+  }
+
+  private List<Resource> getResourcesWithBaseResource(Filter<Resource> filter, Resource baseResource) {
     // split the suffix to extract the paths of the selected components
     String[] suffixParts = splitSuffix(request.getRequestPathInfo().getSuffix());
 
@@ -282,7 +353,7 @@ public final class SuffixParser {
       String decodedPath = decodeResourcePathPart(path);
 
       // lookup the resource specified by the path (which is relative to the current page's content resource)
-      Resource resource = request.getResourceResolver().getResource(baseResourceToUse, decodedPath);
+      Resource resource = request.getResourceResolver().getResource(baseResource, decodedPath);
       if (resource == null) {
         // no resource found with given path, continue with next path in suffix
         continue;
