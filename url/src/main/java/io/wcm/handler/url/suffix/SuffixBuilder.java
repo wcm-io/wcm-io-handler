@@ -19,15 +19,16 @@
  */
 package io.wcm.handler.url.suffix;
 
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.KEY_VALUE_DELIMITER;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.SUFFIX_PART_DELIMITER;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeKey;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeResourcePathPart;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeValue;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.getRelativePath;
-
+import com.day.cq.commons.Filter;
+import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
+import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
+import io.wcm.handler.url.suffix.impl.FilterOperators;
+import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,22 +38,19 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
-import com.day.cq.commons.Filter;
-import com.google.common.collect.ImmutableList;
-
-import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
-import io.wcm.handler.url.suffix.impl.FilterOperators;
-import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.KEY_VALUE_DELIMITER;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.SUFFIX_PART_DELIMITER;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeKey;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeResourcePathPart;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeValue;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.getRelativePath;
 
 /**
  * Builds suffixes to be used in Sling URLs and that can be parsed with {@link SuffixParser}.
@@ -248,6 +246,24 @@ public final class SuffixBuilder {
     }
     return this;
   }
+
+  /**
+   * Puts a relative path of a page into the suffix.
+   *
+   * @param page the page
+   * @param suffixBasePage the base page used to construct the relative path
+   * @return this
+   */
+  public SuffixBuilder page(Page page, Page suffixBasePage) {
+    if (suffixBasePage == null) {
+      throw new IllegalArgumentException("the base page for constructing relative path must not be null");
+    }
+    if (page == null) {
+      throw new IllegalArgumentException("the page for constructing relative path must not be null");
+    }
+    return resource(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
+  }
+
 
   /**
    * Build complete suffix.

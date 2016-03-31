@@ -19,6 +19,23 @@
  */
 package io.wcm.handler.url.suffix;
 
+import com.day.cq.commons.Filter;
+import com.day.cq.wcm.api.Page;
+import io.wcm.handler.url.testcontext.AppAemContext;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.jcr.resource.JcrResourceConstants;
+import org.junit.Rule;
+import org.junit.Test;
+
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.ESCAPE_DELIMITER;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.SUFFIX_PART_DELIMITER;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
@@ -29,25 +46,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import io.wcm.handler.url.testcontext.AppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.jcr.resource.JcrResourceConstants;
-import org.junit.Rule;
-import org.junit.Test;
-
-import com.day.cq.commons.Filter;
-import com.day.cq.wcm.api.Page;
 
 public class SuffixBuilderTest {
 
@@ -294,6 +292,51 @@ public class SuffixBuilderTest {
     // should contain both suffix parts, separated with / (resource path first)
     assertEquals("b" + ESCAPED_SLASH + "c" + SUFFIX_PART_DELIMITER + "abc=true", suffix);
   }
+
+  @Test
+  public void testPage() {
+    // construct suffix pointing to a resource
+    Page basePage = context.create().page("/content/a", "template", "title");
+    Page targetPage = context.create().page("/content/a/b/c", "template", "title");
+
+    String suffix = getBuilder().page(targetPage, basePage).build();
+    // suffix should contain relative path without leading slash
+    assertEquals("b" + ESCAPED_SLASH + "c", suffix);
+
+    // construct suffix for base page
+    suffix = getBuilder().page(basePage, basePage).build();
+    // should be .
+    assertEquals(ESCAPED_DOT, suffix);
+
+    // construct suffix for a null page
+    try {
+      suffix = getBuilder().page(null, basePage).build();
+      fail("expected IllegalArgumentException");
+    }
+    catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // construct suffix for a null base page
+    try {
+      suffix = getBuilder().page(targetPage, null).build();
+      fail("expected IllegalArgumentException");
+    }
+    catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // construct suffix with an invalid base page
+    try {
+      basePage = context.create().page("/content/b", "template", "title");;
+      suffix = getBuilder().page(basePage, null).build();
+      fail("expected IllegalArgumentException");
+    }
+    catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
 
   @Test
   public void testPageSortedMapOfStringString() {
