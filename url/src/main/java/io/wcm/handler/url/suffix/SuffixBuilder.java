@@ -43,6 +43,8 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
+
+import com.day.cq.wcm.api.Page;
 import com.day.cq.commons.Filter;
 import com.google.common.collect.ImmutableList;
 
