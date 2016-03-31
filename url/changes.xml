@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Relax package version dependency for com.day.cq.commons to support AEM60, AEM61 and AEM62.
       </action>
+      <action type="add" dev="amuthmann">
+        WHAN-15: added Pages methods to URL Suffix Builder and Parser
+      </action>
     </release>
 
     <release version="0.7.0" date="2016-01-20">
