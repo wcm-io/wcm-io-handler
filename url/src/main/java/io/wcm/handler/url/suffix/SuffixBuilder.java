@@ -19,16 +19,15 @@
  */
 package io.wcm.handler.url.suffix;
 
-import com.day.cq.commons.Filter;
-import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableList;
-import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
-import io.wcm.handler.url.suffix.impl.FilterOperators;
-import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.KEY_VALUE_DELIMITER;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.SUFFIX_PART_DELIMITER;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeKey;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeResourcePathPart;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeValue;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
+import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.getRelativePath;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,19 +37,22 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.KEY_VALUE_DELIMITER;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.SUFFIX_PART_DELIMITER;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeKey;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeResourcePathPart;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeValue;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
-import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.getRelativePath;
+import com.day.cq.commons.Filter;
+import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
+import io.wcm.handler.url.suffix.impl.FilterOperators;
+import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
 
 /**
  * Builds suffixes to be used in Sling URLs and that can be parsed with {@link SuffixParser}.
