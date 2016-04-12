@@ -43,10 +43,11 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
-
-import com.day.cq.wcm.api.Page;
 import com.day.cq.commons.Filter;
+import com.day.cq.wcm.api.Page;
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
 import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
@@ -253,21 +254,31 @@ public final class SuffixBuilder {
 
   /**
    * Puts a relative path of a page into the suffix.
-   *
    * @param page the page
    * @param suffixBasePage the base page used to construct the relative path
    * @return this
    */
   public SuffixBuilder page(Page page, Page suffixBasePage) {
-    if (suffixBasePage == null) {
-      throw new IllegalArgumentException("the base page for constructing relative path must not be null");
-    }
-    if (page == null) {
-      throw new IllegalArgumentException("the page for constructing relative path must not be null");
-    }
     return resource(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
   }
 
+  /**
+   * Constructs a suffix that contains multiple key-value pairs and address pages. Depending on the
+   * {@link SuffixStateKeepingStrategy}, the suffix contains
+   * further parts from the current request that should be kept when constructing new links.
+   * @param pages pages to address
+   * @param suffixBasePage the base page used to construct the relative path
+   * @return this
+   */
+  public SuffixBuilder pages(List<Page> pages, Page suffixBasePage) {
+    List<Resource> resources = Lists.transform(pages, new Function<Page, Resource>() {
+      @Override
+      public Resource apply(Page page) {
+        return page.adaptTo(Resource.class);
+      }
+    });
+    return resources(resources, suffixBasePage.adaptTo(Resource.class));
+  }
 
   /**
    * Build complete suffix.

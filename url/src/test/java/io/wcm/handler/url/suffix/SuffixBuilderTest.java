@@ -29,9 +29,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import io.wcm.handler.url.testcontext.AppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -48,6 +45,11 @@ import org.junit.Test;
 
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.url.testcontext.AppAemContext;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 public class SuffixBuilderTest {
 
@@ -297,46 +299,46 @@ public class SuffixBuilderTest {
 
   @Test
   public void testPage() {
-    // construct suffix pointing to a resource
-    Page basePage = context.create().page("/content/a", "template", "title");
-    Page targetPage = context.create().page("/content/a/b/c", "template", "title");
+    // construct suffix pointing to a page
+    Page basePage = context.create().page("/content/a");
+    Page targetPage = context.create().page("/content/a/b/c");
 
     String suffix = getBuilder().page(targetPage, basePage).build();
     // suffix should contain relative path without leading slash
     assertEquals("b" + ESCAPED_SLASH + "c", suffix);
+  }
 
+  @Test
+  public void testPageBasePage() {
     // construct suffix for base page
-    suffix = getBuilder().page(basePage, basePage).build();
+    Page basePage = context.create().page("/content/a");
+    String suffix = getBuilder().page(basePage, basePage).build();
     // should be .
     assertEquals(ESCAPED_DOT, suffix);
+  }
 
-    // construct suffix for a null page
-    try {
-      suffix = getBuilder().page(null, basePage).build();
-      fail("expected IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // construct suffix for a null base page
-    try {
-      suffix = getBuilder().page(targetPage, null).build();
-      fail("expected IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e) {
-      // expected
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void testPageWithInvalidBasePage() {
+    context.create().page("/content/a", "template", "title");
+    Page targetPage = context.create().page("/content/a/b/c");
 
     // construct suffix with an invalid base page
-    try {
-      basePage = context.create().page("/content/b", "template", "title");;
-      suffix = getBuilder().page(basePage, null).build();
-      fail("expected IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e) {
-      // expected
-    }
+    Page invalidBasePage = context.create().page("/content/b");
+    getBuilder().page(targetPage, invalidBasePage).build();
+  }
+
+  @Test
+  public void testPages() {
+    // construct suffix pointing to a page
+    Page basePage = context.create().page("/content/a");
+    Page targetPage1 = context.create().page("/content/a/b/c");
+    Page targetPage2 = context.create().page("/content/a/d/1");
+    Page targetPage3 = context.create().page("/content/a/d/2");
+    List<Page> targetPages = ImmutableList.of(targetPage1, targetPage2, targetPage3);
+
+    String suffix = getBuilder().pages(targetPages, basePage).build();
+    // suffix should contain relative path without leading slash
+    assertEquals("b" + ESCAPED_SLASH + "c/d" + ESCAPED_SLASH + "1/d" + ESCAPED_SLASH + "2", suffix);
   }
 
 

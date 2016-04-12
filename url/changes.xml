@@ -23,12 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="0.7.2" date="not released">
+    <release version="0.8.0" date="not released">
       <action type="update" dev="sseifert">
         Relax package version dependency for com.day.cq.commons to support AEM60, AEM61 and AEM62.
       </action>
-      <action type="add" dev="amuthmann">
-        WHAN-15: added Pages methods to URL Suffix Builder and Parser
+      <action type="add" dev="amuthmann" issue="WHAN-15">
+        SuffixBuilder and SuffixParser: Add methods to build and parse suffixes for pages.
       </action>
     </release>
 
