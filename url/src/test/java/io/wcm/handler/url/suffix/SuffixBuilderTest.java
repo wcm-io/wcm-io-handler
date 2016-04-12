@@ -338,7 +338,9 @@ public class SuffixBuilderTest {
 
     String suffix = getBuilder().pages(targetPages, basePage).build();
     // suffix should contain relative path without leading slash
-    assertEquals("b" + ESCAPED_SLASH + "c/d" + ESCAPED_SLASH + "1/d" + ESCAPED_SLASH + "2", suffix);
+    assertEquals("b" + ESCAPED_SLASH + "c"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "1"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "2", suffix);
   }
 
 

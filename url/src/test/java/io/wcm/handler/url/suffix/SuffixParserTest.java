@@ -25,9 +25,6 @@ import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.hexCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import io.wcm.handler.url.testcontext.AppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -41,6 +38,10 @@ import org.junit.Test;
 
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.testcontext.AppAemContext;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 public class SuffixParserTest {
 
@@ -442,90 +443,117 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringPageFilterOfPage() {
-    // create a page and a resource within the page
-    String resourceType = "cq:Page";
-    Filter<Resource> filter = new ResourceTypeFilter(resourceType);
-    Page currentPage = context.create().page("/content/a", "template", "title");
-    Page targetPage = context.create().page("/content/a/b/c", "template", "title");
+  public void testPage() {
+    Page currentPage = context.create().page("/content/a");
+    Page targetPage = context.create().page("/content/a/b/c");
 
-    // get the resource by path (relative to current page) and resource type filter
-    SuffixParser parser = getParserWithIncommingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c", currentPage);
-    Page suffixPage = parser.getPage(filter);
-    // check that the right target resource is found
+    SuffixParser parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c", currentPage);
+    Page suffixPage = parser.getPage();
+
     assertNotNull(suffixPage);
     assertEquals(targetPage.getPath(), suffixPage.getPath());
-
-    // get the suffix resource with the wrong resource type
-    suffixPage = parser.getPage(new ResourceTypeFilter("wrong resourcetype"));
-    // check that no resource is found, despite the path being correct
-    assertNull(suffixPage);
-
-    // don't crash if a non-existing path specified in suffix
-    parser = getParserWithIncommingSuffix(ESCAPED_SLASH + "c" + ESCAPED_SLASH + "d", currentPage);
-    assertNull(parser.getPage(filter));
-
-    // don't crash with null suffix
-    parser = getParserWithIncommingSuffix(null, currentPage);
-    assertNull(parser.getPage(filter));
   }
 
   @Test
-  public void testGetLongIntBooleanStringPages() {
-    // create a page with 4 resources
-    Page basePage = context.create().page("/content/a", "template", "title");
-    String basePath = basePage.getPath();
-    Page pageBC = context.create().page(basePath + "/b/c", "template", "title");
-    Page pageBD = context.create().page(basePath + "/b/d", "template", "title");
-    Page pageCC = context.create().page(basePath + "/c/c", "template", "title");
-    Page pageCD = context.create().page(basePath + "/c/d", "template", "title");
+  public void testPageNonExistingPath() {
+    Page currentPage = context.create().page("/content/a");
 
-    // filter that only includes resources named "c";
-    Filter<Resource> cFilter = new Filter<Resource>() {
+    SuffixParser parser = getParserWithIncommingSuffix("x" + ESCAPED_SLASH + "y", currentPage);
+    Page suffixPage = parser.getPage();
 
-      @Override
-      public boolean includes(Resource pResource) {
-        return pResource.getPath().endsWith("/c");
-      }
-
-    };
-
-    // get these resources from suffix
-    SuffixParser parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c"
-            + SUFFIX_PART_DELIMITER + "b" + ESCAPED_SLASH + "d"
-            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "c"
-            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "d");
-    List<Page> suffixPages = parser.getPages(cFilter, basePage);
-    // check that the two resources named c are found
-    assertNotNull(suffixPages);
-    assertEquals(2, suffixPages.size());
-    assertEquals(pageBC.getPath(), suffixPages.get(0).getPath());
-    assertEquals(pageCC.getPath(), suffixPages.get(1).getPath());
-
-    // test that all four resources are found if no filter is used
-    parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c"
-            + SUFFIX_PART_DELIMITER + "b" + ESCAPED_SLASH + "d"
-            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "c"
-            + SUFFIX_PART_DELIMITER + "c" + ESCAPED_SLASH + "d");
-    List<Page> allPages = parser.getPages(null, basePage);
-    // check that all resources are found
-    assertNotNull(allPages);
-    assertEquals(4, allPages.size());
-    assertEquals(pageBC.getPath(), allPages.get(0).getPath());
-    assertEquals(pageBD.getPath(), allPages.get(1).getPath());
-    assertEquals(pageCC.getPath(), allPages.get(2).getPath());
-    assertEquals(pageCD.getPath(), allPages.get(3).getPath());
-
-    // test with non-existent resources in suffix
-    parser = getParserWithIncomingSuffix(ESCAPED_SLASH + "b" + ESCAPED_SLASH + "c"
-            + SUFFIX_PART_DELIMITER + "e" + ESCAPED_SLASH + "c"
-            + SUFFIX_PART_DELIMITER + "e" + ESCAPED_SLASH + "d");
-    suffixPages = parser.getPages(cFilter, basePage);
-    // check that an only the existing resource b/c is found
-    assertNotNull(suffixPages);
-    assertEquals(1, suffixPages.size());
-    assertEquals(pageBC.getPath(), suffixPages.get(0).getPath());
+    assertNull(suffixPage);
   }
 
+  @Test
+  public void testPageNullSuffix() {
+    Page currentPage = context.create().page("/content/a");
+
+    SuffixParser parser = getParserWithIncommingSuffix(null, currentPage);
+    Page suffixPage = parser.getPage();
+
+    assertNull(suffixPage);
+  }
+
+  @Test
+  public void testPageWithFilter() {
+    Page currentPage = context.create().page("/content/a");
+    Page targetPage = context.create().page("/content/a/b/c", "/apps/app1/templates/template1");
+
+    SuffixParser parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c", currentPage);
+    Page suffixPage = parser.getPage(new PageTemplateFilter("/apps/app1/templates/template1"));
+
+    assertNotNull(suffixPage);
+    assertEquals(targetPage.getPath(), suffixPage.getPath());
+
+    suffixPage = parser.getPage(new PageTemplateFilter("/other/path"));
+    assertNull(suffixPage);
+  }
+
+  @Test
+  public void testPages() {
+    Page currentPage = context.create().page("/content/a");
+    Page targetPage1 = context.create().page("/content/a/b/c");
+    Page targetPage2 = context.create().page("/content/a/d/1");
+    Page targetPage3 = context.create().page("/content/a/d/2");
+
+    SuffixParser parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "1"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "2", currentPage);
+    List<Page> suffixPages = parser.getPages();
+
+    assertEquals(3, suffixPages.size());
+    assertEquals(targetPage1.getPath(), suffixPages.get(0).getPath());
+    assertEquals(targetPage2.getPath(), suffixPages.get(1).getPath());
+    assertEquals(targetPage3.getPath(), suffixPages.get(2).getPath());
+  }
+
+  @Test
+  public void testPagesWithInvalidPath() {
+    Page currentPage = context.create().page("/content/a");
+    Page targetPage1 = context.create().page("/content/a/b/c");
+    Page targetPage3 = context.create().page("/content/a/d/2");
+
+    SuffixParser parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "1"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "2", currentPage);
+    List<Page> suffixPages = parser.getPages();
+
+    assertEquals(2, suffixPages.size());
+    assertEquals(targetPage1.getPath(), suffixPages.get(0).getPath());
+    assertEquals(targetPage3.getPath(), suffixPages.get(1).getPath());
+  }
+
+  @Test
+  public void testPagesWithFiltering() {
+    Page currentPage = context.create().page("/content/a", "/apps/app1/templates/template1");
+    context.create().page("/content/a/b/c", "/apps/app1/templates/template2");
+    Page targetPage2 = context.create().page("/content/a/d/1", "/apps/app1/templates/template1");
+    context.create().page("/content/a/d/2", "/apps/app1/templates/template2");
+
+    SuffixParser parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "1"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "2", currentPage);
+    List<Page> suffixPages = parser.getPages(new PageTemplateFilter("/apps/app1/templates/template1"));
+
+    assertEquals(1, suffixPages.size());
+    assertEquals(targetPage2.getPath(), suffixPages.get(0).getPath());
+  }
+
+  @Test
+  public void testPagesWithNonPageResourcesMixed() {
+    Page currentPage = context.create().page("/content/a");
+    Page targetPage1 = context.create().page("/content/a/b/c");
+    context.create().page("/content/a/d/1");
+    context.create().resource("/content/a/d/1/jcr:content/resource1");
+    context.create().page("/content/a/d/2");
+
+    SuffixParser parser = getParserWithIncommingSuffix("b" + ESCAPED_SLASH + "c"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "1" + ESCAPED_SLASH + "jcr:content" + ESCAPED_SLASH + "resource1"
+        + SUFFIX_PART_DELIMITER + "d" + ESCAPED_SLASH + "2" + ESCAPED_SLASH + "jcr:content", currentPage);
+    List<Page> suffixPages = parser.getPages();
+
+    assertEquals(1, suffixPages.size());
+    assertEquals(targetPage1.getPath(), suffixPages.get(0).getPath());
+  }
 
 }

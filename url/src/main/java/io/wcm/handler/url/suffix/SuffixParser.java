@@ -37,6 +37,8 @@ import org.osgi.annotation.versioning.ProviderType;
 import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 /**
  * Parses suffixes from Sling URLs build with {@link SuffixBuilder}.
@@ -270,13 +272,21 @@ public final class SuffixParser {
   }
 
   /**
-   * Parse the suffix as page paths and return the first page that exists
-   *
+   * Parse the suffix as page paths and return the first page that exists with a page path relative
+   * to the current page path.
+   * @return the page or null if no such page was selected by suffix
+   */
+  public Page getPage() {
+    return getPage((Filter<Page>)null, (Page)null);
+  }
+
+  /**
+   * Parse the suffix as page paths and return the first page that exists.
    * @param basePage the suffix page is relative to this page path (null for current page)
    * @return the page or null if no such page was selected by suffix
    */
   public Page getPage(Page basePage) {
-    return getPage((Filter)null, basePage);
+    return getPage((Filter<Page>)null, basePage);
   }
 
   /**
@@ -285,7 +295,7 @@ public final class SuffixParser {
    * @param filter a filter that selects only the page you're interested in.
    * @return the page or null if no such page was selected by suffix
    */
-  public Page getPage(Filter<Resource> filter) {
+  public Page getPage(Filter<Page> filter) {
     return getPage(filter, (Page)null);
   }
 
@@ -296,25 +306,45 @@ public final class SuffixParser {
    * @param basePage the suffix path is relative to this page path (null for current page)
    * @return the first {@link Page} or null
    */
-  public Page getPage(Filter<Resource> filter, Page basePage) {
-    List<Page> suffixResources = getPages(filter, basePage);
-    if (suffixResources.isEmpty()) {
+  public Page getPage(Filter<Page> filter, Page basePage) {
+    List<Page> suffixPages = getPages(filter, basePage);
+    if (suffixPages.isEmpty()) {
       return null;
     }
     else {
-      return suffixResources.get(0);
+      return suffixPages.get(0);
     }
   }
 
   /**
+   * Get the pages selected in the suffix of the URL with page paths relative
+   * to the current page path.
+   * @return a list containing the Pages
+   */
+  public List<Page> getPages() {
+    return getPages((Filter<Page>)null, (Page)null);
+  }
+
+  /**
+   * Get the pages selected in the suffix of the URL with page paths relative
+   * to the current page path.
+   * @param filter optional filter to select only specific pages
+   * @return a list containing the Pages
+   */
+  public List<Page> getPages(Filter<Page> filter) {
+    return getPages(filter, (Page)null);
+  }
+
+  /**
    * Get the pages selected in the suffix of the URL
-   *
    * @param filter optional filter to select only specific pages
    * @param basePage the suffix path is relative to this page path (null for current page)
    * @return a list containing the Pages
    */
-  public List<Page> getPages(Filter<Resource> filter, Page basePage) {
+  public List<Page> getPages(final Filter<Page> filter, final Page basePage) {
     Resource baseResourceToUse = null;
+
+    // detect pages page to use
     if (basePage == null) {
       PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
       Page currentPage = pageManager.getContainingPage(request.getResource());
@@ -325,16 +355,30 @@ public final class SuffixParser {
     else {
       baseResourceToUse = basePage.adaptTo(Resource.class);
     }
-    // convert resources back to pages
-    List<Resource> resources = getResourcesWithBaseResource(filter, baseResourceToUse);
-    List<Page> pages = new ArrayList<>();
-    for (Resource resource : resources) {
-      Page page = resource.adaptTo(Page.class);
-      if (page != null) {
-        pages.add(page);
+
+    // filter pages (as resources)
+    Filter<Resource> resourceFilter = new Filter<Resource>() {
+      @Override
+      public boolean includes(Resource resource) {
+        Page page = resource.adaptTo(Page.class);
+        if (page == null) {
+          return false;
+        }
+        if (filter == null) {
+          return true;
+        }
+        return filter.includes(page);
       }
-    }
-    return pages;
+    };
+    List<Resource> resources = getResourcesWithBaseResource(resourceFilter, baseResourceToUse);
+
+    // convert resources back to pages
+    return Lists.transform(resources, new Function<Resource, Page>() {
+      @Override
+      public Page apply(Resource resource) {
+        return resource.adaptTo(Page.class);
+      }
+    });
   }
 
   private List<Resource> getResourcesWithBaseResource(Filter<Resource> filter, Resource baseResource) {
