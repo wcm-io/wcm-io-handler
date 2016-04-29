@@ -25,14 +25,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import io.wcm.handler.url.UrlHandler;
-import io.wcm.handler.url.UrlMode;
-import io.wcm.handler.url.UrlModes;
-import io.wcm.handler.url.integrator.IntegratorPlaceholder;
-import io.wcm.handler.url.testcontext.AppAemContext;
-import io.wcm.handler.url.testcontext.DummyAppTemplate;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -44,7 +36,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
+import org.apache.sling.servlethelpers.MockSlingHttpServletRequest;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -52,6 +44,15 @@ import org.mockito.stubbing.Answer;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableSet;
+
+import io.wcm.handler.url.UrlHandler;
+import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.UrlModes;
+import io.wcm.handler.url.integrator.IntegratorPlaceholder;
+import io.wcm.handler.url.testcontext.AppAemContext;
+import io.wcm.handler.url.testcontext.DummyAppTemplate;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 public class UrlHandlerImplTest {
 

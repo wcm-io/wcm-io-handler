@@ -17,8 +17,31 @@
  * limitations under the License.
  * #L%
  */
-/**
- * URL Suffix Helper.
- */
-@org.osgi.annotation.versioning.Version("0.7.0")
 package io.wcm.handler.url.suffix;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.day.cq.commons.Filter;
+import com.day.cq.wcm.api.NameConstants;
+import com.day.cq.wcm.api.Page;
+
+/**
+ * Filters pages by template path.
+ */
+class PageTemplateFilter implements Filter<Page> {
+
+  private final String templatePath;
+
+  /**
+   * @param templatePath Template path
+   */
+  PageTemplateFilter(String templatePath) {
+    this.templatePath = templatePath;
+  }
+
+  @Override
+  public boolean includes(Page page) {
+    return StringUtils.equals(page.getProperties().get(NameConstants.PN_TEMPLATE, String.class), templatePath);
+  }
+
+}

@@ -27,13 +27,6 @@ import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.decodeValue;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.getRelativePath;
-import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
-import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
-import io.wcm.handler.url.suffix.impl.FilterOperators;
-import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
-import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +44,18 @@ import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.Filter;
+import com.day.cq.wcm.api.Page;
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
+import io.wcm.handler.url.suffix.impl.ExcludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeResourcePartsFilter;
+import io.wcm.handler.url.suffix.impl.ExcludeSpecificResourceFilter;
+import io.wcm.handler.url.suffix.impl.FilterOperators;
+import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
+import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
 
 /**
  * Builds suffixes to be used in Sling URLs and that can be parsed with {@link SuffixParser}.
@@ -87,6 +91,7 @@ public final class SuffixBuilder {
    * @param request Sling request
    * @param suffixPartFilter the filter that is called for each suffix part
    */
+  // TODO: Public wcm.io API should not depend on com.day.cq.commons.Filter - create a own interface instead
   public SuffixBuilder(SlingHttpServletRequest request, Filter<String> suffixPartFilter) {
     this(request, new FilteringSuffixStateStrategy(suffixPartFilter));
   }
@@ -245,6 +250,34 @@ public final class SuffixBuilder {
       resource(resource, baseResource);
     }
     return this;
+  }
+
+  /**
+   * Puts a relative path of a page into the suffix.
+   * @param page the page
+   * @param suffixBasePage the base page used to construct the relative path
+   * @return this
+   */
+  public SuffixBuilder page(Page page, Page suffixBasePage) {
+    return resource(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
+  }
+
+  /**
+   * Constructs a suffix that contains multiple key-value pairs and address pages. Depending on the
+   * {@link SuffixStateKeepingStrategy}, the suffix contains
+   * further parts from the current request that should be kept when constructing new links.
+   * @param pages pages to address
+   * @param suffixBasePage the base page used to construct the relative path
+   * @return this
+   */
+  public SuffixBuilder pages(List<Page> pages, Page suffixBasePage) {
+    List<Resource> resources = Lists.transform(pages, new Function<Page, Resource>() {
+      @Override
+      public Resource apply(Page page) {
+        return page.adaptTo(Resource.class);
+      }
+    });
+    return resources(resources, suffixBasePage.adaptTo(Resource.class));
   }
 
   /**

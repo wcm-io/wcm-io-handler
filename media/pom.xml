@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>0.5.8</version>
+    <version>0.5.9-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -97,6 +97,12 @@
 
             <!-- include application path as intial content -->
             <Sling-Initial-Content>SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media</Sling-Initial-Content>
+
+            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
+            <Import-Package>
+              com.day.cq.commons;version="[5.7,7)",
+              *
+            </Import-Package>
 
           </instructions>
         </configuration>
