@@ -20,14 +20,6 @@
 package io.wcm.handler.link.processor;
 
 import static org.junit.Assert.assertEquals;
-import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.spi.LinkProcessor;
-import io.wcm.handler.link.testcontext.AppAemContext;
-import io.wcm.handler.link.type.ExternalLinkType;
-import io.wcm.handler.link.type.InternalLinkType;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -37,6 +29,15 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
+
+import io.wcm.handler.commons.dom.Anchor;
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.spi.LinkProcessor;
+import io.wcm.handler.link.testcontext.AppAemContext;
+import io.wcm.handler.link.type.ExternalLinkType;
+import io.wcm.handler.link.type.InternalLinkType;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 /**
  * Test {@link AbstractInternalLinkInheritUrlParamLinkPostProcessor}.
@@ -71,6 +72,54 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
     }
     else {
       assertEquals("/sample.html", link.getUrl());
+    }
+  }
+
+  @Test
+  public void testInternalLinkFragment() {
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+
+    Link link = new Link(new InternalLinkType(), null);
+    link.setUrl("/sample.html#fragment1");
+    link.setAnchor(new Anchor().setHRef("/sample.html#fragment1"));
+
+    // test without url parameters
+    postProcessor.process(link);
+    assertEquals("/sample.html#fragment1", link.getUrl());
+
+    // test with url parameters
+    context.request().setQueryString("debugClientLibs=true&abc=123");
+
+    postProcessor.process(link);
+    if (adaptable() instanceof SlingHttpServletRequest) {
+      assertEquals("/sample.html?debugClientLibs=true#fragment1", link.getUrl());
+    }
+    else {
+      assertEquals("/sample.html#fragment1", link.getUrl());
+    }
+  }
+
+  @Test
+  public void testInternalLinkFullUrl() {
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+
+    Link link = new Link(new InternalLinkType(), null);
+    link.setUrl("https://host1/sample.html#fragment1");
+    link.setAnchor(new Anchor().setHRef("/sample.html#fragment1"));
+
+    // test without url parameters
+    postProcessor.process(link);
+    assertEquals("https://host1/sample.html#fragment1", link.getUrl());
+
+    // test with url parameters
+    context.request().setQueryString("debugClientLibs=true&abc=123");
+
+    postProcessor.process(link);
+    if (adaptable() instanceof SlingHttpServletRequest) {
+      assertEquals("https://host1/sample.html?debugClientLibs=true#fragment1", link.getUrl());
+    }
+    else {
+      assertEquals("https://host1/sample.html#fragment1", link.getUrl());
     }
   }
 
