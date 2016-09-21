@@ -19,15 +19,19 @@
  */
 package io.wcm.handler.link.processor;
 
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.spi.LinkProcessor;
-import io.wcm.handler.link.type.InternalLinkType;
-import io.wcm.handler.url.UrlHandler;
-
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ConsumerType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.spi.LinkProcessor;
+import io.wcm.handler.link.type.InternalLinkType;
+import io.wcm.handler.url.UrlHandler;
 
 /**
  * Linkhandler postprocessor to inherit URL parametres to internal links.
@@ -39,6 +43,8 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
   private UrlHandler urlHandler;
 
   private final Set<String> inheritUrlParameterNames;
+
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
   /**
    * @param inheritUrlParameterNames Custom list of inheritable URL parameter names.
@@ -52,10 +58,23 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
 
     if (link.isValid() && link.getLinkType().getId() == InternalLinkType.ID) {
       String url = link.getUrl();
-      url = urlHandler.get(url).queryString(null, this.inheritUrlParameterNames).build();
-      link.setUrl(url);
-      if (link.getAnchor() != null) {
-        link.getAnchor().setAttribute("href", url);
+      try {
+        URI uri = new URI(url);
+        String path = uri.getPath();
+        if (uri.getScheme() != null && uri.getHost() != null) {
+          path = uri.getScheme() + "://" + uri.getHost() + path;
+        }
+        url = urlHandler.get(path)
+            .queryString(uri.getRawQuery(), this.inheritUrlParameterNames)
+            .fragment(uri.getFragment())
+            .build();
+        link.setUrl(url);
+        if (link.getAnchor() != null) {
+          link.getAnchor().setAttribute("href", url);
+        }
+      }
+      catch (URISyntaxException ex) {
+        log.warn("Skipping post-processing or URL: " + url, ex);
       }
     }
 
