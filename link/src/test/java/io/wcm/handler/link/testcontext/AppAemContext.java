@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.link.testcontext;
 
+import static io.wcm.testing.mock.wcmio.config.ContextPlugins.WCMIO_CONFIG;
+import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
+
 import org.osgi.framework.Constants;
 
 import io.wcm.config.spi.ApplicationProvider;
@@ -29,9 +32,9 @@ import io.wcm.handler.url.UrlParams;
 import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
-import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -63,34 +66,23 @@ public final class AppAemContext {
   }
 
   public static AemContext newAemContext() {
-    return new AemContext(new SetUpCallback(null));
+    return newAemContext(null);
   }
 
   public static AemContext newAemContext(AemContextCallback callback) {
-    return new AemContext(new SetUpCallback(callback));
+    return new AemContextBuilder()
+        .plugin(WCMIO_SLING, WCMIO_CONFIG)
+        .afterSetUp(callback)
+        .afterSetUp(SETUP_CALLBACK)
+        .build();
   }
 
   /**
    * Custom set up rules required in all unit tests.
    */
-  private static final class SetUpCallback implements AemContextCallback {
-
-    private final AemContextCallback testCallback;
-
-    SetUpCallback(AemContextCallback testCallback) {
-      this.testCallback = testCallback;
-    }
-
+  private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
     @Override
     public void execute(AemContext context) throws Exception {
-
-      // call test-specific callback first
-      if (testCallback != null) {
-        testCallback.execute(context);
-      }
-
-      // wcm.io Sling extensions
-      MockSlingExtensions.setUp(context);
 
       // URL handler-specific parameter definitions
       context.registerService(ParameterProvider.class, new UrlHandlerParameterProviderImpl());
@@ -104,9 +96,6 @@ public final class AppAemContext {
       context.registerService(ConfigurationFinderStrategy.class,
           MockConfig.configurationFinderStrategyAbsoluteParent(APPLICATION_ID,
               DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
-
-      // wcm.io configuration
-      MockConfig.setUp(context);
 
       // media formats
       context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
@@ -138,7 +127,6 @@ public final class AppAemContext {
           .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
           .build());
     }
-
-  }
+  };
 
 }

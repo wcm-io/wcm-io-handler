@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.url.testcontext;
 
+import static io.wcm.testing.mock.wcmio.config.ContextPlugins.WCMIO_CONFIG;
+import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
+
 import java.io.IOException;
 
 import org.apache.sling.api.resource.PersistenceException;
@@ -32,9 +35,9 @@ import io.wcm.handler.url.impl.ApplicationProviderImpl;
 import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
-import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -46,19 +49,19 @@ public final class AppAemContext {
   }
 
   public static AemContext newAemContext() {
-    return new AemContext(new SetUpCallback(), ResourceResolverType.JCR_MOCK);
+    return new AemContextBuilder()
+        .plugin(WCMIO_SLING, WCMIO_CONFIG)
+        .afterSetUp(SETUP_CALLBACK)
+        .resourceResolverType(ResourceResolverType.JCR_MOCK)
+        .build();
   }
 
   /**
    * Custom set up rules required in all unit tests.
    */
-  private static final class SetUpCallback implements AemContextCallback {
-
+  private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
     @Override
     public void execute(AemContext context) throws PersistenceException, IOException {
-
-      // wcm.io Sling extensions
-      MockSlingExtensions.setUp(context);
 
       // URL handler-specific parameter definitions
       context.registerService(ParameterProvider.class, new UrlHandlerParameterProviderImpl());
@@ -71,9 +74,6 @@ public final class AppAemContext {
       context.registerService(ConfigurationFinderStrategy.class,
           MockConfig.configurationFinderStrategyAbsoluteParent(ApplicationProviderImpl.APPLICATION_ID,
               DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
-
-      // wcm.io configuration
-      MockConfig.setUp(context);
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.url");
@@ -107,7 +107,6 @@ public final class AppAemContext {
           .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
           .build());
     }
-
-  }
+  };
 
 }
