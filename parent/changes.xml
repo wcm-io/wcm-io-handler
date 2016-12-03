@@ -25,6 +25,9 @@
 
     <release version="0.5.12" date="not released">
       <action type="update" dev="sseifert">
+        Update dependencies.
+      </action>
+      <action type="update" dev="sseifert">
         Make dependencies to wcm.io Config provided.
       </action>
     </release>

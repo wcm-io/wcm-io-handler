@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.media.testcontext;
 
-import java.io.IOException;
-
-import org.apache.sling.api.resource.PersistenceException;
 import org.osgi.framework.Constants;
 
 import io.wcm.config.spi.ApplicationProvider;
@@ -81,7 +78,7 @@ public final class AppAemContext {
     }
 
     @Override
-    public void execute(AemContext context) throws PersistenceException, IOException {
+    public void execute(AemContext context) throws Exception {
 
       // call test-specific callback first
       if (testCallback != null) {

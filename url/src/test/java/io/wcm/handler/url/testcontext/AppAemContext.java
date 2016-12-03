@@ -19,6 +19,11 @@
  */
 package io.wcm.handler.url.testcontext;
 
+import java.io.IOException;
+
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
+
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
@@ -30,11 +35,6 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
 import io.wcm.testing.mock.wcmio.sling.MockSlingExtensions;
-
-import java.io.IOException;
-
-import org.apache.sling.api.resource.PersistenceException;
-import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -79,6 +79,10 @@ public final class AppAemContext {
       context.addModelsForPackage("io.wcm.handler.url");
 
       // create current page in site context
+      context.create().page("/content");
+      context.create().page("/content/unittest");
+      context.create().page("/content/unittest/de_test");
+      context.create().page("/content/unittest/de_test/brand");
       context.currentPage(context.create().page("/content/unittest/de_test/brand/de"));
       context.create().page("/content/unittest/de_test/brand/de/setion");
       context.create().page("/content/unittest/de_test/brand/de/section/page");

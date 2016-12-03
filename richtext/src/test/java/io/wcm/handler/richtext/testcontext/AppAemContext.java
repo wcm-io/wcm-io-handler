@@ -19,10 +19,6 @@
  */
 package io.wcm.handler.richtext.testcontext;
 
-import java.io.IOException;
-
-import org.apache.sling.api.resource.PersistenceException;
-
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
@@ -79,7 +75,7 @@ public final class AppAemContext {
     }
 
     @Override
-    public void execute(AemContext context) throws PersistenceException, IOException {
+    public void execute(AemContext context) throws Exception {
 
       // call test-specific callback first
       if (testCallback != null) {

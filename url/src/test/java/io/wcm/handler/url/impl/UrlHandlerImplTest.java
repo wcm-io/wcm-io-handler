@@ -183,7 +183,7 @@ public class UrlHandlerImplTest {
   @Test
   public void testRewritePathToContext_SpecContext() {
 
-    context.currentPage(context.create().page("/content", DummyAppTemplate.STRUCTURE_ELEMENT.getTemplatePath()));
+    context.currentPage(context.pageManager().getPage("/content"));
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // paths from current site
@@ -265,9 +265,9 @@ public class UrlHandlerImplTest {
         DummyAppTemplate.CONTENT.getTemplatePath()));
 
     // create more pages to simulate internal link
-    Page targetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page2",
+    Page targetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page2a",
         DummyAppTemplate.CONTENT.getTemplatePath());
-    Page secureTargetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page3",
+    Page secureTargetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page3a",
         DummyAppTemplate.CONTENT_SECURE.getTemplatePath());
 
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
@@ -297,27 +297,27 @@ public class UrlHandlerImplTest {
     assertEquals(IntegratorPlaceholder.URL_CONTENT, externalizeLinkUrl(urlHandler, IntegratorPlaceholder.URL_CONTENT, targetPage));
 
     // simple externalization
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a.html",
         externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", null));
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a.html",
         externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", targetPage));
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a.html",
         urlHandler.get(targetPage).extension("html").buildExternalLinkUrl());
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2/_jcr_content.html",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a/_jcr_content.html",
         externalizeLinkUrl(urlHandler, targetPage.getContentResource().getPath() + ".html", targetPage));
-    assertEquals("/content/unittest/de_test/brand/de/section2/page2/_jcr_content.html",
+    assertEquals("/content/unittest/de_test/brand/de/section2/page2a/_jcr_content.html",
         externalizeLinkUrl(urlHandler, targetPage.getContentResource().getPath() + ".html", targetPage, UrlModes.NO_HOSTNAME));
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page3.html",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page3a.html",
         externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", null));
-    assertEquals("https://de.dummysite.org/content/unittest/de_test/brand/de/section2/page3.html",
+    assertEquals("https://de.dummysite.org/content/unittest/de_test/brand/de/section2/page3a.html",
         externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", secureTargetPage));
-    assertEquals("/content/unittest/de_test/brand/de/section2/page3.html",
+    assertEquals("/content/unittest/de_test/brand/de/section2/page3a.html",
         externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", secureTargetPage, UrlModes.NO_HOSTNAME));
 
     // test with query params and fragment
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html?param=1",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a.html?param=1",
         externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html?param=1", null));
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2.html#hash",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a.html#hash",
         externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html#hash", null));
 
     if (context.request() != null) {
@@ -326,19 +326,19 @@ public class UrlHandlerImplTest {
       request.setContextPath("/cms");
       urlHandler = AdaptTo.notNull(request, UrlHandler.class);
 
-      assertEquals("http://de.dummysite.org/cms/de/section2/page2.html",
+      assertEquals("http://de.dummysite.org/cms/de/section2/page2a.html",
           externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", null));
-      assertEquals("http://de.dummysite.org/cms/de/section2/page2.html",
+      assertEquals("http://de.dummysite.org/cms/de/section2/page2a.html",
           externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", targetPage));
-      assertEquals("http://de.dummysite.org/cms/de/section2/page2/_jcr_content.html",
+      assertEquals("http://de.dummysite.org/cms/de/section2/page2a/_jcr_content.html",
           externalizeLinkUrl(urlHandler, targetPage.getContentResource().getPath() + ".html", targetPage));
-      assertEquals("/cms/de/section2/page2/_jcr_content.html",
+      assertEquals("/cms/de/section2/page2a/_jcr_content.html",
           externalizeLinkUrl(urlHandler, targetPage.getContentResource().getPath() + ".html", targetPage, UrlModes.NO_HOSTNAME));
-      assertEquals("http://de.dummysite.org/cms/de/section2/page3.html",
+      assertEquals("http://de.dummysite.org/cms/de/section2/page3a.html",
           externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", null));
-      assertEquals("https://de.dummysite.org/cms/de/section2/page3.html",
+      assertEquals("https://de.dummysite.org/cms/de/section2/page3a.html",
           externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", secureTargetPage));
-      assertEquals("/cms/de/section2/page3.html",
+      assertEquals("/cms/de/section2/page3a.html",
           externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", secureTargetPage, UrlModes.NO_HOSTNAME));
 
       // externalization with context path and mapping with page from other site as current page
@@ -348,19 +348,19 @@ public class UrlHandlerImplTest {
       context.currentPage(context.create().page("/content/unittest/de_test/brand/en/section/page",
           DummyAppTemplate.CONTENT.getTemplatePath()));
 
-      assertEquals("http://de.dummysite.org/de/section2/page2.html",
+      assertEquals("http://de.dummysite.org/de/section2/page2a.html",
           externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", null));
-      assertEquals("http://de.dummysite.org/de/section2/page2.html",
+      assertEquals("http://de.dummysite.org/de/section2/page2a.html",
           externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", targetPage));
-      assertEquals("http://de.dummysite.org/de/section2/page2/_jcr_content.html",
+      assertEquals("http://de.dummysite.org/de/section2/page2a/_jcr_content.html",
           externalizeLinkUrl(urlHandler, targetPage.getContentResource().getPath() + ".html", targetPage));
-      assertEquals("/de/section2/page2/_jcr_content.html",
+      assertEquals("/de/section2/page2a/_jcr_content.html",
           externalizeLinkUrl(urlHandler, targetPage.getContentResource().getPath() + ".html", targetPage, UrlModes.NO_HOSTNAME));
-      assertEquals("http://de.dummysite.org/de/section2/page3.html",
+      assertEquals("http://de.dummysite.org/de/section2/page3a.html",
           externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", null));
-      assertEquals("https://de.dummysite.org/de/section2/page3.html",
+      assertEquals("https://de.dummysite.org/de/section2/page3a.html",
           externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", secureTargetPage));
-      assertEquals("/de/section2/page3.html",
+      assertEquals("/de/section2/page3a.html",
           externalizeLinkUrl(urlHandler, secureTargetPage.getPath() + ".html", secureTargetPage, UrlModes.NO_HOSTNAME));
     }
 
@@ -373,7 +373,7 @@ public class UrlHandlerImplTest {
         DummyAppTemplate.CONTENT.getTemplatePath()));
 
     // create more pages to simulate internal link
-    Page targetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page2",
+    Page targetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page2a",
         DummyAppTemplate.CONTENT.getTemplatePath());
 
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
@@ -397,14 +397,14 @@ public class UrlHandlerImplTest {
         externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png"));
     assertEquals("http://de.dummysite.org/apps/testapp/docroot/img.png",
         externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png", UrlModes.FULL_URL));
-    assertEquals("/content/unittest/de_test/brand/de/section2/page2.png",
+    assertEquals("/content/unittest/de_test/brand/de/section2/page2a.png",
         externalizeResourceUrl(urlHandler, targetPage.getPath() + ".png"));
-    assertEquals("/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
+    assertEquals("/content/unittest/de_test/brand/de/section2/page2a/_jcr_content.png",
         externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png"));
-    assertEquals("/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
-        urlHandler.get(context.resourceResolver().getResource("/content/unittest/de_test/brand/de/section2/page2/jcr:content"))
+    assertEquals("/content/unittest/de_test/brand/de/section2/page2a/_jcr_content.png",
+        urlHandler.get(context.resourceResolver().getResource("/content/unittest/de_test/brand/de/section2/page2a/jcr:content"))
         .extension("png").buildExternalResourceUrl());
-    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2/_jcr_content.png",
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a/_jcr_content.png",
         externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png", UrlModes.FULL_URL));
 
     // with query parameter or fragment
@@ -424,11 +424,11 @@ public class UrlHandlerImplTest {
           externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png"));
       assertEquals("http://de.dummysite.org/cms/apps/testapp/docroot/img.png",
           externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png", UrlModes.FULL_URL));
-      assertEquals("/cms/de/section2/page2.png",
+      assertEquals("/cms/de/section2/page2a.png",
           externalizeResourceUrl(urlHandler, targetPage.getPath() + ".png"));
-      assertEquals("/cms/de/section2/page2/_jcr_content.png",
+      assertEquals("/cms/de/section2/page2a/_jcr_content.png",
           externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png"));
-      assertEquals("http://de.dummysite.org/cms/de/section2/page2/_jcr_content.png",
+      assertEquals("http://de.dummysite.org/cms/de/section2/page2a/_jcr_content.png",
           externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png", UrlModes.FULL_URL));
 
       // externalization with context path and mapping with page from other site as current page
@@ -442,11 +442,11 @@ public class UrlHandlerImplTest {
           externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png"));
       assertEquals("http://en.dummysite.org/apps/testapp/docroot/img.png",
           externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png", UrlModes.FULL_URL));
-      assertEquals("http://de.dummysite.org/de/section2/page2.png",
+      assertEquals("http://de.dummysite.org/de/section2/page2a.png",
           externalizeResourceUrl(urlHandler, targetPage.getPath() + ".png"));
-      assertEquals("http://de.dummysite.org/de/section2/page2/_jcr_content.png",
+      assertEquals("http://de.dummysite.org/de/section2/page2a/_jcr_content.png",
           externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png"));
-      assertEquals("http://de.dummysite.org/de/section2/page2/_jcr_content.png",
+      assertEquals("http://de.dummysite.org/de/section2/page2a/_jcr_content.png",
           externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png", UrlModes.FULL_URL));
 
     }
