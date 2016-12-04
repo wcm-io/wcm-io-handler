@@ -93,9 +93,6 @@ public final class AppAemContext {
       context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
 
       // sling models registration
-      context.addModelsForPackage("io.wcm.handler.url");
-      context.addModelsForPackage("io.wcm.handler.media");
-      context.addModelsForPackage("io.wcm.handler.link");
       context.addModelsForPackage("io.wcm.handler.richtext");
 
       // create current page in site context
