@@ -19,6 +19,18 @@
  */
 package io.wcm.handler.media.markup;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.commons.json.JSONArray;
+import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.osgi.annotation.versioning.ConsumerType;
+
+import com.day.cq.wcm.api.WCMMode;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
@@ -32,18 +44,6 @@ import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.suffix.SuffixBuilder;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.FileExtension;
-
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
-import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
-import org.osgi.annotation.versioning.ConsumerType;
-
-import com.day.cq.wcm.api.WCMMode;
 
 /**
  * Generates a rendered dummy image as edit placeholder in WCM edit mode with information about image sizes

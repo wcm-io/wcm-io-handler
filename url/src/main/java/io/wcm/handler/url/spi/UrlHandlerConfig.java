@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.url.spi;
 
-import io.wcm.handler.url.UrlMode;
-import io.wcm.handler.url.integrator.IntegratorMode;
-
 import java.util.Collection;
 
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.integrator.IntegratorMode;
 
 /**
  * Provides application-specific configuration information required for URL handling.

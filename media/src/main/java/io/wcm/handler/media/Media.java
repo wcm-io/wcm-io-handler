@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.util.Collection;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds information about a media request processed and resolved by {@link MediaHandler}.

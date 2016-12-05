@@ -19,13 +19,6 @@
  */
 package io.wcm.handler.link.type;
 
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkRequest;
-import io.wcm.handler.link.SyntheticLinkResource;
-import io.wcm.handler.link.type.helpers.InternalLinkResolver;
-import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +29,13 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.LinkRequest;
+import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.type.helpers.InternalLinkResolver;
+import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
 
 /**
  * Implementation of {@link io.wcm.handler.link.spi.LinkType} for internal links with supports

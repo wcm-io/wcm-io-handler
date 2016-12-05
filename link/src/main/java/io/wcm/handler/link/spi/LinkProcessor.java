@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.link.spi;
 
-import io.wcm.handler.link.Link;
-
 import org.osgi.annotation.versioning.ConsumerType;
+
+import io.wcm.handler.link.Link;
 
 /**
  * Processes link metadata before or after link resolving.

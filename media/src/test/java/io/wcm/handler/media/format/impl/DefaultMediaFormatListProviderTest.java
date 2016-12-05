@@ -20,14 +20,15 @@
 package io.wcm.handler.media.format.impl;
 
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.media.testcontext.DummyMediaFormats;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 public class DefaultMediaFormatListProviderTest {
 

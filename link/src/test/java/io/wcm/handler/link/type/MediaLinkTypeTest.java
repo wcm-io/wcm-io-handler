@@ -24,14 +24,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.SyntheticLinkResource;
-import io.wcm.handler.link.testcontext.AppAemContext;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -41,6 +33,15 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.cq.wcm.api.WCMMode;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkHandler;
+import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.testcontext.AppAemContext;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 /**
  * Test {@link MediaLinkType}

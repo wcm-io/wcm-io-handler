@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.link.spi;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkRequest;
-
-import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Defines a link type supported by {@link LinkHandler}.

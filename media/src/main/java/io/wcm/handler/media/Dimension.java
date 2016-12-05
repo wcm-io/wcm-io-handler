@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Dimension with width and height as integer.

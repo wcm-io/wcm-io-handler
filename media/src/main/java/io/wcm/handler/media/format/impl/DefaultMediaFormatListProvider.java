@@ -19,11 +19,6 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.wcm.commons.contenttype.ContentType;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.io.IOException;
 import java.util.Set;
 
@@ -38,6 +33,11 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
 import com.google.common.collect.ImmutableSet;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Exports the list of media format available for the addressed media path in JSON format to the response.

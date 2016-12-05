@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.url.impl;
 
-import io.wcm.config.spi.ApplicationProvider;
-
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.Resource;
+
+import io.wcm.config.spi.ApplicationProvider;
 
 /**
  * Register application in configuration API.

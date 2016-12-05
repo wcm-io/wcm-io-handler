@@ -21,6 +21,20 @@ package io.wcm.handler.link.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.Model;
+import org.junit.Rule;
+import org.junit.Test;
+import org.osgi.framework.Constants;
+
+import com.google.common.collect.ImmutableList;
+
 import io.wcm.config.spi.ApplicationProvider;
 import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.link.Link;
@@ -40,19 +54,6 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
-import org.junit.Rule;
-import org.junit.Test;
-import org.osgi.framework.Constants;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link LinkHandlerImpl} methods.

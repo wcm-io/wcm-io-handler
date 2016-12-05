@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.url.impl;
 
-import io.wcm.sling.commons.util.Escape;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
@@ -29,6 +27,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ResourceResolver;
+
+import io.wcm.sling.commons.util.Escape;
 
 /**
  * Utility methods for externalizing URLs.

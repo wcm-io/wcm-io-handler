@@ -19,13 +19,6 @@
  */
 package io.wcm.handler.media.markup;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.sling.models.annotations.AemObject;
-
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +28,13 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.WCMMode;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Shared functionality for {@link io.wcm.handler.media.spi.MediaMarkupBuilder} image implementations.

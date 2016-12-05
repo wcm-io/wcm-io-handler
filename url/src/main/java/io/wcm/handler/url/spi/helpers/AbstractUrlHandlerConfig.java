@@ -19,17 +19,17 @@
  */
 package io.wcm.handler.url.spi.helpers;
 
-import io.wcm.handler.url.UrlMode;
-import io.wcm.handler.url.UrlModes;
-import io.wcm.handler.url.integrator.IntegratorMode;
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-
 import java.util.List;
 
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.UrlModes;
+import io.wcm.handler.url.integrator.IntegratorMode;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 
 /**
  * Default implementation of configuration options of {@link UrlHandlerConfig} interface.

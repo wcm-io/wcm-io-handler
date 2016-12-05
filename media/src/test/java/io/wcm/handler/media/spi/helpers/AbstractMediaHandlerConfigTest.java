@@ -21,12 +21,13 @@ package io.wcm.handler.media.spi.helpers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
-
-import org.junit.Test;
 
 public class AbstractMediaHandlerConfigTest {
 

@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.format.MediaFormat;
-
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.format.MediaFormat;
 
 /**
  * Manages media resolving and markup generation.

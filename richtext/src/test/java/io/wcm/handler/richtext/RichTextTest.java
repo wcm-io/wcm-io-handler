@@ -24,8 +24,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.commons.dom.Div;
-import io.wcm.handler.commons.dom.Span;
 
 import java.util.List;
 
@@ -35,6 +33,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.commons.dom.Div;
+import io.wcm.handler.commons.dom.Span;
 
 public class RichTextTest {
 

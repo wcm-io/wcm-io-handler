@@ -21,7 +21,7 @@ package io.wcm.handler.media.format;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Test {@link MediaFormatHandler}

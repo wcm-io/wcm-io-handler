@@ -19,12 +19,6 @@
  */
 package io.wcm.handler.link;
 
-import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.spi.LinkType;
-import io.wcm.handler.media.Asset;
-import io.wcm.handler.media.Rendition;
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +28,12 @@ import org.jdom2.Attribute;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.commons.dom.Anchor;
+import io.wcm.handler.link.spi.LinkType;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Rendition;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds information about a link processed and resolved by {@link LinkHandler}.

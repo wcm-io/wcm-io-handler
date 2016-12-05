@@ -21,6 +21,12 @@ package io.wcm.handler.richtext.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.junit.Rule;
+import org.junit.Test;
+
 import io.wcm.handler.richtext.RichText;
 import io.wcm.handler.richtext.RichTextHandler;
 import io.wcm.handler.richtext.RichTextNameConstants;
@@ -29,11 +35,6 @@ import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
-
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
-import org.junit.Test;
 
 /**
  * Test {@link RichTextHandler}

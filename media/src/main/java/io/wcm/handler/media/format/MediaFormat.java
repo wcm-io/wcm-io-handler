@@ -19,15 +19,15 @@
  */
 package io.wcm.handler.media.format;
 
-import io.wcm.handler.media.Dimension;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.media.Dimension;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Media format.

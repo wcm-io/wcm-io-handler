@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.link.impl;
 
-import io.wcm.handler.link.spi.LinkHandlerConfig;
-import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
-
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+
+import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
 
 /**
  * Default implementation of configuration options of {@link LinkHandlerConfig} interface.

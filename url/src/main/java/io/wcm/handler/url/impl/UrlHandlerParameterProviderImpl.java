@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.url.impl;
 
-import io.wcm.config.spi.helpers.AbstractParameterProvider;
-import io.wcm.handler.url.UrlParams;
-
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
+
+import io.wcm.config.spi.helpers.AbstractParameterProvider;
+import io.wcm.handler.url.UrlParams;
 
 /**
  * Provides parameter metadata.

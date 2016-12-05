@@ -22,8 +22,8 @@ package io.wcm.handler.mediasource.dam;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_LARGE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_TEASER_SCALE1;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_LARGE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
@@ -34,6 +34,22 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+import org.junit.Test;
+
+import com.day.cq.dam.api.DamConstants;
+import com.day.cq.wcm.api.WCMMode;
+import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.DropTarget;
+import com.day.cq.wcm.api.components.EditConfig;
+import com.day.cq.wcm.api.components.EditContext;
+import com.google.common.collect.ImmutableList;
+
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Asset;
@@ -51,21 +67,6 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
-
-import java.util.List;
-
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
-import org.junit.Test;
-
-import com.day.cq.dam.api.DamConstants;
-import com.day.cq.wcm.api.WCMMode;
-import com.day.cq.wcm.api.components.ComponentContext;
-import com.day.cq.wcm.api.components.DropTarget;
-import com.day.cq.wcm.api.components.EditConfig;
-import com.day.cq.wcm.api.components.EditContext;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link DamMediaSource}

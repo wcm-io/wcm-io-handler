@@ -21,10 +21,11 @@ package io.wcm.handler.media.format;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.testcontext.DummyMediaFormats;
 
 import org.junit.Test;
+
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
 
 
 public class ResponsiveMediaFormatsBuilderTest {

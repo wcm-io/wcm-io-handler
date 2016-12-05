@@ -25,10 +25,11 @@ import static io.wcm.config.editor.EditorProperties.GROUP;
 import static io.wcm.config.editor.EditorProperties.LABEL;
 import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_ID;
 import static io.wcm.handler.url.impl.ApplicationProviderImpl.APPLICATION_LABEL;
-import io.wcm.config.api.Parameter;
-import io.wcm.config.editor.WidgetTypes;
 
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.config.api.Parameter;
+import io.wcm.config.editor.WidgetTypes;
 
 /**
  * Configuration parameters for URL handler.

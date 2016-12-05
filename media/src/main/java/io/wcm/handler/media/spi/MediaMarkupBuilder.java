@@ -19,10 +19,10 @@
  */
 package io.wcm.handler.media.spi;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
-
-import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Builds XHTML markup for media element.

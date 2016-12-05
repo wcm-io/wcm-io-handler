@@ -24,14 +24,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import io.wcm.handler.commons.dom.Image;
-import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.handler.media.spi.MediaSource;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -40,12 +32,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.components.ComponentContext;
+
+import io.wcm.handler.commons.dom.Image;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaSource;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MediaMarkupBuilderUtilTest {

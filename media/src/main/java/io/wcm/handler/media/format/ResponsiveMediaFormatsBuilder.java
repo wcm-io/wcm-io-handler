@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.media.format;
 
-import io.wcm.handler.media.MediaNameConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.media.MediaNameConstants;
 
 /**
  * Special builder that supports generating a on-the-fly list of media formats derived from a main

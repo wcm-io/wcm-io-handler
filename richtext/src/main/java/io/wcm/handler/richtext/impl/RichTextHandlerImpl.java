@@ -19,18 +19,6 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.richtext.RichText;
-import io.wcm.handler.richtext.RichTextBuilder;
-import io.wcm.handler.richtext.RichTextHandler;
-import io.wcm.handler.richtext.RichTextNameConstants;
-import io.wcm.handler.richtext.RichTextRequest;
-import io.wcm.handler.richtext.TextMode;
-import io.wcm.handler.richtext.util.RewriteContentHandler;
-import io.wcm.handler.richtext.util.RichTextUtil;
-import io.wcm.handler.url.UrlMode;
-import io.wcm.sling.models.annotations.AemObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +36,18 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.richtext.RichText;
+import io.wcm.handler.richtext.RichTextBuilder;
+import io.wcm.handler.richtext.RichTextHandler;
+import io.wcm.handler.richtext.RichTextNameConstants;
+import io.wcm.handler.richtext.RichTextRequest;
+import io.wcm.handler.richtext.TextMode;
+import io.wcm.handler.richtext.util.RewriteContentHandler;
+import io.wcm.handler.richtext.util.RichTextUtil;
+import io.wcm.handler.url.UrlMode;
+import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Default implementation of {@link RichTextHandler}.

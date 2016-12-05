@@ -20,11 +20,6 @@
 package io.wcm.handler.mediasource.dam;
 
 import static org.junit.Assert.assertNotNull;
-import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -32,6 +27,12 @@ import org.junit.Before;
 import org.junit.Rule;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Unit tests with DAM sample content

@@ -19,16 +19,6 @@
  */
 package io.wcm.handler.media.markup;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.sling.commons.request.RequestParam;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -40,6 +30,16 @@ import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.components.ComponentContext;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.sling.commons.request.RequestParam;
 
 /**
  * Helper methods for {@link MediaMarkupBuilder} implementations.

@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.commons.servlets.impl;
 
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.io.IOException;
 import java.util.Dictionary;
 
@@ -40,6 +38,8 @@ import org.osgi.annotation.versioning.ProviderType;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Virtually maps an *.htx request to a cq:Page resource to a *.html request internally (because components

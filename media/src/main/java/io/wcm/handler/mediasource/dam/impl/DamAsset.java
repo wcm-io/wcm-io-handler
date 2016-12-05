@@ -19,12 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.Asset;
-import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.Rendition;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
@@ -33,6 +27,12 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 
 import com.day.cq.dam.api.DamConstants;
+
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.Rendition;
 
 /**
  * {@link Asset} implementation for DAM assets.

@@ -19,15 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.markup;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.commons.dom.Video;
-import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.handler.url.UrlHandler;
-import io.wcm.wcm.commons.contenttype.ContentType;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -54,6 +45,15 @@ import com.day.cq.dam.commons.util.PrefixRenditionPicker;
 import com.day.cq.dam.video.VideoConstants;
 import com.day.cq.dam.video.VideoProfile;
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.commons.dom.Video;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.url.UrlHandler;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Default implementation of {@link MediaMarkupBuilder} for DAM video assets.

@@ -19,13 +19,13 @@
  */
 package io.wcm.handler.link.type;
 
-import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkRequest;
-import io.wcm.handler.link.spi.LinkType;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ConsumerType;
+
+import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.LinkRequest;
+import io.wcm.handler.link.spi.LinkType;
 
 /**
  * Common link type functionality

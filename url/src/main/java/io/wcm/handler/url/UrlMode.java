@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.url;
 
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-
 import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
@@ -28,6 +26,8 @@ import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 
 /**
  * An UrlMode define the externalization logic for URLs depending on context-specific configuration parameters

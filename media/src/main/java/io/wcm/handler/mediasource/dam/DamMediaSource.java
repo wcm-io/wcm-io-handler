@@ -19,19 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.commons.editcontext.DropTargetImpl;
-import io.wcm.handler.media.Asset;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
-import io.wcm.handler.mediasource.dam.impl.DamAsset;
-import io.wcm.sling.models.annotations.AemObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +39,19 @@ import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.commons.WCMUtils;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.commons.editcontext.DropTargetImpl;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaInvalidReason;
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
+import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
+import io.wcm.handler.mediasource.dam.impl.DamAsset;
+import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Default implementation for media requests to media items stored in CQ5 DAM.

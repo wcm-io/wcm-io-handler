@@ -49,8 +49,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -61,7 +59,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 /**
  * Test {@link MediaFormatHandler}

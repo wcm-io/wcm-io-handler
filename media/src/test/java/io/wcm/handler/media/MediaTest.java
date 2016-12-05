@@ -25,8 +25,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import io.wcm.handler.commons.dom.Div;
-import io.wcm.handler.media.spi.MediaSource;
 
 import java.util.Collection;
 
@@ -35,9 +33,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.commons.dom.Div;
+import io.wcm.handler.media.spi.MediaSource;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MediaTest {

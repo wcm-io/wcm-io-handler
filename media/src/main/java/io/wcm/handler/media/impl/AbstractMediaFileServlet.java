@@ -19,10 +19,6 @@
  */
 package io.wcm.handler.media.impl;
 
-import io.wcm.sling.commons.request.RequestPath;
-import io.wcm.wcm.commons.caching.CacheHeader;
-import io.wcm.wcm.commons.contenttype.ContentType;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,6 +32,10 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+
+import io.wcm.sling.commons.request.RequestPath;
+import io.wcm.wcm.commons.caching.CacheHeader;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Stream binary data stored in a nt:file or nt:resource node.

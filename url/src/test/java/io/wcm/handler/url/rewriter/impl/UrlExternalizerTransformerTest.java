@@ -21,10 +21,6 @@ package io.wcm.handler.url.rewriter.impl;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import io.wcm.handler.url.integrator.IntegratorHandler;
-import io.wcm.handler.url.testcontext.AppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,10 +35,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+
+import io.wcm.handler.url.integrator.IntegratorHandler;
+import io.wcm.handler.url.testcontext.AppAemContext;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UrlExternalizerTransformerTest {

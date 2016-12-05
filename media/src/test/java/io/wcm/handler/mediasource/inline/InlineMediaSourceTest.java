@@ -39,6 +39,21 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.util.List;
+
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
+
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
@@ -56,20 +71,6 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
-
-import java.io.ByteArrayInputStream;
-import java.util.List;
-
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.ModifiableValueMap;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Test {@link InlineMediaSource}

@@ -20,7 +20,6 @@
 package io.wcm.handler.url.rewriter.impl;
 
 import static org.junit.Assert.assertEquals;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 import java.util.Map;
 
@@ -28,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
+
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 public class UrlExternalizerTransformerConfigTest {
 

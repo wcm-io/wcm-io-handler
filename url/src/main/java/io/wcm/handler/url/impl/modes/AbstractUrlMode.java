@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import io.wcm.handler.url.UrlMode;
-
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.UrlMode;
 
 abstract class AbstractUrlMode implements UrlMode {
 

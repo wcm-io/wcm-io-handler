@@ -19,12 +19,6 @@
  */
 package io.wcm.handler.media.impl;
 
-import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.wcm.commons.contenttype.ContentType;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -37,6 +31,12 @@ import org.apache.sling.api.servlets.HttpConstants;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.image.Layer;
+
+import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Stream resized or cropped image from binary data stored in a nt:file or nt:resource node.

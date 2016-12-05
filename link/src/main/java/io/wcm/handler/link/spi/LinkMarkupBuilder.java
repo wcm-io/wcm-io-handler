@@ -19,10 +19,10 @@
  */
 package io.wcm.handler.link.spi;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
-
-import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Builds XHTML markup for links. The markup builder should build only an empty anchor tag without content.

@@ -19,10 +19,6 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.spi.MediaFormatProvider;
-import io.wcm.sling.commons.osgi.RankedServices;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +34,10 @@ import org.apache.felix.scr.annotations.Service;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.sling.commons.osgi.RankedServices;
 
 /**
  * Default implementation of {@link MediaFormatProviderManager}.

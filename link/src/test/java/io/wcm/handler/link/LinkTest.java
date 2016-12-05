@@ -25,18 +25,19 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.spi.LinkType;
-import io.wcm.handler.media.Asset;
-import io.wcm.handler.media.Rendition;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.commons.dom.Anchor;
+import io.wcm.handler.link.spi.LinkType;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Rendition;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LinkTest {

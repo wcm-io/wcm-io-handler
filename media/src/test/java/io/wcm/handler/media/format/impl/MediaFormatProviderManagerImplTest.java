@@ -21,10 +21,6 @@ package io.wcm.handler.media.format.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatBuilder;
-import io.wcm.handler.media.spi.MediaFormatProvider;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import java.util.SortedSet;
 
@@ -32,9 +28,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.google.common.collect.ImmutableSortedSet;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.MediaFormatBuilder;
+import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MediaFormatProviderManagerImplTest {

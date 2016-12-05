@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.url.rewriter.impl;
 
-import io.wcm.handler.url.UrlHandler;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -35,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import io.wcm.handler.url.UrlHandler;
 
 /**
  * HTML transformer that rewrites URLs in certain HTML element attributes.

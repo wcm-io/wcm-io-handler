@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.media.spi;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaRequest;
-
-import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Defines a media source supported by {@link MediaHandler}.

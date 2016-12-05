@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
@@ -30,6 +28,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Crop dimension with left, top, width and height as integer.

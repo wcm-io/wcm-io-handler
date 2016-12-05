@@ -19,15 +19,6 @@
  */
 package io.wcm.handler.link.testcontext;
 
-import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.link.spi.LinkHandlerConfig;
-import io.wcm.handler.link.spi.LinkType;
-import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
-import io.wcm.handler.link.type.ExternalLinkType;
-import io.wcm.handler.link.type.InternalCrossScopeLinkType;
-import io.wcm.handler.link.type.InternalLinkType;
-import io.wcm.handler.link.type.MediaLinkType;
-
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +29,15 @@ import org.apache.sling.models.annotations.Model;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.config.spi.annotations.Application;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.LinkType;
+import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
+import io.wcm.handler.link.type.ExternalLinkType;
+import io.wcm.handler.link.type.InternalCrossScopeLinkType;
+import io.wcm.handler.link.type.InternalLinkType;
+import io.wcm.handler.link.type.MediaLinkType;
 
 /**
  * Dummy link configuration
