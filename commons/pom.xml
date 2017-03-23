@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>0.5.11-SNAPSHOT</version>
+    <version>0.5.12</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.commons</artifactId>
-  <version>0.5.3-SNAPSHOT</version>
+  <version>0.5.4</version>
   <packaging>bundle</packaging>
 
   <name>Handler Commons</name>
