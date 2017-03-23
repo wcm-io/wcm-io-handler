@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.parent</artifactId>
-  <version>0.5.11-SNAPSHOT</version>
+  <version>0.5.13-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Handler</name>
