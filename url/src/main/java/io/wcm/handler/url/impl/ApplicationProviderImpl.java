@@ -23,7 +23,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.Resource;
 
-import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.caconfig.application.spi.ApplicationProvider;
 
 /**
  * Register application in configuration API.

@@ -30,7 +30,7 @@ import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.config.spi.annotations.Application;
+import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;

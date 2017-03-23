@@ -34,8 +34,8 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import com.google.common.collect.ImmutableSortedSet;
 
-import io.wcm.config.core.management.Application;
-import io.wcm.config.core.management.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationFinder;
+import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.MediaFormatRankingComparator;
@@ -63,7 +63,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
   private SortedSet<MediaFormat> getMediaFormatsForApplication() {
     if (this.mediaFormats == null) {
-      Application application = applicationFinder.find(currentResource);
+      ApplicationInfo application = applicationFinder.find(currentResource);
       if (application == null) {
         this.mediaFormats = ImmutableSortedSet.of();
       }

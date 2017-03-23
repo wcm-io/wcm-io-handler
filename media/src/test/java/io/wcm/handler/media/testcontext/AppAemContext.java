@@ -19,12 +19,14 @@
  */
 package io.wcm.handler.media.testcontext;
 
-import static io.wcm.testing.mock.wcmio.config.ContextPlugins.WCMIO_CONFIG;
+import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
+import static io.wcm.testing.mock.wcmio.caconfig.compat.ContextPlugins.WCMIO_CACONFIG_COMPAT;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
+import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
 import org.osgi.framework.Constants;
 
-import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
@@ -35,7 +37,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.wcmio.config.MockConfig;
+import io.wcm.testing.mock.wcmio.caconfig.compat.MockCAConfig;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -67,7 +69,8 @@ public final class AppAemContext {
 
   public static AemContext newAemContext(AemContextCallback callback) {
     return new AemContextBuilder()
-        .plugin(WCMIO_SLING, WCMIO_CONFIG)
+        .plugin(CACONFIG)
+        .plugin(WCMIO_SLING, WCMIO_CACONFIG, WCMIO_CACONFIG_COMPAT)
         .afterSetUp(callback)
         .afterSetUp(SETUP_CALLBACK)
         .build();
@@ -85,12 +88,12 @@ public final class AppAemContext {
 
       // application provider
       context.registerService(ApplicationProvider.class,
-          MockConfig.applicationProvider(APPLICATION_ID, "/content"),
+          MockCAConfig.applicationProvider(APPLICATION_ID, "/content"),
           ImmutableValueMap.of(Constants.SERVICE_RANKING, 1000));
 
       // configuration finder strategy
       context.registerService(ConfigurationFinderStrategy.class,
-          MockConfig.configurationFinderStrategyAbsoluteParent(APPLICATION_ID,
+          MockCAConfig.configurationFinderStrategyAbsoluteParent(APPLICATION_ID,
               DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
 
       // media formats
@@ -108,7 +111,7 @@ public final class AppAemContext {
           DummyAppTemplate.CONTENT.getTemplatePath()));
 
       // default site config
-      MockConfig.writeConfiguration(context, ROOTPATH_CONTENT,
+      MockCAConfig.writeConfiguration(context, ROOTPATH_CONTENT,
           ImmutableValueMap.builder()
           .put(UrlParams.SITE_URL.getName(), "http://www.dummysite.org")
           .put(UrlParams.SITE_URL_SECURE.getName(), "https://www.dummysite.org")

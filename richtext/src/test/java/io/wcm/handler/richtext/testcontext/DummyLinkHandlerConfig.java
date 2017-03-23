@@ -23,7 +23,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 
-import io.wcm.config.spi.annotations.Application;
+import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
 

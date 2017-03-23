@@ -19,15 +19,17 @@
  */
 package io.wcm.handler.url.testcontext;
 
-import static io.wcm.testing.mock.wcmio.config.ContextPlugins.WCMIO_CONFIG;
+import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
+import static io.wcm.testing.mock.wcmio.caconfig.compat.ContextPlugins.WCMIO_CACONFIG_COMPAT;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
+import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
 import java.io.IOException;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
-import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.config.spi.ParameterProvider;
 import io.wcm.handler.url.UrlParams;
@@ -37,7 +39,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.wcmio.config.MockConfig;
+import io.wcm.testing.mock.wcmio.caconfig.compat.MockCAConfig;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -50,7 +52,8 @@ public final class AppAemContext {
 
   public static AemContext newAemContext() {
     return new AemContextBuilder()
-        .plugin(WCMIO_SLING, WCMIO_CONFIG)
+        .plugin(CACONFIG)
+        .plugin(WCMIO_SLING, WCMIO_CACONFIG, WCMIO_CACONFIG_COMPAT)
         .afterSetUp(SETUP_CALLBACK)
         .resourceResolverType(ResourceResolverType.JCR_MOCK)
         .build();
@@ -68,11 +71,11 @@ public final class AppAemContext {
 
       // application provider
       context.registerService(ApplicationProvider.class,
-          MockConfig.applicationProvider(ApplicationProviderImpl.APPLICATION_ID, "/content"));
+          MockCAConfig.applicationProvider(ApplicationProviderImpl.APPLICATION_ID, "/content"));
 
       // configuration finder strategy
       context.registerService(ConfigurationFinderStrategy.class,
-          MockConfig.configurationFinderStrategyAbsoluteParent(ApplicationProviderImpl.APPLICATION_ID,
+          MockCAConfig.configurationFinderStrategyAbsoluteParent(ApplicationProviderImpl.APPLICATION_ID,
               DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
 
       // sling models registration
@@ -94,13 +97,13 @@ public final class AppAemContext {
       context.create().page("/content/unittest/de_test/brand/en/section/page");
 
       // default site config
-      MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de",
+      MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de",
           ImmutableValueMap.builder()
           .put(UrlParams.SITE_URL.getName(), "http://de.dummysite.org")
           .put(UrlParams.SITE_URL_SECURE.getName(), "https://de.dummysite.org")
           .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
           .build());
-      MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/en",
+      MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/en",
           ImmutableValueMap.builder()
           .put(UrlParams.SITE_URL.getName(), "http://en.dummysite.org")
           .put(UrlParams.SITE_URL_SECURE.getName(), "https://en.dummysite.org")

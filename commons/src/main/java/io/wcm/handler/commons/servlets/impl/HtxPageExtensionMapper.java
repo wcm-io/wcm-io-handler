@@ -67,7 +67,6 @@ public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
 
   // ---------- SCR Integration ----------------------------------------------
 
-  @SuppressWarnings("unchecked")
   protected void activate(ComponentContext pContext) {
     // read config
     final Dictionary<String, Object> props = pContext.getProperties();

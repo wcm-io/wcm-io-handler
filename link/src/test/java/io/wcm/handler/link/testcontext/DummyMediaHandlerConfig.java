@@ -27,7 +27,7 @@ import org.apache.sling.models.annotations.Model;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.config.spi.annotations.Application;
+import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;

@@ -27,7 +27,7 @@ import org.apache.sling.models.annotations.Model;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.config.spi.annotations.Application;
+import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 import io.wcm.handler.url.spi.UrlHandlerConfig;

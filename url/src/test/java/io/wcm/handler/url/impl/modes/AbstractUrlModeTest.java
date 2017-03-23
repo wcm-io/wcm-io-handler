@@ -36,7 +36,7 @@ import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.wcmio.config.MockConfig;
+import io.wcm.testing.mock.wcmio.caconfig.compat.MockCAConfig;
 
 public abstract class AbstractUrlModeTest {
 
@@ -98,7 +98,7 @@ public abstract class AbstractUrlModeTest {
   }
 
   protected void setSiteConfigNoUrl() {
-    MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", ImmutableValueMap.of());
+    MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", ImmutableValueMap.of());
   }
 
   protected abstract UrlMode urlMode();
