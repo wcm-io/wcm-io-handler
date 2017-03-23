@@ -19,18 +19,16 @@
  */
 package io.wcm.handler.url.rewriter.impl;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.rewriter.Transformer;
 import org.apache.sling.rewriter.TransformerFactory;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * AEM Link Checker Transformer for externalizing URLs with URL handler.
  */
-@Component(immediate = true)
-@Service(value = TransformerFactory.class)
-@Property(name = "pipeline.type", value = "wcm-io-urlhandler-externalizer")
+@Component(service = TransformerFactory.class, immediate = true, property = {
+    "pipeline.type=wcm-io-urlhandler-externalizer"
+})
 public class UrlExternalizerTransformerFactory implements TransformerFactory {
 
   @Override

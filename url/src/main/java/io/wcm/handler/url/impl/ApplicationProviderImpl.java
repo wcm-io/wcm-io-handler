@@ -19,17 +19,15 @@
  */
 package io.wcm.handler.url.impl;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.Resource;
+import org.osgi.service.component.annotations.Component;
 
 import io.wcm.caconfig.application.spi.ApplicationProvider;
 
 /**
  * Register application in configuration API.
  */
-@Component(immediate = true)
-@Service(ApplicationProvider.class)
+@Component(service = ApplicationProvider.class, immediate = true)
 public class ApplicationProviderImpl implements ApplicationProvider {
 
   /**

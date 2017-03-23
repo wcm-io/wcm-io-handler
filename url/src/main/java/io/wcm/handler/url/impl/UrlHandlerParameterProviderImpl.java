@@ -19,17 +19,16 @@
  */
 package io.wcm.handler.url.impl;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Component;
 
+import io.wcm.config.spi.ParameterProvider;
 import io.wcm.config.spi.helpers.AbstractParameterProvider;
 import io.wcm.handler.url.UrlParams;
 
 /**
  * Provides parameter metadata.
  */
-@Component(immediate = true)
-@Service
+@Component(service = ParameterProvider.class, immediate = true)
 public class UrlHandlerParameterProviderImpl extends AbstractParameterProvider {
 
   /**
