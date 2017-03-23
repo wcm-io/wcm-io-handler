@@ -19,14 +19,6 @@
  */
 package io.wcm.handler.media.testcontext;
 
-import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
-import io.wcm.handler.mediasource.dam.DamMediaSource;
-import io.wcm.handler.mediasource.inline.InlineMediaSource;
-
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +28,14 @@ import org.apache.sling.models.annotations.Model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+
+import io.wcm.config.spi.annotations.Application;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
+import io.wcm.handler.mediasource.dam.DamMediaSource;
+import io.wcm.handler.mediasource.inline.InlineMediaSource;
 
 /**
  * Dummy media configuration

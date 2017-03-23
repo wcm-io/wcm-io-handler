@@ -11,7 +11,12 @@ Link, Media and RichText Handler infrastructure.
 * [RichText Handler](richtext/): RichText processing and markup generation.
 * [Handler Commons](commons/): Functionality shared by the handler implementations.
 
+To see how this all works together have a look at the [sample application][wcmio-samples].
+
 
 ### GitHub Repository
 
 Sources: https://github.com/wcm-io/wcm-io-handler
+
+
+[wcmio-samples]: http://wcm.io/samples/

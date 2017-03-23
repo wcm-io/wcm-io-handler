@@ -23,8 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 import java.io.InputStream;
 
@@ -36,6 +34,9 @@ import org.junit.Test;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
+
+import io.wcm.handler.media.Media;
+import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 /**
  * Tests the {@link RenditionMetadata}, especially the compareTo method

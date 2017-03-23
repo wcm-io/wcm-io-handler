@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.media.spi.helpers;
 
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.spi.MediaFormatProvider;
-
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +26,9 @@ import java.util.Set;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableSet;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaFormatProvider;
 
 /**
  * Abstract implementation of {@link MediaFormatProvider} providing list of media formats either from given

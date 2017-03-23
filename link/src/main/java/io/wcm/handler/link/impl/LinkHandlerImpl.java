@@ -19,6 +19,16 @@
  */
 package io.wcm.handler.link.impl;
 
+import java.util.List;
+
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
+
+import com.day.cq.wcm.api.Page;
+
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkBuilder;
 import io.wcm.handler.link.LinkHandler;
@@ -29,16 +39,6 @@ import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
-
-import java.util.List;
-
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
-
-import com.day.cq.wcm.api.Page;
 
 /**
  * Default implementation of a {@link LinkHandler}

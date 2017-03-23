@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.media.spi;
 
-import io.wcm.handler.media.Media;
-
 import org.osgi.annotation.versioning.ConsumerType;
+
+import io.wcm.handler.media.Media;
 
 /**
  * Processes media metadata before or after media resolving.

@@ -19,10 +19,6 @@
  */
 package io.wcm.handler.link.type;
 
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.SyntheticLinkResource;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +29,10 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.SyntheticLinkResource;
 
 /**
  * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for external links.

@@ -19,11 +19,6 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import io.wcm.handler.url.UrlModes;
-import io.wcm.handler.url.integrator.IntegratorHandler;
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.sling.commons.adapter.AdaptTo;
-
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +27,11 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.UrlModes;
+import io.wcm.handler.url.integrator.IntegratorHandler;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
  * Default mode: Does generate a full externalized URL only if both siteUrl and siteUrlSecure parameter

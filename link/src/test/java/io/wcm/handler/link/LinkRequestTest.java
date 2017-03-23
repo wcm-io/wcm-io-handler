@@ -20,9 +20,10 @@
 package io.wcm.handler.link;
 
 import static org.junit.Assert.assertEquals;
-import io.wcm.handler.url.UrlModes;
 
 import org.junit.Test;
+
+import io.wcm.handler.url.UrlModes;
 
 public class LinkRequestTest {
 

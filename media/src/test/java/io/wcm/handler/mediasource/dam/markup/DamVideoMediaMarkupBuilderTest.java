@@ -24,6 +24,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jdom2.Element;
+import org.junit.Before;
+import org.junit.Test;
+
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Source;
@@ -32,13 +40,6 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 import io.wcm.wcm.commons.contenttype.ContentType;
-
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Element;
-import org.junit.Before;
-import org.junit.Test;
 
 public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
 

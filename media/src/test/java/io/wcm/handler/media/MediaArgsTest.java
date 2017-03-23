@@ -27,10 +27,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.markup.DragDropSupport;
-import io.wcm.handler.url.UrlModes;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 import java.util.Map;
 
@@ -38,6 +34,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.markup.DragDropSupport;
+import io.wcm.handler.url.UrlModes;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 public class MediaArgsTest {
 

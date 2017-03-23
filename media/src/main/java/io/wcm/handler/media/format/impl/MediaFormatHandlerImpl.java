@@ -19,14 +19,6 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import io.wcm.config.core.management.Application;
-import io.wcm.config.core.management.ApplicationFinder;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.handler.media.format.MediaFormatRankingComparator;
-import io.wcm.handler.media.format.MediaFormatSizeRankingComparator;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +33,14 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import com.google.common.collect.ImmutableSortedSet;
+
+import io.wcm.config.core.management.Application;
+import io.wcm.config.core.management.ApplicationFinder;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.format.MediaFormatRankingComparator;
+import io.wcm.handler.media.format.MediaFormatSizeRankingComparator;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Media format handling.

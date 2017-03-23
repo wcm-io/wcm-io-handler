@@ -19,16 +19,6 @@
  */
 package io.wcm.handler.link.type;
 
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkRequest;
-import io.wcm.handler.link.SyntheticLinkResource;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.spi.MediaHandlerConfig;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +30,16 @@ import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.LinkRequest;
+import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 
 /**
  * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for media links.

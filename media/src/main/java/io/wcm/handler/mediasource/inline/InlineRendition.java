@@ -19,21 +19,6 @@
  */
 package io.wcm.handler.mediasource.inline;
 
-import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.handler.media.impl.ImageFileServlet;
-import io.wcm.handler.media.impl.JcrBinary;
-import io.wcm.handler.media.impl.MediaFileServlet;
-import io.wcm.handler.url.UrlHandler;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.wcm.commons.caching.ModificationDate;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -51,6 +36,21 @@ import org.apache.sling.api.resource.ValueMap;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.image.Layer;
+
+import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.JcrBinary;
+import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.url.UrlHandler;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.caching.ModificationDate;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * {@link Rendition} implementation for inline media objects stored in a node in a content page.

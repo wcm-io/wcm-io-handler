@@ -19,6 +19,16 @@
  */
 package io.wcm.handler.media.markup;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.osgi.annotation.versioning.ProviderType;
+
+import com.day.cq.wcm.api.WCMMode;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
@@ -30,16 +40,6 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
-import org.osgi.annotation.versioning.ProviderType;
-
-import com.day.cq.wcm.api.WCMMode;
 
 /**
  * Generates a simple dummy image as edit placeholder in WCM edit mode, if no media item is set.

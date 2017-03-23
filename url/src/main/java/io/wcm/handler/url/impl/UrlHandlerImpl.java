@@ -19,13 +19,6 @@
  */
 package io.wcm.handler.url.impl;
 
-import io.wcm.handler.url.UrlBuilder;
-import io.wcm.handler.url.UrlHandler;
-import io.wcm.handler.url.UrlMode;
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.sling.commons.request.RequestParam;
-import io.wcm.sling.models.annotations.AemObject;
-
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -41,6 +34,13 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.settings.SlingSettingsService;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.UrlBuilder;
+import io.wcm.handler.url.UrlHandler;
+import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.sling.commons.request.RequestParam;
+import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Default implementation of a {@link UrlHandler}

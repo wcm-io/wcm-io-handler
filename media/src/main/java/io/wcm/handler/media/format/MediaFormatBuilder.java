@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.media.format;
 
-import io.wcm.config.spi.ApplicationProvider;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.config.spi.ApplicationProvider;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 /**
  * Fluent API for building media format definitions.

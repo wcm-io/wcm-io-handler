@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.link;
 
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.util.HashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,6 +28,8 @@ import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds all properties that are part of a link handling request.

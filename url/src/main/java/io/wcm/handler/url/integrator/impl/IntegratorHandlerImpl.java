@@ -19,14 +19,6 @@
  */
 package io.wcm.handler.url.integrator.impl;
 
-import io.wcm.handler.url.integrator.IntegratorHandler;
-import io.wcm.handler.url.integrator.IntegratorMode;
-import io.wcm.handler.url.integrator.IntegratorNameConstants;
-import io.wcm.handler.url.integrator.IntegratorProtocol;
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.sling.commons.request.RequestPath;
-import io.wcm.sling.models.annotations.AemObject;
-
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -40,6 +32,14 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.integrator.IntegratorHandler;
+import io.wcm.handler.url.integrator.IntegratorMode;
+import io.wcm.handler.url.integrator.IntegratorNameConstants;
+import io.wcm.handler.url.integrator.IntegratorProtocol;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.sling.commons.request.RequestPath;
+import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Default implementation of a {@link IntegratorHandler}

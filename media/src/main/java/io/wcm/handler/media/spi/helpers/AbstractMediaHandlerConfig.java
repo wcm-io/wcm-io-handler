@@ -19,15 +19,6 @@
  */
 package io.wcm.handler.media.spi.helpers;
 
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
-import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
-import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.handler.media.spi.MediaProcessor;
-import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.mediasource.dam.DamMediaSource;
-
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +27,15 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
+import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.spi.MediaProcessor;
+import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.handler.mediasource.dam.DamMediaSource;
 
 /**
  * Default implementation of configuration options of {@link MediaHandlerConfig} interface.

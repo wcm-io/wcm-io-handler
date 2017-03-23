@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.media.spi;
 
-import io.wcm.handler.media.format.MediaFormat;
-
 import java.util.List;
 import java.util.Set;
 
 import org.osgi.annotation.versioning.ConsumerType;
+
+import io.wcm.handler.media.format.MediaFormat;
 
 /**
  * Provides application-specific configuration information required for media handling.

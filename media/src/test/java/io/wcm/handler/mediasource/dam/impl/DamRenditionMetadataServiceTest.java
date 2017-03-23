@@ -25,10 +25,6 @@ import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.wcm.commons.util.RunMode;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -39,6 +35,11 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.cq.dam.api.DamEvent;
+
+import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.wcm.commons.util.RunMode;
 
 public class DamRenditionMetadataServiceTest {
 

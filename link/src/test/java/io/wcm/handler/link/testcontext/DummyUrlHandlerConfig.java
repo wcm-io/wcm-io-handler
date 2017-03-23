@@ -19,12 +19,6 @@
  */
 package io.wcm.handler.link.testcontext;
 
-import io.wcm.config.spi.annotations.Application;
-import io.wcm.handler.url.integrator.IntegratorMode;
-import io.wcm.handler.url.integrator.IntegratorModes;
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.handler.url.spi.helpers.AbstractUrlHandlerConfig;
-
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +29,12 @@ import org.apache.sling.models.annotations.Model;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
+
+import io.wcm.config.spi.annotations.Application;
+import io.wcm.handler.url.integrator.IntegratorMode;
+import io.wcm.handler.url.integrator.IntegratorModes;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.handler.url.spi.helpers.AbstractUrlHandlerConfig;
 
 /**
  * Dummy url configuration

@@ -23,13 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import io.wcm.handler.url.integrator.IntegratorHandler;
-import io.wcm.handler.url.integrator.IntegratorModes;
-import io.wcm.handler.url.integrator.IntegratorNameConstants;
-import io.wcm.handler.url.integrator.IntegratorProtocol;
-import io.wcm.handler.url.testcontext.AppAemContext;
-import io.wcm.handler.url.testcontext.DummyAppTemplate;
-import io.wcm.testing.mock.aem.junit.AemContext;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ModifiableValueMap;
@@ -38,6 +31,14 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.cq.wcm.api.Page;
+
+import io.wcm.handler.url.integrator.IntegratorHandler;
+import io.wcm.handler.url.integrator.IntegratorModes;
+import io.wcm.handler.url.integrator.IntegratorNameConstants;
+import io.wcm.handler.url.integrator.IntegratorProtocol;
+import io.wcm.handler.url.testcontext.AppAemContext;
+import io.wcm.handler.url.testcontext.DummyAppTemplate;
+import io.wcm.testing.mock.aem.junit.AemContext;
 
 public class IntegratorHandlerImplTest {
 

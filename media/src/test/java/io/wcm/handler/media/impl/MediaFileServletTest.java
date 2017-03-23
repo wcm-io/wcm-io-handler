@@ -20,9 +20,6 @@
 package io.wcm.handler.media.impl;
 
 import static org.junit.Assert.assertEquals;
-import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.wcm.commons.contenttype.ContentType;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,6 +27,10 @@ import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 public class MediaFileServletTest {
 

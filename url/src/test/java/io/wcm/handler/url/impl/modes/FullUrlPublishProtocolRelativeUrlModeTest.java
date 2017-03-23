@@ -21,13 +21,14 @@ package io.wcm.handler.url.impl.modes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
+
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.wcm.commons.util.RunMode;
-
-import org.junit.Test;
 
 public class FullUrlPublishProtocolRelativeUrlModeTest extends AbstractUrlModeTest {
 

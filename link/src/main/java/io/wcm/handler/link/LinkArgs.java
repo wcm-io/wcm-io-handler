@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.link;
 
-import io.wcm.handler.url.UrlMode;
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +28,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.url.UrlMode;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds parameters to influence the link resolving process.

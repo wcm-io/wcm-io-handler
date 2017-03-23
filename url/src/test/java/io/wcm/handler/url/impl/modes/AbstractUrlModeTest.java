@@ -19,6 +19,15 @@
  */
 package io.wcm.handler.url.impl.modes;
 
+import java.util.Set;
+
+import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.settings.SlingSettingsService;
+import org.junit.Before;
+import org.junit.Rule;
+
+import com.day.cq.wcm.api.Page;
+
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 import io.wcm.handler.url.integrator.IntegratorNameConstants;
@@ -28,15 +37,6 @@ import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.wcmio.config.MockConfig;
-
-import java.util.Set;
-
-import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.settings.SlingSettingsService;
-import org.junit.Before;
-import org.junit.Rule;
-
-import com.day.cq.wcm.api.Page;
 
 public abstract class AbstractUrlModeTest {
 

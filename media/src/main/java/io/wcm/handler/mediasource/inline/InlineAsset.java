@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.mediasource.inline;
 
-import io.wcm.handler.media.Asset;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.Rendition;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.Rendition;
 
 /**
  * {@link Asset} implementation for inline media objects stored in a node in a content page.

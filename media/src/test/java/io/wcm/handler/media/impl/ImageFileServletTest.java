@@ -20,9 +20,6 @@
 package io.wcm.handler.media.impl;
 
 import static org.junit.Assert.assertEquals;
-import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.wcm.commons.contenttype.ContentType;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,6 +32,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.day.image.Layer;
+
+import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 public class ImageFileServletTest {
 

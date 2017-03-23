@@ -19,17 +19,6 @@
  */
 package io.wcm.handler.mediasource.inline;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.Asset;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.impl.JcrBinary;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
-import io.wcm.sling.commons.util.Escape;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -42,6 +31,17 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.jcr.JcrConstants;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaInvalidReason;
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.impl.JcrBinary;
+import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
+import io.wcm.sling.commons.util.Escape;
 
 /**
  * Default implementation for media references to binaries stored in a node inside the content page.

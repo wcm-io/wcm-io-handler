@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.richtext;
 
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -30,6 +28,8 @@ import org.jdom2.output.Format;
 import org.jdom2.output.Format.TextMode;
 import org.jdom2.output.XMLOutputter;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds information about a rich text processed and resolved by {@link RichTextHandler}.

@@ -19,10 +19,10 @@
  */
 package io.wcm.handler.media.format.impl;
 
+import java.util.SortedSet;
+
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
-
-import java.util.SortedSet;
 
 /**
  * Collects all media format definitions provided by applications via {@link MediaFormatProvider} interface.

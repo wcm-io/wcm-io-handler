@@ -19,20 +19,6 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.SyntheticLinkResource;
-import io.wcm.handler.link.spi.LinkHandlerConfig;
-import io.wcm.handler.link.spi.LinkType;
-import io.wcm.handler.link.type.InternalLinkType;
-import io.wcm.handler.link.type.MediaLinkType;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.richtext.util.RewriteContentHandler;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -59,6 +45,20 @@ import org.jdom2.Text;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.google.common.collect.ImmutableSet;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkHandler;
+import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.link.spi.LinkType;
+import io.wcm.handler.link.type.InternalLinkType;
+import io.wcm.handler.link.type.MediaLinkType;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.richtext.util.RewriteContentHandler;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Default implementation of {@link RichTextRewriteContentHandlerImpl}.

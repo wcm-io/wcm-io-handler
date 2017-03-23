@@ -19,11 +19,10 @@
  */
 package io.wcm.handler.commons.servlets.impl;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletResponse;
@@ -36,10 +35,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.service.component.ComponentContext;
 
-@RunWith(MockitoJUnitRunner.class)
+import io.wcm.sling.commons.resource.ImmutableValueMap;
+
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class HtxPageExtensionMapperTest {
 
   @Mock

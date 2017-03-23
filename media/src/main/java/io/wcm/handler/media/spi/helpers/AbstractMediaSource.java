@@ -19,6 +19,15 @@
  */
 package io.wcm.handler.media.spi.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.ValueMap;
+import org.osgi.annotation.versioning.ConsumerType;
+
+import com.google.common.collect.ImmutableList;
+
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
@@ -28,15 +37,6 @@ import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaSource;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.ValueMap;
-import org.osgi.annotation.versioning.ConsumerType;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Common media source functionality

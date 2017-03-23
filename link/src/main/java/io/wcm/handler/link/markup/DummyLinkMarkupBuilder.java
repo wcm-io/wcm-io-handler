@@ -19,12 +19,6 @@
  */
 package io.wcm.handler.link.markup;
 
-import io.wcm.handler.commons.dom.Anchor;
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.spi.LinkMarkupBuilder;
-import io.wcm.sling.models.annotations.AemObject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -32,6 +26,12 @@ import org.apache.sling.models.annotations.Model;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.WCMMode;
+
+import io.wcm.handler.commons.dom.Anchor;
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkHandler;
+import io.wcm.handler.link.spi.LinkMarkupBuilder;
+import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Very basic implementation of {@link LinkMarkupBuilder}

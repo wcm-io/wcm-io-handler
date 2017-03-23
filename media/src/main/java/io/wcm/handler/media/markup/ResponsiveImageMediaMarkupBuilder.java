@@ -19,14 +19,6 @@
  */
 package io.wcm.handler.media.markup;
 
-import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.commons.dom.Image;
-import io.wcm.handler.media.Asset;
-import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaNameConstants;
-import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.format.MediaFormat;
-
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +29,14 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.models.annotations.Model;
 import org.osgi.annotation.versioning.ConsumerType;
+
+import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.commons.dom.Image;
+import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
 
 /**
  * Builds image element with data attribute containing sources for responsive image.

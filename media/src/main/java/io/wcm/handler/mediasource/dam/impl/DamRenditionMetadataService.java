@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.wcm.commons.contenttype.FileExtension;
-import io.wcm.wcm.commons.util.RunMode;
-
 import java.util.EnumSet;
 
 import javax.jcr.Node;
@@ -52,6 +49,9 @@ import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamEvent;
 import com.day.image.Layer;
+
+import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Background service that extracts additional metadata like width and height for DAM renditions.

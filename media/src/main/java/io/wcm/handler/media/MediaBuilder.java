@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.media;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlMode;
-
-import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Define media handling request using builder pattern.

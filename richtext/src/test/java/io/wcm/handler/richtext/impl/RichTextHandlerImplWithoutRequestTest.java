@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import io.wcm.handler.richtext.RichTextHandler;
-
 import org.apache.sling.api.adapter.Adaptable;
+
+import io.wcm.handler.richtext.RichTextHandler;
 
 /**
  * Test {@link RichTextHandler}

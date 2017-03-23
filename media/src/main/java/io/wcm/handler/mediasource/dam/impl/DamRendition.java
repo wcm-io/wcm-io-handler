@@ -19,15 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.url.UrlHandler;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.wcm.commons.caching.ModificationDate;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.util.Date;
 
 import org.apache.sling.api.adapter.Adaptable;
@@ -36,6 +27,15 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
 import com.day.cq.dam.api.Asset;
+
+import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.url.UrlHandler;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.caching.ModificationDate;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * {@link Rendition} implementation for DAM asset renditions.

@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.media.impl;
 
-import io.wcm.handler.url.suffix.SuffixParser;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-
 import java.awt.Color;
 import java.io.IOException;
 
@@ -36,6 +33,9 @@ import com.day.cq.wcm.commons.AbstractImageServlet;
 import com.day.image.Font;
 import com.day.image.Layer;
 import com.day.image.font.AbstractFont;
+
+import io.wcm.handler.url.suffix.SuffixParser;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Servlet which is used to render a dummy image with information about the size of the image and media format.

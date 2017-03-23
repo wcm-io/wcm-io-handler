@@ -19,19 +19,6 @@
  */
 package io.wcm.handler.link.type.helpers;
 
-import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkArgs;
-import io.wcm.handler.link.LinkHandler;
-import io.wcm.handler.link.LinkNameConstants;
-import io.wcm.handler.link.LinkRequest;
-import io.wcm.handler.link.spi.LinkHandlerConfig;
-import io.wcm.handler.url.UrlHandler;
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.models.annotations.AemObject;
-import io.wcm.wcm.commons.contenttype.FileExtension;
-import io.wcm.wcm.commons.util.RunMode;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -45,6 +32,19 @@ import org.osgi.annotation.versioning.ProviderType;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMMode;
+
+import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkArgs;
+import io.wcm.handler.link.LinkHandler;
+import io.wcm.handler.link.LinkNameConstants;
+import io.wcm.handler.link.LinkRequest;
+import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.handler.url.UrlHandler;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.sling.models.annotations.AemObject;
+import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Implements resolving an internal link for link types. The primary goal is to support the implementation

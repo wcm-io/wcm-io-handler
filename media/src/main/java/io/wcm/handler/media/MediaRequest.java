@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.wcm.commons.util.ToStringStyle;
-
 import java.util.HashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -28,6 +26,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds all properties that are part of a media handling request.

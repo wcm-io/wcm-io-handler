@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.media;
 
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.wcm.commons.caching.ModificationDateProvider;
-
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.wcm.commons.caching.ModificationDateProvider;
 
 /**
  * Represents a rendition contained in a {@link Asset} which can be rendered.

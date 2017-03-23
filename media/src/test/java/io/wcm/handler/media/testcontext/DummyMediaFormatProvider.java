@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.media.testcontext;
 
-import io.wcm.handler.media.spi.MediaFormatProvider;
-import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
-
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
+
+import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
 
 @Component(immediate = true)
 @Service(MediaFormatProvider.class)
