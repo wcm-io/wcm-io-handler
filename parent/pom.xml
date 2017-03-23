@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.parent</artifactId>
-  <version>0.5.13-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Handler</name>
@@ -46,6 +46,10 @@
 
   <properties>
     <site.url.module.prefix>handler</site.url.module.prefix>
+
+    <!-- compiler settings -->
+    <build.compiler.source>1.8</build.compiler.source>
+    <build.compiler.target>1.8</build.compiler.target>
 
     <jdom2.version>2.0.6</jdom2.version>
   </properties>
