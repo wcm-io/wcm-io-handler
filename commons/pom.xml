@@ -50,12 +50,6 @@
   
   <dependencies>
 
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    
     <!-- optional dependency from jdom - required for bnd analysis -->
     <dependency>
       <groupId>jaxen</groupId>
