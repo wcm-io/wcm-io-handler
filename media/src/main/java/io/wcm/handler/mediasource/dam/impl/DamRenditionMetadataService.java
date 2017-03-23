@@ -26,22 +26,22 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.settings.SlingSettingsService;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,12 +56,20 @@ import io.wcm.wcm.commons.util.RunMode;
 /**
  * Background service that extracts additional metadata like width and height for DAM renditions.
  */
-@Component(immediate = true, metatype = true,
-label = "wcm.io DAM Rendition Metadata Service",
-description = "Extracts additional metadata like width and height for DAM renditions.")
-@Property(name = EventConstants.EVENT_TOPIC, value = DamEvent.EVENT_TOPIC, propertyPrivate = true)
-@Service(EventHandler.class)
+@Component(service = EventHandler.class, immediate = true, property = {
+    EventConstants.EVENT_TOPIC + "=" + DamEvent.EVENT_TOPIC
+})
+@Designate(ocd = DamRenditionMetadataService.Config.class)
 public final class DamRenditionMetadataService implements EventHandler {
+
+  @ObjectClassDefinition(name = "wcm.io DAM Rendition Metadata Service",
+      description = "Extracts additional metadata like width and height for DAM renditions")
+  static @interface Config {
+
+    @AttributeDefinition(name = "Enabled", description = "Switch to enable or disable this service.")
+    boolean enabled() default true;
+
+  }
 
   /**
    * Name for Renditions Metadata node
@@ -80,11 +88,6 @@ public final class DamRenditionMetadataService implements EventHandler {
 
   private static final EnumSet<DamEvent.Type> SUPPORTED_EVENT_TYPES = EnumSet.of(DamEvent.Type.RENDITION_UPDATED, DamEvent.Type.RENDITION_REMOVED);
 
-  private static final boolean DEFAULT_ENABLED = true;
-
-  @Property(boolValue = DEFAULT_ENABLED, label = "Enabled", description = "Switch to enable or disable this service.")
-  static final String PROPERTY_ENABLED = "enabled";
-
   private final Logger log = LoggerFactory.getLogger(this.getClass());
   private boolean enabled;
 
@@ -95,10 +98,10 @@ public final class DamRenditionMetadataService implements EventHandler {
   private SlingSettingsService slingSettings;
 
   @Activate
-  private void activate(ComponentContext componentContext) {
+  private void activate(ComponentContext componentContext, Config config) {
     // Activate only in author mode, and check enabled status in service configuration as well
     enabled = !RunMode.disableIfNotAuthor(slingSettings.getRunModes(), componentContext, log)
-        && PropertiesUtil.toBoolean(componentContext.getProperties().get(PROPERTY_ENABLED), DEFAULT_ENABLED);
+        && config.enabled();
   }
 
   @Override

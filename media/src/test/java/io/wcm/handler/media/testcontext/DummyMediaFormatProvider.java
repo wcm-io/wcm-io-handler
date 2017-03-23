@@ -19,14 +19,12 @@
  */
 package io.wcm.handler.media.testcontext;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Component;
 
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
 
-@Component(immediate = true)
-@Service(MediaFormatProvider.class)
+@Component(service = MediaFormatProvider.class, immediate = true)
 public class DummyMediaFormatProvider extends AbstractMediaFormatProvider {
 
   public DummyMediaFormatProvider() {

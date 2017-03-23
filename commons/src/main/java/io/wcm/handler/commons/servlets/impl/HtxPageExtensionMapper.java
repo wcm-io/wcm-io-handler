@@ -44,7 +44,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Virtually maps an *.htx request to a cq:Page resource to a *.html request internally (because components
  * and JSPs are normally only registered to *.html extension). Mapping can be enabled or disabled.
  */
-@Component(service = Servlet.class, property = {
+@Component(service = Servlet.class, immediate = true, property = {
     "sling.servlet.paths=/apps/foundation/components/primary/cq/Page/Page." + FileExtension.HTML_UNCACHED + ".servlet",
     "sling.servlet.methods=" + HttpConstants.METHOD_GET,
     "sling.servlet.extensions=" + FileExtension.HTML_UNCACHED
@@ -52,8 +52,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 @Designate(ocd = HtxPageExtensionMapper.Config.class)
 public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
-
-  private static final Logger log = LoggerFactory.getLogger(HtxPageExtensionMapper.class);
 
   @ObjectClassDefinition(name = "wcm.io htx Page Extension Mapper",
       description = "Mapps all *.htx requests on Pages to *.html view.")
@@ -63,6 +61,8 @@ public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
     boolean enabled() default true;
 
   }
+
+  private static final Logger log = LoggerFactory.getLogger(HtxPageExtensionMapper.class);
 
   private boolean enabled;
 

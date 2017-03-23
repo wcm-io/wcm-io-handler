@@ -30,8 +30,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -39,6 +37,7 @@ import org.apache.sling.models.annotations.Model;
 import org.junit.Rule;
 import org.junit.Test;
 import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
 
 import com.google.common.collect.ImmutableList;
 
@@ -343,8 +342,7 @@ public class MediaHandlerImplTest {
 
   }
 
-  @Component(immediate = true)
-  @Service(MediaFormatProvider.class)
+  @Component(service = MediaFormatProvider.class, immediate = true)
   public static class TestMediaFormatProvider extends AbstractMediaFormatProvider {
 
     public TestMediaFormatProvider() {

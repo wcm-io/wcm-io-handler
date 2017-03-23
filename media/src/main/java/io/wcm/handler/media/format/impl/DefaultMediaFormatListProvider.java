@@ -22,15 +22,17 @@ package io.wcm.handler.media.format.impl;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
-import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
+import org.osgi.service.component.annotations.Component;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -42,8 +44,12 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 /**
  * Exports the list of media format available for the addressed media path in JSON format to the response.
  */
-@SlingServlet(extensions = FileExtension.JSON, selectors = "wcmio_handler_media_mediaformat_list",
-resourceTypes = "sling/servlet/default", methods = "GET", metatype = false)
+@Component(service = Servlet.class, immediate = true, property = {
+    "sling.servlet.extensions=" + FileExtension.JSON,
+    "sling.servlet.selectors=wcmio_handler_media_mediaformat_list",
+    "sling.servlet.resourceTypes=sling/servlet/default",
+    "sling.servlet.methods=" + HttpConstants.METHOD_GET
+})
 public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

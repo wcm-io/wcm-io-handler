@@ -25,11 +25,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -42,8 +41,7 @@ import io.wcm.sling.commons.osgi.RankedServices;
 /**
  * Default implementation of {@link MediaFormatProviderManager}.
  */
-@Component(immediate = true, metatype = false)
-@Service(MediaFormatProviderManager.class)
+@Component(service = MediaFormatProviderManager.class, immediate = true)
 public final class MediaFormatProviderManagerImpl implements MediaFormatProviderManager {
 
   private volatile Map<String, SortedSet<MediaFormat>> mediaFormats = ImmutableMap.of();
@@ -51,8 +49,9 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
   /**
    * Parameter providers implemented by installed applications.
    */
-  @Reference(name = "mediaFormatProvider", referenceInterface = MediaFormatProvider.class,
-      cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+  @Reference(name = "mediaFormatProvider", service = MediaFormatProvider.class,
+      cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+      bind = "bindMediaFormatProvider", unbind = "unbindMediaFormatProvider")
   private final RankedServices<MediaFormatProvider> mediaFormatProviders = new RankedServices<>(new MediaFormatProviderChangeListener());
 
   @Override
