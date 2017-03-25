@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0-SNAPSHOT</version>
     <relativePath />
   </parent>
 
@@ -57,6 +57,11 @@
       <artifactId>org.apache.sling.models.api</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.api</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.sling</groupId>
@@ -73,7 +78,7 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.caconfig.impl</artifactId>
-      <version>1.3.0</version>
+      <version>1.3.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
@@ -112,13 +117,11 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>osgi.core</artifactId>
-      <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>osgi.cmpn</artifactId>
-      <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
 
@@ -180,17 +183,6 @@
     </dependency>
 
   </dependencies>
-  <dependencyManagement>
-    <dependencies>
-
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>3.3.2</version>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
 
   <distributionManagement>
     <site>
