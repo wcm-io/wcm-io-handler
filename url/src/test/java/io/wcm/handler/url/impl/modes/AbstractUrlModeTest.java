@@ -28,6 +28,7 @@ import org.junit.Rule;
 
 import com.day.cq.wcm.api.Page;
 
+import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 import io.wcm.handler.url.integrator.IntegratorNameConstants;
@@ -36,7 +37,7 @@ import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.wcmio.caconfig.compat.MockCAConfig;
+import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
 public abstract class AbstractUrlModeTest {
 
@@ -98,7 +99,8 @@ public abstract class AbstractUrlModeTest {
   }
 
   protected void setSiteConfigNoUrl() {
-    MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", ImmutableValueMap.of());
+    MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", SiteConfig.class.getName(),
+        ImmutableValueMap.of());
   }
 
   protected abstract UrlMode urlMode();

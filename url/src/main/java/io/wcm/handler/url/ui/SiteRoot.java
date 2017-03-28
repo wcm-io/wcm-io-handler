@@ -97,7 +97,7 @@ public final class SiteRoot {
 
   /**
    * Gets the site root page of the given path
-   * @param path
+   * @param path Path
    * @return Site root page
    */
   public Page getRootPage(String path) {

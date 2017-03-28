@@ -70,6 +70,10 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * Detect integrator template modes - check selectors in current url.
    */
   private void detectIntegratorTemplateModes() {
+    // integrator mode cannot be active if no modes defined
+    if (urlHandlerConfig.getIntegratorModes().isEmpty()) {
+      return;
+    }
     if (request != null && RequestPath.hasSelector(request, SELECTOR_INTEGRATORTEMPLATE_SECURE)) {
       integratorTemplateSecureMode = true;
     }
