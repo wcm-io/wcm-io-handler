@@ -54,6 +54,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   private Resource currentResource;
   @OSGiService
   private MediaFormatProviderManager mediaFormatProviderManager;
+  // TODO: get rid of dependency to ApplicationFinder
   @OSGiService
   private ApplicationFinder applicationFinder;
 

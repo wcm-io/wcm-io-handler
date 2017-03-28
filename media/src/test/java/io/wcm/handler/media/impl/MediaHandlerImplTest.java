@@ -42,7 +42,6 @@ import org.osgi.service.component.annotations.Component;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.caconfig.application.spi.ApplicationProvider;
-import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
@@ -58,7 +57,6 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
-import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
@@ -79,7 +77,10 @@ public class MediaHandlerImplTest {
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
           Constants.SERVICE_RANKING, -10);
-      callbackContext.registerService(MediaFormatProvider.class, new TestMediaFormatProvider());
+      callbackContext.registerService(MediaHandlerConfig.class, new TestMediaHandlerConfig(),
+          Constants.SERVICE_RANKING, 1000);
+      callbackContext.registerService(MediaFormatProvider.class, new TestMediaFormatProvider(),
+          Constants.SERVICE_RANKING, 1000);
     }
   });
 
@@ -175,25 +176,24 @@ public class MediaHandlerImplTest {
 
 
   public static class TestApplicationProvider implements ApplicationProvider {
+
     @Override
     public String getApplicationId() {
       return APP_ID;
     }
+
     @Override
     public String getLabel() {
       return null;
     }
+
     @Override
     public boolean matches(Resource resource) {
       return true;
     }
   }
 
-  @Model(adaptables = {
-      SlingHttpServletRequest.class, Resource.class
-  }, adapters = MediaHandlerConfig.class)
-  @Application(APP_ID)
-  public static class TestMediaHandlerConfig extends AbstractMediaHandlerConfig {
+  public static class TestMediaHandlerConfig extends MediaHandlerConfig {
 
     @Override
     public List<Class<? extends MediaProcessor>> getPreProcessors() {
@@ -213,6 +213,11 @@ public class MediaHandlerImplTest {
     @Override
     public List<Class<? extends MediaProcessor>> getPostProcessors() {
       return ImmutableList.<Class<? extends MediaProcessor>>of(TestPostProcessor.class);
+    }
+
+    @Override
+    public boolean matches(Resource resource) {
+      return true;
     }
 
   };

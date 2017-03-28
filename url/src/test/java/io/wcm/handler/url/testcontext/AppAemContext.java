@@ -64,17 +64,17 @@ public final class AppAemContext {
     @Override
     public void execute(AemContext context) throws PersistenceException, IOException {
 
+      // handler SPI
+      context.registerInjectActivateService(new SpiResolverImpl());
+      context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new DefaultUrlHandlerConfig());
+      context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
+
       // register configuration classes
       MockContextAwareConfig.registerAnnotationClasses(context, SiteConfig.class);
 
       // context path strategy
       MockCAConfig.contextPathStrategyAbsoluteParent(context, DummyUrlHandlerConfig.SITE_ROOT_LEVEL);
-
-      // handler configuration
-      context.registerInjectActivateService(new SpiResolverImpl());
-      context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
-      context.registerInjectActivateService(new DefaultUrlHandlerConfig());
-      context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.url");

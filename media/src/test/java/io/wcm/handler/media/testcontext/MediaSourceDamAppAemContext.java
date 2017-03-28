@@ -28,9 +28,20 @@ import java.io.IOException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
+import io.wcm.caconfig.application.impl.ApplicationAdapterFactory;
+import io.wcm.caconfig.application.impl.ApplicationFinderImpl;
+import io.wcm.caconfig.application.impl.ApplicationImplementationPicker;
+import io.wcm.caconfig.application.spi.ApplicationProvider;
+import io.wcm.handler.commons.spisupport.impl.SpiResolverImpl;
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
+import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
+import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
 import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.url.SiteConfig;
+import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
+import io.wcm.handler.url.impl.UrlHandlerConfigAdapterFactory;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
@@ -85,7 +96,19 @@ public final class MediaSourceDamAppAemContext {
     public void execute(AemContext context) throws PersistenceException, IOException {
 
       // application provider
-      MockCAConfig.applicationProvider(context, AppAemContext.APPLICATION_ID, "^/content(/.*)?$");
+      context.registerInjectActivateService(new ApplicationFinderImpl());
+      context.registerInjectActivateService(new ApplicationImplementationPicker());
+      context.registerInjectActivateService(new ApplicationAdapterFactory());
+      context.registerService(ApplicationProvider.class, new DummyApplicationProvider());
+
+      // handler SPI
+      context.registerInjectActivateService(new SpiResolverImpl());
+      context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new DefaultUrlHandlerConfig());
+      context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
+      context.registerInjectActivateService(new MediaHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new DefaultMediaHandlerConfig());
+      context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig());
 
       // context path strategy
       MockCAConfig.contextPathStrategyAbsoluteParent(context, DummyUrlHandlerConfig.SITE_ROOT_LEVEL);

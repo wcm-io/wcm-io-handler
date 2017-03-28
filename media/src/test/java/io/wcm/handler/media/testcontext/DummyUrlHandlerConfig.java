@@ -21,26 +21,18 @@ package io.wcm.handler.media.testcontext;
 
 import java.util.List;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.handler.url.spi.helpers.AbstractUrlHandlerConfig;
 
 /**
  * Dummy url configuration
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = UrlHandlerConfig.class)
-@Application(AppAemContext.APPLICATION_ID)
-public class DummyUrlHandlerConfig extends AbstractUrlHandlerConfig {
+public class DummyUrlHandlerConfig extends UrlHandlerConfig {
 
   public static final int SITE_ROOT_LEVEL = 4;
 
@@ -57,6 +49,11 @@ public class DummyUrlHandlerConfig extends AbstractUrlHandlerConfig {
   @Override
   public List<IntegratorMode> getIntegratorModes() {
     return INTEGRATOR_MODES;
+  }
+
+  @Override
+  public boolean matches(Resource resource) {
+    return (resource != null);
   }
 
 }

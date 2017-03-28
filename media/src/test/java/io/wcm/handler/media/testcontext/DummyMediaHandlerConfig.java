@@ -22,29 +22,21 @@ package io.wcm.handler.media.testcontext;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 import io.wcm.handler.mediasource.inline.InlineMediaSource;
 
 /**
  * Dummy media configuration
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = MediaHandlerConfig.class)
-@Application(AppAemContext.APPLICATION_ID)
-public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
+public class DummyMediaHandlerConfig extends MediaHandlerConfig {
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
       DamMediaSource.class,
@@ -63,6 +55,11 @@ public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
   @Override
   public Set<MediaFormat> getDownloadMediaFormats() {
     return DOWNLOAD_MEDIA_FORMATS;
+  }
+
+  @Override
+  public boolean matches(Resource resource) {
+    return (resource != null);
   }
 
 }
