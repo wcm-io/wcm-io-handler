@@ -21,8 +21,10 @@ package io.wcm.handler.url.ui;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -42,6 +44,8 @@ public final class SiteRoot {
 
   private Page siteRootPage;
 
+  @SlingObject
+  private ResourceResolver resolver;
   @AemObject
   private Page currentPage;
   @AemObject
@@ -69,7 +73,7 @@ public final class SiteRoot {
    * @return Site root path for the site. The path is not checked for validness.
    */
   public String getRootPath(String path) {
-    int rootLevel = urlHandlerConfig.getSiteRootLevel(path);
+    int rootLevel = urlHandlerConfig.getSiteRootLevel(path, resolver);
     if (rootLevel > 0) {
       return Text.getAbsoluteParent(path, rootLevel);
     }

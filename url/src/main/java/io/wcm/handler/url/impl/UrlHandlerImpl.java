@@ -101,8 +101,8 @@ public final class UrlHandlerImpl implements UrlHandler {
     String[] pathParts = StringUtils.split(path, "/");
 
     // check if both paths are valid - return unchanged path if not
-    int siteRootLevelContextPath = urlHandlerConfig.getSiteRootLevel(contextPath);
-    int siteRootLevelPath = urlHandlerConfig.getSiteRootLevel(path);
+    int siteRootLevelContextPath = urlHandlerConfig.getSiteRootLevel(contextPath, resolver);
+    int siteRootLevelPath = urlHandlerConfig.getSiteRootLevel(path, resolver);
     if ((contextPathParts.length <= siteRootLevelContextPath)
         || (pathParts.length <= siteRootLevelPath)
         || !StringUtils.equals(contextPathParts[0], "content")

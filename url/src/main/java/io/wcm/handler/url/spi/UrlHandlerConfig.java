@@ -21,6 +21,7 @@ package io.wcm.handler.url.spi;
 
 import java.util.Collection;
 
+import org.apache.sling.api.resource.ResourceResolver;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
@@ -44,9 +45,10 @@ public abstract class UrlHandlerConfig implements SpiMatcher {
   /**
    * Returns the absolute path level where the root page of the site is located.
    * @param contextPath Context path that is assumed to be inside the site context.
+   * @param resolver Resource resolver
    * @return Root level or 0 if it could not be detected
    */
-  public int getSiteRootLevel(String contextPath) {
+  public int getSiteRootLevel(String contextPath, ResourceResolver resolver) {
     // not supported by default
     return 0;
   }
