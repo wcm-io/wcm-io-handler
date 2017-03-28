@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2017 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,34 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.link.impl;
+package io.wcm.handler.link.testcontext;
+
+import static io.wcm.handler.link.testcontext.AppAemContext.APPLICATION_ID;
 
 import org.apache.sling.api.resource.Resource;
-import org.osgi.framework.Constants;
-import org.osgi.service.component.annotations.Component;
 
-import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.caconfig.application.spi.ApplicationProvider;
 
 /**
- * Default implementation of configuration options of {@link LinkHandlerConfig} interface.
+ * TODO: get rid of dependency to ApplicationProvider
+ * @deprecated Get rid of application support
  */
-@Component(service = LinkHandlerConfig.class, immediate = true, property = {
-    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
-})
-public final class DefaultLinkHandlerConfig extends LinkHandlerConfig {
+@Deprecated
+public class DummyApplicationProvider implements ApplicationProvider {
+
+  @Override
+  public String getApplicationId() {
+    return APPLICATION_ID;
+  }
+
+  @Override
+  public String getLabel() {
+    return APPLICATION_ID;
+  }
 
   @Override
   public boolean matches(Resource resource) {
-    return true;
+    return (resource != null);
   }
 
 }

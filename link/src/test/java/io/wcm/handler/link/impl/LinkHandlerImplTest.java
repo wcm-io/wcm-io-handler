@@ -35,8 +35,6 @@ import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
-import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkHandler;
@@ -46,7 +44,6 @@ import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.spi.LinkType;
-import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.AbstractLinkType;
 import io.wcm.handler.url.UrlModes;
@@ -64,11 +61,10 @@ public class LinkHandlerImplTest {
 
   @Rule
   public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
-
     @Override
     public void execute(AemContext callbackContext) {
-      callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
-          ImmutableValueMap.of(Constants.SERVICE_RANKING, -10));
+      callbackContext.registerService(LinkHandlerConfig.class, new TestLinkHandlerConfig(),
+          Constants.SERVICE_RANKING, 1000);
     }
   });
 
@@ -110,29 +106,7 @@ public class LinkHandlerImplTest {
   }
 
 
-  public static class TestApplicationProvider implements ApplicationProvider {
-
-    @Override
-    public String getApplicationId() {
-      return APP_ID;
-    }
-
-    @Override
-    public String getLabel() {
-      return null;
-    }
-
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
-    }
-  }
-
-  @Model(adaptables = {
-      SlingHttpServletRequest.class, Resource.class
-  }, adapters = LinkHandlerConfig.class)
-  @Application(APP_ID)
-  public static class TestLinkHandlerConfig extends AbstractLinkHandlerConfig {
+  public static class TestLinkHandlerConfig extends LinkHandlerConfig {
 
     @Override
     public List<Class<? extends LinkType>> getLinkTypes() {
@@ -147,6 +121,11 @@ public class LinkHandlerImplTest {
     @Override
     public List<Class<? extends LinkProcessor>> getPostProcessors() {
       return ImmutableList.<Class<? extends LinkProcessor>>of(TestLinkPostProcessor.class);
+    }
+
+    @Override
+    public boolean matches(Resource resource) {
+      return true;
     }
 
   };

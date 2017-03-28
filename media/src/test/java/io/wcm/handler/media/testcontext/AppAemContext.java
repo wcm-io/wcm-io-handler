@@ -49,6 +49,7 @@ public final class AppAemContext {
 
   /**
    * Appliation ID
+   * TODO: remove APPLICATION_ID
    */
   public static final String APPLICATION_ID = "/apps/test";
 
