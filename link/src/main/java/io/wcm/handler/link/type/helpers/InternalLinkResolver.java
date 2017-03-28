@@ -78,6 +78,7 @@ public final class InternalLinkResolver {
   /**
    * Check if a given page is valid and acceptable to link upon.
    * @param page Page
+   * @param options Options
    * @return true if link is acceptable
    */
   public boolean acceptPage(Page page, InternalLinkResolverOptions options) {

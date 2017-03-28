@@ -37,7 +37,6 @@ import com.google.common.collect.ImmutableList;
 
 import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.caconfig.application.spi.annotations.Application;
-import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkHandler;
@@ -49,14 +48,12 @@ import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
 import io.wcm.handler.link.testcontext.AppAemContext;
-import io.wcm.handler.link.testcontext.DummyUrlHandlerConfig;
 import io.wcm.handler.link.type.AbstractLinkType;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.wcmio.caconfig.compat.MockCAConfig;
 
 /**
  * Test {@link LinkHandlerImpl} methods.
@@ -71,10 +68,7 @@ public class LinkHandlerImplTest {
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
-          ImmutableValueMap.of(Constants.SERVICE_RANKING, 1));
-      context.registerService(ConfigurationFinderStrategy.class,
-          MockCAConfig.configurationFinderStrategyAbsoluteParent(APP_ID,
-              DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
+          ImmutableValueMap.of(Constants.SERVICE_RANKING, -10));
     }
   });
 

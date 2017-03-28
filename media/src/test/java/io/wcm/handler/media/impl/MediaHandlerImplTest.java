@@ -43,7 +43,6 @@ import com.google.common.collect.ImmutableList;
 
 import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.caconfig.application.spi.annotations.Application;
-import io.wcm.config.spi.ConfigurationFinderStrategy;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
@@ -62,13 +61,10 @@ import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
 import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.media.testcontext.DummyUrlHandlerConfig;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.wcmio.caconfig.compat.MockCAConfig;
 
 /**
  * Test {@link MediaHandlerImpl} methods.
@@ -82,11 +78,8 @@ public class MediaHandlerImplTest {
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
-          ImmutableValueMap.of(Constants.SERVICE_RANKING, 1));
+          Constants.SERVICE_RANKING, -10);
       callbackContext.registerService(MediaFormatProvider.class, new TestMediaFormatProvider());
-      callbackContext.registerService(ConfigurationFinderStrategy.class,
-          MockCAConfig.configurationFinderStrategyAbsoluteParent(APP_ID,
-              DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
     }
   });
 

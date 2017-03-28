@@ -20,7 +20,6 @@
 package io.wcm.handler.media.testcontext;
 
 import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
-import static io.wcm.testing.mock.wcmio.caconfig.compat.ContextPlugins.WCMIO_CACONFIG_COMPAT;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
@@ -29,18 +28,13 @@ import java.io.IOException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
-import io.wcm.config.spi.ConfigurationFinderStrategy;
-import io.wcm.config.spi.ParameterProvider;
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.spi.MediaFormatProvider;
-import io.wcm.handler.url.UrlParams;
-import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.handler.url.SiteConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.wcmio.caconfig.compat.MockCAConfig;
+import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -69,7 +63,7 @@ public final class MediaSourceDamAppAemContext {
   public static AemContext newAemContext() {
     return new AemContextBuilder()
         .plugin(CACONFIG)
-        .plugin(WCMIO_SLING, WCMIO_CACONFIG, WCMIO_CACONFIG_COMPAT)
+        .plugin(WCMIO_SLING, WCMIO_CACONFIG)
         .afterSetUp(SETUP_CALLBACK)
         .build();
   }
@@ -77,7 +71,7 @@ public final class MediaSourceDamAppAemContext {
   public static AemContext newAemContext(ResourceResolverType resourceResolverType) {
     return new AemContextBuilder()
         .plugin(CACONFIG)
-        .plugin(WCMIO_SLING, WCMIO_CACONFIG, WCMIO_CACONFIG_COMPAT)
+        .plugin(WCMIO_SLING, WCMIO_CACONFIG)
         .afterSetUp(SETUP_CALLBACK)
         .resourceResolverType(resourceResolverType)
         .build();
@@ -90,17 +84,11 @@ public final class MediaSourceDamAppAemContext {
     @Override
     public void execute(AemContext context) throws PersistenceException, IOException {
 
-      // URL handler-specific parameter definitions
-      context.registerService(ParameterProvider.class, new UrlHandlerParameterProviderImpl());
-
       // application provider
-      context.registerService(ApplicationProvider.class,
-          MockCAConfig.applicationProvider(AppAemContext.APPLICATION_ID, "/content"));
+      MockCAConfig.applicationProvider(context, AppAemContext.APPLICATION_ID, "^/content(/.*)?$");
 
-      // configuration finder strategy
-      context.registerService(ConfigurationFinderStrategy.class,
-          MockCAConfig.configurationFinderStrategyAbsoluteParent(AppAemContext.APPLICATION_ID,
-              DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
+      // context path strategy
+      MockCAConfig.contextPathStrategyAbsoluteParent(context, DummyUrlHandlerConfig.SITE_ROOT_LEVEL);
 
       // media formats
       context.registerService(MediaFormatProvider.class, new DummyMediaFormatProvider());
@@ -116,12 +104,10 @@ public final class MediaSourceDamAppAemContext {
           DummyAppTemplate.CONTENT.getTemplatePath()));
 
       // default site config
-      MockCAConfig.writeConfiguration(context, ROOTPATH_CONTENT,
-          ImmutableValueMap.builder()
-          .put(UrlParams.SITE_URL.getName(), "http://www.dummysite.org")
-          .put(UrlParams.SITE_URL_SECURE.getName(), "https://www.dummysite.org")
-          .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
-          .build());
+      MockCAConfig.writeConfiguration(context, ROOTPATH_CONTENT, SiteConfig.class.getName(),
+          "siteUrl", "http://www.dummysite.org",
+          "siteUrlSecure", "https://www.dummysite.org",
+          "siteUrlAuthor", "https://author.dummysite.org");
     }
   };
 

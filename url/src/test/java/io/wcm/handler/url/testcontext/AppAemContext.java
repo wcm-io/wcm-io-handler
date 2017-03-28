@@ -67,7 +67,7 @@ public final class AppAemContext {
       // application provider
       MockCAConfig.applicationProvider(context, ApplicationProviderImpl.APPLICATION_ID, "^/content(/.*)?$");
 
-      // configuration finder strategy
+      // context path strategy
       MockCAConfig.contextPathStrategyAbsoluteParent(context, DummyUrlHandlerConfig.SITE_ROOT_LEVEL);
 
       // sling models registration
