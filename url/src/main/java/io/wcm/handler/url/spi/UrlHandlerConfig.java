@@ -24,8 +24,11 @@ import java.util.Collection;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
 
+import io.wcm.handler.commons.spisupport.SpiMatcher;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorMode;
 
 /**
@@ -36,37 +39,51 @@ import io.wcm.handler.url.integrator.IntegratorMode;
  * </p>
  */
 @ConsumerType
-public interface UrlHandlerConfig {
+public abstract class UrlHandlerConfig implements SpiMatcher {
 
   /**
    * Returns the absolute path level where the root page of the site is located.
    * @param contextPath Context path that is assumed to be inside the site context.
    * @return Root level or 0 if it could not be detected
    */
-  int getSiteRootLevel(String contextPath);
+  public int getSiteRootLevel(String contextPath) {
+    // not supported by default
+    return 0;
+  }
 
   /**
    * Detects if a page has to be accessed in secure mode
    * @param page Page Page
    * @return true if secure mode is required
    */
-  boolean isSecure(Page page);
+  public boolean isSecure(Page page) {
+    // not supported by default
+    return false;
+  }
 
   /**
    * Detects if page is a integrator page and contains application redirect link information
    * @param page Page
    * @return true if Page is a integrator page
    */
-  boolean isIntegrator(Page page);
+  public boolean isIntegrator(Page page) {
+    // not supported by default
+    return false;
+  }
 
   /**
    * @return Default URL mode that is used if no URL mode is specified
    */
-  UrlMode getDefaultUrlMode();
+  public UrlMode getDefaultUrlMode() {
+    return UrlModes.DEFAULT;
+  }
 
   /**
    * @return Supported integrator modes
    */
-  Collection<IntegratorMode> getIntegratorModes();
+  public Collection<IntegratorMode> getIntegratorModes() {
+    // not supported by default
+    return ImmutableList.of();
+  }
 
 }

@@ -19,21 +19,23 @@
  */
 package io.wcm.handler.url.impl;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
+import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.handler.url.spi.helpers.AbstractUrlHandlerConfig;
 
 /**
  * Default implementation of configuration options of {@link UrlHandlerConfig} interface.
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = UrlHandlerConfig.class)
-public final class DefaultUrlHandlerConfig extends AbstractUrlHandlerConfig {
+@Component(service = UrlHandlerConfig.class, immediate = true, property = {
+    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
+})
+public class DefaultUrlHandlerConfig extends UrlHandlerConfig {
 
-  // inherit from superclass
+  @Override
+  public boolean matches(Resource resource) {
+    return true;
+  }
 
 }

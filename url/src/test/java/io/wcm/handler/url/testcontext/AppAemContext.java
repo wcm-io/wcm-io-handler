@@ -29,8 +29,11 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
+import io.wcm.handler.commons.spisupport.impl.SpiResolverImpl;
 import io.wcm.handler.url.SiteConfig;
-import io.wcm.handler.url.impl.ApplicationProviderImpl;
+import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
+import io.wcm.handler.url.impl.UrlHandlerConfigAdapterFactory;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
@@ -64,11 +67,14 @@ public final class AppAemContext {
       // register configuration classes
       MockContextAwareConfig.registerAnnotationClasses(context, SiteConfig.class);
 
-      // application provider
-      MockCAConfig.applicationProvider(context, ApplicationProviderImpl.APPLICATION_ID, "^/content(/.*)?$");
-
       // context path strategy
       MockCAConfig.contextPathStrategyAbsoluteParent(context, DummyUrlHandlerConfig.SITE_ROOT_LEVEL);
+
+      // handler configuration
+      context.registerInjectActivateService(new SpiResolverImpl());
+      context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new DefaultUrlHandlerConfig());
+      context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.url");

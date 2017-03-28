@@ -22,18 +22,14 @@ package io.wcm.handler.url.testcontext;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.caconfig.application.spi.annotations.Application;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
-import io.wcm.handler.url.impl.ApplicationProviderImpl;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
@@ -41,11 +37,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 /**
  * Dummy link configuration
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = UrlHandlerConfig.class)
-@Application(ApplicationProviderImpl.APPLICATION_ID)
-public class DummyUrlHandlerConfig implements UrlHandlerConfig {
+public class DummyUrlHandlerConfig extends UrlHandlerConfig {
 
   public static final int SITE_ROOT_LEVEL = 4;
 
@@ -79,6 +71,11 @@ public class DummyUrlHandlerConfig implements UrlHandlerConfig {
   @Override
   public int getSiteRootLevel(String contextPath) {
     return SITE_ROOT_LEVEL;
+  }
+
+  @Override
+  public boolean matches(Resource resource) {
+    return (resource != null);
   }
 
 }

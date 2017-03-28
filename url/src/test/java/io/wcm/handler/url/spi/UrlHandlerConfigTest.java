@@ -17,22 +17,24 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.url.spi.helpers;
+package io.wcm.handler.url.spi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.sling.api.resource.Resource;
 import org.junit.Test;
 
 import io.wcm.handler.url.UrlModes;
-import io.wcm.handler.url.spi.UrlHandlerConfig;
 
+public class UrlHandlerConfigTest {
 
-public class AbstractUrlHandlerConfigTest {
-
-  private UrlHandlerConfig underTest = new AbstractUrlHandlerConfig() {
-    // no overrides
+  private UrlHandlerConfig underTest = new UrlHandlerConfig() {
+    @Override
+    public boolean matches(Resource resource) {
+      return true;
+    }
   };
 
   @Test
