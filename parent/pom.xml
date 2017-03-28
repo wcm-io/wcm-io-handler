@@ -53,6 +53,17 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi.cmpn</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.models.api</artifactId>
       <scope>compile</scope>
@@ -154,28 +165,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi.core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi.cmpn</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.adobe.aem</groupId>
       <artifactId>aem-api</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <!-- TODO: get rid of this application detection support? -->
-    <dependency>
-      <groupId>io.wcm</groupId>
-      <artifactId>io.wcm.caconfig.application</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <scope>compile</scope>
     </dependency>
 
   </dependencies>

@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2017 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,26 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Convenience classes for implementing the SPI.
- */
-@org.osgi.annotation.versioning.Version("1.0.0")
-package io.wcm.handler.url.spi.helpers;
+package io.wcm.handler.commons.spisupport.impl;
+
+import java.util.regex.Pattern;
+
+import org.apache.sling.api.resource.Resource;
+
+class DummySpiImpl implements DummySpi {
+
+  private Pattern pathPattern;
+
+  DummySpiImpl(String pathPattern) {
+    this.pathPattern = Pattern.compile(pathPattern);
+  }
+
+  @Override
+  public boolean matches(Resource resource) {
+    if (resource == null) {
+      return false;
+    }
+    return pathPattern.matcher(resource.getPath()).matches();
+  }
+
+}
