@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.commons.spisupport;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -46,7 +43,6 @@ public interface SpiResolver {
    * @param <T> SPI interface class
    * @return SPI implementation or null if no matching found.
    */
-  @CheckForNull
-  <T extends SpiMatcher> T resolve(@Nonnull Class<T> spiInterface, @CheckForNull Adaptable adaptable);
+  <T extends SpiMatcher> T resolve(Class<T> spiInterface, Adaptable adaptable);
 
 }

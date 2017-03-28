@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.commons.spisupport;
 
-import javax.annotation.CheckForNull;
-
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ConsumerType;
 
@@ -38,6 +36,6 @@ public interface SpiMatcher {
    * @param resource Resource - may be null
    * @return true if the resource matches
    */
-  boolean matches(@CheckForNull Resource resource);
+  boolean matches(Resource resource);
 
 }
