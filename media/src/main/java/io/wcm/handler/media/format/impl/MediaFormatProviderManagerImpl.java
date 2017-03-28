@@ -41,17 +41,17 @@ import io.wcm.sling.commons.osgi.RankedServices;
 /**
  * Default implementation of {@link MediaFormatProviderManager}.
  */
-@Component(service = MediaFormatProviderManager.class, immediate = true)
+@Component(service = MediaFormatProviderManager.class, immediate = true,
+    reference = {
+        @Reference(name = "mediaFormatProvider", service = MediaFormatProvider.class,
+            cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+            bind = "bindMediaFormatProvider", unbind = "unbindMediaFormatProvider")
+
+    })
 public final class MediaFormatProviderManagerImpl implements MediaFormatProviderManager {
 
   private volatile Map<String, SortedSet<MediaFormat>> mediaFormats = ImmutableMap.of();
 
-  /**
-   * Parameter providers implemented by installed applications.
-   */
-  @Reference(name = "mediaFormatProvider", service = MediaFormatProvider.class,
-      cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-      bind = "bindMediaFormatProvider", unbind = "unbindMediaFormatProvider")
   private final RankedServices<MediaFormatProvider> mediaFormatProviders = new RankedServices<>(new MediaFormatProviderChangeListener());
 
   @Override
