@@ -23,15 +23,14 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-import com.day.cq.commons.Filter;
-
-class EventElementsMockFilter implements Filter<String> {
+class EventElementsMockFilter implements Predicate<String> {
 
   private List<String> mTestedElements = new ArrayList<String>();
 
   @Override
-  public boolean includes(String element) {
+  public boolean test(String element) {
     mTestedElements.add(element);
 
     assertNotNull(element);

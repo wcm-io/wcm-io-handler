@@ -26,9 +26,9 @@ package io.wcm.handler.url.suffix.impl;
 public class ExcludeResourcePartsFilter extends IncludeResourcePartsFilter {
 
   @Override
-  public boolean includes(String suffixPart) {
+  public boolean test(String suffixPart) {
     // exact reversion of IncludeResourcePartsFilter
-    return !super.includes(suffixPart);
+    return !super.test(suffixPart);
   }
 
 }

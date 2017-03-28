@@ -19,16 +19,17 @@
  */
 package io.wcm.handler.url.suffix;
 
+import java.util.function.Predicate;
+
 import org.apache.commons.lang3.StringUtils;
 
-import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 
 /**
  * Filters pages by template path.
  */
-class PageTemplateFilter implements Filter<Page> {
+class PageTemplateFilter implements Predicate<Page> {
 
   private final String templatePath;
 
@@ -40,7 +41,7 @@ class PageTemplateFilter implements Filter<Page> {
   }
 
   @Override
-  public boolean includes(Page page) {
+  public boolean test(Page page) {
     return StringUtils.equals(page.getProperties().get(NameConstants.PN_TEMPLATE, String.class), templatePath);
   }
 

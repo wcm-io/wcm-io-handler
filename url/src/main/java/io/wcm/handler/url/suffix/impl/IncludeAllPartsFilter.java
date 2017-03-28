@@ -19,15 +19,15 @@
  */
 package io.wcm.handler.url.suffix.impl;
 
-import com.day.cq.commons.Filter;
+import java.util.function.Predicate;
 
 /**
  * Trivial filter that includes all strings
  */
-public class IncludeAllPartsFilter implements Filter<String> {
+public class IncludeAllPartsFilter implements Predicate<String> {
 
   @Override
-  public boolean includes(String suffixPart) {
+  public boolean test(String suffixPart) {
     return true;
   }
 

@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.resource.Resource;
@@ -36,7 +37,6 @@ import org.apache.sling.jcr.resource.JcrResourceConstants;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
 
 import io.wcm.handler.url.testcontext.AppAemContext;
@@ -309,7 +309,7 @@ public class SuffixParserTest {
   public void testGetLongIntBooleanStringResourceFilterOfResource() {
     // create a page and a resource within the page
     String resourceType = "theResourceType";
-    Filter<Resource> filter = new ResourceTypeFilter(resourceType);
+    Predicate<Resource> filter = new ResourceTypeFilter(resourceType);
     Page currentPage = context.create().page("/content/a", "template", "title");
     Resource targetResource = createResource("/content/a/jcr:content/b/c", resourceType);
 
@@ -345,9 +345,9 @@ public class SuffixParserTest {
     Resource targetResource = createResource("/content/a/jcr:content/b/c", resourceType);
 
     // filter that only includes resources named "c";
-    Filter<Resource> cFilter = new Filter<Resource>() {
+    Predicate<Resource> cFilter = new Predicate<Resource>() {
       @Override
-      public boolean includes(Resource pResource) {
+      public boolean test(Resource pResource) {
         return pResource.getPath().endsWith("/c");
       }
     };
@@ -386,13 +386,11 @@ public class SuffixParserTest {
     Resource resourceCD = createResource(basePath + "/c/d", resourceType);
 
     // filter that only includes resources named "c";
-    Filter<Resource> cFilter = new Filter<Resource>() {
-
+    Predicate<Resource> cFilter = new Predicate<Resource>() {
       @Override
-      public boolean includes(Resource pResource) {
+      public boolean test(Resource pResource) {
         return pResource.getPath().endsWith("/c");
       }
-
     };
 
     // get these resources from suffix

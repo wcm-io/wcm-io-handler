@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.url.suffix;
 
-import org.apache.sling.api.resource.Resource;
+import java.util.function.Predicate;
 
-import com.day.cq.commons.Filter;
+import org.apache.sling.api.resource.Resource;
 
 /**
  * Filters resources by resource type (appends /apps/ prefix if needed).
  */
-class ResourceTypeFilter implements Filter<Resource> {
+class ResourceTypeFilter implements Predicate<Resource> {
 
   private final String resourceType;
 
@@ -38,7 +38,7 @@ class ResourceTypeFilter implements Filter<Resource> {
   }
 
   @Override
-  public boolean includes(Resource resource) {
+  public boolean test(Resource resource) {
     return resource.isResourceType(resourceType);
   }
 

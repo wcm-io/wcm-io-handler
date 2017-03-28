@@ -32,9 +32,9 @@ public class ExcludeNamedPartsFilter extends IncludeNamedPartsFilter {
   }
 
   @Override
-  public boolean includes(String suffixPart) {
+  public boolean test(String suffixPart) {
     // exact reversion of IncludeNamedPartsFilter
-    return !super.includes(suffixPart);
+    return !super.test(suffixPart);
   }
 
 }
