@@ -29,6 +29,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
@@ -52,7 +53,7 @@ public class Redirect {
   private SlingHttpServletResponse response;
   @AemObject
   private WCMMode wcmMode;
-  @ValueMapValue(optional = true)
+  @ValueMapValue(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String redirectStatus;
 
   private boolean renderPage = true;

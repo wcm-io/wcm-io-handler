@@ -26,6 +26,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ProviderType;
@@ -54,7 +55,7 @@ public final class InlineMediaSource extends MediaSource {
 
   @Self
   private Adaptable adaptable;
-  @OSGiService(optional = true)
+  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private MimeTypeService mimeTypeService;
 
   /**

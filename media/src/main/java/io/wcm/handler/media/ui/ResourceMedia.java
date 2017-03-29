@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.RequestAttribute;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -46,10 +47,10 @@ import io.wcm.handler.media.MediaHandler;
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceMedia {
 
-  @RequestAttribute(optional = true)
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String mediaFormat;
 
-  @RequestAttribute(optional = true)
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String cssClass;
 
   @Self

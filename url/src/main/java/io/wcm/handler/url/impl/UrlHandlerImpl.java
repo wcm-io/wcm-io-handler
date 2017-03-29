@@ -28,6 +28,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -60,9 +61,9 @@ public final class UrlHandlerImpl implements UrlHandler {
   private SlingSettingsService slingSettings;
 
   // optional injections (only available if called inside a request)
-  @SlingObject(optional = true)
+  @SlingObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private SlingHttpServletRequest request;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
 
   @Override

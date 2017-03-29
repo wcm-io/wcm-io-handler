@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ConsumerType;
 
@@ -42,10 +43,10 @@ import io.wcm.sling.models.annotations.AemObject;
 @ConsumerType
 public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuilder {
 
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private WCMMode wcmMode;
 
-  @SlingObject(optional = true)
+  @SlingObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private SlingHttpServletRequest request;
 
   /**

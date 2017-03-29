@@ -131,7 +131,7 @@
               <relocations>
                 <relocation>
                   <pattern>org.apache.sling.commons.osgi</pattern>
-                  <shadedPattern>caconfigimpl.org.apache.sling.commons.osgi</shadedPattern>
+                  <shadedPattern>wcmiohandlercommons.org.apache.sling.commons.osgi</shadedPattern>
                 </relocation>
               </relocations>
               <filters>

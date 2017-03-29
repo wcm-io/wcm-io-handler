@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -61,7 +62,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
 
   @Self
   private RewriteContentHandler rewriteContentHandler;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
 
   @Override
