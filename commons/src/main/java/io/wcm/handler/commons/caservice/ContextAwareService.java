@@ -17,21 +17,21 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.spisupport;
+package io.wcm.handler.commons.caservice;
 
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * This interface can be extended by SPI interfaces that allow matching multiple implementation.
- * It should never be implemented directly.
- * TODO: more generic name and place for this?
+ * OSGi service interfaces or classes may additionally extend or implement this interface
+ * if they can be looked up "context-aware", that means multiple implementations with a certain
+ * service ranking exist and each of them is asked at lookup if the given resource matches.
  */
 @ConsumerType
-public interface SpiMatcher {
+public interface ContextAwareService {
 
   /**
-   * Evaluates if the given resources should be handled to this SPI implementation or not.
+   * Evaluates if the given resource can be handled by this implementation or not.
    * It is important that this check is implemented as efficient as possible (e.g. by only checking the resource
    * path against a precompiled regular expression), because this method is called quite often.
    * @param resource Resource - never null unless {@link #supportsNullResource()} returns true.

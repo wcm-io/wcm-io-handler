@@ -17,26 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.spisupport.impl;
-
-import java.util.regex.Pattern;
+package io.wcm.handler.commons.caservice.impl;
 
 import org.apache.sling.api.resource.Resource;
 
-class DummySpiImpl implements DummySpi {
-
-  private Pattern pathPattern;
-
-  DummySpiImpl(String pathPattern) {
-    this.pathPattern = Pattern.compile(pathPattern);
-  }
+class DummyDefaultSpiImpl implements DummySpi {
 
   @Override
   public boolean matches(Resource resource) {
-    if (resource == null) {
-      return false;
-    }
-    return pathPattern.matcher(resource.getPath()).matches();
+    return true;
+  }
+
+  @Override
+  public boolean supportsNullResource() {
+    return true;
   }
 
 }

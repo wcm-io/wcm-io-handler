@@ -27,18 +27,18 @@ import org.osgi.annotation.versioning.ConsumerType;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.commons.spisupport.SpiMatcher;
+import io.wcm.handler.commons.caservice.ContextAwareService;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorMode;
 
 /**
  * {@link UrlHandlerConfig} OSGi services provide application-specific configuration for URL handling.
- * Via the {@link SpiMatcher} methods it can be controlled if this configuration applies to all or only certain
+ * Via the {@link ContextAwareService} methods it can be controlled if this configuration applies to all or only certain
  * resources.
  */
 @ConsumerType
-public abstract class UrlHandlerConfig implements SpiMatcher {
+public abstract class UrlHandlerConfig implements ContextAwareService {
 
   /**
    * Returns the absolute path level where the root page of the site is located.

@@ -24,11 +24,11 @@ import org.apache.sling.api.adapter.AdapterFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.handler.commons.spisupport.SpiResolver;
+import io.wcm.handler.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 
 /**
- * Adapts resources or requests to {@link LinkHandlerConfig} via {@link SpiResolver}.
+ * Adapts resources or requests to {@link LinkHandlerConfig} via {@link ContextAwareServiceResolver}.
  */
 @Component(service = AdapterFactory.class,
     property = {
@@ -39,13 +39,13 @@ import io.wcm.handler.link.spi.LinkHandlerConfig;
 public class LinkHandlerConfigAdapterFactory implements AdapterFactory {
 
   @Reference
-  private SpiResolver spiResolver;
+  private ContextAwareServiceResolver serviceResolver;
 
   @SuppressWarnings("unchecked")
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == LinkHandlerConfig.class) {
-      return (AdapterType)spiResolver.resolve(LinkHandlerConfig.class, (Adaptable)adaptable);
+      return (AdapterType)serviceResolver.resolve(LinkHandlerConfig.class, (Adaptable)adaptable);
     }
     return null;
   }

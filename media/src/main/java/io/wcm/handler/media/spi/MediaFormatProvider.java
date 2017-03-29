@@ -27,16 +27,16 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableSet;
 
-import io.wcm.handler.commons.spisupport.SpiMatcher;
+import io.wcm.handler.commons.caservice.ContextAwareService;
 import io.wcm.handler.media.format.MediaFormat;
 
 /**
  * {@link MediaFormatProvider} OSGi services provide media formats for the media handler.
- * Via the {@link SpiMatcher} methods it can be controlled if this configuration applies to all or only certain
+ * Via the {@link ContextAwareService} methods it can be controlled if this configuration applies to all or only certain
  * resources.
  */
 @ConsumerType
-public abstract class MediaFormatProvider implements SpiMatcher {
+public abstract class MediaFormatProvider implements ContextAwareService {
 
   private final Set<MediaFormat> mediaFormats;
 

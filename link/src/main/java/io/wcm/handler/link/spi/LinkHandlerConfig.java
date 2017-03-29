@@ -28,7 +28,7 @@ import org.osgi.annotation.versioning.ConsumerType;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.commons.spisupport.SpiMatcher;
+import io.wcm.handler.commons.caservice.ContextAwareService;
 import io.wcm.handler.link.markup.DummyLinkMarkupBuilder;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.processor.DefaultInternalLinkInheritUrlParamLinkPostProcessor;
@@ -38,11 +38,11 @@ import io.wcm.handler.link.type.MediaLinkType;
 
 /**
  * {@link LinkHandlerConfig} OSGi services provide application-specific configuration for link handling.
- * Via the {@link SpiMatcher} methods it can be controlled if this configuration applies to all or only certain
+ * Via the {@link ContextAwareService} methods it can be controlled if this configuration applies to all or only certain
  * resources.
  */
 @ConsumerType
-public abstract class LinkHandlerConfig implements SpiMatcher {
+public abstract class LinkHandlerConfig implements ContextAwareService {
 
   private static final List<Class<? extends LinkType>> DEFAULT_LINK_TYPES = ImmutableList.<Class<? extends LinkType>>of(
       InternalLinkType.class,

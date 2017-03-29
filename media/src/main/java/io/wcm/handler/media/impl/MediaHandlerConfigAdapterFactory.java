@@ -24,11 +24,11 @@ import org.apache.sling.api.adapter.AdapterFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.handler.commons.spisupport.SpiResolver;
+import io.wcm.handler.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 
 /**
- * Adapts resources or requests to {@link MediaHandlerConfig} via {@link SpiResolver}.
+ * Adapts resources or requests to {@link MediaHandlerConfig} via {@link ContextAwareServiceResolver}.
  */
 @Component(service = AdapterFactory.class,
     property = {
@@ -39,13 +39,13 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 public class MediaHandlerConfigAdapterFactory implements AdapterFactory {
 
   @Reference
-  private SpiResolver spiResolver;
+  private ContextAwareServiceResolver serviceResolver;
 
   @SuppressWarnings("unchecked")
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == MediaHandlerConfig.class) {
-      return (AdapterType)spiResolver.resolve(MediaHandlerConfig.class, (Adaptable)adaptable);
+      return (AdapterType)serviceResolver.resolve(MediaHandlerConfig.class, (Adaptable)adaptable);
     }
     return null;
   }

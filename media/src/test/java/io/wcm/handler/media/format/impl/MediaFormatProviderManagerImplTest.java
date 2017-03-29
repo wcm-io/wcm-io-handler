@@ -35,7 +35,7 @@ import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableSortedSet;
 
-import io.wcm.handler.commons.spisupport.impl.SpiResolverImpl;
+import io.wcm.handler.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.spi.MediaFormatProvider;
@@ -67,7 +67,7 @@ public class MediaFormatProviderManagerImplTest {
   public void setUp() {
     resource = context.create().resource("/content/test");
 
-    context.registerInjectActivateService(new SpiResolverImpl());
+    context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
 
     when(provider1.getMediaFormats()).thenReturn(MEDIAFORMATS_1);
     when(provider1.matches(resource)).thenReturn(true);

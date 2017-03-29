@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.spisupport.impl;
+package io.wcm.handler.commons.caservice.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -32,10 +32,10 @@ import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.commons.spisupport.SpiResolver;
+import io.wcm.handler.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
-public class SpiResolverImplTest {
+public class ContextAwareServiceResolverImplTest {
 
   @Rule
   public AemContext context = new AemContext();
@@ -44,7 +44,7 @@ public class SpiResolverImplTest {
   private DummySpi contentDamImpl;
   private DummySpi contentSampleImpl;
 
-  private SpiResolver underTest;
+  private ContextAwareServiceResolver underTest;
 
   @Before
   public void setUp() {
@@ -55,7 +55,7 @@ public class SpiResolverImplTest {
     contentSampleImpl = context.registerService(DummySpi.class, new DummySpiImpl("^/content/sample(/.*)?$"),
         Constants.SERVICE_RANKING, 300);
 
-    underTest = context.registerInjectActivateService(new SpiResolverImpl());
+    underTest = context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
   }
 
   @Test

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.spisupport.impl;
+package io.wcm.handler.commons.caservice.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,19 +30,23 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import io.wcm.handler.commons.spisupport.SpiMatcher;
+import io.wcm.handler.commons.caservice.ContextAwareService;
 
-class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatcher> {
+class ContextAwareServiceTracker implements ServiceTrackerCustomizer<ContextAwareService, ContextAwareService> {
 
   private final BundleContext bundleContext;
-  private final ServiceTracker<SpiMatcher, SpiMatcher> serviceTracker;
-  private volatile RankedServices<SpiMatcher> rankedServices;
+  private final ServiceTracker<ContextAwareService, ContextAwareService> serviceTracker;
+  private volatile RankedServices<ContextAwareService> rankedServices;
 
-  SpiServiceTracker(String className, BundleContext bundleContext) {
+  private static final Logger log = LoggerFactory.getLogger(ContextAwareServiceTracker.class);
+
+  ContextAwareServiceTracker(String serviceClassName, BundleContext bundleContext) {
     this.bundleContext = bundleContext;
-    this.rankedServices = new RankedServices<SpiMatcher>(Order.DESCENDING);
-    this.serviceTracker = new ServiceTracker<SpiMatcher, SpiMatcher>(bundleContext, className, this);
+    this.rankedServices = new RankedServices<ContextAwareService>(Order.DESCENDING);
+    this.serviceTracker = new ServiceTracker<ContextAwareService, ContextAwareService>(bundleContext, serviceClassName, this);
     this.serviceTracker.open();
   }
 
@@ -52,8 +56,11 @@ class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatch
   }
 
   @Override
-  public SpiMatcher addingService(ServiceReference<SpiMatcher> reference) {
-    SpiMatcher service = bundleContext.getService(reference);
+  public ContextAwareService addingService(ServiceReference<ContextAwareService> reference) {
+    ContextAwareService service = bundleContext.getService(reference);
+    if (log.isDebugEnabled()) {
+      log.debug("Add service {}", service.getClass().getName());
+    }
     Map<String, Object> props = getProperties(reference);
     if (rankedServices != null) {
       rankedServices.bind(service, props);
@@ -62,12 +69,15 @@ class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatch
   }
 
   @Override
-  public void modifiedService(ServiceReference<SpiMatcher> reference, SpiMatcher service) {
+  public void modifiedService(ServiceReference<ContextAwareService> reference, ContextAwareService service) {
     // nothing to do
   }
 
   @Override
-  public void removedService(ServiceReference<SpiMatcher> reference, SpiMatcher service) {
+  public void removedService(ServiceReference<ContextAwareService> reference, ContextAwareService service) {
+    if (log.isDebugEnabled()) {
+      log.debug("Remove service {}", service.getClass().getName());
+    }
     Map<String, Object> props = getProperties(reference);
     if (rankedServices != null) {
       rankedServices.unbind(service, props);
@@ -75,7 +85,7 @@ class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatch
     bundleContext.ungetService(reference);
   }
 
-  private Map<String, Object> getProperties(ServiceReference<SpiMatcher> reference) {
+  private Map<String, Object> getProperties(ServiceReference<ContextAwareService> reference) {
     Map<String, Object> props = new HashMap<>();
     for (String key : reference.getPropertyKeys()) {
       props.put(key, reference.getProperty(key));
@@ -83,7 +93,7 @@ class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatch
     return props;
   }
 
-  public Stream<SpiMatcher> resolve(Resource resource) {
+  public Stream<ContextAwareService> resolve(Resource resource) {
     if (rankedServices == null) {
       return Stream.empty();
     }

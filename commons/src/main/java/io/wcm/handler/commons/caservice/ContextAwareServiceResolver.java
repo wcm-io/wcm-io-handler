@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.spisupport;
+package io.wcm.handler.commons.caservice;
 
 import java.util.stream.Stream;
 
@@ -27,37 +27,35 @@ import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Service that resolves the best-matching SPI implementation.
+ * Resolves the best-matching context-aware service implementation.
  */
 @ProviderType
-public interface SpiResolver {
+public interface ContextAwareServiceResolver {
 
   /**
-   * Resolves the best-matching SPI implementation for the given resource context.
-   * Only SPI implementation that report a match via {@link SpiMatcher} are considered as candidates -
+   * Resolves the best-matching service implementation for the given resource context.
+   * Only implementations that report a match via {@link ContextAwareService} are considered as candidates -
    * if multiple candidates exist the implementation with the highest service ranking is returned.
-   * It is recommended that for each SPI interface a default service with lowest service ranking (Integer.MIN_VALUE)
-   * is registered which accepts all resources.
-   * @param spiInterface SPI interface
+   * @param serviceClass Service interface or class
    * @param adaptable Adaptable which is either a {@link Resource} or {@link SlingHttpServletRequest}.
    *          A resource instances is used directly for matching, in case of request the associated resource is used.
    *          May be null if no context is available.
    * @param <T> SPI interface class
    * @return SPI implementation or null if no match found.
    */
-  <T extends SpiMatcher> T resolve(Class<T> spiInterface, Adaptable adaptable);
+  <T extends ContextAwareService> T resolve(Class<T> serviceClass, Adaptable adaptable);
 
   /**
    * Resolves al matching SPI implementation for the given resource context.
-   * Only SPI implementation that report a match via {@link SpiMatcher} are considered as candidates -
+   * Only SPI implementation that report a match via {@link ContextAwareService} are considered as candidates -
    * the candidates are returned ordered descending by their service ranking.
-   * @param spiInterface SPI interface
+   * @param serviceClass Service interface or class
    * @param adaptable Adaptable which is either a {@link Resource} or {@link SlingHttpServletRequest}.
    *          A resource instances is used directly for matching, in case of request the associated resource is used.
    *          May be null if no context is available.
    * @param <T> SPI interface class
    * @return Stream with all matching SPI implementations (may be empty)
    */
-  <T extends SpiMatcher> Stream<T> resolveAll(Class<T> spiInterface, Adaptable adaptable);
+  <T extends ContextAwareService> Stream<T> resolveAll(Class<T> serviceClass, Adaptable adaptable);
 
 }

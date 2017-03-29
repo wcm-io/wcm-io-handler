@@ -28,7 +28,7 @@ import java.io.IOException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
-import io.wcm.handler.commons.spisupport.impl.SpiResolverImpl;
+import io.wcm.handler.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
 import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
@@ -79,7 +79,7 @@ public final class MediaSourceInlineAppAemContext {
     public void execute(AemContext context) throws PersistenceException, IOException {
 
       // handler SPI
-      context.registerInjectActivateService(new SpiResolverImpl());
+      context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
       context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
       context.registerInjectActivateService(new DefaultUrlHandlerConfig());
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());

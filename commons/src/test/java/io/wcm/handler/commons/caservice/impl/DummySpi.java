@@ -17,8 +17,12 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Support classes for Handler SPIs.
- */
-@org.osgi.annotation.versioning.Version("1.0.0")
-package io.wcm.handler.commons.spisupport;
+package io.wcm.handler.commons.caservice.impl;
+
+import io.wcm.handler.commons.caservice.ContextAwareService;
+
+interface DummySpi extends ContextAwareService {
+
+  // example SPI implementation
+
+}

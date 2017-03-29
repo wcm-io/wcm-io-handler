@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.spisupport.impl;
+package io.wcm.handler.commons.caservice.impl;
 
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
@@ -36,30 +36,29 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
-import io.wcm.handler.commons.spisupport.SpiMatcher;
-import io.wcm.handler.commons.spisupport.SpiResolver;
+import io.wcm.handler.commons.caservice.ContextAwareService;
+import io.wcm.handler.commons.caservice.ContextAwareServiceResolver;
 
 /**
- * SPI resolver implementation.
- * TODO: implementation without service tracker?
+ * {@link ContextAwareServiceResolver} implementation.
  */
-@Component(service = SpiResolver.class, immediate = true)
-public class SpiResolverImpl implements SpiResolver {
+@Component(service = ContextAwareServiceResolver.class, immediate = true)
+public class ContextAwareServiceResolverImpl implements ContextAwareServiceResolver {
 
   private BundleContext bundleContext;
 
   // cache of service trackers for each SPI interface
-  private final LoadingCache<String, SpiServiceTracker> cache = CacheBuilder.newBuilder()
-      .removalListener(new RemovalListener<String, SpiServiceTracker>() {
+  private final LoadingCache<String, ContextAwareServiceTracker> cache = CacheBuilder.newBuilder()
+      .removalListener(new RemovalListener<String, ContextAwareServiceTracker>() {
         @Override
-        public void onRemoval(RemovalNotification<String, SpiServiceTracker> notification) {
+        public void onRemoval(RemovalNotification<String, ContextAwareServiceTracker> notification) {
           notification.getValue().dispose();
         }
       })
-      .build(new CacheLoader<String, SpiServiceTracker>() {
+      .build(new CacheLoader<String, ContextAwareServiceTracker>() {
         @Override
-        public SpiServiceTracker load(String className) throws Exception {
-          return new SpiServiceTracker(className, bundleContext);
+        public ContextAwareServiceTracker load(String className) throws Exception {
+          return new ContextAwareServiceTracker(className, bundleContext);
         }
       });
 
@@ -75,17 +74,17 @@ public class SpiResolverImpl implements SpiResolver {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends SpiMatcher> T resolve(Class<T> spiInterface, Adaptable adaptable) {
+  public <T extends ContextAwareService> T resolve(Class<T> serviceClass, Adaptable adaptable) {
     Resource resource = getResource(adaptable);
-    SpiServiceTracker serviceTracker = getServiceTracker(spiInterface);
+    ContextAwareServiceTracker serviceTracker = getServiceTracker(serviceClass);
     return (T)serviceTracker.resolve(resource).findFirst().orElse(null);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends SpiMatcher> Stream<T> resolveAll(Class<T> spiInterface, Adaptable adaptable) {
+  public <T extends ContextAwareService> Stream<T> resolveAll(Class<T> serviceClass, Adaptable adaptable) {
     Resource resource = getResource(adaptable);
-    SpiServiceTracker serviceTracker = getServiceTracker(spiInterface);
+    ContextAwareServiceTracker serviceTracker = getServiceTracker(serviceClass);
     return (Stream<T>)serviceTracker.resolve(resource);
   }
 
@@ -99,12 +98,12 @@ public class SpiResolverImpl implements SpiResolver {
     return null;
   }
 
-  private SpiServiceTracker getServiceTracker(Class<?> spiInterface) {
+  private ContextAwareServiceTracker getServiceTracker(Class<?> serviceClass) {
     try {
-      return cache.get(spiInterface.getName());
+      return cache.get(serviceClass.getName());
     }
     catch (ExecutionException ex) {
-      throw new RuntimeException("Error getting service tracker for " + spiInterface.getName() + " from cache.", ex);
+      throw new RuntimeException("Error getting service tracker for " + serviceClass.getName() + " from cache.", ex);
     }
   }
 

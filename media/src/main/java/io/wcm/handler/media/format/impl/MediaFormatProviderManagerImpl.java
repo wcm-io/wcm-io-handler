@@ -27,7 +27,7 @@ import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.handler.commons.spisupport.SpiResolver;
+import io.wcm.handler.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 
@@ -38,11 +38,11 @@ import io.wcm.handler.media.spi.MediaFormatProvider;
 public final class MediaFormatProviderManagerImpl implements MediaFormatProviderManager {
 
   @Reference
-  private SpiResolver spiResolver;
+  private ContextAwareServiceResolver serviceResolver;
 
   @Override
   public SortedSet<MediaFormat> getMediaFormats(Resource contextResource) {
-    return spiResolver.resolveAll(MediaFormatProvider.class, contextResource)
+    return serviceResolver.resolveAll(MediaFormatProvider.class, contextResource)
         .flatMap(provider -> provider.getMediaFormats().stream())
         .collect(Collectors.toCollection(() -> new TreeSet<MediaFormat>()));
   }

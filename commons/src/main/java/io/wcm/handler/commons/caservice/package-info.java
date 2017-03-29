@@ -17,12 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.commons.spisupport.impl;
-
-import io.wcm.handler.commons.spisupport.SpiMatcher;
-
-interface DummySpi extends SpiMatcher {
-
-  // example SPI implementation
-
-}
+/**
+ * Support classes for Handler SPIs.
+ */
+@org.osgi.annotation.versioning.Version("1.0.0")
+package io.wcm.handler.commons.caservice;
