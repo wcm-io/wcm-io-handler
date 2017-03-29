@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
@@ -46,7 +45,7 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
       );
 
   @Override
-  public int getSiteRootLevel(String contextPath, ResourceResolver resolver) {
+  public int getSiteRootLevel(Resource resource) {
     return SITE_ROOT_LEVEL;
   }
 

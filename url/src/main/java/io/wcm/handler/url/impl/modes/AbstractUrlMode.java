@@ -19,10 +19,8 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
 import com.day.cq.wcm.api.Page;
 
@@ -77,21 +75,6 @@ abstract class AbstractUrlMode implements UrlMode {
       config = new UrlConfig(adaptable);
     }
     return config;
-  }
-
-  /**
-   * Get resource resolver from adaptable.
-   * @param adaptable Resource or request
-   * @return Resource resolver or null
-   */
-  protected ResourceResolver getResourceResolver(Adaptable adaptable) {
-    if (adaptable instanceof Resource) {
-      return ((Resource)adaptable).getResourceResolver();
-    }
-    else if (adaptable instanceof SlingHttpServletRequest) {
-      return ((SlingHttpServletRequest)adaptable).getResourceResolver();
-    }
-    return null;
   }
 
 }

@@ -23,14 +23,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.url.UrlMode;
-import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
@@ -46,11 +43,6 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
       IntegratorModes.SIMPLE,
       IntegratorModes.EXTENDED
       );
-
-  @Override
-  public UrlMode getDefaultUrlMode() {
-    return UrlModes.DEFAULT;
-  }
 
   @Override
   public List<IntegratorMode> getIntegratorModes() {
@@ -70,7 +62,7 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
   }
 
   @Override
-  public int getSiteRootLevel(String contextPath, ResourceResolver resolver) {
+  public int getSiteRootLevel(Resource contextResource) {
     return SITE_ROOT_LEVEL;
   }
 

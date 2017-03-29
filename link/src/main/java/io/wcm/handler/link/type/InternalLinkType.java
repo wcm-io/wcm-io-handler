@@ -44,7 +44,7 @@ import io.wcm.handler.url.UrlHandler;
  * <p>
  * This link type ensures all links target only pages inside the same inner-most configuration scope, which is usually
  * the same site/language. All link paths referencing pages outside this content subtree are rewritten via
- * {@link UrlHandler#rewritePathToContext(String)} with the root path of the inner-most configuration scope/site and
+ * {@link UrlHandler#rewritePathToContext(Resource)} with the root path of the inner-most configuration scope/site and
  * then resolved.
  * </p>
  */

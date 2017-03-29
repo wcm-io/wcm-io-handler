@@ -25,7 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
 import com.day.cq.wcm.api.Page;
 
@@ -78,11 +77,9 @@ public final class DefaultUrlMode extends AbstractUrlMode {
     }
 
     UrlHandlerConfig urlHandlerConfig = AdaptTo.notNull(adaptable, UrlHandlerConfig.class);
-    String currentPath = currentPage.getPath();
-    String targetPath = targetResource.getPath();
-    ResourceResolver resolver = getResourceResolver(adaptable);
-    String currentSiteRoot = getRootPath(currentPath, urlHandlerConfig.getSiteRootLevel(currentPath, resolver));
-    String pathSiteRoot = getRootPath(targetPath, urlHandlerConfig.getSiteRootLevel(targetPath, resolver));
+    Resource currentResource = currentPage.adaptTo(Resource.class);
+    String currentSiteRoot = getRootPath(currentPage.getPath(), urlHandlerConfig.getSiteRootLevel(currentResource));
+    String pathSiteRoot = getRootPath(targetResource.getPath(), urlHandlerConfig.getSiteRootLevel(targetResource));
     boolean notInCurrentSite = !StringUtils.equals(currentSiteRoot, pathSiteRoot);
 
     if (notInCurrentSite) {

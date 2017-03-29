@@ -22,7 +22,6 @@ package io.wcm.handler.media.testcontext;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 
 import com.google.common.collect.ImmutableList;
 
@@ -43,7 +42,7 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
       );
 
   @Override
-  public int getSiteRootLevel(String contextPath, ResourceResolver resolver) {
+  public int getSiteRootLevel(Resource resource) {
     return SITE_ROOT_LEVEL;
   }
 

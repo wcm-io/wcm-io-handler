@@ -21,6 +21,7 @@ package io.wcm.handler.url.ui;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
@@ -64,18 +65,18 @@ public final class SiteRoot {
     if (page == null) {
       return null;
     }
-    return getRootPath(page.getPath());
+    return getRootPath(page.adaptTo(Resource.class));
   }
 
   /**
    * Gets site root level path of a site.
-   * @param path Path of page within the site
+   * @param resource Resource within the site
    * @return Site root path for the site. The path is not checked for validness.
    */
-  public String getRootPath(String path) {
-    int rootLevel = urlHandlerConfig.getSiteRootLevel(path, resolver);
+  public String getRootPath(Resource resource) {
+    int rootLevel = urlHandlerConfig.getSiteRootLevel(resource);
     if (rootLevel > 0) {
-      return Text.getAbsoluteParent(path, rootLevel);
+      return Text.getAbsoluteParent(resource.getPath(), rootLevel);
     }
     return null;
   }
@@ -97,15 +98,6 @@ public final class SiteRoot {
       siteRootPage = pageManager.getPage(getRootPath());
     }
     return siteRootPage;
-  }
-
-  /**
-   * Gets the site root page of the given path
-   * @param path Path
-   * @return Site root page
-   */
-  public Page getRootPage(String path) {
-    return pageManager.getPage(getRootPath(path));
   }
 
   /**

@@ -39,7 +39,7 @@ public class UrlHandlerConfigTest {
 
   @Test
   public void testDefaultValues() {
-    assertEquals(0, underTest.getSiteRootLevel(null, null));
+    assertEquals(0, underTest.getSiteRootLevel(null));
     assertFalse(underTest.isSecure(null));
     assertFalse(underTest.isIntegrator(null));
     assertEquals(UrlModes.DEFAULT, underTest.getDefaultUrlMode());

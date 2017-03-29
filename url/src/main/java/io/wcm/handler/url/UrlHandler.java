@@ -68,10 +68,10 @@ public interface UrlHandler {
    * This is useful if a link to an internal page points to a page outside the site (e.g. because the page containing
    * the link was copied from the other site or inherited). When the AEM built-in rewrite logic was not applied the link
    * would be invalid. This methods rewrites the link path to the current site to try to resolve it there.
-   * @param path Path to rewrite
-   * @return Rewritten path
+   * @param resource Resource to rewrite path from
+   * @return Rewritten path or null if resource invalid
    */
-  String rewritePathToContext(String path);
+  String rewritePathToContext(Resource resource);
 
   /**
    * Rewrites given path to given site or context.
@@ -79,10 +79,10 @@ public interface UrlHandler {
    * This is useful if a link to an internal page points to a page outside the site (e.g. because the page containing
    * the link was copied from the other site or inherited). When the AEM built-in rewrite logic was not applied the link
    * would be invalid. This methods rewrites the link path to the current site to try to resolve it there.
-   * @param path Path to rewrite
-   * @param contextPath Context path
-   * @return Rewritten path
+   * @param resource Resource to rewrite path from
+   * @param contextResource Context resource to which the path should be rewritten to
+   * @return Rewritten path or null if resource or context resource is invalid
    */
-  String rewritePathToContext(String path, String contextPath);
+  String rewritePathToContext(Resource resource, Resource contextResource);
 
 }
