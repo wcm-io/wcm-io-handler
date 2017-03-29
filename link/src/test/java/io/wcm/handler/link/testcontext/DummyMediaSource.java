@@ -28,7 +28,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
+import io.wcm.handler.media.spi.MediaSource;
 
 /**
  * Dummy media source
@@ -36,7 +36,7 @@ import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
-public class DummyMediaSource extends AbstractMediaSource {
+public class DummyMediaSource extends MediaSource {
 
   @Override
   public String getId() {

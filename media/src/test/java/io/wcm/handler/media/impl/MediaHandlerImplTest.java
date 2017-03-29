@@ -56,8 +56,6 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -248,7 +246,7 @@ public class MediaHandlerImplTest {
   @Model(adaptables = {
       SlingHttpServletRequest.class, Resource.class
   })
-  public static class TestMediaSource extends AbstractMediaSource {
+  public static class TestMediaSource extends MediaSource {
 
     @Override
     public String getId() {
@@ -341,7 +339,7 @@ public class MediaHandlerImplTest {
   }
 
   @Component(service = MediaFormatProvider.class, immediate = true)
-  public static class TestMediaFormatProvider extends AbstractMediaFormatProvider {
+  public static class TestMediaFormatProvider extends MediaFormatProvider {
 
     public TestMediaFormatProvider() {
       super(TestMediaFormats.class);

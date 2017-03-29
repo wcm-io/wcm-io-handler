@@ -40,7 +40,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.impl.JcrBinary;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.sling.commons.util.Escape;
 
 /**
@@ -50,7 +50,7 @@ import io.wcm.sling.commons.util.Escape;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class InlineMediaSource extends AbstractMediaSource {
+public final class InlineMediaSource extends MediaSource {
 
   @Self
   private Adaptable adaptable;

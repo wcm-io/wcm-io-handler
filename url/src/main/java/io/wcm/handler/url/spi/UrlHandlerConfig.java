@@ -35,9 +35,9 @@ import io.wcm.handler.url.integrator.IntegratorMode;
 /**
  * Provides application-specific configuration information required for URL handling.
  * <p>
- * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
- * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * This interface has to be implemented as OSGi service.
  * </p>
+ * TODO: think about even more sensible defaults?
  */
 @ConsumerType
 public abstract class UrlHandlerConfig implements SpiMatcher {

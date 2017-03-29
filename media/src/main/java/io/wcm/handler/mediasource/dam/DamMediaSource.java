@@ -49,7 +49,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.sling.models.annotations.AemObject;
 
@@ -60,7 +60,7 @@ import io.wcm.sling.models.annotations.AemObject;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class DamMediaSource extends AbstractMediaSource {
+public final class DamMediaSource extends MediaSource {
 
   @Self
   private Adaptable adaptable;
