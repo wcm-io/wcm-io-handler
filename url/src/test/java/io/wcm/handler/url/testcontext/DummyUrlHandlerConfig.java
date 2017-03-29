@@ -76,7 +76,7 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
 
   @Override
   public boolean matches(Resource resource) {
-    return (resource != null);
+    return true;
   }
 
 }

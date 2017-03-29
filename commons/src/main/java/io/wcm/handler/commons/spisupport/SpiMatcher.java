@@ -25,6 +25,7 @@ import org.osgi.annotation.versioning.ConsumerType;
 /**
  * This interface can be extended by SPI interfaces that allow matching multiple implementation.
  * It should never be implemented directly.
+ * TODO: more generic name and place for this?
  */
 @ConsumerType
 public interface SpiMatcher {
@@ -33,9 +34,17 @@ public interface SpiMatcher {
    * Evaluates if the given resources should be handled to this SPI implementation or not.
    * It is important that this check is implemented as efficient as possible (e.g. by only checking the resource
    * path against a precompiled regular expression), because this method is called quite often.
-   * @param resource Resource - may be null
+   * @param resource Resource - never null unless {@link #supportsNullResource()} returns true.
    * @return true if the resource matches
    */
   boolean matches(Resource resource);
+
+  /**
+   * Implementations may signal that they are also interested being called when no resource context exists.
+   * @return true if the {@link #matches(Resource)} method should also be called when no resource context exists.
+   */
+  default boolean supportsNullResource() {
+    return false;
+  }
 
 }

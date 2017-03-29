@@ -50,6 +50,9 @@ class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatch
       return null;
     }
     for (SpiMatcher service : rankedServices) {
+      if (resource == null && !service.supportsNullResource()) {
+        continue;
+      }
       if (service.matches(resource)) {
         return service;
       }

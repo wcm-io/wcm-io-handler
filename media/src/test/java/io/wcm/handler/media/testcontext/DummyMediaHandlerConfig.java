@@ -59,7 +59,7 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
 
   @Override
   public boolean matches(Resource resource) {
-    return (resource != null);
+    return true;
   }
 
 }

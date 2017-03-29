@@ -75,12 +75,18 @@ public class SpiResolverImplTest {
 
   @Test
   public void testWithSlingHttpServletRequest() {
+    defaultImpl = context.registerService(DummySpi.class, new DummyDefaultSpiImpl(),
+        Constants.SERVICE_RANKING, Integer.MIN_VALUE);
+
     context.currentResource(context.create().resource("/content/test1"));
     assertSame(contentImpl, underTest.resolve(DummySpi.class, context.request()));
   }
 
   @Test
   public void testWithNull() {
+    defaultImpl = context.registerService(DummySpi.class, new DummyDefaultSpiImpl(),
+        Constants.SERVICE_RANKING, Integer.MIN_VALUE);
+
     assertSame(defaultImpl, underTest.resolve(DummySpi.class, null));
   }
 

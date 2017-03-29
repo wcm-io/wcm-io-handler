@@ -38,4 +38,9 @@ public final class DefaultMediaHandlerConfig extends MediaHandlerConfig {
     return true;
   }
 
+  @Override
+  public boolean supportsNullResource() {
+    return true;
+  }
+
 }

@@ -44,7 +44,7 @@ public class DummyApplicationProvider implements ApplicationProvider {
 
   @Override
   public boolean matches(Resource resource) {
-    return (resource != null);
+    return true;
   }
 
 }

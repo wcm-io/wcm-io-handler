@@ -72,7 +72,7 @@ public class DummyLinkHandlerConfig extends LinkHandlerConfig {
 
   @Override
   public boolean matches(Resource resource) {
-    return (resource != null);
+    return true;
   }
 
 }

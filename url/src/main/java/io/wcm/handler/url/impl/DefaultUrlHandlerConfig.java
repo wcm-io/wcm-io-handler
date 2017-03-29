@@ -38,4 +38,9 @@ public class DefaultUrlHandlerConfig extends UrlHandlerConfig {
     return true;
   }
 
+  @Override
+  public boolean supportsNullResource() {
+    return true;
+  }
+
 }

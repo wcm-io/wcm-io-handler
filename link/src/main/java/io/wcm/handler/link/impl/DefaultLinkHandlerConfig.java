@@ -38,4 +38,9 @@ public final class DefaultLinkHandlerConfig extends LinkHandlerConfig {
     return true;
   }
 
+  @Override
+  public boolean supportsNullResource() {
+    return true;
+  }
+
 }

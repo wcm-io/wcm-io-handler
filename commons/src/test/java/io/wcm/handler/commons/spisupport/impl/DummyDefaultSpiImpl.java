@@ -28,4 +28,9 @@ class DummyDefaultSpiImpl implements DummySpi {
     return true;
   }
 
+  @Override
+  public boolean supportsNullResource() {
+    return true;
+  }
+
 }

@@ -40,6 +40,7 @@ import io.wcm.handler.commons.spisupport.SpiResolver;
 
 /**
  * SPI resolver implementation.
+ * TODO: implementation without service tracker?
  */
 @Component(service = SpiResolver.class, immediate = true)
 public class SpiResolverImpl implements SpiResolver {
