@@ -35,11 +35,9 @@ import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 
 /**
- * Provides application-specific configuration information required for media handling.
- * <p>
- * This interface has to be implemented as OSGi service.
- * </p>
- * TODO: think about even more sensible defaults?
+ * {@link MediaHandlerConfig} OSGi services provide application-specific configuration for media handling.
+ * Via the {@link SpiMatcher} methods it can be controlled if this configuration applies to all or only certain
+ * resources.
  */
 @ConsumerType
 public abstract class MediaHandlerConfig implements SpiMatcher {
@@ -62,6 +60,7 @@ public abstract class MediaHandlerConfig implements SpiMatcher {
    * @return Media format names for downloads that are allowed as target for links
    */
   public Set<MediaFormat> getDownloadMediaFormats() {
+    // TODO: sensible default for download media formats?
     return DEFAULT_DOWNLOAD_MEDIA_FORMATS;
   }
 

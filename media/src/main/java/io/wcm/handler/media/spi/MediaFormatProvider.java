@@ -31,10 +31,9 @@ import io.wcm.handler.commons.spisupport.SpiMatcher;
 import io.wcm.handler.media.format.MediaFormat;
 
 /**
- * Allows application to provide media formats for the media handler.
- * <p>
- * This interface has to be implemented as OSGi service.
- * </p>
+ * {@link MediaFormatProvider} OSGi services provide media formats for the media handler.
+ * Via the {@link SpiMatcher} methods it can be controlled if this configuration applies to all or only certain
+ * resources.
  */
 @ConsumerType
 public abstract class MediaFormatProvider implements SpiMatcher {

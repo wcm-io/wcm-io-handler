@@ -40,10 +40,8 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 
 /**
- * Defines a media source supported by {@link MediaHandler}.
- * <p>
- * This interface has to be implemented as OSGi service.
- * </p>
+ * Via {@link MediaSource} OSGi services applications can define additional media sources supported by
+ * {@link MediaHandler}.
  */
 @ConsumerType
 public abstract class MediaSource {

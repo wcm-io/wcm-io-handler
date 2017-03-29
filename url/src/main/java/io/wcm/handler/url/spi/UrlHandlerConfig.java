@@ -33,11 +33,9 @@ import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorMode;
 
 /**
- * Provides application-specific configuration information required for URL handling.
- * <p>
- * This interface has to be implemented as OSGi service.
- * </p>
- * TODO: think about even more sensible defaults?
+ * {@link UrlHandlerConfig} OSGi services provide application-specific configuration for URL handling.
+ * Via the {@link SpiMatcher} methods it can be controlled if this configuration applies to all or only certain
+ * resources.
  */
 @ConsumerType
 public abstract class UrlHandlerConfig implements SpiMatcher {
@@ -48,8 +46,9 @@ public abstract class UrlHandlerConfig implements SpiMatcher {
    * @param resolver Resource resolver
    * @return Root level or 0 if it could not be detected
    */
+  // TODO: pass in resource insetad of path + resolver?
   public int getSiteRootLevel(String contextPath, ResourceResolver resolver) {
-    // not supported by default
+    // TODO: sensible default for site root level
     return 0;
   }
 
@@ -59,7 +58,7 @@ public abstract class UrlHandlerConfig implements SpiMatcher {
    * @return true if secure mode is required
    */
   public boolean isSecure(Page page) {
-    // not supported by default
+    // TODO: sensible default for secure detection
     return false;
   }
 

@@ -35,11 +35,9 @@ import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
 
 /**
- * Provides application-specific configuration information required for link handling.
- * <p>
- * This interface has to be implemented as OSGi service.
- * </p>
- * TODO: think about even more sensible defaults?
+ * {@link LinkHandlerConfig} OSGi services provide application-specific configuration for link handling.
+ * Via the {@link SpiMatcher} methods it can be controlled if this configuration applies to all or only certain
+ * resources.
  */
 @ConsumerType
 public abstract class LinkHandlerConfig implements SpiMatcher {
@@ -103,6 +101,7 @@ public abstract class LinkHandlerConfig implements SpiMatcher {
    * @return true if Page is a redirect page
    */
   public boolean isRedirect(Page page) {
+    // TODO: sensible default: support "built-in" redirect page resource type - via super resource type
     // not supported by default
     return false;
   }
