@@ -45,7 +45,6 @@ import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.testcontext.AppAemContext;
-import io.wcm.handler.link.type.AbstractLinkType;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -155,7 +154,7 @@ public class LinkHandlerImplTest {
   @Model(adaptables = {
       SlingHttpServletRequest.class, Resource.class
   })
-  public static class TestLinkType extends AbstractLinkType {
+  public static class TestLinkType extends LinkType {
 
     @Override
     public String getId() {

@@ -35,6 +35,7 @@ import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
@@ -49,7 +50,7 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class MediaLinkType extends AbstractLinkType {
+public final class MediaLinkType extends LinkType {
 
   /**
    * Default root folder für DAM

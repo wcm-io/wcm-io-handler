@@ -33,6 +33,7 @@ import org.osgi.annotation.versioning.ProviderType;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkType;
 
 /**
  * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for external links.
@@ -42,7 +43,7 @@ import io.wcm.handler.link.SyntheticLinkResource;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class ExternalLinkType extends AbstractLinkType {
+public final class ExternalLinkType extends LinkType {
 
   /**
    * Link type ID

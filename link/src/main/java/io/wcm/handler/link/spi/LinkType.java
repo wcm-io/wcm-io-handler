@@ -19,52 +19,67 @@
  */
 package io.wcm.handler.link.spi;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.ValueMap;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
+import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 
 /**
  * Defines a link type supported by {@link LinkHandler}.
  * <p>
- * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * This interface has to be implemented by a Sling Model class. The adaptables
  * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
  * </p>
  * TODO: switch to OSGi service?
  */
 @ConsumerType
-public interface LinkType {
+public abstract class LinkType {
 
   /**
    * @return Link type ID (is stored as identifier in repository)
    */
-  String getId();
+  public abstract String getId();
 
   /**
    * @return Name of the property in which the primary link reference is stored
    */
-  String getPrimaryLinkRefProperty();
+  public abstract String getPrimaryLinkRefProperty();
 
   /**
    * Checks whether a link reference can be handled by this link type
    * @param linkRequest Link reference
    * @return true if this link type can handle the given link reference
    */
-  boolean accepts(LinkRequest linkRequest);
+  public boolean accepts(LinkRequest linkRequest) {
+    ValueMap props = linkRequest.getResourceProperties();
+    // check for matching link type ID in link resource
+    String linkTypeId = props.get(LinkNameConstants.PN_LINK_TYPE, String.class);
+    if (StringUtils.isNotEmpty(linkTypeId)) {
+      return StringUtils.equals(linkTypeId, getId());
+    }
+    // if not link type is set at all check if link ref attribute contains a valid link
+    else {
+      String linkRef = props.get(getPrimaryLinkRefProperty(), String.class);
+      return accepts(linkRef);
+    }
+  }
 
   /**
    * Checks whether a link reference string can be handled by this link type
    * @param linkRef Link reference string
    * @return true if this link type can handle the given link reference
    */
-  boolean accepts(String linkRef);
+  public abstract boolean accepts(String linkRef);
 
   /**
    * Resolves a link
    * @param link Link metadata
    * @return Resolved link metadata. Never null.
    */
-  Link resolveLink(Link link);
+  public abstract Link resolveLink(Link link);
 
 }

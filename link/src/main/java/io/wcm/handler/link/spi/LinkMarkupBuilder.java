@@ -27,10 +27,9 @@ import io.wcm.handler.link.Link;
 /**
  * Builds XHTML markup for links. The markup builder should build only an empty anchor tag without content.
  * <p>
- * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * This interface has to be implemented by a Sling Model class. The adaptables
  * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
  * </p>
- * TODO: switch to OSGi service?
  */
 @ConsumerType
 public interface LinkMarkupBuilder {
