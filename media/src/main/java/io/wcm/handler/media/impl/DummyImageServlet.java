@@ -44,7 +44,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  */
 @Component(service = Servlet.class, immediate = true, property = {
     "sling.servlet.extensions=" + FileExtension.PNG,
-    "sling.servlet.resourceTypes=/apps/wcm-io/handler/media/components/dummyImage"
+    "sling.servlet.resourceTypes=wcm-io/handler/media/components/dummyImage"
 })
 public final class DummyImageServlet extends AbstractImageServlet {
   private static final long serialVersionUID = 1L;

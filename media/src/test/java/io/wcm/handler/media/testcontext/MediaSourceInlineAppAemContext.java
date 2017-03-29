@@ -49,11 +49,6 @@ import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 public final class MediaSourceInlineAppAemContext {
 
   /**
-   * Appliation ID
-   */
-  public static final String APPLICATION_ID = "/apps/test";
-
-  /**
    * DAM root path
    */
   public static final String DAM_PATH = "/content/dam/test";

@@ -67,8 +67,6 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
  */
 public class MediaHandlerImplTest {
 
-  static final String APP_ID = "/apps/mediaHandlerImplTestApp";
-
   @Rule
   public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
     @Override

@@ -7,6 +7,6 @@
 
   "jcr:content": {
     "jcr:primaryType": "cq:PageContent",
-    "sling:resourceType": "/apps/wcm-io/handler/link/components/page/redirect"
+    "sling:resourceType": "wcm-io/handler/link/components/page/redirect"
   }
 }

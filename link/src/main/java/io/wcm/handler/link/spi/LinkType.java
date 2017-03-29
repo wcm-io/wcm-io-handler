@@ -34,7 +34,6 @@ import io.wcm.handler.link.LinkRequest;
  * This interface has to be implemented by a Sling Model class. The adaptables
  * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
  * </p>
- * TODO: switch to OSGi service?
  */
 @ConsumerType
 public abstract class LinkType {

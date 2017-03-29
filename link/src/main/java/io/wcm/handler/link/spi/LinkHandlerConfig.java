@@ -21,6 +21,8 @@ package io.wcm.handler.link.spi;
 
 import java.util.List;
 
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
@@ -53,6 +55,8 @@ public abstract class LinkHandlerConfig implements SpiMatcher {
 
   private static final List<Class<? extends LinkProcessor>> DEFAULT_POST_PROCESSORS = ImmutableList.<Class<? extends LinkProcessor>>of(
       DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+
+  private static final String REDIRECT_RESOURCE_TYPE = "wcm-io/handler/link/components/page/redirect";
 
   /**
    * @return Supported link types
@@ -101,9 +105,9 @@ public abstract class LinkHandlerConfig implements SpiMatcher {
    * @return true if Page is a redirect page
    */
   public boolean isRedirect(Page page) {
-    // TODO: sensible default: support "built-in" redirect page resource type - via super resource type
-    // not supported by default
-    return false;
+    Resource pageContent = page.getContentResource();
+    ResourceResolver resolver = pageContent.getResourceResolver();
+    return resolver.isResourceType(pageContent, REDIRECT_RESOURCE_TYPE);
   }
 
 }
