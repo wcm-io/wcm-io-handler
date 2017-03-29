@@ -132,10 +132,11 @@ public interface MediaBuilder {
   MediaBuilder fixedDimension(long widthValue, long heightValue);
 
   /**
-   * @param value Whether to set a "Content-Disposition" header for forcing a "Save as" dialog on the client
+   * @param value Whether to set a "Content-Disposition" header to "attachment"
+   *          for forcing a "Save as" dialog on the client
    * @return this
    */
-  MediaBuilder forceDownload(boolean value);
+  MediaBuilder contentDispositionAttachment(boolean value);
 
   /**
    * Allows to specify a custom alternative text that is to be used instead of the one defined in the the media lib item

@@ -17,32 +17,18 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.testcontext;
-
-import java.util.List;
+package io.wcm.handler.link.testcontext;
 
 import org.apache.sling.api.resource.Resource;
+import org.osgi.service.component.annotations.Component;
 
-import com.google.common.collect.ImmutableList;
+import io.wcm.handler.media.spi.MediaFormatProvider;
 
-import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.mediasource.dam.DamMediaSource;
-import io.wcm.handler.mediasource.inline.InlineMediaSource;
+@Component(service = MediaFormatProvider.class, immediate = true)
+public class DummyMediaFormatProvider extends MediaFormatProvider {
 
-/**
- * Dummy media configuration
- */
-public class DummyMediaHandlerConfig extends MediaHandlerConfig {
-
-  private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
-      DamMediaSource.class,
-      InlineMediaSource.class
-      );
-
-  @Override
-  public List<Class<? extends MediaSource>> getSources() {
-    return MEDIA_SOURCES;
+  public DummyMediaFormatProvider() {
+    super(DummyMediaFormats.class);
   }
 
   @Override

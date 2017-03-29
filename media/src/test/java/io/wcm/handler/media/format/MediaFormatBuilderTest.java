@@ -44,6 +44,7 @@ public class MediaFormatBuilderTest {
         .fileSizeMax(10000L)
         .extensions("gif", "png")
         .renditionGroup("group1")
+        .download(true)
         .internal(true)
         .ranking(500)
         .build();
@@ -59,6 +60,7 @@ public class MediaFormatBuilderTest {
         "gif", "png"
     }, mf.getExtensions());
     assertEquals("group1", mf.getRenditionGroup());
+    assertTrue(mf.isDownload());
     assertTrue(mf.isInternal());
     assertEquals(500, mf.getRanking());
   }
@@ -86,6 +88,7 @@ public class MediaFormatBuilderTest {
     assertEquals(0L, mf.getFileSizeMax());
     assertArrayEquals(new String[0], mf.getExtensions());
     assertNull("group1", mf.getRenditionGroup());
+    assertFalse(mf.isDownload());
     assertFalse(mf.isInternal());
     assertEquals(0, mf.getRanking());
   }

@@ -30,6 +30,7 @@ import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
 import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
+import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
@@ -101,6 +102,7 @@ public final class AppAemContext {
 
       // media formats
       context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
+      context.registerService(MediaFormatProvider.class, new DummyMediaFormatProvider());
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.link");

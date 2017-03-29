@@ -40,6 +40,7 @@ import io.wcm.handler.media.format.MediaFormat;
 
 /**
  * Builds image element with data attribute containing sources for responsive image.
+ * TODO: switch to HTML5-compatible markup, keep this as legacy version
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class

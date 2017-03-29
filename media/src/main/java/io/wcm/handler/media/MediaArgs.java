@@ -48,7 +48,8 @@ public final class MediaArgs implements Cloneable {
   private UrlMode urlMode;
   private long fixedWidth;
   private long fixedHeight;
-  private boolean forceDownload;
+  private boolean download;
+  private boolean contentDispositionAttachment;
   private String altText;
   private boolean dummyImage = true;
   private String dummyImageUrl;
@@ -305,18 +306,35 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * @return Whether to set a "Content-Disposition" header for forcing a "Save as" dialog on the client
+   * @return Accept only media formats that have the download flag set.
    */
-  public boolean isForceDownload() {
-    return this.forceDownload;
+  public boolean isDownload() {
+    return this.download;
   }
 
   /**
-   * @param value Whether to set a "Content-Disposition" header for forcing a "Save as" dialog on the client
+   * @param value Accept only media formats that have the download flag set.
    * @return this
    */
-  public MediaArgs forceDownload(boolean value) {
-    this.forceDownload = value;
+  public MediaArgs download(boolean value) {
+    this.download = value;
+    return this;
+  }
+
+  /**
+   * @return Whether to set a "Content-Disposition" header to "attachment" for forcing a "Save as" dialog on the client
+   */
+  public boolean isContentDispositionAttachment() {
+    return this.contentDispositionAttachment;
+  }
+
+  /**
+   * @param value Whether to set a "Content-Disposition" header to "attachment" for forcing a "Save as" dialog on the
+   *          client
+   * @return this
+   */
+  public MediaArgs contentDispositionAttachment(boolean value) {
+    this.contentDispositionAttachment = value;
     return this;
   }
 
@@ -478,7 +496,8 @@ public final class MediaArgs implements Cloneable {
     clone.urlMode = this.urlMode;
     clone.fixedWidth = this.fixedWidth;
     clone.fixedHeight = this.fixedHeight;
-    clone.forceDownload = this.forceDownload;
+    clone.download = this.download;
+    clone.contentDispositionAttachment = this.contentDispositionAttachment;
     clone.altText = this.altText;
     clone.dummyImage = this.dummyImage;
     clone.dummyImageUrl = this.dummyImageUrl;

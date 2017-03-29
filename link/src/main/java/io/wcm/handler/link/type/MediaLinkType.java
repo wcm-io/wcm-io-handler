@@ -38,7 +38,6 @@ import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 
 /**
@@ -95,14 +94,10 @@ public final class MediaLinkType extends AbstractLinkType {
     String mediaRef = props.get(LinkNameConstants.PN_LINK_MEDIA_REF, String.class);
     boolean isDownload = props.get(LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD, false);
 
-    // only allow linking to "download" medialib formats
-    MediaFormat[] downloadMediaFormats = null;
-    if (mediaHandlerConfig.getDownloadMediaFormats() != null) {
-      downloadMediaFormats = mediaHandlerConfig.getDownloadMediaFormats().toArray(
-          new MediaFormat[mediaHandlerConfig.getDownloadMediaFormats().size()]);
-    }
-    MediaArgs mediaArgs = new MediaArgs(downloadMediaFormats)
-    .forceDownload(isDownload)
+    MediaArgs mediaArgs = new MediaArgs()
+        // only allow linking to "download" media formats
+        .download(true)
+        .contentDispositionAttachment(isDownload)
         .urlMode(linkRequest.getLinkArgs().getUrlMode());
 
     // resolve media library reference

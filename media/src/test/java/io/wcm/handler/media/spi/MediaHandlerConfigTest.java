@@ -59,11 +59,6 @@ public class MediaHandlerConfigTest {
   }
 
   @Test
-  public void testGetDownloadMediaFormats() {
-    assertTrue(underTest.getDownloadMediaFormats().isEmpty());
-  }
-
-  @Test
   public void testGetDefaultImageQuality() {
     assertEquals(1d, underTest.getDefaultImageQuality("image/png"), 0.001d);
     assertEquals(256d, underTest.getDefaultImageQuality("image/gif"), 0.001d);

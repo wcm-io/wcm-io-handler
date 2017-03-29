@@ -20,16 +20,13 @@
 package io.wcm.handler.media.spi;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.commons.spisupport.SpiMatcher;
-import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
@@ -47,22 +44,12 @@ public abstract class MediaHandlerConfig implements SpiMatcher {
    */
   public static final double DEFAULT_JPEG_QUALITY = 0.98d;
 
-  private static final Set<MediaFormat> DEFAULT_DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of();
-
   private static final List<Class<? extends MediaSource>> DEFAULT_MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
       DamMediaSource.class);
 
   private static final List<Class<? extends MediaMarkupBuilder>> DEFAULT_MEDIA_MARKUP_BUILDERS = ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
       SimpleImageMediaMarkupBuilder.class,
       DummyImageMediaMarkupBuilder.class);
-
-  /**
-   * @return Media format names for downloads that are allowed as target for links
-   */
-  public Set<MediaFormat> getDownloadMediaFormats() {
-    // TODO: sensible default for download media formats?
-    return DEFAULT_DOWNLOAD_MEDIA_FORMATS;
-  }
 
   /**
    * @return Supported media sources

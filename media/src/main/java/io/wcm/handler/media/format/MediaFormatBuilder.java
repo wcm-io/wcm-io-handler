@@ -50,6 +50,7 @@ public final class MediaFormatBuilder {
   private long fileSizeMax;
   private String[] extensions;
   private String renditionGroup;
+  private boolean download;
   private boolean internal;
   private int ranking;
   private final Map<String, Object> properties = new HashMap<>();
@@ -225,6 +226,15 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * @param value Media assets with this format should be downloaded and not displayed directly
+   * @return this
+   */
+  public MediaFormatBuilder download(boolean value) {
+    this.download = value;
+    return this;
+  }
+
+  /**
    * @param value For internal use only (not displayed for user)
    * @return this
    */
@@ -293,6 +303,7 @@ public final class MediaFormatBuilder {
         fileSizeMax,
         nonNullArray(extensions),
         renditionGroup,
+        download,
         internal,
         ranking,
         ImmutableValueMap.copyOf(properties));

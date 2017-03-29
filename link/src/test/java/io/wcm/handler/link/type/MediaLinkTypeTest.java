@@ -116,21 +116,22 @@ public class MediaLinkTypeTest {
   }
 
   // --> does not work because dummy implementation does not support download media format detection
-  // @Test
-  // public void testInvalidImageLink() {
-  // LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+  //@Test
+  //public void testInvalidImageLink() {
+  //  LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
   //
-  // SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver());
-  // ValueMap linkProps = linkResource.getProperties();
-  // .put(LinkNameConstants.PN_LINK_TYPE, DefaultMediaLinkType.ID);
-  // .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dummymedia/image1");
+  //  SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+  //      ImmutableValueMap.builder()
+  //          .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
+  //          .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dummymedia/image1")
+  //          .build());
   //
-  // Link link = linkHandler.get(linkResource).build();
+  //  Link link = linkHandler.get(linkResource).build();
   //
-  // assertFalse("link invalid", link.isValid());
-  // assertNull("link url", link.getLinkUrl());
-  // assertNull("anchor", link.getAnchor());
-  // }
+  //  assertFalse("link invalid", link.isValid());
+  //  assertNull("link url", link.getUrl());
+  //  assertNull("anchor", link.getAnchor());
+  //}
 
   @Test
   public void testValidPdfLink() {

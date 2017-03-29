@@ -50,6 +50,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private final long fileSizeMax;
   private final String[] extensions;
   private final String renditionGroup;
+  private final boolean download;
   private final boolean internal;
   private final int ranking;
   private final ValueMap properties;
@@ -59,7 +60,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   MediaFormat(String name, String label, String description,
       long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight,
       double ratio, long ratioWidth, long ratioHeight, long fileSizeMax, String[] extensions,
-      String renditionGroup, boolean internal, int ranking, ValueMap properties) {
+      String renditionGroup, boolean download, boolean internal, int ranking, ValueMap properties) {
     this.name = name;
     this.label = label;
     this.description = description;
@@ -75,6 +76,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
     this.fileSizeMax = fileSizeMax;
     this.extensions = extensions;
     this.renditionGroup = renditionGroup;
+    this.download = download;
     this.internal = internal;
     this.ranking = ranking;
     this.properties = properties;
@@ -226,6 +228,13 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    */
   public String getRenditionGroup() {
     return this.renditionGroup;
+  }
+
+  /**
+   * @return Media assets with this format should be downloaded and not displayed directly
+   */
+  public boolean isDownload() {
+    return this.download;
   }
 
   /**

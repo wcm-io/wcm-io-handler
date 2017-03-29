@@ -347,6 +347,7 @@ public final class DummyMediaFormats {
   public static final MediaFormat DOWNLOAD = create("download")
       .label("Download")
       .extensions("pdf", "zip", "exe")
+      .download(true)
       .build();
 
   /* rendition group with non-fixed dimensions */

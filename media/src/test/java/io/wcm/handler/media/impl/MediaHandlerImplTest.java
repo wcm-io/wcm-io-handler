@@ -56,6 +56,7 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -109,6 +110,33 @@ public class MediaHandlerImplTest {
   }
 
   @Test
+  public void testDownload() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    // test pipelining and resolve link
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1", new MediaArgs()
+        .download(true)
+        .urlMode(UrlModes.DEFAULT));
+    Media media = mediaHandler.get(mediaRequest).build();
+
+    // make sure initial media request is unmodified
+    assertEquals("/content/dummymedia/item1", mediaRequest.getMediaRef());
+    assertEquals(UrlModes.DEFAULT, mediaRequest.getMediaArgs().getUrlMode());
+
+    // check preprocessed link reference
+    assertEquals("/content/dummymedia/item1/pre1", media.getMediaRequest().getMediaRef());
+    assertEquals(UrlModes.FULL_URL, media.getMediaRequest().getMediaArgs().getUrlMode());
+
+    // check final link url and html element
+    assertEquals(true, media.isValid());
+    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.pdf", media.getUrl());
+    assertNull(media.getElement());
+
+    // check resolved media format list
+    assertArrayEquals(new MediaFormat[] { DummyMediaFormats.DOWNLOAD }, media.getMediaRequest().getMediaArgs().getMediaFormats());
+  }
+
+  @Test
   public void testMediaFormatResolving() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
@@ -152,7 +180,7 @@ public class MediaHandlerImplTest {
         .mandatoryMediaFormats(mediaFormats)
         .fileExtensions(fileExtensions)
         .fixedDimension(200, 100)
-        .forceDownload(true)
+        .contentDispositionAttachment(true)
         .altText("alt")
         .dummyImage(false)
         .dummyImageUrl("/dummy/url")
@@ -164,7 +192,7 @@ public class MediaHandlerImplTest {
     assertArrayEquals(fileExtensions, args.getFileExtensions());
     assertEquals(200, args.getFixedWidth());
     assertEquals(100, args.getFixedHeight());
-    assertTrue(args.isForceDownload());
+    assertTrue(args.isContentDispositionAttachment());
     assertFalse(args.isDummyImage());
     assertEquals("/dummy/url", args.getDummyImageUrl());
   }
@@ -244,9 +272,16 @@ public class MediaHandlerImplTest {
 
     @Override
     public Media resolveMedia(Media media) {
-      String mediaUrl = media.getMediaRequest().getMediaRef();
-      media.setUrl("http://xyz" + mediaUrl + ".gif");
-      return media;
+      if (media.getMediaRequest().getMediaArgs().isDownload()) {
+        String mediaUrl = media.getMediaRequest().getMediaRef();
+        media.setUrl("http://xyz" + mediaUrl + ".pdf");
+        return media;
+      }
+      else {
+        String mediaUrl = media.getMediaRequest().getMediaRef();
+        media.setUrl("http://xyz" + mediaUrl + ".gif");
+        return media;
+      }
     }
 
     @Override

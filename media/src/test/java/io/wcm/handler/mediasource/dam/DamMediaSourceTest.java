@@ -405,7 +405,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaUrlStandard_Resize_Download() {
     // construct url to an existing media item - should resolve to the first rendition
-    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs(SHOWROOM_CONTROLS_SCALE1).forceDownload(true)).buildUrl();
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs(SHOWROOM_CONTROLS_SCALE1).contentDispositionAttachment(true)).buildUrl();
     assertNotNull("returned url?", url);
     assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.download_attachment.file/standard.jpg",
         url);
@@ -501,7 +501,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testDownloadMediaElement() {
-    MediaArgs mediaArgs = new MediaArgs().forceDownload(true);
+    MediaArgs mediaArgs = new MediaArgs().contentDispositionAttachment(true);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());

@@ -420,7 +420,7 @@ public class InlineMediaSourceTest {
     assertEquals("url", PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.file/sample_image_215x102.jpg", rendition.getUrl());
 
     // test with force download
-    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(0, 20).forceDownload(true))
+    rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(0, 20).contentDispositionAttachment(true))
         .refProperty("mediaInline").build().getRendition();
     assertEquals("width", 42, rendition.getWidth());
     assertEquals("height", 20, rendition.getHeight());
@@ -543,7 +543,7 @@ public class InlineMediaSourceTest {
   @Test
   public void testDownloadMediaElement() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
-    MediaArgs mediaArgs = new MediaArgs().forceDownload(true);
+    MediaArgs mediaArgs = new MediaArgs().contentDispositionAttachment(true);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNull("no invalid reason", media.getMediaInvalidReason());

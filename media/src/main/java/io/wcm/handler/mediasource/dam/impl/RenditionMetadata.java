@@ -190,11 +190,11 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   /**
-   * @param forceDownload Force content disposition download header.
+   * @param contentDispositionAttachment Force content disposition download header.
    * @return Media path (not externalized)
    */
-  public String getMediaPath(boolean forceDownload) {
-    if (forceDownload) {
+  public String getMediaPath(boolean contentDispositionAttachment) {
+    if (contentDispositionAttachment) {
       return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServlet.SELECTOR
           + "." + MediaFileServlet.SELECTOR_DOWNLOAD
           + "." + MediaFileServlet.EXTENSION, getFileName());
