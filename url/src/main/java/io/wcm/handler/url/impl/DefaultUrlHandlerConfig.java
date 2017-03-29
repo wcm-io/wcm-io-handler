@@ -19,9 +19,12 @@
  */
 package io.wcm.handler.url.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 
@@ -32,6 +35,25 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
     Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
 })
 public class DefaultUrlHandlerConfig extends UrlHandlerConfig {
+
+  @Reference
+  private ConfigurationResourceResolver configurationResourceResolver;
+
+  @Override
+  public int getSiteRootLevel(Resource contextResource) {
+    if (contextResource != null) {
+      // assumption: inner-most context-aware configuration context path is site root path
+      String siteRootpath = configurationResourceResolver.getContextPath(contextResource);
+      if (siteRootpath != null) {
+        return getAbsoluteLevel(siteRootpath);
+      }
+    }
+    return 0;
+  }
+
+  static int getAbsoluteLevel(String path) {
+    return StringUtils.countMatches(path, "/") - 1;
+  }
 
   @Override
   public boolean matches(Resource resource) {

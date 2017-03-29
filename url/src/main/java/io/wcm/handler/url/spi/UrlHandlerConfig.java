@@ -45,10 +45,7 @@ public abstract class UrlHandlerConfig implements SpiMatcher {
    * @param contextResource Context resource that is assumed to be inside the site context.
    * @return Root level or 0 if it could not be detected
    */
-  public int getSiteRootLevel(Resource contextResource) {
-    // TODO: sensible default for site root level
-    return 0;
-  }
+  public abstract int getSiteRootLevel(Resource contextResource);
 
   /**
    * Detects if a page has to be accessed in secure mode
@@ -56,7 +53,7 @@ public abstract class UrlHandlerConfig implements SpiMatcher {
    * @return true if secure mode is required
    */
   public boolean isSecure(Page page) {
-    // TODO: sensible default for secure detection
+    // not supported by default
     return false;
   }
 

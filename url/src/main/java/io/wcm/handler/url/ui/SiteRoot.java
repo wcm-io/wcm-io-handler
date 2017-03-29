@@ -47,7 +47,7 @@ public final class SiteRoot {
 
   @SlingObject
   private ResourceResolver resolver;
-  @AemObject
+  @AemObject(optional = true)
   private Page currentPage;
   @AemObject
   private PageManager pageManager;

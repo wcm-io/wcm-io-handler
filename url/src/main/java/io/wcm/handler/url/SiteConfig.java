@@ -24,9 +24,8 @@ import org.apache.sling.caconfig.annotation.Property;
 
 /**
  * Context-Aware URL Handler Site configuration.
- * TODO: think about name "SiteConfig" - "UrlHandlerConfig" is alread defined
  */
-@Configuration(label = "wcm.io URL Handler",
+@Configuration(label = "wcm.io Handler Site URLs",
     description = "Defines Site URLs for Author and Publish environments.")
 public @interface SiteConfig {
 
