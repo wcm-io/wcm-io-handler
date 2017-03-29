@@ -36,7 +36,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 public final class MediaFormat implements Comparable<MediaFormat> {
 
   private final String name;
-  private final String applicationId;
   private final String label;
   private final String description;
   private final long width;
@@ -54,17 +53,14 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private final boolean internal;
   private final int ranking;
   private final ValueMap properties;
-
-  private final String key;
   private String combinedTitle;
 
   //CHECKSTYLE:OFF
-  MediaFormat(String name, String applicationId, String label, String description,
+  MediaFormat(String name, String label, String description,
       long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight,
       double ratio, long ratioWidth, long ratioHeight, long fileSizeMax, String[] extensions,
       String renditionGroup, boolean internal, int ranking, ValueMap properties) {
     this.name = name;
-    this.applicationId = applicationId;
     this.label = label;
     this.description = description;
     this.width = width;
@@ -82,8 +78,6 @@ public final class MediaFormat implements Comparable<MediaFormat> {
     this.internal = internal;
     this.ranking = ranking;
     this.properties = properties;
-
-    this.key = applicationId + ":" + name;
   }
   //CHECKSTYLE:ON
 
@@ -92,13 +86,6 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    */
   public String getName() {
     return this.name;
-  }
-
-  /**
-   * @return Application Id
-   */
-  public String getApplicationId() {
-    return this.applicationId;
   }
 
   /**
@@ -458,7 +445,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   public boolean equals(Object pObj) {
     if (pObj instanceof MediaFormat) {
       MediaFormat other = (MediaFormat)pObj;
-      return key.equals(other.key);
+      return name.equals(other.name);
     }
     else {
       return false;
@@ -467,12 +454,12 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
   @Override
   public int hashCode() {
-    return key.hashCode();
+    return name.hashCode();
   }
 
   @Override
   public int compareTo(MediaFormat o) {
-    return this.key.compareTo(o.key);
+    return this.name.compareTo(o.name);
   }
 
 }

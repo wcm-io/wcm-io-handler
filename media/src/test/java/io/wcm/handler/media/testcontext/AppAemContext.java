@@ -23,10 +23,6 @@ import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
-import io.wcm.caconfig.application.impl.ApplicationAdapterFactory;
-import io.wcm.caconfig.application.impl.ApplicationFinderImpl;
-import io.wcm.caconfig.application.impl.ApplicationImplementationPicker;
-import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.handler.commons.spisupport.impl.SpiResolverImpl;
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
@@ -46,12 +42,6 @@ import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
  * Sets up {@link AemContext} for unit tests in this application.
  */
 public final class AppAemContext {
-
-  /**
-   * Appliation ID
-   * TODO: remove APPLICATION_ID
-   */
-  public static final String APPLICATION_ID = "/apps/test";
 
   /**
    * DAM root path
@@ -86,12 +76,6 @@ public final class AppAemContext {
   private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
     @Override
     public void execute(AemContext context) throws Exception {
-
-      // application provider
-      context.registerInjectActivateService(new ApplicationFinderImpl());
-      context.registerInjectActivateService(new ApplicationImplementationPicker());
-      context.registerInjectActivateService(new ApplicationAdapterFactory());
-      context.registerService(ApplicationProvider.class, new DummyApplicationProvider());
 
       // handler SPI
       context.registerInjectActivateService(new SpiResolverImpl());

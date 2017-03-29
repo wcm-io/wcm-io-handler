@@ -33,11 +33,9 @@ import com.google.common.collect.ImmutableMap;
 
 public class MediaFormatBuilderTest {
 
-  private static final String APP_ID = "/apps/sample";
-
   @Test
   public void testBuilder_variant1() {
-    MediaFormat mf = MediaFormatBuilder.create("name1", APP_ID)
+    MediaFormat mf = MediaFormatBuilder.create("name1")
         .label("label1")
         .description("description1")
         .width(800)
@@ -67,9 +65,7 @@ public class MediaFormatBuilderTest {
 
   @Test
   public void testBuilder_variant2() {
-    MediaFormat mf = MediaFormatBuilder.create()
-        .name("name2")
-        .applicationId(APP_ID)
+    MediaFormat mf = MediaFormatBuilder.create("name2")
         .width(400, 800)
         .height(300, 600)
         .ratio(100, 50)
@@ -96,9 +92,7 @@ public class MediaFormatBuilderTest {
 
   @Test
   public void testBuilder_variant3() {
-    MediaFormat mf = MediaFormatBuilder.create()
-        .name("name2")
-        .applicationId(APP_ID)
+    MediaFormat mf = MediaFormatBuilder.create("name2")
         .minWidth(400)
         .maxWidth(800)
         .minHeight(300)
@@ -115,9 +109,7 @@ public class MediaFormatBuilderTest {
 
   @Test
   public void testBuilder_variant4() {
-    MediaFormat mf = MediaFormatBuilder.create()
-        .name("name3")
-        .applicationId(APP_ID)
+    MediaFormat mf = MediaFormatBuilder.create("name3")
         .fixedDimension(1000, 500)
         .build();
 
@@ -127,45 +119,20 @@ public class MediaFormatBuilderTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testMissingNameApplicationId() {
-    MediaFormatBuilder.create().build();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testMissingName() {
-    MediaFormatBuilder.create().applicationId(APP_ID).build();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testMissingApplicationId() {
-    MediaFormatBuilder.create().name("mf1").build();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testNullName() {
-    MediaFormatBuilder.create().name(null).applicationId(APP_ID).build();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullApplicationId() {
-    MediaFormatBuilder.create().name("mf1").applicationId(null).build();
+    MediaFormatBuilder.create(null).build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalName() {
-    MediaFormatBuilder.create("name with spaces", APP_ID).build();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testIllegalApplicationId() {
-    MediaFormatBuilder.create("mf1", "illegal app id").build();
+    MediaFormatBuilder.create("name with spaces").build();
   }
 
   @Test
   public void testProperties() {
     Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
 
-    MediaFormat mf = MediaFormatBuilder.create("name1", APP_ID)
+    MediaFormat mf = MediaFormatBuilder.create("name1")
         .property("prop3", "value3")
         .properties(props)
         .property("prop2", "value2")
@@ -187,7 +154,7 @@ public class MediaFormatBuilderTest {
         unmodifiableExtension
     };
 
-    MediaFormat mf = MediaFormatBuilder.create("name", APP_ID)
+    MediaFormat mf = MediaFormatBuilder.create("name")
         .extensions(extensionsSource)
         .build();
 

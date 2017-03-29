@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 
 import org.osgi.annotation.versioning.ProviderType;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 /**
@@ -36,8 +35,7 @@ public final class MediaFormatBuilder {
 
   private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\-\\_]+$");
 
-  private String name;
-  private String applicationId;
+  private final String name;
   private String label;
   private String description;
   private long width;
@@ -56,52 +54,20 @@ public final class MediaFormatBuilder {
   private int ranking;
   private final Map<String, Object> properties = new HashMap<>();
 
-  private MediaFormatBuilder() {
-    // private constructor
-  }
-
-  /**
-   * Create a new media format builder.
-   * @return Media format builder
-   */
-  public static MediaFormatBuilder create() {
-    return new MediaFormatBuilder();
+  private MediaFormatBuilder(String name) {
+    if (name == null || !NAME_PATTERN.matcher(name).matches()) {
+      throw new IllegalArgumentException("Invalid name: " + name);
+    }
+    this.name = name;
   }
 
   /**
    * Create a new media format builder.
    * @param name Media format name. Only characters, numbers, hyphen and underline are allowed.
-   * @param applicationId Application id
-   * @return Media foramt builder
+   * @return Media format builder
    */
-  public static MediaFormatBuilder create(String name, String applicationId) {
-    return new MediaFormatBuilder()
-    .name(name)
-    .applicationId(applicationId);
-  }
-
-  /**
-   * @param value Media format name. Only characters, numbers, hyphen and underline are allowed.
-   * @return this
-   */
-  public MediaFormatBuilder name(String value) {
-    if (value == null || !NAME_PATTERN.matcher(value).matches()) {
-      throw new IllegalArgumentException("Invalid name: " + value);
-    }
-    this.name = value;
-    return this;
-  }
-
-  /**
-   * @param value Media format name. Only characters, numbers, hyphen and underline are allowed.
-   * @return this
-   */
-  public MediaFormatBuilder applicationId(String value) {
-    if (value == null || !ApplicationProvider.APPLICATION_ID_PATTERN.matcher(value).matches()) {
-      throw new IllegalArgumentException("Invalid applicaiton id: " + value);
-    }
-    this.applicationId = value;
-    return this;
+  public static MediaFormatBuilder create(String name) {
+    return new MediaFormatBuilder(name);
   }
 
   /**
@@ -311,12 +277,8 @@ public final class MediaFormatBuilder {
     if (this.name == null) {
       throw new IllegalArgumentException("Name is missing.");
     }
-    if (this.applicationId == null) {
-      throw new IllegalArgumentException("Application id is missing.");
-    }
     return new MediaFormat(
         name,
-        applicationId,
         label,
         description,
         width,

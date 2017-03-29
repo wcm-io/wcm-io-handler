@@ -41,7 +41,6 @@ import org.osgi.service.component.annotations.Component;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.caconfig.application.spi.ApplicationProvider;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
@@ -73,8 +72,6 @@ public class MediaHandlerImplTest {
   public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
     @Override
     public void execute(AemContext callbackContext) {
-      callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
-          Constants.SERVICE_RANKING, -10);
       callbackContext.registerService(MediaHandlerConfig.class, new TestMediaHandlerConfig(),
           Constants.SERVICE_RANKING, 1000);
       callbackContext.registerService(MediaFormatProvider.class, new TestMediaFormatProvider(),
@@ -172,24 +169,6 @@ public class MediaHandlerImplTest {
     assertEquals("/dummy/url", args.getDummyImageUrl());
   }
 
-
-  public static class TestApplicationProvider implements ApplicationProvider {
-
-    @Override
-    public String getApplicationId() {
-      return APP_ID;
-    }
-
-    @Override
-    public String getLabel() {
-      return null;
-    }
-
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
-    }
-  }
 
   public static class TestMediaHandlerConfig extends MediaHandlerConfig {
 
@@ -320,7 +299,7 @@ public class MediaHandlerImplTest {
     }
 
     /* home_stage */
-    public static final MediaFormat HOME_STAGE = create("home_stage", APP_ID)
+    public static final MediaFormat HOME_STAGE = create("home_stage")
         .label("Home Stage")
         .width(960)
         .height(485)
@@ -328,7 +307,7 @@ public class MediaHandlerImplTest {
         .build();
 
     /* home_teaser */
-    public static final MediaFormat HOME_TEASER = create("home_teaser", APP_ID)
+    public static final MediaFormat HOME_TEASER = create("home_teaser")
         .label("Home Teaser")
         .width(206)
         .height(104)
@@ -343,6 +322,11 @@ public class MediaHandlerImplTest {
 
     public TestMediaFormatProvider() {
       super(TestMediaFormats.class);
+    }
+
+    @Override
+    public boolean matches(Resource resource) {
+      return true;
     }
 
   }

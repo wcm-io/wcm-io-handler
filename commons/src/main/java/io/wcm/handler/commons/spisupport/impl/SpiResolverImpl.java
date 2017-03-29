@@ -20,6 +20,7 @@
 package io.wcm.handler.commons.spisupport.impl;
 
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -62,25 +63,6 @@ public class SpiResolverImpl implements SpiResolver {
         }
       });
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T extends SpiMatcher> T resolve(Class<T> spiInterface, Adaptable adaptable) {
-    Resource resource = null;
-    if (adaptable instanceof Resource) {
-      resource = (Resource)adaptable;
-    }
-    else if (adaptable instanceof SlingHttpServletRequest) {
-      resource = ((SlingHttpServletRequest)adaptable).getResource();
-    }
-    try {
-      SpiServiceTracker serviceTracker = cache.get(spiInterface.getName());
-      return (T)serviceTracker.resolve(resource);
-    }
-    catch (ExecutionException ex) {
-      throw new RuntimeException("Error getting service tracker for " + spiInterface.getName() + " from cache.", ex);
-    }
-  }
-
   @Activate
   private void activate(BundleContext context) {
     this.bundleContext = context;
@@ -89,6 +71,41 @@ public class SpiResolverImpl implements SpiResolver {
   @Deactivate
   private void deactivate(BundleContext context) {
     cache.invalidateAll();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends SpiMatcher> T resolve(Class<T> spiInterface, Adaptable adaptable) {
+    Resource resource = getResource(adaptable);
+    SpiServiceTracker serviceTracker = getServiceTracker(spiInterface);
+    return (T)serviceTracker.resolve(resource).findFirst().orElse(null);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T extends SpiMatcher> Stream<T> resolveAll(Class<T> spiInterface, Adaptable adaptable) {
+    Resource resource = getResource(adaptable);
+    SpiServiceTracker serviceTracker = getServiceTracker(spiInterface);
+    return (Stream<T>)serviceTracker.resolve(resource);
+  }
+
+  private Resource getResource(Adaptable adaptable) {
+    if (adaptable instanceof Resource) {
+      return (Resource)adaptable;
+    }
+    else if (adaptable instanceof SlingHttpServletRequest) {
+      return ((SlingHttpServletRequest)adaptable).getResource();
+    }
+    return null;
+  }
+
+  private SpiServiceTracker getServiceTracker(Class<?> spiInterface) {
+    try {
+      return cache.get(spiInterface.getName());
+    }
+    catch (ExecutionException ex) {
+      throw new RuntimeException("Error getting service tracker for " + spiInterface.getName() + " from cache.", ex);
+    }
   }
 
 }

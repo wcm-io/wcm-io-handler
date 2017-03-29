@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.commons.spisupport;
 
+import java.util.stream.Stream;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -31,7 +33,7 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface SpiResolver {
 
   /**
-   * Resolves the best-matching SPI implementation for the given resource.
+   * Resolves the best-matching SPI implementation for the given resource context.
    * Only SPI implementation that report a match via {@link SpiMatcher} are considered as candidates -
    * if multiple candidates exist the implementation with the highest service ranking is returned.
    * It is recommended that for each SPI interface a default service with lowest service ranking (Integer.MIN_VALUE)
@@ -41,8 +43,21 @@ public interface SpiResolver {
    *          A resource instances is used directly for matching, in case of request the associated resource is used.
    *          May be null if no context is available.
    * @param <T> SPI interface class
-   * @return SPI implementation or null if no matching found.
+   * @return SPI implementation or null if no match found.
    */
   <T extends SpiMatcher> T resolve(Class<T> spiInterface, Adaptable adaptable);
+
+  /**
+   * Resolves al matching SPI implementation for the given resource context.
+   * Only SPI implementation that report a match via {@link SpiMatcher} are considered as candidates -
+   * the candidates are returned ordered descending by their service ranking.
+   * @param spiInterface SPI interface
+   * @param adaptable Adaptable which is either a {@link Resource} or {@link SlingHttpServletRequest}.
+   *          A resource instances is used directly for matching, in case of request the associated resource is used.
+   *          May be null if no context is available.
+   * @param <T> SPI interface class
+   * @return Stream with all matching SPI implementations (may be empty)
+   */
+  <T extends SpiMatcher> Stream<T> resolveAll(Class<T> spiInterface, Adaptable adaptable);
 
 }

@@ -27,6 +27,7 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.handler.commons.spisupport.SpiMatcher;
 import io.wcm.handler.media.format.MediaFormat;
 
 /**
@@ -36,7 +37,7 @@ import io.wcm.handler.media.format.MediaFormat;
  * </p>
  */
 @ConsumerType
-public abstract class MediaFormatProvider {
+public abstract class MediaFormatProvider implements SpiMatcher {
 
   private final Set<MediaFormat> mediaFormats;
 

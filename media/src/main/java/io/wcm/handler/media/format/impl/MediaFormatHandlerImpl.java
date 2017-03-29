@@ -34,8 +34,6 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
 import com.google.common.collect.ImmutableSortedSet;
 
-import io.wcm.caconfig.application.ApplicationFinder;
-import io.wcm.caconfig.application.ApplicationInfo;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.MediaFormatRankingComparator;
@@ -54,9 +52,6 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   private Resource currentResource;
   @OSGiService
   private MediaFormatProviderManager mediaFormatProviderManager;
-  // TODO: get rid of dependency to ApplicationFinder
-  @OSGiService
-  private ApplicationFinder applicationFinder;
 
   // do not access directly - used for caching. use getMediaFormatsForApplication() and getMediaFormatMap() instead
   private SortedSet<MediaFormat> mediaFormats;
@@ -64,13 +59,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
   private SortedSet<MediaFormat> getMediaFormatsForApplication() {
     if (this.mediaFormats == null) {
-      ApplicationInfo application = applicationFinder.find(currentResource);
-      if (application == null) {
-        this.mediaFormats = ImmutableSortedSet.of();
-      }
-      else {
-        this.mediaFormats = mediaFormatProviderManager.getMediaFormats(application.getApplicationId());
-      }
+      this.mediaFormats = mediaFormatProviderManager.getMediaFormats(currentResource);
     }
     return this.mediaFormats;
   }

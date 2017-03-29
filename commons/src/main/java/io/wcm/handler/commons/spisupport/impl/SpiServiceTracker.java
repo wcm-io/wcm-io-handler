@@ -21,6 +21,7 @@ package io.wcm.handler.commons.spisupport.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.osgi.Order;
@@ -43,21 +44,6 @@ class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatch
     this.rankedServices = new RankedServices<SpiMatcher>(Order.DESCENDING);
     this.serviceTracker = new ServiceTracker<SpiMatcher, SpiMatcher>(bundleContext, className, this);
     this.serviceTracker.open();
-  }
-
-  public SpiMatcher resolve(Resource resource) {
-    if (rankedServices == null) {
-      return null;
-    }
-    for (SpiMatcher service : rankedServices) {
-      if (resource == null && !service.supportsNullResource()) {
-        continue;
-      }
-      if (service.matches(resource)) {
-        return service;
-      }
-    }
-    return null;
   }
 
   public void dispose() {
@@ -95,6 +81,14 @@ class SpiServiceTracker implements ServiceTrackerCustomizer<SpiMatcher, SpiMatch
       props.put(key, reference.getProperty(key));
     }
     return props;
+  }
+
+  public Stream<SpiMatcher> resolve(Resource resource) {
+    if (rankedServices == null) {
+      return Stream.empty();
+    }
+    return rankedServices.getList().stream()
+        .filter(service -> (resource != null || service.supportsNullResource()) && service.matches(resource));
   }
 
 }

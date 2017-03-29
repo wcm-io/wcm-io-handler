@@ -64,7 +64,6 @@ import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -329,7 +328,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageInvalidMediaFormat() {
     // create img element in a mediaFormat for which there is no rendition is available - returns any rendition
-    MediaArgs args = new MediaArgs(MediaFormatBuilder.create("someotherformat", AppAemContext.APPLICATION_ID).build());
+    MediaArgs args = new MediaArgs(MediaFormatBuilder.create("someotherformat").build());
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull("returned null?", img);
   }
