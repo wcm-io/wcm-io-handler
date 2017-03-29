@@ -28,7 +28,7 @@ import io.wcm.handler.link.spi.LinkHandlerConfig;
 /**
  * Default implementation of configuration options of {@link LinkHandlerConfig} interface.
  */
-@Component(service = LinkHandlerConfig.class, immediate = true, property = {
+@Component(service = LinkHandlerConfig.class, property = {
     Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
 })
 public final class DefaultLinkHandlerConfig extends LinkHandlerConfig {

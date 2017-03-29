@@ -20,11 +20,9 @@
 package io.wcm.handler.media.testcontext;
 
 import org.apache.sling.api.resource.Resource;
-import org.osgi.service.component.annotations.Component;
 
 import io.wcm.handler.media.spi.MediaFormatProvider;
 
-@Component(service = MediaFormatProvider.class, immediate = true)
 public class DummyMediaFormatProvider extends MediaFormatProvider {
 
   public DummyMediaFormatProvider() {

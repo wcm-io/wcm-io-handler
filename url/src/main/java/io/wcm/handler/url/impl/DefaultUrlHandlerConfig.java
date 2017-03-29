@@ -31,7 +31,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 /**
  * Default implementation of configuration options of {@link UrlHandlerConfig} interface.
  */
-@Component(service = UrlHandlerConfig.class, immediate = true, property = {
+@Component(service = UrlHandlerConfig.class, property = {
     Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
 })
 public class DefaultUrlHandlerConfig extends UrlHandlerConfig {

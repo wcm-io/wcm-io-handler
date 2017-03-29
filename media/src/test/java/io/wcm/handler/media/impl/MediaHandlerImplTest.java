@@ -37,7 +37,6 @@ import org.apache.sling.models.annotations.Model;
 import org.junit.Rule;
 import org.junit.Test;
 import org.osgi.framework.Constants;
-import org.osgi.service.component.annotations.Component;
 
 import com.google.common.collect.ImmutableList;
 
@@ -350,7 +349,6 @@ public class MediaHandlerImplTest {
 
   }
 
-  @Component(service = MediaFormatProvider.class, immediate = true)
   public static class TestMediaFormatProvider extends MediaFormatProvider {
 
     public TestMediaFormatProvider() {

@@ -28,7 +28,7 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 /**
  * Default implementation of configuration options of {@link MediaHandlerConfig} interface.
  */
-@Component(service = MediaHandlerConfig.class, immediate = true, property = {
+@Component(service = MediaHandlerConfig.class, property = {
     Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
 })
 public final class DefaultMediaHandlerConfig extends MediaHandlerConfig {
