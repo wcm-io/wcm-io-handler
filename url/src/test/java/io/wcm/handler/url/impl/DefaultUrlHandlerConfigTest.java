@@ -60,11 +60,4 @@ public class DefaultUrlHandlerConfigTest {
     assertEquals(0, underTest.getSiteRootLevel(null));
   }
 
-  @Test
-  public void testGetAbsoluteLevel() {
-    assertEquals(0, DefaultUrlHandlerConfig.getAbsoluteLevel("/content"));
-    assertEquals(1, DefaultUrlHandlerConfig.getAbsoluteLevel("/content/test"));
-    assertEquals(3, DefaultUrlHandlerConfig.getAbsoluteLevel("/content/test1/test2/test3"));
-  }
-
 }
