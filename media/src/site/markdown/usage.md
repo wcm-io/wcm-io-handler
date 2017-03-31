@@ -135,9 +135,10 @@ Example:
 })
 public class MediaHandlerConfigImpl extends MediaHandlerConfig {
 
-  private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
-      DamMediaSource.class,
-      InlineMediaSource.class
+  private static final List<Class<? extends MediaSource>> MEDIA_SOURCES =
+      ImmutableList.<Class<? extends MediaSource>>of(
+          DamMediaSource.class,
+          InlineMediaSource.class
       );
 
   private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =
