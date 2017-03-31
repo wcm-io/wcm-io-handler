@@ -64,7 +64,7 @@ Site URL is a protocol and hostname, e.g. `http://www.mycompany.com`.
 
 ### Configuring and tailoring the URL resolving process
 
-Optionally you can provide an OSGi service to specify in more detail the URL resolving needs of your application. For this you have to extend the [UrlHandlerConfig][url-handler-config] class. Via [Context-Aware Services][sling-commons-caservices] you can make sure the SPI customization affects only resource (content pages, DAM assets) that are relevant for your application. Thus it is possible to provide different customizations for different applications running in the same AEM instance.
+Optionally you can provide an OSGi service to specify in more detail the URL resolving needs of your application. For this you have to extend the [UrlHandlerConfig][url-handler-config] class. Via [Context-Aware Services][sling-commons-caservices] you can make sure the SPI customization affects only resources (content pages, DAM assets) that are relevant for your application. Thus it is possible to provide different customizations for different applications running in the same AEM instance.
 
 With this you can:
 
