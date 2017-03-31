@@ -34,7 +34,7 @@
   <version>0.5.13-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Handler</name>
+  <name>Handler 0.x (deprecated)</name>
   <description>Link, Media and RichText Handler infrastructure.</description>
 
   <scm>
@@ -45,7 +45,7 @@
   </scm>
 
   <properties>
-    <site.url.module.prefix>handler</site.url.module.prefix>
+    <site.url.module.prefix>handler-0.x</site.url.module.prefix>
 
     <jdom2.version>2.0.6</jdom2.version>
   </properties>
