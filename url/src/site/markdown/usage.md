@@ -53,21 +53,18 @@ With the different Enumeration constants from [UrlModes][url-modes] you have fin
 
 ### Context-specific parameters
 
-To make sure that the externalization works properly you have to configure three Parameters in the [context-specific Configuration][config]:
+To make sure that the externalization works properly you have to configure three Parameters in the [Context-Aware Configuration][caconfig] for configuration class `io.wcm.handler.url.SiteConfig`:
 
 * siteUrl: Site URL on public access from outside, for non-secure access (HTTP).
 * siteUrlSecure: Site URL for public access from outside, for secure access (HTTPS).
 * siteUrlAuthor: Site URL on author instance.
 
 Site URL is a protocol and hostname, e.g. `http://www.mycompany.com`.
-For accessing the parameter you can use the constants from [UrlParams][url-params] class.
 
 
 ### Configuring and tailoring the URL resolving process
 
-Optionally you can implement an interface to specify in more detail the URL resolving needs of your application. For this you have to implement the [UrlHandlerConfig][url-handler-config] interface. You can extend from [AbstractUrlHandlerConfig][abstract-url-handler-config] and overwrite only what is required.
-
-The class you implement is a Sling Model class, and should have an @Application annotation with the Application ID specified via the [Application Provider interface][config-application-provider] of the configuration infrastructure.
+Optionally you can provide an OSGi service to specify in more detail the URL resolving needs of your application. For this you have to extend the [UrlHandlerConfig][url-handler-config] class. Via [Context-Aware Services][sling-commons-caservices] you can make sure the SPI customization affects only resource (content pages, DAM assets) that are relevant for your application. Thus it is possible to provide different customizations for different applications running in the same AEM instance.
 
 With this you can:
 
@@ -80,9 +77,10 @@ With this you can:
 Example:
 
 ```java
-@Model(adaptables = { SlingHttpServletRequest.class, Resource.class }, adapters = UrlHandlerConfig.class)
-@Application(ApplicationProviderImpl.APPLICATION_ID)
-public class UrlHandlerConfigImpl extends AbstractUrlHandlerConfig {
+@Component(service = UrlHandlerConfig.class, property = {
+    ContextAwareService.PROPERTY_CONTEXT_PATH_PATTERN + "=^/content/(dam/)?myapp(/.*)?$"
+})
+public class UrlHandlerConfigImpl extends UrlHandlerConfig {
 
   public static final int SITE_ROOT_LEVEL = 3;
 
@@ -109,6 +107,5 @@ public class UrlHandlerConfigImpl extends AbstractUrlHandlerConfig {
 [url-modes]: apidocs/io/wcm/handler/url/UrlModes.html
 [url-params]: apidocs/io/wcm/handler/url/UrlParams.html
 [url-handler-config]: apidocs/io/wcm/handler/url/spi/UrlHandlerConfig.html
-[abstract-url-handler-config]: apidocs/io/wcm/handler/url/spi/helpers/AbstractUrlHandlerConfig.html
-[config]: ../../config/
-[config-application-provider]: ../../config/api/usage-spi.html#Application_provider
+[caconfig]: ../../caconfig/
+[sling-commons-caservices]: ../../sling/commons/context-aware-services.html
