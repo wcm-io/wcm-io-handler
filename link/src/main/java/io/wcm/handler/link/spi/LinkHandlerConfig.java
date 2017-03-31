@@ -38,8 +38,8 @@ import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * {@link LinkHandlerConfig} OSGi services provide application-specific configuration for link handling.
- * Via the {@link ContextAwareService} methods it can be controlled if this configuration applies to all or only certain
- * resources.
+ * Applications can set service properties or bundle headers as defined in {@link ContextAwareService} to apply this
+ * configuration only for resources that match the relevant resource paths.
  */
 @ConsumerType
 public abstract class LinkHandlerConfig implements ContextAwareService {

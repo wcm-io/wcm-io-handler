@@ -21,15 +21,21 @@ package io.wcm.handler.media.format.impl;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
+import io.wcm.sling.commons.caservice.ContextAwareServiceResolver.ResolveAllResult;
 
 /**
  * Default implementation of {@link MediaFormatProviderManager}.
@@ -40,11 +46,23 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
   @Reference
   private ContextAwareServiceResolver serviceResolver;
 
+  // cache resolving of media formats per combined cache key of context-aware services
+  private final Cache<String, SortedSet<MediaFormat>> cache = CacheBuilder.newBuilder()
+      .expireAfterWrite(1, TimeUnit.HOURS)
+      .build();
+
   @Override
   public SortedSet<MediaFormat> getMediaFormats(Resource contextResource) {
-    return serviceResolver.resolveAll(MediaFormatProvider.class, contextResource)
-        .flatMap(provider -> provider.getMediaFormats().stream())
-        .collect(Collectors.toCollection(() -> new TreeSet<MediaFormat>()));
+    ResolveAllResult<MediaFormatProvider> result = serviceResolver.resolveAll(MediaFormatProvider.class, contextResource);
+    String key = result.getCombinedKey();
+    try {
+      return cache.get(key, () -> result.getServices()
+          .flatMap(provider -> provider.getMediaFormats().stream())
+          .collect(Collectors.toCollection(() -> new TreeSet<MediaFormat>())));
+    }
+    catch (ExecutionException ex) {
+      throw new RuntimeException("Error accessing media format provider result cache.", ex);
+    }
   }
 
 }

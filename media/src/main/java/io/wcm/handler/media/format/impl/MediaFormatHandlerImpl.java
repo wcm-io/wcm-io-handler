@@ -53,11 +53,11 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   @OSGiService
   private MediaFormatProviderManager mediaFormatProviderManager;
 
-  // do not access directly - used for caching. use getMediaFormatsForApplication() and getMediaFormatMap() instead
+  // do not access directly - used for caching. use getMediaFormatsForCurrentResource() and getMediaFormatMap() instead
   private SortedSet<MediaFormat> mediaFormats;
   private Map<String, MediaFormat> mediaFormatMap;
 
-  private SortedSet<MediaFormat> getMediaFormatsForApplication() {
+  private SortedSet<MediaFormat> getMediaFormatsForCurrentResource() {
     if (this.mediaFormats == null) {
       this.mediaFormats = mediaFormatProviderManager.getMediaFormats(currentResource);
     }
@@ -67,7 +67,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   private Map<String, MediaFormat> getMediaFormatMap() {
     if (this.mediaFormatMap == null) {
       this.mediaFormatMap = new HashMap<>();
-      for (MediaFormat mediaFormat : getMediaFormatsForApplication()) {
+      for (MediaFormat mediaFormat : getMediaFormatsForCurrentResource()) {
         this.mediaFormatMap.put(mediaFormat.getName(), mediaFormat);
       }
     }
@@ -90,7 +90,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    */
   @Override
   public SortedSet<MediaFormat> getMediaFormats() {
-    return getMediaFormatsForApplication();
+    return getMediaFormatsForCurrentResource();
   }
 
   /**
@@ -101,7 +101,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   @Override
   public SortedSet<MediaFormat> getMediaFormats(Comparator<MediaFormat> comparator) {
     SortedSet<MediaFormat> set = new TreeSet<>(comparator);
-    set.addAll(getMediaFormatsForApplication());
+    set.addAll(getMediaFormatsForCurrentResource());
     return ImmutableSortedSet.copyOf(set);
   }
 
