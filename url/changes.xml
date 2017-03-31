@@ -27,6 +27,23 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.1 and Java 8 as minimum versions.
       </action>
+      <action type="update" dev="sseifert">
+        Switched from wcm.io Config 0.x to Sling Context-Aware configuration.
+        Removed UrlParams class, and added SiteConfig annotation class instead.
+      </action>
+      <action type="update" dev="sseifert">
+        Switched SPI to OSGi services based on wcm.io Sling Commons Context-Aware Services for UrlHandlerConfig.
+        Use SPI abstract class instead of interface + abstract helper implementation for UrlHandlerConfig.
+      </action>
+      <action type="update" dev="sseifert">
+        SuffixParser: Use java.util.function.Predicate instead of com.day.cq.commons.Filter for filter expression.
+      </action>
+      <action type="update" dev="sseifert">
+        SiteRoot model: Remove methods getRootPage(String), getRootPath(String).
+      </action>
+      <action type="update" dev="sseifert">
+        UrlHandler: Changed rewritePathToContext methods to use Resource parameters instead of String parameters.
+      </action>
     </release>
 
     <release version="0.8.2" date="2017-03-23">

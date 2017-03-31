@@ -27,6 +27,19 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.1 and Java 8 as minimum versions.
       </action>
+      <action type="update" dev="sseifert">
+        Switched SPI to OSGi services based on wcm.io Sling Commons Context-Aware Services MediaHandlerConfig, MediaFormatProvider.
+        Use SPI abstract class instead of interface + abstract helper implementation for MediaHandlerConfig, MediaFormatProvider, MediaSource.
+      </action>
+      <action type="update" dev="sseifert">
+        MediaHandlerConfig: Remove method "getDownloadMediaFormats()" - downloadable media formats are now detected by setting the "donload" flag on the media format definitions.
+      </action>
+      <action type="update" dev="sseifert">
+        MediaFormat: Remove application id, add new flag "download" to mark media formats as download formats which can be linked upon.
+      </action>
+      <action type="update" dev="sseifert">
+        MediaArgs/MediaBuilder: Rename "forceDownload" to "contentDispositionAttachment", add new "download" option.
+      </action>
     </release>
 
     <release version="0.10.4" date="2017-03-23">
