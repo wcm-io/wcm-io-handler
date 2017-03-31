@@ -27,8 +27,8 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableSet;
 
-import io.wcm.handler.commons.caservice.ContextAwareService;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * {@link MediaFormatProvider} OSGi services provide media formats for the media handler.

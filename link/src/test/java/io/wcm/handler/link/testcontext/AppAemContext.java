@@ -23,7 +23,6 @@ import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
-import io.wcm.handler.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.handler.link.impl.DefaultLinkHandlerConfig;
 import io.wcm.handler.link.impl.LinkHandlerConfigAdapterFactory;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
@@ -86,7 +85,6 @@ public final class AppAemContext {
     public void execute(AemContext context) throws Exception {
 
       // handler SPI
-      context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
       context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
       context.registerInjectActivateService(new DefaultUrlHandlerConfig());
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());

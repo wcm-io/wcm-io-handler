@@ -35,10 +35,6 @@ public class UrlHandlerConfigTest {
     public int getSiteRootLevel(Resource contextResource) {
       return 0;
     }
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
-    }
   };
 
   @Test

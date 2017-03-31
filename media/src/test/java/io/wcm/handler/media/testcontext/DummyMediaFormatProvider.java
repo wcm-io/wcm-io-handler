@@ -19,19 +19,12 @@
  */
 package io.wcm.handler.media.testcontext;
 
-import org.apache.sling.api.resource.Resource;
-
 import io.wcm.handler.media.spi.MediaFormatProvider;
 
 public class DummyMediaFormatProvider extends MediaFormatProvider {
 
   public DummyMediaFormatProvider() {
     super(DummyMediaFormats.class);
-  }
-
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
   }
 
 }

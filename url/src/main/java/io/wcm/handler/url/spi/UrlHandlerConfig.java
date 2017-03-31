@@ -27,10 +27,10 @@ import org.osgi.annotation.versioning.ConsumerType;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.commons.caservice.ContextAwareService;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorMode;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * {@link UrlHandlerConfig} OSGi services provide application-specific configuration for URL handling.

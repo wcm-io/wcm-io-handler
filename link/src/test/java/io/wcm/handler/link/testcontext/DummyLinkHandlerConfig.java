@@ -22,7 +22,6 @@ package io.wcm.handler.link.testcontext;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
@@ -68,11 +67,6 @@ public class DummyLinkHandlerConfig extends LinkHandlerConfig {
   public boolean isRedirect(Page page) {
     String templatePath = page.getProperties().get(NameConstants.PN_TEMPLATE, String.class);
     return StringUtils.equals(templatePath, DummyAppTemplate.REDIRECT.getTemplatePath());
-  }
-
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
   }
 
 }

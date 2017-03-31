@@ -35,10 +35,10 @@ import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableSortedSet;
 
-import io.wcm.handler.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.sling.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -70,9 +70,7 @@ public class MediaFormatProviderManagerImplTest {
     context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
 
     when(provider1.getMediaFormats()).thenReturn(MEDIAFORMATS_1);
-    when(provider1.matches(resource)).thenReturn(true);
     when(provider2.getMediaFormats()).thenReturn(MEDIAFORMATS_2);
-    when(provider2.matches(resource)).thenReturn(true);
 
     context.registerService(MediaFormatProvider.class, provider1,
         Constants.SERVICE_RANKING, 200);

@@ -26,10 +26,10 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.commons.caservice.ContextAwareService;
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * {@link MediaHandlerConfig} OSGi services provide application-specific configuration for media handling.

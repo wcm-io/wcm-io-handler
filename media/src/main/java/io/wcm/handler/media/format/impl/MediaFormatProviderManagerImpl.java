@@ -27,9 +27,9 @@ import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.handler.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
 
 /**
  * Default implementation of {@link MediaFormatProviderManager}.

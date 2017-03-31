@@ -22,7 +22,6 @@ package io.wcm.handler.media.spi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.sling.api.resource.Resource;
 import org.junit.Test;
 
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
@@ -32,11 +31,7 @@ import io.wcm.handler.mediasource.dam.DamMediaSource;
 public class MediaHandlerConfigTest {
 
   private MediaHandlerConfig underTest = new MediaHandlerConfig() {
-
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
-    }
+    // inherit default
   };
 
   @Test

@@ -217,11 +217,6 @@ public class MediaHandlerImplTest {
       return ImmutableList.<Class<? extends MediaProcessor>>of(TestPostProcessor.class);
     }
 
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
-    }
-
   };
 
 
@@ -353,11 +348,6 @@ public class MediaHandlerImplTest {
 
     public TestMediaFormatProvider() {
       super(TestMediaFormats.class);
-    }
-
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
     }
 
   }

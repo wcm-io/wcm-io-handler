@@ -28,13 +28,13 @@ import org.osgi.annotation.versioning.ConsumerType;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.commons.caservice.ContextAwareService;
 import io.wcm.handler.link.markup.DummyLinkMarkupBuilder;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.processor.DefaultInternalLinkInheritUrlParamLinkPostProcessor;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * {@link LinkHandlerConfig} OSGi services provide application-specific configuration for link handling.

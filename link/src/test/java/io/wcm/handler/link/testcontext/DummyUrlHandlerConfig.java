@@ -66,9 +66,4 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
     return StringUtils.equals(templatePath, DummyAppTemplate.INTEGRATOR.getTemplatePath());
   }
 
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
-  }
-
 }

@@ -66,9 +66,4 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
     return SITE_ROOT_LEVEL;
   }
 
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
-  }
-
 }

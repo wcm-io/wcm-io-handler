@@ -24,8 +24,8 @@ import org.apache.sling.api.adapter.AdapterFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.handler.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
 
 /**
  * Adapts resources or requests to {@link MediaHandlerConfig} via {@link ContextAwareServiceResolver}.

@@ -19,28 +19,21 @@
  */
 package io.wcm.handler.link.impl;
 
-import org.apache.sling.api.resource.Resource;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 
 import io.wcm.handler.link.spi.LinkHandlerConfig;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * Default implementation of configuration options of {@link LinkHandlerConfig} interface.
  */
 @Component(service = LinkHandlerConfig.class, property = {
-    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
+    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE,
+    ContextAwareService.PROPERTY_ACCEPTS_CONTEXT_PATH_EMPTY + ":Boolean=true"
 })
 public final class DefaultLinkHandlerConfig extends LinkHandlerConfig {
 
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
-  }
-
-  @Override
-  public boolean supportsNullResource() {
-    return true;
-  }
+  // inherit all from {@link LinkHandlerConfig}
 
 }

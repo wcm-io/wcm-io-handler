@@ -122,11 +122,6 @@ public class LinkHandlerImplTest {
       return ImmutableList.<Class<? extends LinkProcessor>>of(TestLinkPostProcessor.class);
     }
 
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
-    }
-
   };
 
   @Model(adaptables = {

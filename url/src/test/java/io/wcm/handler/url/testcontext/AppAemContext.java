@@ -29,7 +29,6 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
-import io.wcm.handler.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
 import io.wcm.handler.url.impl.UrlHandlerConfigAdapterFactory;
@@ -65,7 +64,6 @@ public final class AppAemContext {
     public void execute(AemContext context) throws PersistenceException, IOException {
 
       // handler SPI
-      context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
       context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
       context.registerInjectActivateService(new DefaultUrlHandlerConfig());
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());

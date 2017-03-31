@@ -51,9 +51,4 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
     return INTEGRATOR_MODES;
   }
 
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
-  }
-
 }

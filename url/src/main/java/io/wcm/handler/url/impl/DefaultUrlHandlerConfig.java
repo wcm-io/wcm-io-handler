@@ -26,13 +26,15 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 import io.wcm.sling.commons.resource.ResourcePath;
 
 /**
  * Default implementation of configuration options of {@link UrlHandlerConfig} interface.
  */
 @Component(service = UrlHandlerConfig.class, property = {
-    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE
+    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE,
+    ContextAwareService.PROPERTY_ACCEPTS_CONTEXT_PATH_EMPTY + ":Boolean=true"
 })
 public class DefaultUrlHandlerConfig extends UrlHandlerConfig {
 
@@ -49,16 +51,6 @@ public class DefaultUrlHandlerConfig extends UrlHandlerConfig {
       }
     }
     return 0;
-  }
-
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
-  }
-
-  @Override
-  public boolean supportsNullResource() {
-    return true;
   }
 
 }

@@ -21,8 +21,6 @@ package io.wcm.handler.media.testcontext;
 
 import java.util.List;
 
-import org.apache.sling.api.resource.Resource;
-
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -43,11 +41,6 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
   @Override
   public List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
-  }
-
-  @Override
-  public boolean matches(Resource resource) {
-    return true;
   }
 
 }
