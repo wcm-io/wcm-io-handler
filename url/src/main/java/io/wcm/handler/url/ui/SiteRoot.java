@@ -22,16 +22,13 @@ package io.wcm.handler.url.ui;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
-import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMMode;
 import com.day.text.Text;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
@@ -46,14 +43,10 @@ public final class SiteRoot {
 
   private Page siteRootPage;
 
-  @SlingObject
-  private ResourceResolver resolver;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
   @AemObject
   private PageManager pageManager;
-  @AemObject
-  private WCMMode wcmMode;
   @Self
   private UrlHandlerConfig urlHandlerConfig;
 
@@ -111,11 +104,12 @@ public final class SiteRoot {
     if (path == null) {
       return null;
     }
+    StringBuilder sb = new StringBuilder(path);
     if (!relativePath.startsWith("/")) {
-      path += "/";
+      sb.append("/");
     }
-    path += relativePath;
-    return pageManager.getPage(path);
+    sb.append(relativePath);
+    return pageManager.getPage(sb.toString());
   }
 
   /**

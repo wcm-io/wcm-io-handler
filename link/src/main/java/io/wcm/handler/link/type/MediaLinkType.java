@@ -39,7 +39,6 @@ import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.spi.MediaHandlerConfig;
 
 /**
  * Default implementation of {@link io.wcm.handler.link.spi.LinkType} for media links.
@@ -62,8 +61,6 @@ public final class MediaLinkType extends LinkType {
    */
   public static final String ID = "media";
 
-  @Self
-  private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaHandler mediaHandler;
 

@@ -62,7 +62,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   @Self
   private MediaFormatHandler mediaFormatHandler;
 
-  private Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
   public MediaBuilder get(Resource resource) {
