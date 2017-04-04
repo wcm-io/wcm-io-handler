@@ -38,7 +38,6 @@ public class ResponsiveMediaFormatsBuilderTest {
     .build();
 
     assertEquals(ResponsiveMediaFormatsBuilder.buildCombinedName(DummyMediaFormats.RATIO, "B1", 160, 100), mediaFormats[0].getName());
-    assertEquals(DummyMediaFormats.RATIO.getApplicationId(), mediaFormats[0].getApplicationId());
     assertEquals(DummyMediaFormats.RATIO.getLabel(), mediaFormats[0].getLabel());
     assertArrayEquals(DummyMediaFormats.RATIO.getExtensions(), mediaFormats[0].getExtensions());
     assertEquals(DummyMediaFormats.RATIO.getRatio(), mediaFormats[0].getRatio(), 0.001d);
@@ -47,7 +46,6 @@ public class ResponsiveMediaFormatsBuilderTest {
     assertEquals("B1", mediaFormats[0].getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
 
     assertEquals(ResponsiveMediaFormatsBuilder.buildCombinedName(DummyMediaFormats.RATIO, "B2", 320, 200), mediaFormats[1].getName());
-    assertEquals(DummyMediaFormats.RATIO.getApplicationId(), mediaFormats[1].getApplicationId());
     assertEquals(DummyMediaFormats.RATIO.getLabel(), mediaFormats[1].getLabel());
     assertArrayEquals(DummyMediaFormats.RATIO.getExtensions(), mediaFormats[1].getExtensions());
     assertEquals(DummyMediaFormats.RATIO.getRatio(), mediaFormats[1].getRatio(), 0.001d);

@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.url.suffix.impl;
 
-import com.day.cq.commons.Filter;
+import java.util.function.Predicate;
 
 /**
  * Filter that discards all resource-suffix-parts and only keeps specific key-value-parts
  */
-public class IncludeNamedPartsFilter implements Filter<String> {
+public class IncludeNamedPartsFilter implements Predicate<String> {
 
   private final String[] keysToKeep;
 
@@ -36,7 +36,7 @@ public class IncludeNamedPartsFilter implements Filter<String> {
   }
 
   @Override
-  public boolean includes(String suffixPart) {
+  public boolean test(String suffixPart) {
     for (String key : keysToKeep) {
       if (suffixPart.startsWith(key + UrlSuffixUtil.KEY_VALUE_DELIMITER)) {
         return true;

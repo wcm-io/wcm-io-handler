@@ -49,13 +49,6 @@ public final class LinkArgs implements Cloneable {
   private ValueMap properties;
 
   /**
-   * Default constructor
-   */
-  public LinkArgs() {
-    // default constructor
-  }
-
-  /**
    * @return URL mode for externalizing the URL
    */
   public UrlMode getUrlMode() {

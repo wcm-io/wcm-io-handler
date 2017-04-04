@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>0.5.12</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.url</artifactId>
-  <version>0.8.3-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>URL Handler</name>
@@ -51,15 +51,9 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.commons</artifactId>
-      <version>0.5.4</version>
+      <version>1.0.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -67,14 +61,6 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <!-- try to get arround assumed logger-related threading issue on CI -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>1.7.12</version>
-      <scope>test</scope>
     </dependency>
 
   </dependencies>

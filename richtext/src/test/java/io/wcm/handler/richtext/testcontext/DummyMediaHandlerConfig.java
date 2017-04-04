@@ -21,25 +21,15 @@ package io.wcm.handler.richtext.testcontext;
 
 import java.util.List;
 
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
-
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
 
 /**
  * Dummy media configuration
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = MediaHandlerConfig.class)
-@Application(AppAemContext.APPLICATION_ID)
-public class DummyMediaHandlerConfig extends AbstractMediaHandlerConfig {
+public class DummyMediaHandlerConfig extends MediaHandlerConfig {
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES =
       ImmutableList.<Class<? extends MediaSource>>of();

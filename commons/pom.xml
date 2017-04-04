@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>0.5.12</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.commons</artifactId>
-  <version>0.5.5-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Handler Commons</name>
@@ -50,12 +50,6 @@
   
   <dependencies>
 
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    
     <!-- optional dependency from jdom - required for bnd analysis -->
     <dependency>
       <groupId>jaxen</groupId>
@@ -86,8 +80,7 @@
 
             <Export-Package>
               io.wcm.handler.commons.dom,
-              io.wcm.handler.commons.editcontext,
-              io.wcm.handler.commons.jcr
+              io.wcm.handler.commons.editcontext
             </Export-Package>
 
             <!-- embed JDOM2 dependency -->

@@ -2,6 +2,8 @@
 
 Link, Media and RichText Handler infrastructure.
 
+The current version of wcm.io Handler is 1.x. Guideline for migration from [wcm.io Handler 0.x][wcmio-handler-0x]: [Migrate from wcm.io Handler 0.x to 1.x][wcmio-handler-migration]
+
 
 ### Overview
 
@@ -20,3 +22,5 @@ Sources: https://github.com/wcm-io/wcm-io-handler
 
 
 [wcmio-samples]: http://wcm.io/samples/
+[wcmio-handler-0x]: http://wcm.io/handler-0.x/
+[wcmio-handler-migration]: https://wcm-io.atlassian.net/wiki/x/dhn9Ag

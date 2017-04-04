@@ -30,6 +30,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ProviderType;
@@ -49,7 +50,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.sling.models.annotations.AemObject;
 
@@ -60,7 +61,7 @@ import io.wcm.sling.models.annotations.AemObject;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class DamMediaSource extends AbstractMediaSource {
+public final class DamMediaSource extends MediaSource {
 
   @Self
   private Adaptable adaptable;
@@ -68,9 +69,9 @@ public final class DamMediaSource extends AbstractMediaSource {
   private ResourceResolver resourceResolver;
   @SlingObject
   private Resource resource;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private WCMMode wcmMode;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentContext componentContext;
 
   /**

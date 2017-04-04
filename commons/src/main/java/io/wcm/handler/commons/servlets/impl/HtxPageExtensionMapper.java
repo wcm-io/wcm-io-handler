@@ -20,22 +20,21 @@
 package io.wcm.handler.commons.servlets.impl;
 
 import java.io.IOException;
-import java.util.Dictionary;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.request.RequestPathInfo;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
-import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.osgi.annotation.versioning.ProviderType;
-import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,33 +44,33 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Virtually maps an *.htx request to a cq:Page resource to a *.html request internally (because components
  * and JSPs are normally only registered to *.html extension). Mapping can be enabled or disabled.
  */
-@SlingServlet(paths = "/apps/foundation/components/primary/cq/Page/Page." + FileExtension.HTML_UNCACHED + ".servlet",
-methods = HttpConstants.METHOD_GET,
-extensions = FileExtension.HTML_UNCACHED,
-label = "wcm.io htx Page Extension Mapper",
-description = "Mapps all *.htx requests on Pages to *.html view.",
-metatype = true)
-@ProviderType
+@Component(service = Servlet.class, immediate = true, property = {
+    "sling.servlet.paths=/apps/foundation/components/primary/cq/Page/Page." + FileExtension.HTML_UNCACHED + ".servlet",
+    "sling.servlet.methods=" + HttpConstants.METHOD_GET,
+    "sling.servlet.extensions=" + FileExtension.HTML_UNCACHED
+})
+@Designate(ocd = HtxPageExtensionMapper.Config.class)
 public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
-  private static final Logger log = LoggerFactory.getLogger(HtxPageExtensionMapper.class);
+  @ObjectClassDefinition(name = "wcm.io htx Page Extension Mapper",
+      description = "Mapps all *.htx requests on Pages to *.html view.")
+  static @interface Config {
 
-  @Property(boolValue = HtxPageExtensionMapper.DEFAULT_ENABLED,
-      label = "Enabled",
-      description = "Enable mapping.")
-  static final String PROPERTY_ENABLED = "enabled";
-  static final boolean DEFAULT_ENABLED = true;
+    @AttributeDefinition(name = "Enabled", description = "Enable mapping.")
+    boolean enabled() default true;
+
+  }
+
+  private static final Logger log = LoggerFactory.getLogger(HtxPageExtensionMapper.class);
 
   private boolean enabled;
 
   // ---------- SCR Integration ----------------------------------------------
 
-  @SuppressWarnings("unchecked")
-  protected void activate(ComponentContext pContext) {
+  protected void activate(Config config) {
     // read config
-    final Dictionary<String, Object> props = pContext.getProperties();
-    this.enabled = PropertiesUtil.toBoolean(props.get(PROPERTY_ENABLED), DEFAULT_ENABLED);
+    this.enabled = config.enabled();
   }
 
   @Override

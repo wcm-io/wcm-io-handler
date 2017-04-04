@@ -22,10 +22,13 @@ package io.wcm.handler.link.type.helpers;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.settings.SlingSettingsService;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -68,9 +71,11 @@ public final class InternalLinkResolver {
   private LinkHandler linkHandler;
   @Self
   private UrlHandler urlHandler;
+  @SlingObject
+  private ResourceResolver resourceResolver;
   @AemObject
   private PageManager pageManager;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private WCMMode wcmMode;
   @OSGiService
   private SlingSettingsService slingSettings;
@@ -78,6 +83,7 @@ public final class InternalLinkResolver {
   /**
    * Check if a given page is valid and acceptable to link upon.
    * @param page Page
+   * @param options Options
    * @return true if link is acceptable
    */
   public boolean acceptPage(Page page, InternalLinkResolverOptions options) {
@@ -238,7 +244,7 @@ public final class InternalLinkResolver {
     // Rewrite target to current site context
     String rewrittenPath;
     if (options.isRewritePathToContext()) {
-      rewrittenPath = urlHandler.rewritePathToContext(targetPath);
+      rewrittenPath = urlHandler.rewritePathToContext(SyntheticNavigatableResource.get(targetPath, resourceResolver));
     }
     else {
       rewrittenPath = targetPath;

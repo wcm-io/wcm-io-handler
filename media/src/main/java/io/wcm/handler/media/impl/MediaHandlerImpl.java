@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -28,6 +29,8 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
@@ -59,7 +62,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   @Self
   private MediaFormatHandler mediaFormatHandler;
 
-  private Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
   public MediaBuilder get(Resource resource) {
@@ -120,6 +123,12 @@ public final class MediaHandlerImpl implements MediaHandler {
 
     // resolve media format names to media formats
     if (!resolveMediaFormats(mediaRequest.getMediaArgs())) {
+      media.setMediaInvalidReason(MediaInvalidReason.INVALID_MEDIA_FORMAT);
+      return media;
+    }
+
+    // if only downloads are accepted prepare media format filter set which only contains download media formats
+    if (!resolveDownloadMediaFormats(mediaRequest.getMediaArgs())) {
       media.setMediaInvalidReason(MediaInvalidReason.INVALID_MEDIA_FORMAT);
       return media;
     }
@@ -224,6 +233,37 @@ public final class MediaHandlerImpl implements MediaHandler {
     mediaArgs.mediaFormats(mediaFormats);
     mediaArgs.mediaFormatNames((String[])null);
     return resolutionSuccessful;
+  }
+
+  /**
+   * If a set of media formats is given it is filtered to contain only download media formats.
+   * If no is given a new set of allowed media formats is created by getting from all media formats those marked as "download".
+   * If the result is an empty set of media formats (but downloads are requests) resolution is not successful.
+   * @param mediaArgs Media args
+   * @return true if resolving was successful
+   */
+  private boolean resolveDownloadMediaFormats(MediaArgs mediaArgs) {
+    if (!mediaArgs.isDownload()) {
+      // not filtering for downloads
+      return true;
+    }
+    List<MediaFormat> candidates = new ArrayList<>();
+    if (mediaArgs.getMediaFormats() != null) {
+      candidates.addAll(ImmutableList.copyOf(mediaArgs.getMediaFormats()));
+    }
+    else {
+      candidates.addAll(mediaFormatHandler.getMediaFormats());
+    }
+    MediaFormat[] result = candidates.stream()
+        .filter(MediaFormat::isDownload)
+        .toArray(size -> new MediaFormat[size]);
+    if (result.length > 0) {
+      mediaArgs.mediaFormats(result);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
 }

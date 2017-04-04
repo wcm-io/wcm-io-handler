@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.url.suffix.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.function.Predicate;
 
-import com.day.cq.commons.Filter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Suffix-part filter that removes specific resource paths.
  */
-public class ExcludeSpecificResourceFilter implements Filter<String> {
+public class ExcludeSpecificResourceFilter implements Predicate<String> {
 
   private final String resourcePathToRemove;
 
@@ -38,7 +38,7 @@ public class ExcludeSpecificResourceFilter implements Filter<String> {
   }
 
   @Override
-  public boolean includes(String suffixPart) {
+  public boolean test(String suffixPart) {
     if (StringUtils.contains(suffixPart, UrlSuffixUtil.KEY_VALUE_DELIMITER)) {
       return true;
     }

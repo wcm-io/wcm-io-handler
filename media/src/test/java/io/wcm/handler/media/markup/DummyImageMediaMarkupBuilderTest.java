@@ -60,7 +60,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class DummyImageMediaMarkupBuilderTest {
 
-  private static final MediaFormat DUMMY_FORMAT = create("dummyformat", AppAemContext.APPLICATION_ID).build();
+  private static final MediaFormat DUMMY_FORMAT = create("dummyformat").build();
 
   @Rule
   public final AemContext context = AppAemContext.newAemContext();

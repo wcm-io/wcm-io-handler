@@ -77,10 +77,9 @@ public final class DefaultUrlMode extends AbstractUrlMode {
     }
 
     UrlHandlerConfig urlHandlerConfig = AdaptTo.notNull(adaptable, UrlHandlerConfig.class);
-    String currentPath = currentPage.getPath();
-    String targetPath = targetResource.getPath();
-    String currentSiteRoot = getRootPath(currentPath, urlHandlerConfig.getSiteRootLevel(currentPath));
-    String pathSiteRoot = getRootPath(targetPath, urlHandlerConfig.getSiteRootLevel(targetPath));
+    Resource currentResource = currentPage.adaptTo(Resource.class);
+    String currentSiteRoot = getRootPath(currentPage.getPath(), urlHandlerConfig.getSiteRootLevel(currentResource));
+    String pathSiteRoot = getRootPath(targetResource.getPath(), urlHandlerConfig.getSiteRootLevel(targetResource));
     boolean notInCurrentSite = !StringUtils.equals(currentSiteRoot, pathSiteRoot);
 
     if (notInCurrentSite) {

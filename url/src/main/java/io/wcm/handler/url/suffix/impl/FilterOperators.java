@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.url.suffix.impl;
 
-import com.day.cq.commons.Filter;
+import java.util.function.Predicate;
 
 /**
  * Contains static methods that combine filters with logical operations
@@ -36,12 +36,11 @@ public final class FilterOperators {
    * @param filter2
    * @return a filter that includes those elements that are included by *both* specified filters
    */
-  public static <T> Filter<T> and(final Filter<T> filter1, final Filter<T> filter2) {
-    return new Filter<T>() {
-
+  public static <T> Predicate<T> and(final Predicate<T> filter1, final Predicate<T> filter2) {
+    return new Predicate<T>() {
       @Override
-      public boolean includes(T pElement) {
-        return filter1.includes(pElement) && filter2.includes(pElement);
+      public boolean test(T pElement) {
+        return filter1.test(pElement) && filter2.test(pElement);
       }
     };
   }
@@ -52,12 +51,11 @@ public final class FilterOperators {
    * @param filter2
    * @return a filter that includes those elements that are included by *one* of the specified filters
    */
-  public static <T> Filter<T> or(final Filter<T> filter1, final Filter<T> filter2) {
-    return new Filter<T>() {
-
+  public static <T> Predicate<T> or(final Predicate<T> filter1, final Predicate<T> filter2) {
+    return new Predicate<T>() {
       @Override
-      public boolean includes(T pElement) {
-        return filter1.includes(pElement) || filter2.includes(pElement);
+      public boolean test(T pElement) {
+        return filter1.test(pElement) || filter2.test(pElement);
       }
     };
   }

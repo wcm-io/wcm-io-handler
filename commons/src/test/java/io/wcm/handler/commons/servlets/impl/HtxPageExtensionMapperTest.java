@@ -30,18 +30,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.request.RequestPathInfo;
-import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.osgi.service.component.ComponentContext;
-
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class HtxPageExtensionMapperTest {
+
+  @Rule
+  public OsgiContext context = new OsgiContext();
 
   @Mock
   private SlingHttpServletRequest request;
@@ -60,10 +61,7 @@ public class HtxPageExtensionMapperTest {
 
   @Test
   public void testDisabled() throws Exception {
-    ComponentContext context = MockOsgi.newComponentContext(
-        ImmutableValueMap.of(HtxPageExtensionMapper.PROPERTY_ENABLED, false));
-    HtxPageExtensionMapper underTest = new HtxPageExtensionMapper();
-    underTest.activate(context);
+    HtxPageExtensionMapper underTest = context.registerInjectActivateService(new HtxPageExtensionMapper(), "enabled", false);
 
     underTest.doGet(request, response);
     verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -72,10 +70,7 @@ public class HtxPageExtensionMapperTest {
 
   @Test
   public void testSimpleUrl() throws Exception {
-    ComponentContext context = MockOsgi.newComponentContext(
-        ImmutableValueMap.of(HtxPageExtensionMapper.PROPERTY_ENABLED, true));
-    HtxPageExtensionMapper underTest = new HtxPageExtensionMapper();
-    underTest.activate(context);
+    HtxPageExtensionMapper underTest = context.registerInjectActivateService(new HtxPageExtensionMapper(), "enabled", true);
 
     when(requestPathInfo.getResourcePath()).thenReturn("/my/path");
     when(requestPathInfo.getExtension()).thenReturn("html");
@@ -89,10 +84,7 @@ public class HtxPageExtensionMapperTest {
 
   @Test
   public void testComplexUrl() throws Exception {
-    ComponentContext context = MockOsgi.newComponentContext(
-        ImmutableValueMap.of(HtxPageExtensionMapper.PROPERTY_ENABLED, true));
-    HtxPageExtensionMapper underTest = new HtxPageExtensionMapper();
-    underTest.activate(context);
+    HtxPageExtensionMapper underTest = context.registerInjectActivateService(new HtxPageExtensionMapper(), "enabled", true);
 
     when(requestPathInfo.getResourcePath()).thenReturn("/my/path");
     when(requestPathInfo.getExtension()).thenReturn("html");

@@ -19,88 +19,50 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.resource.Resource;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
-import io.wcm.sling.commons.osgi.RankedServices;
+import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
+import io.wcm.sling.commons.caservice.ContextAwareServiceResolver.ResolveAllResult;
 
 /**
  * Default implementation of {@link MediaFormatProviderManager}.
  */
-@Component(immediate = true, metatype = false)
-@Service(MediaFormatProviderManager.class)
+@Component(service = MediaFormatProviderManager.class, immediate = true)
 public final class MediaFormatProviderManagerImpl implements MediaFormatProviderManager {
 
-  private volatile Map<String, SortedSet<MediaFormat>> mediaFormats = ImmutableMap.of();
+  @Reference
+  private ContextAwareServiceResolver serviceResolver;
 
-  /**
-   * Parameter providers implemented by installed applications.
-   */
-  @Reference(name = "mediaFormatProvider", referenceInterface = MediaFormatProvider.class,
-      cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-  private final RankedServices<MediaFormatProvider> mediaFormatProviders = new RankedServices<>(new MediaFormatProviderChangeListener());
+  // cache resolving of media formats per combined cache key of context-aware services
+  private final Cache<String, SortedSet<MediaFormat>> cache = CacheBuilder.newBuilder()
+      .expireAfterWrite(1, TimeUnit.HOURS)
+      .build();
 
   @Override
-  public SortedSet<MediaFormat> getMediaFormats(String applicationId) {
-    SortedSet<MediaFormat> mediaFormatSet = mediaFormats.get(applicationId);
-    if (mediaFormatSet == null) {
-      mediaFormatSet = ImmutableSortedSet.<MediaFormat>of();
+  public SortedSet<MediaFormat> getMediaFormats(Resource contextResource) {
+    ResolveAllResult<MediaFormatProvider> result = serviceResolver.resolveAll(MediaFormatProvider.class, contextResource);
+    String key = result.getCombinedKey();
+    try {
+      return cache.get(key, () -> result.getServices()
+          .flatMap(provider -> provider.getMediaFormats().stream())
+          .collect(Collectors.toCollection(() -> new TreeSet<MediaFormat>())));
     }
-    return mediaFormatSet;
-  }
-
-  void bindMediaFormatProvider(MediaFormatProvider service, Map<String, Object> props) {
-    mediaFormatProviders.bind(service, props);
-  }
-
-  void unbindMediaFormatProvider(MediaFormatProvider service, Map<String, Object> props) {
-    mediaFormatProviders.unbind(service, props);
-  }
-
-
-  /**
-   * Synchronizes the field mediaFormats whenever a media format provider service is added or removed.
-   */
-  private class MediaFormatProviderChangeListener implements RankedServices.ChangeListener {
-
-    @Override
-    public void changed() {
-      Map<String, SortedSet<MediaFormat>> mediaFormatMap = new HashMap<>();
-
-      for (MediaFormatProvider provider : MediaFormatProviderManagerImpl.this.mediaFormatProviders) {
-        for (MediaFormat mediaFormat : provider.getMediaFormats()) {
-          SortedSet<MediaFormat> mediaFormatSet = mediaFormatMap.get(mediaFormat.getApplicationId());
-          if (mediaFormatSet == null) {
-            mediaFormatSet = new TreeSet<>();
-            mediaFormatMap.put(mediaFormat.getApplicationId(), mediaFormatSet);
-          }
-          mediaFormatSet.add(mediaFormat);
-        }
-      }
-
-      Set<String> applicationIds = ImmutableSet.copyOf(mediaFormatMap.keySet());
-      for (String applicationId : applicationIds) {
-        mediaFormatMap.put(applicationId, ImmutableSortedSet.copyOf(mediaFormatMap.get(applicationId)));
-      }
-
-      MediaFormatProviderManagerImpl.this.mediaFormats = ImmutableMap.copyOf(mediaFormatMap);
+    catch (ExecutionException ex) {
+      throw new RuntimeException("Error accessing media format provider result cache.", ex);
     }
-
   }
 
 }

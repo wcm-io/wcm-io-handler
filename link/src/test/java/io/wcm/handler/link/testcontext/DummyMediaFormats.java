@@ -17,8 +17,22 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Convenience classes for implementing the SPI.
- */
-@org.osgi.annotation.versioning.Version("0.5.0")
-package io.wcm.handler.url.spi.helpers;
+package io.wcm.handler.link.testcontext;
+
+import static io.wcm.handler.media.format.MediaFormatBuilder.create;
+
+import io.wcm.handler.media.format.MediaFormat;
+
+public final class DummyMediaFormats {
+
+  private DummyMediaFormats() {
+    // constants only
+  }
+
+  public static final MediaFormat DOWNLOAD = create("download")
+      .label("Download")
+      .extensions("pdf", "zip", "exe")
+      .download(true)
+      .build();
+
+}

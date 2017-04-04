@@ -30,8 +30,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -42,8 +40,6 @@ import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.config.spi.ApplicationProvider;
-import io.wcm.config.spi.annotations.Application;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
@@ -58,13 +54,10 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
-import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 
@@ -73,15 +66,14 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
  */
 public class MediaHandlerImplTest {
 
-  static final String APP_ID = "/apps/mediaHandlerImplTestApp";
-
   @Rule
   public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
     @Override
     public void execute(AemContext callbackContext) {
-      callbackContext.registerService(ApplicationProvider.class, new TestApplicationProvider(),
-          ImmutableValueMap.of(Constants.SERVICE_RANKING, 1));
-      callbackContext.registerService(MediaFormatProvider.class, new TestMediaFormatProvider());
+      callbackContext.registerService(MediaHandlerConfig.class, new TestMediaHandlerConfig(),
+          Constants.SERVICE_RANKING, 1000);
+      callbackContext.registerService(MediaFormatProvider.class, new TestMediaFormatProvider(),
+          Constants.SERVICE_RANKING, 1000);
     }
   });
 
@@ -112,6 +104,33 @@ public class MediaHandlerImplTest {
     assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", media.getElement().getAttributeValue("src"));
 
     assertEquals("<img src=\"http://xyz/content/dummymedia/item1/pre1.gif\" />", media.getMarkup());
+  }
+
+  @Test
+  public void testDownload() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    // test pipelining and resolve link
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1", new MediaArgs()
+        .download(true)
+        .urlMode(UrlModes.DEFAULT));
+    Media media = mediaHandler.get(mediaRequest).build();
+
+    // make sure initial media request is unmodified
+    assertEquals("/content/dummymedia/item1", mediaRequest.getMediaRef());
+    assertEquals(UrlModes.DEFAULT, mediaRequest.getMediaArgs().getUrlMode());
+
+    // check preprocessed link reference
+    assertEquals("/content/dummymedia/item1/pre1", media.getMediaRequest().getMediaRef());
+    assertEquals(UrlModes.FULL_URL, media.getMediaRequest().getMediaArgs().getUrlMode());
+
+    // check final link url and html element
+    assertEquals(true, media.isValid());
+    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.pdf", media.getUrl());
+    assertNull(media.getElement());
+
+    // check resolved media format list
+    assertArrayEquals(new MediaFormat[] { DummyMediaFormats.DOWNLOAD }, media.getMediaRequest().getMediaArgs().getMediaFormats());
   }
 
   @Test
@@ -158,7 +177,7 @@ public class MediaHandlerImplTest {
         .mandatoryMediaFormats(mediaFormats)
         .fileExtensions(fileExtensions)
         .fixedDimension(200, 100)
-        .forceDownload(true)
+        .contentDispositionAttachment(true)
         .altText("alt")
         .dummyImage(false)
         .dummyImageUrl("/dummy/url")
@@ -170,32 +189,13 @@ public class MediaHandlerImplTest {
     assertArrayEquals(fileExtensions, args.getFileExtensions());
     assertEquals(200, args.getFixedWidth());
     assertEquals(100, args.getFixedHeight());
-    assertTrue(args.isForceDownload());
+    assertTrue(args.isContentDispositionAttachment());
     assertFalse(args.isDummyImage());
     assertEquals("/dummy/url", args.getDummyImageUrl());
   }
 
 
-  public static class TestApplicationProvider implements ApplicationProvider {
-    @Override
-    public String getApplicationId() {
-      return APP_ID;
-    }
-    @Override
-    public String getLabel() {
-      return null;
-    }
-    @Override
-    public boolean matches(Resource resource) {
-      return true;
-    }
-  }
-
-  @Model(adaptables = {
-      SlingHttpServletRequest.class, Resource.class
-  }, adapters = MediaHandlerConfig.class)
-  @Application(APP_ID)
-  public static class TestMediaHandlerConfig extends AbstractMediaHandlerConfig {
+  public static class TestMediaHandlerConfig extends MediaHandlerConfig {
 
     @Override
     public List<Class<? extends MediaProcessor>> getPreProcessors() {
@@ -245,7 +245,7 @@ public class MediaHandlerImplTest {
   @Model(adaptables = {
       SlingHttpServletRequest.class, Resource.class
   })
-  public static class TestMediaSource extends AbstractMediaSource {
+  public static class TestMediaSource extends MediaSource {
 
     @Override
     public String getId() {
@@ -264,9 +264,16 @@ public class MediaHandlerImplTest {
 
     @Override
     public Media resolveMedia(Media media) {
-      String mediaUrl = media.getMediaRequest().getMediaRef();
-      media.setUrl("http://xyz" + mediaUrl + ".gif");
-      return media;
+      if (media.getMediaRequest().getMediaArgs().isDownload()) {
+        String mediaUrl = media.getMediaRequest().getMediaRef();
+        media.setUrl("http://xyz" + mediaUrl + ".pdf");
+        return media;
+      }
+      else {
+        String mediaUrl = media.getMediaRequest().getMediaRef();
+        media.setUrl("http://xyz" + mediaUrl + ".gif");
+        return media;
+      }
     }
 
     @Override
@@ -319,7 +326,7 @@ public class MediaHandlerImplTest {
     }
 
     /* home_stage */
-    public static final MediaFormat HOME_STAGE = create("home_stage", APP_ID)
+    public static final MediaFormat HOME_STAGE = create("home_stage")
         .label("Home Stage")
         .width(960)
         .height(485)
@@ -327,7 +334,7 @@ public class MediaHandlerImplTest {
         .build();
 
     /* home_teaser */
-    public static final MediaFormat HOME_TEASER = create("home_teaser", APP_ID)
+    public static final MediaFormat HOME_TEASER = create("home_teaser")
         .label("Home Teaser")
         .width(206)
         .height(104)
@@ -337,9 +344,7 @@ public class MediaHandlerImplTest {
 
   }
 
-  @Component(immediate = true)
-  @Service(MediaFormatProvider.class)
-  public static class TestMediaFormatProvider extends AbstractMediaFormatProvider {
+  public static class TestMediaFormatProvider extends MediaFormatProvider {
 
     public TestMediaFormatProvider() {
       super(TestMediaFormats.class);

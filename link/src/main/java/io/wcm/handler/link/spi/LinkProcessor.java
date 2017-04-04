@@ -26,7 +26,7 @@ import io.wcm.handler.link.Link;
 /**
  * Processes link metadata before or after link resolving.
  * <p>
- * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
+ * This interface has to be implemented by a Sling Model class. The adaptables
  * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
  * </p>
  */

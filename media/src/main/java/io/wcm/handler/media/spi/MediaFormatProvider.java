@@ -19,24 +19,67 @@
  */
 package io.wcm.handler.media.spi;
 
+import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.osgi.annotation.versioning.ConsumerType;
 
+import com.google.common.collect.ImmutableSet;
+
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
- * Allows application to provide media formats for the media handler.
- * <p>
- * This interface has to be implented as OSGi service.
- * </p>
+ * {@link MediaFormatProvider} OSGi services provide media formats for the media handler.
+ * Applications can set service properties or bundle headers as defined in {@link ContextAwareService} to apply this
+ * configuration only for resources that match the relevant resource paths.
  */
 @ConsumerType
-public interface MediaFormatProvider {
+public abstract class MediaFormatProvider implements ContextAwareService {
+
+  private final Set<MediaFormat> mediaFormats;
+
+  /**
+   * @param mediaFormats Set of media formats for parameter provider
+   */
+  protected MediaFormatProvider(Set<MediaFormat> mediaFormats) {
+    this.mediaFormats = mediaFormats;
+  }
+
+  /**
+   * @param type Type containing media format definitions as public static fields.
+   */
+  protected MediaFormatProvider(Class<?> type) {
+    this(getMediaFormatsFromPublicFields(type));
+  }
 
   /**
    * @return Media formats that the application defines
    */
-  Set<MediaFormat> getMediaFormats();
+  public Set<MediaFormat> getMediaFormats() {
+    return mediaFormats;
+  }
+
+  /**
+   * Get all media formats defined as public static fields in the given type.
+   * @param type Type
+   * @return Set of media formats
+   */
+  private static Set<MediaFormat> getMediaFormatsFromPublicFields(Class<?> type) {
+    Set<MediaFormat> params = new HashSet<>();
+    try {
+      Field[] fields = type.getFields();
+      for (Field field : fields) {
+        if (field.getType().isAssignableFrom(MediaFormat.class)) {
+          params.add((MediaFormat)field.get(null));
+        }
+      }
+    }
+    catch (IllegalArgumentException | IllegalAccessException ex) {
+      throw new RuntimeException("Unable to access fields of " + type.getName(), ex);
+    }
+    return ImmutableSet.copyOf(params);
+  }
 
 }

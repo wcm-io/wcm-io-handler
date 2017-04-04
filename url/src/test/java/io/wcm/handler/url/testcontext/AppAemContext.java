@@ -19,25 +19,24 @@
  */
 package io.wcm.handler.url.testcontext;
 
-import static io.wcm.testing.mock.wcmio.config.ContextPlugins.WCMIO_CONFIG;
+import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
+import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
 import java.io.IOException;
 
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 
-import io.wcm.config.spi.ApplicationProvider;
-import io.wcm.config.spi.ConfigurationFinderStrategy;
-import io.wcm.config.spi.ParameterProvider;
-import io.wcm.handler.url.UrlParams;
-import io.wcm.handler.url.impl.ApplicationProviderImpl;
-import io.wcm.handler.url.impl.UrlHandlerParameterProviderImpl;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.handler.url.SiteConfig;
+import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
+import io.wcm.handler.url.impl.UrlHandlerConfigAdapterFactory;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
-import io.wcm.testing.mock.wcmio.config.MockConfig;
+import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
 /**
  * Sets up {@link AemContext} for unit tests in this application.
@@ -50,7 +49,8 @@ public final class AppAemContext {
 
   public static AemContext newAemContext() {
     return new AemContextBuilder()
-        .plugin(WCMIO_SLING, WCMIO_CONFIG)
+        .plugin(CACONFIG)
+        .plugin(WCMIO_SLING, WCMIO_CACONFIG)
         .afterSetUp(SETUP_CALLBACK)
         .resourceResolverType(ResourceResolverType.JCR_MOCK)
         .build();
@@ -63,17 +63,16 @@ public final class AppAemContext {
     @Override
     public void execute(AemContext context) throws PersistenceException, IOException {
 
-      // URL handler-specific parameter definitions
-      context.registerService(ParameterProvider.class, new UrlHandlerParameterProviderImpl());
+      // handler SPI
+      context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new DefaultUrlHandlerConfig());
+      context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
 
-      // application provider
-      context.registerService(ApplicationProvider.class,
-          MockConfig.applicationProvider(ApplicationProviderImpl.APPLICATION_ID, "/content"));
+      // register configuration classes
+      MockContextAwareConfig.registerAnnotationClasses(context, SiteConfig.class);
 
-      // configuration finder strategy
-      context.registerService(ConfigurationFinderStrategy.class,
-          MockConfig.configurationFinderStrategyAbsoluteParent(ApplicationProviderImpl.APPLICATION_ID,
-              DummyUrlHandlerConfig.SITE_ROOT_LEVEL));
+      // context path strategy
+      MockCAConfig.contextPathStrategyAbsoluteParent(context, DummyUrlHandlerConfig.SITE_ROOT_LEVEL);
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.url");
@@ -94,18 +93,14 @@ public final class AppAemContext {
       context.create().page("/content/unittest/de_test/brand/en/section/page");
 
       // default site config
-      MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de",
-          ImmutableValueMap.builder()
-          .put(UrlParams.SITE_URL.getName(), "http://de.dummysite.org")
-          .put(UrlParams.SITE_URL_SECURE.getName(), "https://de.dummysite.org")
-          .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
-          .build());
-      MockConfig.writeConfiguration(context, "/content/unittest/de_test/brand/en",
-          ImmutableValueMap.builder()
-          .put(UrlParams.SITE_URL.getName(), "http://en.dummysite.org")
-          .put(UrlParams.SITE_URL_SECURE.getName(), "https://en.dummysite.org")
-          .put(UrlParams.SITE_URL_AUTHOR.getName(), "https://author.dummysite.org")
-          .build());
+      MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", SiteConfig.class.getName(),
+          "siteUrl", "http://de.dummysite.org",
+          "siteUrlSecure", "https://de.dummysite.org",
+          "siteUrlAuthor", "https://author.dummysite.org");
+      MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/en", SiteConfig.class.getName(),
+          "siteUrl", "http://en.dummysite.org",
+          "siteUrlSecure", "https://en.dummysite.org",
+          "siteUrlAuthor", "https://author.dummysite.org");
     }
   };
 

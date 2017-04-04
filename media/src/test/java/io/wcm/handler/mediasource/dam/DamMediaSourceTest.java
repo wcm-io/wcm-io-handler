@@ -64,7 +64,6 @@ import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
-import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -329,7 +328,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaElementImageInvalidMediaFormat() {
     // create img element in a mediaFormat for which there is no rendition is available - returns any rendition
-    MediaArgs args = new MediaArgs(MediaFormatBuilder.create("someotherformat", AppAemContext.APPLICATION_ID).build());
+    MediaArgs args = new MediaArgs(MediaFormatBuilder.create("someotherformat").build());
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull("returned null?", img);
   }
@@ -406,7 +405,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   @Test
   public void testGetMediaUrlStandard_Resize_Download() {
     // construct url to an existing media item - should resolve to the first rendition
-    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs(SHOWROOM_CONTROLS_SCALE1).forceDownload(true)).buildUrl();
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs(SHOWROOM_CONTROLS_SCALE1).contentDispositionAttachment(true)).buildUrl();
     assertNotNull("returned url?", url);
     assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.download_attachment.file/standard.jpg",
         url);
@@ -502,7 +501,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   public void testDownloadMediaElement() {
-    MediaArgs mediaArgs = new MediaArgs().forceDownload(true);
+    MediaArgs mediaArgs = new MediaArgs().contentDispositionAttachment(true);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());

@@ -34,6 +34,7 @@ import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.type.helpers.InternalLinkResolver;
 import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
 import io.wcm.handler.url.UrlHandler;
@@ -44,7 +45,7 @@ import io.wcm.handler.url.UrlHandler;
  * <p>
  * This link type ensures all links target only pages inside the same inner-most configuration scope, which is usually
  * the same site/language. All link paths referencing pages outside this content subtree are rewritten via
- * {@link UrlHandler#rewritePathToContext(String)} with the root path of the inner-most configuration scope/site and
+ * {@link UrlHandler#rewritePathToContext(Resource)} with the root path of the inner-most configuration scope/site and
  * then resolved.
  * </p>
  */
@@ -52,7 +53,7 @@ import io.wcm.handler.url.UrlHandler;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class InternalLinkType extends AbstractLinkType {
+public final class InternalLinkType extends LinkType {
 
   /**
    * Link type ID

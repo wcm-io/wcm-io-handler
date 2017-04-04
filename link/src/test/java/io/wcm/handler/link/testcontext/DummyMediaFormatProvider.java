@@ -17,8 +17,14 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Convenience classes for implementing the SPI.
- */
-@org.osgi.annotation.versioning.Version("0.5.0")
-package io.wcm.handler.media.spi.helpers;
+package io.wcm.handler.link.testcontext;
+
+import io.wcm.handler.media.spi.MediaFormatProvider;
+
+public class DummyMediaFormatProvider extends MediaFormatProvider {
+
+  public DummyMediaFormatProvider() {
+    super(DummyMediaFormats.class);
+  }
+
+}

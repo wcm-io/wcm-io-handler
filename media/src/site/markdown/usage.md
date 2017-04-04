@@ -45,7 +45,7 @@ Further properties are defined in [MediaNameConstants][media-name-constants]. It
 Media formats describe expected output formats of media assets or images. They are defined as constants using a builder pattern. The most simple type of media format is defining an image with a  fixed dimension:
 
 ```java
-public static final MediaFormat CONTENT_480 = MediaFormatBuilder.create("content_480", APPLICATION_ID)
+public static final MediaFormat CONTENT_480 = MediaFormatBuilder.create("content_480")
     .label("Content Standard")
     .fixedDimension(480, 270)
     .extensions("gif", "jpg", "png")
@@ -55,7 +55,7 @@ public static final MediaFormat CONTENT_480 = MediaFormatBuilder.create("content
 It is also possible to define a format which matches certain min/max-sizes and a ratio:
 
 ```java
-public static final MediaFormat MF_16_9 = create("mf_16_9", APPLICATION_ID)
+public static final MediaFormat MF_16_9 = create("mf_16_9")
     .label("16:9 Image")
     .minWidth(1000)
     .minHeight(500)
@@ -67,13 +67,14 @@ public static final MediaFormat MF_16_9 = create("mf_16_9", APPLICATION_ID)
 Or a media format defining downloads only restricting by file extensions:
 
 ```java
-public static final MediaFormat DOWNLOAD = create("download", APPLICATION_ID)
+public static final MediaFormat DOWNLOAD = create("download")
     .label("Download")
     .extensions("pdf", "zip", "ppt", "pptx", "doc", "docx")
+    .download(true)
     .build();
 ```
 
-These media format definitions have to be provided to the media handling using an OSGi service implementing the [MediaFormatProvider][media-format-provider] interface. For convenience it is possible to extend [AbstractMediaFormatProvider][abstract-media-format-provider] and extract the defined formats from the public static fields of a class.
+These media format definitions have to be provided to the media handling using an OSGi service extending the [MediaFormatProvider][media-format-provider] class. The default implementation supports extracting the defined formats from the public static fields of a class. Via [Context-Aware Services][sling-commons-caservices] you can make sure the media formats affect only resources (content pages, DAM assets) that are relevant for your application. Thus it is possible to provide different media formats for different applications running in the same AEM instance.
 
 When resolving a media reference it is possible to specify one or multiple media formats. If the media asset contains a rendition that exactly matches the format it is returned. If it contains a rendition that is bigger but has the requested ratio a dynamically downscaled rendition is returned. If cropping parameters are defined they are applied before checking against the media format. If no rendition matches or can be rescaled the resolving process failed and the returned media is invalid. In Edit Mode `DummyImageMediaMarkupBuilder` is then used to render a drop area instead to which an DAM asset can be assigned via drag&drop.
 
@@ -117,29 +118,29 @@ In this case the `${media.markup ...}` is replaced with the media markup of the 
 
 ### Configuring and tailoring the media resolving process
 
-Optionally you can implement an interface to specify in more detail the media resolving needs of your application. For this you have to implement the [MediaHandlerConfig][media-handler-config] interface. You can extend from [AbstractMediaHandlerConfig][abstract-media-handler-config] and overwrite only what is required.
-
-The class you implement is a Sling Model class, and should have an @Application annotation with the Application ID specified via the [Application Provider interface][config-application-provider] of the configuration infrastructure.
+Optionally you can provide an OSGi service to specify in more detail the media resolving needs of your application. For this you have to extend the [MediaHandlerConfig][media-handler-config] class. Via [Context-Aware Services][sling-commons-caservices] you can make sure the SPI customization affects only resources (content pages, DAM assets) that are relevant for your application. Thus it is possible to provide different customizations for different applications running in the same AEM instance.
 
 With this you can:
 
 * Define which media sources are supported by your application or include your own ones
 * Define which markup builders are supported by your application or include your own ones
 * Define custom pre- and postprocessors that are called before and after the media resolving takes place
-* Define which media formats may be used for downloads that means link targets of the [Link Handler][link-handler]
 * Implement a method which returns the default quality when writing images with lossy compression
 
 Example:
 
 ```java
-@Model(adaptables = { SlingHttpServletRequest.class, Resource.class }, adapters = MediaHandlerConfig.class)
-@Application(ApplicationProviderImpl.APPLICATION_ID)
-public class MediaHandlerConfigImpl extends AbstractMediaHandlerConfig {
+@Component(service = MediaHandlerConfig.class, property = {
+    ContextAwareService.PROPERTY_CONTEXT_PATH_PATTERN + "=^/content/(dam/)?myapp(/.*)?$"
+})
+public class MediaHandlerConfigImpl extends MediaHandlerConfig {
 
-  private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS =
-      ImmutableSet.of(
-          MediaFormats.DOWNLOAD
+  private static final List<Class<? extends MediaSource>> MEDIA_SOURCES =
+      ImmutableList.<Class<? extends MediaSource>>of(
+          DamMediaSource.class,
+          InlineMediaSource.class
       );
+
   private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =
       ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
           SimpleImageMediaMarkupBuilder.class,
@@ -147,13 +148,13 @@ public class MediaHandlerConfigImpl extends AbstractMediaHandlerConfig {
       );
 
   @Override
-  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
-    return MEDIA_MARKUP_BUILDERS;
+  public List<Class<? extends MediaSource>> getSources() {
+    return MEDIA_SOURCES;
   }
 
   @Override
-  public Set<MediaFormat> getDownloadMediaFormats() {
-    return DOWNLOAD_MEDIA_FORMATS;
+  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
+    return MEDIA_MARKUP_BUILDERS;
   }
 
 }
@@ -176,7 +177,7 @@ In a responsive web project there is often the need to show images with same rat
 Example - define a media format with a certain ratio and minimum sizes (big enough for for the largest resolution on the website):
 
 ```
-public static final MediaFormat MF_16_9 = create("mf_16_9", APPLICATION_ID)
+public static final MediaFormat MF_16_9 = create("mf_16_9")
     .label("Media 16:9")
     .minWidth(1600)
     .minHeight(900)
@@ -188,8 +189,9 @@ public static final MediaFormat MF_16_9 = create("mf_16_9", APPLICATION_ID)
 Configure the media handling process to use special markup builders:
 
 ```java
-@Model(adaptables = { SlingHttpServletRequest.class, Resource.class }, adapters = MediaHandlerConfig.class)
-@Application(ApplicationProviderImpl.APPLICATION_ID)
+@Component(service = MediaHandlerConfig.class, property = {
+    ContextAwareService.PROPERTY_CONTEXT_PATH_PATTERN + "=^/content/(dam/)?myapp(/.*)?$"
+})
 public class MediaHandlerConfigImpl extends AbstractMediaHandlerConfig {
 
   private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS =
@@ -236,9 +238,7 @@ You can customize the markup that is generated by subclassing `io.wcm.handler.me
 [media-builder]: apidocs/io/wcm/handler/media/MediaBuilder.html
 [media-name-constants]: apidocs/io/wcm/handler/media/MediaNameConstants.html
 [media-handler-config]: apidocs/io/wcm/handler/media/spi/MediaHandlerConfig.html
-[abstract-media-handler-config]: apidocs/io/wcm/handler/media/spi/helpers/AbstractMediaHandlerConfig.html
 [media-format-provider]: apidocs/io/wcm/handler/media/spi/MediaFormatProvider.html
-[abstract-media-format-provider]: apidocs/io/wcm/handler/media/spi/helpers/AbstractMediaFormatProvider.html
 [url-handler]: ../url/
 [link-handler]: ../link/
-[config-application-provider]: ../../config/api/usage-spi.html#Application_provider
+[sling-commons-caservices]: ../../sling/commons/context-aware-services.html

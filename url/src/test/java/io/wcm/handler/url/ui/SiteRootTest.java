@@ -58,9 +58,6 @@ public class SiteRootTest {
   public void testGetRootPage() {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertEquals("/content/unittest/de_test/brand/de", underTest.getRootPage().getPath());
-    assertEquals("/content/unittest/de_test/brand/de",
-        underTest.getRootPage("/content/unittest/de_test/brand/de/conference").getPath());
-    assertNull(underTest.getRootPage("/other/path"));
   }
 
   @Test

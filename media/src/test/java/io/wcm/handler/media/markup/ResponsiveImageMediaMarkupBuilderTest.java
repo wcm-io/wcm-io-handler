@@ -138,6 +138,12 @@ public class ResponsiveImageMediaMarkupBuilderTest {
     media.setAsset(asset);
     image = underTest.build(media);
     assertEquals("alt", "Alt Text", image.getAttributeValue("alt"));
+
+    // compare whole string
+    assertEquals(
+        "<img alt=\"Alt Text\" data-resp-src=\"[{&quot;mq&quot;:&quot;L1&quot;,&quot;src&quot;:&quot;/media/dummy/1920x600png&quot;},"
+            + "{&quot;mq&quot;:&quot;M1&quot;,&quot;src&quot;:&quot;/media/dummy/120x100png&quot;}]\" />",
+        image.toString());
   }
 
   @Test

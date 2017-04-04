@@ -20,51 +20,66 @@
 package io.wcm.handler.media.spi;
 
 import java.util.List;
-import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.annotation.versioning.ConsumerType;
 
-import io.wcm.handler.media.format.MediaFormat;
+import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
+import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
+import io.wcm.handler.mediasource.dam.DamMediaSource;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
- * Provides application-specific configuration information required for media handling.
- * <p>
- * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
- * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
- * </p>
+ * {@link MediaHandlerConfig} OSGi services provide application-specific configuration for media handling.
+ * Applications can set service properties or bundle headers as defined in {@link ContextAwareService} to apply this
+ * configuration only for resources that match the relevant resource paths.
  */
 @ConsumerType
-public interface MediaHandlerConfig {
+public abstract class MediaHandlerConfig implements ContextAwareService {
 
   /**
    * Default value for JPEG quality.
    */
-  double DEFAULT_JPEG_QUALITY = 0.98d;
+  public static final double DEFAULT_JPEG_QUALITY = 0.98d;
 
-  /**
-   * @return Media format names for downloads that are allowed as target for links
-   */
-  Set<MediaFormat> getDownloadMediaFormats();
+  private static final List<Class<? extends MediaSource>> DEFAULT_MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
+      DamMediaSource.class);
+
+  private static final List<Class<? extends MediaMarkupBuilder>> DEFAULT_MEDIA_MARKUP_BUILDERS = ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
+      SimpleImageMediaMarkupBuilder.class,
+      DummyImageMediaMarkupBuilder.class);
 
   /**
    * @return Supported media sources
    */
-  List<Class<? extends MediaSource>> getSources();
+  public List<Class<? extends MediaSource>> getSources() {
+    return DEFAULT_MEDIA_SOURCES;
+  }
 
   /**
    * @return Available media markup builders
    */
-  List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders();
+  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
+    return DEFAULT_MEDIA_MARKUP_BUILDERS;
+  }
 
   /**
    * @return List of media metadata pre processors (optional). The processors are applied in list order.
    */
-  List<Class<? extends MediaProcessor>> getPreProcessors();
+  public List<Class<? extends MediaProcessor>> getPreProcessors() {
+    // no processors
+    return ImmutableList.of();
+  }
 
   /**
    * @return List of media metadata post processors (optional). The processors are applied in list order.
    */
-  List<Class<? extends MediaProcessor>> getPostProcessors();
+  public List<Class<? extends MediaProcessor>> getPostProcessors() {
+    // no processors
+    return ImmutableList.of();
+  }
 
   /**
    * Get the default quality for images in this app generated with the Layer API.
@@ -73,6 +88,18 @@ public interface MediaHandlerConfig {
    * @param mimeType MIME-type of the output format
    * @return Quality factor
    */
-  double getDefaultImageQuality(String mimeType);
+  public double getDefaultImageQuality(String mimeType) {
+    if (StringUtils.isNotEmpty(mimeType)) {
+      String format = StringUtils.substringAfter(mimeType.toLowerCase(), "image/");
+      if (StringUtils.equals(format, "jpg") || StringUtils.equals(format, "jpeg")) {
+        return DEFAULT_JPEG_QUALITY;
+      }
+      else if (StringUtils.equals(format, "gif")) {
+        return 256d; // 256 colors
+      }
+    }
+    // return quality "1" for all other mime types
+    return 1d;
+  }
 
 }

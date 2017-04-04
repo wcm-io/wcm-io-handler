@@ -23,11 +23,12 @@ import java.awt.Color;
 import java.io.IOException;
 
 import javax.jcr.RepositoryException;
+import javax.servlet.Servlet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
+import org.osgi.service.component.annotations.Component;
 
 import com.day.cq.wcm.commons.AbstractImageServlet;
 import com.day.image.Font;
@@ -41,9 +42,10 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Servlet which is used to render a dummy image with information about the size of the image and media format.
  * Note: most of the values used for scaling are the result of experiments, how the image looks nice.
  */
-@SlingServlet(
-    resourceTypes = "/apps/wcm-io/handler/media/components/dummyImage",
-    extensions = FileExtension.PNG)
+@Component(service = Servlet.class, immediate = true, property = {
+    "sling.servlet.extensions=" + FileExtension.PNG,
+    "sling.servlet.resourceTypes=/apps/wcm-io/handler/media/components/dummyImage"
+})
 public final class DummyImageServlet extends AbstractImageServlet {
   private static final long serialVersionUID = 1L;
 

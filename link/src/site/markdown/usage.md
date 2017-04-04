@@ -62,9 +62,7 @@ In this case the anchor defined in the sightly template is used, but all attribu
 
 ### Configuring and tailoring the link resolving process
 
-Optionally you can implement an interface to specify in more detail the link resolving needs of your application. For this you have to implement the [LinkHandlerConfig][link-handler-config] interface. You can extend from [AbstractLinkHandlerConfig][abstract-link-handler-config] and overwrite only what is required.
-
-The class you implement is a Sling Model class, and should have an @Application annotation with the Application ID specified via the [Application Provider interface][config-application-provider] of the configuration infrastructure.
+Optionally you can provide an OSGi service to specify in more detail the link resolving needs of your application. For this you have to extend the [LinkHandlerConfig][link-handler-config] class. Via [Context-Aware Services][sling-commons-caservices] you can make sure the SPI customization affects only resources (content pages, DAM assets) that are relevant for your application. Thus it is possible to provide different customizations for different applications running in the same AEM instance.
 
 With this you can:
 
@@ -77,13 +75,15 @@ With this you can:
 Example:
 
 ```java
-@Model(adaptables = { SlingHttpServletRequest.class, Resource.class }, adapters = LinkHandlerConfig.class)
-@Application(ApplicationProviderImpl.APPLICATION_ID)
-public class LinkHandlerConfigImpl extends AbstractLinkHandlerConfig {
+@Component(service = LinkHandlerConfig.class, property = {
+    ContextAwareService.PROPERTY_CONTEXT_PATH_PATTERN + "=^/content/(dam/)?myapp(/.*)?$"
+})
+public class LinkHandlerConfigImpl extends LinkHandlerConfig {
 
   private static final List<Class<? extends LinkType>> LINK_TYPES =
       ImmutableList.<Class<? extends LinkType>>of(
           InternalLinkType.class,
+          InternalCrossScopeLinkType.class,
           ExternalLinkType.class,
           MediaLinkType.class
       );
@@ -116,6 +116,5 @@ Schematic flow of link handling process:
 [link-builder]: apidocs/io/wcm/handler/link/LinkBuilder.html
 [link-name-constants]: apidocs/io/wcm/handler/link/LinkNameConstants.html
 [link-handler-config]: apidocs/io/wcm/handler/link/spi/LinkHandlerConfig.html
-[abstract-link-handler-config]: apidocs/io/wcm/handler/link/spi/helpers/AbstractLinkHandlerConfig.html
 [url-handler]: ../url/
-[config-application-provider]: ../../config/api/usage-spi.html#Application_provider
+[sling-commons-caservices]: ../../sling/commons/context-aware-services.html

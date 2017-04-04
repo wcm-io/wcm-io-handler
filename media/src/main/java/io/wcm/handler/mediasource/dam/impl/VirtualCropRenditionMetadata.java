@@ -74,11 +74,11 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public String getMediaPath(boolean forceDownload) {
+  public String getMediaPath(boolean contentDispositionAttachment) {
     return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
         + "." + getWidth() + "." + getHeight()
         + "." + this.cropDimension.getCropString()
-        + (forceDownload ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
+        + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
         + "." + MediaFileServlet.EXTENSION, getFileName());
   }
 

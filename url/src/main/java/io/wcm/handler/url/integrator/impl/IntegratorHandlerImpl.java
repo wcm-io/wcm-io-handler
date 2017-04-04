@@ -28,6 +28,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
@@ -53,9 +54,9 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
   private UrlHandlerConfig urlHandlerConfig;
 
   // optional injections (only available if called inside a request)
-  @SlingObject(optional = true)
+  @SlingObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private SlingHttpServletRequest request;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
 
   private boolean integratorTemplateMode;
@@ -70,6 +71,10 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * Detect integrator template modes - check selectors in current url.
    */
   private void detectIntegratorTemplateModes() {
+    // integrator mode cannot be active if no modes defined
+    if (urlHandlerConfig.getIntegratorModes().isEmpty()) {
+      return;
+    }
     if (request != null && RequestPath.hasSelector(request, SELECTOR_INTEGRATORTEMPLATE_SECURE)) {
       integratorTemplateSecureMode = true;
     }

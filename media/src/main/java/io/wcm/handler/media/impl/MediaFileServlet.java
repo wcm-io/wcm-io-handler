@@ -19,8 +19,10 @@
  */
 package io.wcm.handler.media.impl;
 
-import org.apache.felix.scr.annotations.sling.SlingServlet;
+import javax.servlet.Servlet;
+
 import org.apache.sling.api.servlets.HttpConstants;
+import org.osgi.service.component.annotations.Component;
 
 import com.day.cq.commons.jcr.JcrConstants;
 
@@ -28,13 +30,13 @@ import com.day.cq.commons.jcr.JcrConstants;
  * Stream binary data stored in a nt:file or nt:resource node.
  * Optional support for Content-Disposition header ("download_attachment").
  */
-@SlingServlet(
-    resourceTypes = {
-        JcrConstants.NT_FILE, JcrConstants.NT_RESOURCE
-    },
-    selectors = MediaFileServlet.SELECTOR,
-    extensions = MediaFileServlet.EXTENSION,
-    methods = HttpConstants.METHOD_GET)
+@Component(service = Servlet.class, immediate = true, property = {
+    "sling.servlet.extensions=" + MediaFileServlet.EXTENSION,
+    "sling.servlet.selectors=" + MediaFileServlet.SELECTOR,
+    "sling.servlet.resourceTypes=" + JcrConstants.NT_FILE,
+    "sling.servlet.resourceTypes=" + JcrConstants.NT_RESOURCE,
+    "sling.servlet.methods=" + HttpConstants.METHOD_GET
+})
 public final class MediaFileServlet extends AbstractMediaFileServlet {
   private static final long serialVersionUID = 1L;
 

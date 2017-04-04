@@ -19,21 +19,21 @@
  */
 package io.wcm.handler.link.impl;
 
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
+import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
 
 import io.wcm.handler.link.spi.LinkHandlerConfig;
-import io.wcm.handler.link.spi.helpers.AbstractLinkHandlerConfig;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * Default implementation of configuration options of {@link LinkHandlerConfig} interface.
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = LinkHandlerConfig.class)
-public final class DefaultLinkHandlerConfig extends AbstractLinkHandlerConfig {
+@Component(service = LinkHandlerConfig.class, property = {
+    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE,
+    ContextAwareService.PROPERTY_ACCEPTS_CONTEXT_PATH_EMPTY + ":Boolean=true"
+})
+public final class DefaultLinkHandlerConfig extends LinkHandlerConfig {
 
-  // inherit from superclass
+  // inherit all from {@link LinkHandlerConfig}
 
 }

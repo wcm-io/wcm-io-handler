@@ -19,21 +19,38 @@
  */
 package io.wcm.handler.url.impl;
 
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
+import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.handler.url.spi.helpers.AbstractUrlHandlerConfig;
+import io.wcm.sling.commons.caservice.ContextAwareService;
+import io.wcm.sling.commons.resource.ResourcePath;
 
 /**
  * Default implementation of configuration options of {@link UrlHandlerConfig} interface.
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = UrlHandlerConfig.class)
-public final class DefaultUrlHandlerConfig extends AbstractUrlHandlerConfig {
+@Component(service = UrlHandlerConfig.class, property = {
+    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE,
+    ContextAwareService.PROPERTY_ACCEPTS_CONTEXT_PATH_EMPTY + ":Boolean=true"
+})
+public class DefaultUrlHandlerConfig extends UrlHandlerConfig {
 
-  // inherit from superclass
+  @Reference
+  private ConfigurationResourceResolver configurationResourceResolver;
+
+  @Override
+  public int getSiteRootLevel(Resource contextResource) {
+    if (contextResource != null) {
+      // assumption: inner-most context-aware configuration context path is site root path
+      String siteRootpath = configurationResourceResolver.getContextPath(contextResource);
+      if (siteRootpath != null) {
+        return ResourcePath.getAbsoluteLevel(siteRootpath);
+      }
+    }
+    return 0;
+  }
 
 }

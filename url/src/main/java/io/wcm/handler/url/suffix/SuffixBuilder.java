@@ -37,13 +37,13 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
-import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
@@ -91,8 +91,7 @@ public final class SuffixBuilder {
    * @param request Sling request
    * @param suffixPartFilter the filter that is called for each suffix part
    */
-  // TODO: Public wcm.io API should not depend on com.day.cq.commons.Filter - create a own interface instead
-  public SuffixBuilder(SlingHttpServletRequest request, Filter<String> suffixPartFilter) {
+  public SuffixBuilder(SlingHttpServletRequest request, Predicate<String> suffixPartFilter) {
     this(request, new FilteringSuffixStateStrategy(suffixPartFilter));
   }
 
@@ -108,7 +107,7 @@ public final class SuffixBuilder {
    * @return a {@link SuffixBuilder} that discards everything but the *resource* parts of the suffix
    */
   public static SuffixBuilder thatKeepsResourceParts(SlingHttpServletRequest request) {
-    Filter<String> filter = new IncludeResourcePartsFilter();
+    Predicate<String> filter = new IncludeResourcePartsFilter();
     return new SuffixBuilder(request, filter);
   }
 
@@ -118,7 +117,7 @@ public final class SuffixBuilder {
    * @return a {@link SuffixBuilder} that keeps only the named key/value-parts defined by pKeysToKeep
    */
   public static SuffixBuilder thatKeepsNamedParts(SlingHttpServletRequest request, String... keysToKeep) {
-    Filter<String> filter = new IncludeNamedPartsFilter(keysToKeep);
+    Predicate<String> filter = new IncludeNamedPartsFilter(keysToKeep);
     return new SuffixBuilder(request, filter);
   }
 
@@ -129,7 +128,7 @@ public final class SuffixBuilder {
    *         parts
    */
   public static SuffixBuilder thatKeepsNamedPartsAndResources(SlingHttpServletRequest request, String... keysToKeep) {
-    Filter<String> filter = FilterOperators.or(new IncludeResourcePartsFilter(), new IncludeNamedPartsFilter(keysToKeep));
+    Predicate<String> filter = FilterOperators.or(new IncludeResourcePartsFilter(), new IncludeNamedPartsFilter(keysToKeep));
     return new SuffixBuilder(request, filter);
   }
 
@@ -167,7 +166,7 @@ public final class SuffixBuilder {
    * @return {@link SuffixBuilder} that will discard all resource parts and the named parts defined by pKeysToDiscard
    */
   public static SuffixBuilder thatDiscardsResourceAndNamedParts(SlingHttpServletRequest request, String... keysToDiscard) {
-    Filter<String> filter = FilterOperators.and(new ExcludeResourcePartsFilter(), new ExcludeNamedPartsFilter(keysToDiscard));
+    Predicate<String> filter = FilterOperators.and(new ExcludeResourcePartsFilter(), new ExcludeNamedPartsFilter(keysToDiscard));
     return new SuffixBuilder(request, filter);
   }
 
@@ -180,7 +179,7 @@ public final class SuffixBuilder {
    */
   public static SuffixBuilder thatDiscardsSpecificResourceAndNamedParts(SlingHttpServletRequest request, String resourcePathToDiscard,
       String... keysToDiscard) {
-    Filter<String> filter = FilterOperators.and(new ExcludeSpecificResourceFilter(resourcePathToDiscard), new ExcludeNamedPartsFilter(keysToDiscard));
+    Predicate<String> filter = FilterOperators.and(new ExcludeSpecificResourceFilter(resourcePathToDiscard), new ExcludeNamedPartsFilter(keysToDiscard));
     return new SuffixBuilder(request, filter);
   }
 

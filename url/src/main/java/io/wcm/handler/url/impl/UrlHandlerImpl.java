@@ -28,6 +28,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -60,9 +61,9 @@ public final class UrlHandlerImpl implements UrlHandler {
   private SlingSettingsService slingSettings;
 
   // optional injections (only available if called inside a request)
-  @SlingObject(optional = true)
+  @SlingObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private SlingHttpServletRequest request;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
 
   @Override
@@ -81,33 +82,39 @@ public final class UrlHandlerImpl implements UrlHandler {
   }
 
   @Override
-  public String rewritePathToContext(final String path) {
+  public String rewritePathToContext(final Resource resource) {
+    if (resource == null) {
+      return null;
+    }
     if (currentPage != null) {
-      return rewritePathToContext(path, currentPage.getPath());
+      return rewritePathToContext(resource, currentPage.adaptTo(Resource.class));
     }
     else {
-      return path;
+      return resource.getPath();
     }
   }
 
   @Override
-  public String rewritePathToContext(final String path, final String contextPath) {
-    if (StringUtils.isEmpty(path) || StringUtils.isEmpty(contextPath)) {
-      return path;
+  public String rewritePathToContext(final Resource resource, final Resource contextResource) {
+    if (resource == null) {
+      return null;
+    }
+    if (contextResource == null) {
+      return resource.getPath();
     }
 
     // split up paths
-    String[] contextPathParts = StringUtils.split(contextPath, "/");
-    String[] pathParts = StringUtils.split(path, "/");
+    String[] contextPathParts = StringUtils.split(contextResource.getPath(), "/");
+    String[] pathParts = StringUtils.split(resource.getPath(), "/");
 
     // check if both paths are valid - return unchanged path if not
-    int siteRootLevelContextPath = urlHandlerConfig.getSiteRootLevel(contextPath);
-    int siteRootLevelPath = urlHandlerConfig.getSiteRootLevel(path);
+    int siteRootLevelContextPath = urlHandlerConfig.getSiteRootLevel(contextResource);
+    int siteRootLevelPath = urlHandlerConfig.getSiteRootLevel(resource);
     if ((contextPathParts.length <= siteRootLevelContextPath)
         || (pathParts.length <= siteRootLevelPath)
         || !StringUtils.equals(contextPathParts[0], "content")
         || !StringUtils.equals(pathParts[0], "content")) {
-      return path;
+      return resource.getPath();
     }
 
     // rewrite path to current context

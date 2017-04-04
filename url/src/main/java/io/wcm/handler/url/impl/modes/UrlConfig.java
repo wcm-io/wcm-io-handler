@@ -20,27 +20,37 @@
 package io.wcm.handler.url.impl.modes;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.caconfig.ConfigurationBuilder;
 
-import io.wcm.config.api.Configuration;
-import io.wcm.handler.url.UrlParams;
+import io.wcm.handler.url.SiteConfig;
 
 /**
- * Helper class for accessing site url configuration in URL mode implementation.
+ * Helper class for accessing site URL configuration in URL mode implementation.
  */
 class UrlConfig {
 
-  private final Configuration config;
   private final String siteUrl;
   private final String siteUrlSecure;
   private final String siteUrlAuthor;
 
   UrlConfig(Adaptable adaptable) {
-    this.config = adaptable.adaptTo(Configuration.class);
-    if (this.config != null) {
-      this.siteUrl = config.get(UrlParams.SITE_URL);
-      this.siteUrlSecure = StringUtils.defaultString(config.get(UrlParams.SITE_URL_SECURE), this.siteUrl);
-      this.siteUrlAuthor = config.get(UrlParams.SITE_URL_AUTHOR);
+    SiteConfig config = null;
+    if (adaptable instanceof Resource) {
+      config = adaptable.adaptTo(ConfigurationBuilder.class).as(SiteConfig.class);
+    }
+    else if (adaptable instanceof SlingHttpServletRequest) {
+      Resource resource = ((SlingHttpServletRequest)adaptable).getResource();
+      if (resource != null) {
+        config = resource.adaptTo(ConfigurationBuilder.class).as(SiteConfig.class);
+      }
+    }
+    if (config != null) {
+      this.siteUrl = config.siteUrl();
+      this.siteUrlSecure = StringUtils.defaultString(config.siteUrlSecure(), this.siteUrl);
+      this.siteUrlAuthor = config.siteUrlAuthor();
     }
     else {
       this.siteUrl = null;
@@ -78,7 +88,7 @@ class UrlConfig {
   }
 
   /**
-   * @return true if site url for author is set
+   * @return true if site URL for author is set
    */
   public boolean hasSiteUrlAuthor() {
     return StringUtils.isNotEmpty(this.siteUrlAuthor);

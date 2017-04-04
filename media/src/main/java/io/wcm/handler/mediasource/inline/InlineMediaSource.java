@@ -26,6 +26,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ProviderType;
@@ -40,7 +41,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.impl.JcrBinary;
-import io.wcm.handler.media.spi.helpers.AbstractMediaSource;
+import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.sling.commons.util.Escape;
 
 /**
@@ -50,11 +51,11 @@ import io.wcm.sling.commons.util.Escape;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class InlineMediaSource extends AbstractMediaSource {
+public final class InlineMediaSource extends MediaSource {
 
   @Self
   private Adaptable adaptable;
-  @OSGiService(optional = true)
+  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private MimeTypeService mimeTypeService;
 
   /**

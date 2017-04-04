@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +44,6 @@ import org.apache.sling.jcr.resource.JcrResourceConstants;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.day.cq.commons.Filter;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
@@ -360,7 +360,7 @@ public class SuffixBuilderTest {
   /**
    * tests escaping/unescaping functionality by constructing complex suffix with
    * {@link SuffixBuilder#resources(List, Resource)} and then decomposing it using
-   * {@link SuffixParser#get(String, String)} and {@link SuffixParser#getResource(Filter)}
+   * {@link SuffixParser#get(String, String)} and {@link SuffixParser#getResource(Predicate)}
    * @throws UnsupportedEncodingException
    */
   @Test

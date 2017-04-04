@@ -19,21 +19,21 @@
  */
 package io.wcm.handler.media.impl;
 
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.models.annotations.Model;
+import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
 
 import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.media.spi.helpers.AbstractMediaHandlerConfig;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
  * Default implementation of configuration options of {@link MediaHandlerConfig} interface.
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = MediaHandlerConfig.class)
-public final class DefaultMediaHandlerConfig extends AbstractMediaHandlerConfig {
+@Component(service = MediaHandlerConfig.class, property = {
+    Constants.SERVICE_RANKING + ":Integer=" + Integer.MIN_VALUE,
+    ContextAwareService.PROPERTY_ACCEPTS_CONTEXT_PATH_EMPTY + ":Boolean=true"
+})
+public final class DefaultMediaHandlerConfig extends MediaHandlerConfig {
 
-  // inherit from superclass
+  // inherit all from {@link MediaHandlerConfig}
 
 }

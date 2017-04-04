@@ -26,6 +26,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Default;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.RequestAttribute;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
@@ -45,7 +46,7 @@ import io.wcm.handler.richtext.RichTextNameConstants;
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceRichText {
 
-  @RequestAttribute(optional = true)
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   @Default(values = RichTextNameConstants.PN_TEXT)
   private String propertyName;
 

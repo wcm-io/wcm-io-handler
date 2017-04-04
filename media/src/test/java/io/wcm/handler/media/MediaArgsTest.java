@@ -171,7 +171,8 @@ public class MediaArgsTest {
     mediaArgs.urlMode(UrlModes.FULL_URL_FORCENONSECURE);
     mediaArgs.fixedWidth(10);
     mediaArgs.fixedHeight(20);
-    mediaArgs.forceDownload(true);
+    mediaArgs.download(true);
+    mediaArgs.contentDispositionAttachment(true);
     mediaArgs.altText("altText");
     mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
@@ -193,7 +194,8 @@ public class MediaArgsTest {
     assertEquals(mediaArgs.getUrlMode(), clone.getUrlMode());
     assertEquals(mediaArgs.getFixedWidth(), clone.getFixedWidth());
     assertEquals(mediaArgs.getFixedHeight(), clone.getFixedHeight());
-    assertEquals(mediaArgs.isForceDownload(), clone.isForceDownload());
+    assertEquals(mediaArgs.isDownload(), clone.isDownload());
+    assertEquals(mediaArgs.isContentDispositionAttachment(), clone.isContentDispositionAttachment());
     assertEquals(mediaArgs.getAltText(), clone.getAltText());
     assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());

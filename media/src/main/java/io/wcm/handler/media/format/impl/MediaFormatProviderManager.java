@@ -21,6 +21,8 @@ package io.wcm.handler.media.format.impl;
 
 import java.util.SortedSet;
 
+import org.apache.sling.api.resource.Resource;
+
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 
@@ -31,9 +33,9 @@ public interface MediaFormatProviderManager {
 
   /**
    * Get all media format definitions for application.
-   * @param applicationId Application id
+   * @param contextResource Context resource to get media formats for
    * @return Media format definitions
    */
-  SortedSet<MediaFormat> getMediaFormats(String applicationId);
+  SortedSet<MediaFormat> getMediaFormats(Resource contextResource);
 
 }

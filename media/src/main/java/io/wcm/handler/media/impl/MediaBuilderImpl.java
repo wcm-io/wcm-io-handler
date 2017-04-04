@@ -157,8 +157,8 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public MediaBuilder forceDownload(boolean value) {
-    this.mediaArgs.forceDownload(value);
+  public MediaBuilder contentDispositionAttachment(boolean value) {
+    this.mediaArgs.contentDispositionAttachment(value);
     return this;
   }
 

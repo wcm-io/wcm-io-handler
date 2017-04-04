@@ -21,52 +21,65 @@ package io.wcm.handler.url.spi;
 
 import java.util.Collection;
 
+import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorMode;
+import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
- * Provides application-specific configuration information required for URL handling.
- * <p>
- * This interface has to be implemented by a Sling Model class, optional with @Application annotation. The adaptables
- * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
- * </p>
+ * {@link UrlHandlerConfig} OSGi services provide application-specific configuration for URL handling.
+ * Applications can set service properties or bundle headers as defined in {@link ContextAwareService} to apply this
+ * configuration only for resources that match the relevant resource paths.
  */
 @ConsumerType
-public interface UrlHandlerConfig {
+public abstract class UrlHandlerConfig implements ContextAwareService {
 
   /**
    * Returns the absolute path level where the root page of the site is located.
-   * @param contextPath Context path that is assumed to be inside the site context.
+   * @param contextResource Context resource that is assumed to be inside the site context.
    * @return Root level or 0 if it could not be detected
    */
-  int getSiteRootLevel(String contextPath);
+  public abstract int getSiteRootLevel(Resource contextResource);
 
   /**
    * Detects if a page has to be accessed in secure mode
    * @param page Page Page
    * @return true if secure mode is required
    */
-  boolean isSecure(Page page);
+  public boolean isSecure(Page page) {
+    // not supported by default
+    return false;
+  }
 
   /**
    * Detects if page is a integrator page and contains application redirect link information
    * @param page Page
    * @return true if Page is a integrator page
    */
-  boolean isIntegrator(Page page);
+  public boolean isIntegrator(Page page) {
+    // not supported by default
+    return false;
+  }
 
   /**
    * @return Default URL mode that is used if no URL mode is specified
    */
-  UrlMode getDefaultUrlMode();
+  public UrlMode getDefaultUrlMode() {
+    return UrlModes.DEFAULT;
+  }
 
   /**
    * @return Supported integrator modes
    */
-  Collection<IntegratorMode> getIntegratorModes();
+  public Collection<IntegratorMode> getIntegratorModes() {
+    // not supported by default
+    return ImmutableList.of();
+  }
 
 }

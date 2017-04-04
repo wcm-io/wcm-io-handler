@@ -31,7 +31,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 
 /**
  * An UrlMode define the externalization logic for URLs depending on context-specific configuration parameters
- * defined in {@link UrlParams}.
+ * defined in {@link SiteConfig}.
  * <p>
  * If you want to implement your own UrlMode you can create a singleton class extending this interface. See
  * {@link UrlModes} class as an example.

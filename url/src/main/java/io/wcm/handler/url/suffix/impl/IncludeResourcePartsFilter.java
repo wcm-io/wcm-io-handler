@@ -19,18 +19,18 @@
  */
 package io.wcm.handler.url.suffix.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.function.Predicate;
 
-import com.day.cq.commons.Filter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Suffix-part filter that only includes resource-suffix parts
  * (identified by not containing {@link UrlSuffixUtil#KEY_VALUE_DELIMITER})
  */
-public class IncludeResourcePartsFilter implements Filter<String> {
+public class IncludeResourcePartsFilter implements Predicate<String> {
 
   @Override
-  public boolean includes(String suffixPart) {
+  public boolean test(String suffixPart) {
     return !StringUtils.contains(suffixPart, UrlSuffixUtil.KEY_VALUE_DELIMITER);
   }
 

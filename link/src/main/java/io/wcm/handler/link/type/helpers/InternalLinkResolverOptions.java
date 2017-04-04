@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.link.type.helpers;
 
+import org.apache.sling.api.resource.Resource;
+
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.url.UrlHandler;
 
@@ -53,7 +55,7 @@ public final class InternalLinkResolverOptions {
    * Rewrite path to context.
    * @return If set to true it is ensured that all links target only pages inside the same inner-most configuration
    *         scope, which is usually the same site/language. All link paths referencing pages outside this content
-   *         subtree are rewritten via {@link UrlHandler#rewritePathToContext(String)} with the root path of the
+   *         subtree are rewritten via {@link UrlHandler#rewritePathToContext(Resource)} with the root path of the
    *         inner-most configuration scope/site and then resolved.
    */
   public boolean isRewritePathToContext() {
@@ -64,7 +66,7 @@ public final class InternalLinkResolverOptions {
    * Rewrite path to context.
    * @param value If set to true it is ensured that all links target only pages inside the same inner-most configuration
    *          scope, which is usually the same site/language. All link paths referencing pages outside this content
-   *          subtree are rewritten via {@link UrlHandler#rewritePathToContext(String)} with the root path of the
+   *          subtree are rewritten via {@link UrlHandler#rewritePathToContext(Resource)} with the root path of the
    *          inner-most configuration scope/site and then resolved.
    * @return this
    */

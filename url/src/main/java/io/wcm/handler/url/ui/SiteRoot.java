@@ -21,13 +21,14 @@ package io.wcm.handler.url.ui;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
-import com.day.cq.wcm.api.WCMMode;
 import com.day.text.Text;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
@@ -42,12 +43,10 @@ public final class SiteRoot {
 
   private Page siteRootPage;
 
-  @AemObject
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
   @AemObject
   private PageManager pageManager;
-  @AemObject
-  private WCMMode wcmMode;
   @Self
   private UrlHandlerConfig urlHandlerConfig;
 
@@ -60,18 +59,18 @@ public final class SiteRoot {
     if (page == null) {
       return null;
     }
-    return getRootPath(page.getPath());
+    return getRootPath(page.adaptTo(Resource.class));
   }
 
   /**
    * Gets site root level path of a site.
-   * @param path Path of page within the site
+   * @param resource Resource within the site
    * @return Site root path for the site. The path is not checked for validness.
    */
-  public String getRootPath(String path) {
-    int rootLevel = urlHandlerConfig.getSiteRootLevel(path);
+  public String getRootPath(Resource resource) {
+    int rootLevel = urlHandlerConfig.getSiteRootLevel(resource);
     if (rootLevel > 0) {
-      return Text.getAbsoluteParent(path, rootLevel);
+      return Text.getAbsoluteParent(resource.getPath(), rootLevel);
     }
     return null;
   }
@@ -96,15 +95,6 @@ public final class SiteRoot {
   }
 
   /**
-   * Gets the site root page of the given path
-   * @param path
-   * @return Site root page
-   */
-  public Page getRootPage(String path) {
-    return pageManager.getPage(getRootPath(path));
-  }
-
-  /**
    * Get page relative to site root.
    * @param relativePath Path relative to site root
    * @return Page instance or null if not found
@@ -114,11 +104,12 @@ public final class SiteRoot {
     if (path == null) {
       return null;
     }
+    StringBuilder sb = new StringBuilder(path);
     if (!relativePath.startsWith("/")) {
-      path += "/";
+      sb.append("/");
     }
-    path += relativePath;
-    return pageManager.getPage(path);
+    sb.append(relativePath);
+    return pageManager.getPage(sb.toString());
   }
 
   /**

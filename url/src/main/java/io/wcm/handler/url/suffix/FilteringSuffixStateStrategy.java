@@ -23,11 +23,10 @@ import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.splitSuffix;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.osgi.annotation.versioning.ProviderType;
-
-import com.day.cq.commons.Filter;
 
 /**
  * Implementation of {@link SuffixStateKeepingStrategy} that calls a Filter for each suffix part from the
@@ -36,13 +35,12 @@ import com.day.cq.commons.Filter;
 @ProviderType
 public final class FilteringSuffixStateStrategy implements SuffixStateKeepingStrategy {
 
-  private final Filter<String> suffixPartFilter;
+  private final Predicate<String> suffixPartFilter;
 
   /**
-   * @param suffixPartFilter the {@link Filter} that defines
+   * @param suffixPartFilter the {@link Predicate} that defines which suffix parts are allowed
    */
-  // TODO: Public wcm.io API should not depend on com.day.cq.commons.Filter - create a own interface instead
-  public FilteringSuffixStateStrategy(Filter<String> suffixPartFilter) {
+  public FilteringSuffixStateStrategy(Predicate<String> suffixPartFilter) {
     this.suffixPartFilter = suffixPartFilter;
   }
 
@@ -59,7 +57,7 @@ public final class FilteringSuffixStateStrategy implements SuffixStateKeepingStr
       String nextPart = suffixPartArray[i];
 
       // for each part: check filter if it should be inc
-      if (suffixPartFilter == null || suffixPartFilter.includes(nextPart)) {
+      if (suffixPartFilter == null || suffixPartFilter.test(nextPart)) {
         suffixPartsToKeep.add(nextPart);
       }
     }

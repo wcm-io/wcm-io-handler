@@ -25,6 +25,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 
 import com.day.cq.wcm.api.Page;
@@ -52,7 +53,7 @@ public final class LinkHandlerImpl implements LinkHandler {
   private Adaptable adaptable;
   @Self
   private LinkHandlerConfig linkHandlerConfig;
-  @AemObject(optional = true)
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
 
   @Override

@@ -57,9 +57,7 @@ public final class ResponsiveMediaFormatsBuilder {
    * @return this
    */
   public ResponsiveMediaFormatsBuilder breakpoint(String breakpoint, int width, int height) {
-    mediaFormats.add(MediaFormatBuilder.create()
-        .name(buildCombinedName(mainMediaFormat, breakpoint, width, height))
-        .applicationId(mainMediaFormat.getApplicationId())
+    mediaFormats.add(MediaFormatBuilder.create(buildCombinedName(mainMediaFormat, breakpoint, width, height))
         .label(mainMediaFormat.getLabel())
         .extensions(mainMediaFormat.getExtensions())
         .ratio(mainMediaFormat.getRatio())

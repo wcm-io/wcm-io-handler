@@ -34,6 +34,7 @@ import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
+import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.type.helpers.InternalLinkResolver;
 import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
 
@@ -50,7 +51,7 @@ import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class InternalCrossScopeLinkType extends AbstractLinkType {
+public final class InternalCrossScopeLinkType extends LinkType {
 
   /**
    * Link type ID
