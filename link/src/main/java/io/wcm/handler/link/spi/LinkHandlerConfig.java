@@ -21,8 +21,6 @@ package io.wcm.handler.link.spi;
 
 import java.util.List;
 
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
@@ -35,6 +33,7 @@ import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
 import io.wcm.sling.commons.caservice.ContextAwareService;
+import io.wcm.sling.commons.resource.ResourceType;
 
 /**
  * {@link LinkHandlerConfig} OSGi services provide application-specific configuration for link handling.
@@ -105,9 +104,7 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
    * @return true if Page is a redirect page
    */
   public boolean isRedirect(Page page) {
-    Resource pageContent = page.getContentResource();
-    ResourceResolver resolver = pageContent.getResourceResolver();
-    return resolver.isResourceType(pageContent, REDIRECT_RESOURCE_TYPE);
+    return ResourceType.is(page.getContentResource(), REDIRECT_RESOURCE_TYPE);
   }
 
 }
