@@ -34,7 +34,7 @@ import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.url.UrlHandler;
 
 /**
- * Linkhandler postprocessor to inherit URL parametres to internal links.
+ * Linkhandler post processor to inherit URL parameters to internal links.
  */
 @ConsumerType
 public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor implements LinkProcessor {
