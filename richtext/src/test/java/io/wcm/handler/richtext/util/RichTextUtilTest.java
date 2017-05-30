@@ -150,17 +150,27 @@ public class RichTextUtilTest {
 
     assertEquals("to-replace-single",
         "<test1 /><replaced-element-once /><test2 />",
-        rewriteContent("<test1 /><to-replace-once /><test2 />"));
+        rewriteContent("<test1 /><to-replace-once /><test2 />", Rewriter.class, RewriterReplaceOnce.class));
 
     assertEquals("to-replace-single",
         "<test1 /><replaced-element-once /><to-replace-once /><test2 />",
-        rewriteContent("<test1 /><to-replace-once /><to-replace-once /><test2 />"));
+        rewriteContent("<test1 /><to-replace-once /><to-replace-once /><test2 />", Rewriter.class, RewriterReplaceOnce.class));
 
   }
 
-  private String rewriteContent(String input) throws Exception {
+  @SafeVarargs
+  private static String rewriteContent(String input, Class<? extends RewriteContentHandler>... rewriterClasses) throws Exception {
     Element root = RichTextUtil.parseText(input);
-    RichTextUtil.rewriteContent(root, new TestRewriteContentHandler());
+    List<RewriteContentHandler> instances = new ArrayList<>();
+    for (Class<? extends RewriteContentHandler> clazz : rewriterClasses) {
+      instances.add(clazz.newInstance());
+    }
+    if (instances.isEmpty()) {
+      RichTextUtil.rewriteContent(root, new Rewriter());
+    }
+    else {
+      RichTextUtil.rewriteContent(root, instances);
+    }
     return toStringContentOnly(root);
   }
 
@@ -168,7 +178,7 @@ public class RichTextUtilTest {
    * Serializes all content/children of this element.
    * @return Serialized content.
    */
-  private String toStringContentOnly(Element element) {
+  private static String toStringContentOnly(Element element) {
     StringBuilder sb = new StringBuilder();
     XMLOutputter xmlOutputter = new XMLOutputter();
     for (Object content : element.getContent()) {
@@ -191,9 +201,7 @@ public class RichTextUtilTest {
     return sb.toString();
   }
 
-  static class TestRewriteContentHandler implements RewriteContentHandler {
-
-    private boolean mReplaceOnce;
+  static class Rewriter implements RewriteContentHandler {
 
     @Override
     public List<Content> rewriteElement(Element element) {
@@ -229,7 +237,25 @@ public class RichTextUtilTest {
         return content;
       }
 
-      else if (StringUtils.equals(element.getName(), "to-replace-once")) {
+      return null;
+    }
+
+    @Override
+    public List<Content> rewriteText(Text text) {
+      // noting to do
+      return null;
+    }
+
+  }
+
+  static class RewriterReplaceOnce implements RewriteContentHandler {
+
+    private boolean mReplaceOnce;
+
+    @Override
+    public List<Content> rewriteElement(Element element) {
+
+      if (StringUtils.equals(element.getName(), "to-replace-once")) {
         if (!mReplaceOnce) {
           List<Content> content = new ArrayList<Content>();
           content.add(new Element("replaced-element-once").addContent(element.cloneContent()));

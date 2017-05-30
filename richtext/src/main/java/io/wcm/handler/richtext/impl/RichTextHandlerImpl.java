@@ -22,8 +22,6 @@ package io.wcm.handler.richtext.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -73,12 +71,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   @OSGiService
   private ContextAwareServiceResolver serviceResolver;
 
-  private RichTextHandlerConfig config;
-
-  @PostConstruct
-  protected void activate() {
-    config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
-  }
+  private List<RewriteContentHandler> rewriteContentHandlers;
 
   @Override
   public RichTextBuilder get(Resource resource) {
@@ -137,11 +130,9 @@ public final class RichTextHandlerImpl implements RichTextHandler {
       Element contentParent = RichTextUtil.parseText(text, true);
 
       // Rewrite content (e.g. anchor tags)
-      List<Class<? extends RewriteContentHandler>> rewriteContentHandlerClasses = config.getRewriteContentHandlers();
-      if (!rewriteContentHandlerClasses.isEmpty()) {
-        // TODO: handle multiple implementations
-        RewriteContentHandler rewriteContentHandler = adaptable.adaptTo(rewriteContentHandlerClasses.get(0));
-        RichTextUtil.rewriteContent(contentParent, rewriteContentHandler);
+      List<RewriteContentHandler> handlers = getRewriterContentHandlers();
+      if (!handlers.isEmpty()) {
+        RichTextUtil.rewriteContent(contentParent, handlers);
       }
 
       // return xhtml elements
@@ -174,6 +165,17 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   @Override
   public boolean isEmpty(String text) {
     return RichTextUtil.isEmpty(text);
+  }
+
+  private List<RewriteContentHandler> getRewriterContentHandlers() {
+    if (rewriteContentHandlers == null) {
+      RichTextHandlerConfig config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
+      rewriteContentHandlers = new ArrayList<>();
+      for (Class<? extends RewriteContentHandler> clazz : config.getRewriteContentHandlers()) {
+        rewriteContentHandlers.add(adaptable.adaptTo(clazz));
+      }
+    }
+    return rewriteContentHandlers;
   }
 
 }

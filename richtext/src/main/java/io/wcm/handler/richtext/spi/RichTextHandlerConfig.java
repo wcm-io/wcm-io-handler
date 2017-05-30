@@ -41,7 +41,9 @@ public abstract class RichTextHandlerConfig implements ContextAwareService {
       DefaultRewriteContentHandler.class);
 
   /**
-   * @return Available link markup builders
+   * Defines a list of rewrite content handlers. If multiple implementations are provided, the first
+   * one that does return a non-null value for any of the rewrite operations wins.
+   * @return Available rewrite content handler
    */
   public List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {
     return DEFAULT_REWRITE_CONTENT_HANDLERS;
