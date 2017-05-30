@@ -124,6 +124,18 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
+  public void testInternalLinkFullUrlWithPort() {
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+
+    Link link = new Link(new InternalLinkType(), null);
+    link.setUrl("https://host1:8080/sample.html#fragment1");
+    link.setAnchor(new Anchor().setHRef("/sample.html#fragment1"));
+
+    postProcessor.process(link);
+    assertEquals("https://host1:8080/sample.html#fragment1", link.getUrl());
+  }
+
+  @Test
   public void testInternalLinkWithCustomParameterList() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), AbcInternalLinkInheritUrlParamLinkPostProcessor.class);
 
