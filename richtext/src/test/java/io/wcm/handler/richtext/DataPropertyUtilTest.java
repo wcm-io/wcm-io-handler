@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.richtext.impl;
+package io.wcm.handler.richtext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

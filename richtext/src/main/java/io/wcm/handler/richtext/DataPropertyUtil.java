@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.richtext.impl;
+package io.wcm.handler.richtext;
 
 import java.util.regex.Pattern;
 

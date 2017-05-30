@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2017 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * RichText Handler API.
+ * SPI for configuring and tailoring rich text handler processing.
  */
-@org.osgi.annotation.versioning.Version("1.1.0")
-package io.wcm.handler.richtext;
+@org.osgi.annotation.versioning.Version("1.0.0")
+package io.wcm.handler.richtext.spi;

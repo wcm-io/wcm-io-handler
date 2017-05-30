@@ -22,11 +22,15 @@ package io.wcm.handler.richtext.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -45,9 +49,11 @@ import io.wcm.handler.richtext.RichTextHandler;
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.RichTextRequest;
 import io.wcm.handler.richtext.TextMode;
+import io.wcm.handler.richtext.spi.RichTextHandlerConfig;
 import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.handler.richtext.util.RichTextUtil;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
@@ -61,9 +67,18 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   static final Logger log = LoggerFactory.getLogger(RichTextHandlerImpl.class);
 
   @Self
-  private RewriteContentHandler rewriteContentHandler;
+  private Adaptable adaptable;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
+  @OSGiService
+  private ContextAwareServiceResolver serviceResolver;
+
+  private RichTextHandlerConfig config;
+
+  @PostConstruct
+  protected void activate() {
+    config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
+  }
 
   @Override
   public RichTextBuilder get(Resource resource) {
@@ -122,7 +137,12 @@ public final class RichTextHandlerImpl implements RichTextHandler {
       Element contentParent = RichTextUtil.parseText(text, true);
 
       // Rewrite content (e.g. anchor tags)
-      RichTextUtil.rewriteContent(contentParent, rewriteContentHandler);
+      List<Class<? extends RewriteContentHandler>> rewriteContentHandlerClasses = config.getRewriteContentHandlers();
+      if (!rewriteContentHandlerClasses.isEmpty()) {
+        // TODO: handle multiple implementations
+        RewriteContentHandler rewriteContentHandler = adaptable.adaptTo(rewriteContentHandlerClasses.get(0));
+        RichTextUtil.rewriteContent(contentParent, rewriteContentHandler);
+      }
 
       // return xhtml elements
       return ImmutableList.copyOf(contentParent.cloneContent());

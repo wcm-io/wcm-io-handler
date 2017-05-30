@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.richtext.impl;
+package io.wcm.handler.richtext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -42,6 +42,8 @@ import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.google.common.collect.ImmutableSet;
@@ -61,12 +63,10 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
- * Default implementation of {@link RichTextRewriteContentHandlerImpl}.
+ * Default implementation of {@link DefaultRewriteContentHandler}.
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = RewriteContentHandler.class)
-public final class RichTextRewriteContentHandlerImpl implements RewriteContentHandler {
+@Model(adaptables = { SlingHttpServletRequest.class, Resource.class })
+public final class DefaultRewriteContentHandler implements RewriteContentHandler {
 
   @Self
   private Adaptable adaptable;
@@ -78,6 +78,8 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
   private LinkHandlerConfig linkHandlerConfig;
   @Self
   private MediaHandler mediaHandler;
+
+  private static final Logger log = LoggerFactory.getLogger(DefaultRewriteContentHandler.class);
 
   /**
    * List of all tag names that should not be rendered "self-closing" to avoid interpretation errors in browsers
@@ -262,7 +264,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
           metadata = new JSONObject(metadataString);
         }
         catch (JSONException ex) {
-          RichTextHandlerImpl.log.debug("Invalid link metadata: " + metadataString, ex);
+          log.debug("Invalid link metadata: " + metadataString, ex);
         }
       }
     }
@@ -299,7 +301,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
         metadata = new JSONObject(metadataString);
       }
       catch (JSONException ex) {
-        RichTextHandlerImpl.log.debug("Invalid link metadata: " + metadataString, ex);
+        log.debug("Invalid link metadata: " + metadataString, ex);
       }
     }
     if (metadata == null) {
