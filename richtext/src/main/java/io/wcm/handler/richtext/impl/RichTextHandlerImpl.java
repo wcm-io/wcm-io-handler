@@ -130,9 +130,9 @@ public final class RichTextHandlerImpl implements RichTextHandler {
       Element contentParent = RichTextUtil.parseText(text, true);
 
       // Rewrite content (e.g. anchor tags)
-      List<RewriteContentHandler> handlers = getRewriterContentHandlers();
-      if (!handlers.isEmpty()) {
-        RichTextUtil.rewriteContent(contentParent, handlers);
+      List<RewriteContentHandler> rewriters = getRewriterContentHandlers();
+      for (RewriteContentHandler rewriter : rewriters) {
+        RichTextUtil.rewriteContent(contentParent, rewriter);
       }
 
       // return xhtml elements
@@ -172,7 +172,12 @@ public final class RichTextHandlerImpl implements RichTextHandler {
       RichTextHandlerConfig config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
       rewriteContentHandlers = new ArrayList<>();
       for (Class<? extends RewriteContentHandler> clazz : config.getRewriteContentHandlers()) {
-        rewriteContentHandlers.add(adaptable.adaptTo(clazz));
+        RewriteContentHandler rewriter = adaptable.adaptTo(clazz);
+        if (rewriter == null) {
+          throw new RuntimeException("Unable to adapt " + adaptable.getClass() + " to " + clazz.getName() + ". "
+              + "Make sure the class is a Sling Model and adaptable from Resource and SlingHttpServletRequest.");
+        }
+        rewriteContentHandlers.add(rewriter);
       }
     }
     return rewriteContentHandlers;

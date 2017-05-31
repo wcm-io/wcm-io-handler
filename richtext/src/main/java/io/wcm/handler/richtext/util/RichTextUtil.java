@@ -22,7 +22,6 @@ package io.wcm.handler.richtext.util;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,8 +32,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
 import org.osgi.annotation.versioning.ProviderType;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Utility methods for handling XHTML rich text fragments i.e. used for FCKEditor.
@@ -168,17 +165,6 @@ public final class RichTextUtil {
    * @param rewriteContentHandler Rewrite content handler
    */
   public static void rewriteContent(Element parent, RewriteContentHandler rewriteContentHandler) {
-    rewriteContent(parent, ImmutableList.of(rewriteContentHandler));
-  }
-
-  /**
-   * Rewrites all children/sub-tree of the given parent element.
-   * For rewrite operations the given rewrite content handlers are called.
-   * The first rewrite content handler implementation that does not return null for a rewrite operation wins.
-   * @param parent Parent element
-   * @param rewriteContentHandlers Rewrite content handlers
-   */
-  public static void rewriteContent(Element parent, Collection<RewriteContentHandler> rewriteContentHandlers) {
 
     // iterate through content list and build new content list
     List<Content> originalContent = parent.getContent();
@@ -190,40 +176,34 @@ public final class RichTextUtil {
         Element element = (Element)contentElement;
 
         // check if rewrite is needed for element
-        boolean rewrittenContentFound = false;
-        for (RewriteContentHandler rewriteContentHandler : rewriteContentHandlers) {
-          List<Content> rewriteContent = rewriteContentHandler.rewriteElement(element);
-          if (rewriteContent != null) {
-            // element was removed
-            if (rewriteContent.isEmpty()) {
-              // do not add to newContent
-            }
+        List<Content> rewriteContent = rewriteContentHandler.rewriteElement(element);
+        if (rewriteContent != null) {
+          // element was removed
+          if (rewriteContent.isEmpty()) {
+            // do not add to newContent
+          }
 
-            // element is the same - rewrite child elements
-            else if (rewriteContent.size() == 1 && rewriteContent.get(0) == element) { //NOPMD
-              rewriteContent(element, rewriteContentHandlers);
-              newContent.add(element);
-            }
+          // element is the same - rewrite child elements
+          else if (rewriteContent.size() == 1 && rewriteContent.get(0) == element) { //NOPMD
+            rewriteContent(element, rewriteContentHandler);
+            newContent.add(element);
+          }
 
-            // element was replaced with other content - rewrite and add instead
-            else {
-              for (Content newContentItem : rewriteContent) {
-                if (newContentItem instanceof Element) {
-                  Element newElement = (Element)newContentItem;
-                  rewriteContent(newElement, rewriteContentHandlers);
-                }
-                newContent.add(newContentItem.clone());
+          // element was replaced with other content - rewrite and add instead
+          else {
+            for (Content newContentItem : rewriteContent) {
+              if (newContentItem instanceof Element) {
+                Element newElement = (Element)newContentItem;
+                rewriteContent(newElement, rewriteContentHandler);
               }
+              newContent.add(newContentItem.clone());
             }
-
-            rewrittenContentFound = true;
-            break;
           }
         }
 
         // nothing to rewrite - do nothing, but rewrite child element
-        if (!rewrittenContentFound) {
-          rewriteContent(element, rewriteContentHandlers);
+        else {
+          rewriteContent(element, rewriteContentHandler);
           newContent.add(element);
         }
 
@@ -234,35 +214,29 @@ public final class RichTextUtil {
         Text text = (Text)contentElement;
 
         // check if rewrite is needed for text node
-        boolean rewrittenTextFound = false;
-        for (RewriteContentHandler rewriteContentHandler : rewriteContentHandlers) {
-          List<Content> rewriteContent = rewriteContentHandler.rewriteText(text);
-          if (rewriteContent != null) {
-            // element was removed
-            if (rewriteContent.isEmpty()) {
-              // do not add to newContent
-            }
+        List<Content> rewriteContent = rewriteContentHandler.rewriteText(text);
+        if (rewriteContent != null) {
+          // element was removed
+          if (rewriteContent.isEmpty()) {
+            // do not add to newContent
+          }
 
-            // element is the same - ignore
-            else if (rewriteContent.size() == 1 && rewriteContent.get(0) == text) { //NOPMD
-              // add original element
-              newContent.add(text);
-            }
+          // element is the same - ignore
+          else if (rewriteContent.size() == 1 && rewriteContent.get(0) == text) { //NOPMD
+            // add original element
+            newContent.add(text);
+          }
 
-            // element was replaced with other content - add instead
-            else {
-              for (Content newContentItem : rewriteContent) {
-                newContent.add(newContentItem.clone());
-              }
+          // element was replaced with other content - add instead
+          else {
+            for (Content newContentItem : rewriteContent) {
+              newContent.add(newContentItem.clone());
             }
-
-            rewrittenTextFound = true;
-            break;
           }
         }
 
         // nothing to rewrite - do nothing, but add original text element
-        if (!rewrittenTextFound) {
+        else {
           newContent.add(text);
         }
 

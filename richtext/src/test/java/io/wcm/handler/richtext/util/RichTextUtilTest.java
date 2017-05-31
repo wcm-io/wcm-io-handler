@@ -150,27 +150,25 @@ public class RichTextUtilTest {
 
     assertEquals("to-replace-single",
         "<test1 /><replaced-element-once /><test2 />",
-        rewriteContent("<test1 /><to-replace-once /><test2 />", Rewriter.class, RewriterReplaceOnce.class));
+        rewriteContent("<test1 /><to-replace-once /><test2 />"));
 
     assertEquals("to-replace-single",
         "<test1 /><replaced-element-once /><to-replace-once /><test2 />",
-        rewriteContent("<test1 /><to-replace-once /><to-replace-once /><test2 />", Rewriter.class, RewriterReplaceOnce.class));
+        rewriteContent("<test1 /><to-replace-once /><to-replace-once /><test2 />"));
 
   }
 
-  @SafeVarargs
-  private static String rewriteContent(String input, Class<? extends RewriteContentHandler>... rewriterClasses) throws Exception {
+  @Test
+  public void testXhtmlEntities() throws Exception {
+
+    Element element = RichTextUtil.parseText("Der Jodelkaiser aus dem &Ouml;tztal.", true);
+    assertEquals("text", "Der Jodelkaiser aus dem Ötztal.", element.getText());
+
+  }
+
+  private String rewriteContent(String input) throws Exception {
     Element root = RichTextUtil.parseText(input);
-    List<RewriteContentHandler> instances = new ArrayList<>();
-    for (Class<? extends RewriteContentHandler> clazz : rewriterClasses) {
-      instances.add(clazz.newInstance());
-    }
-    if (instances.isEmpty()) {
-      RichTextUtil.rewriteContent(root, new Rewriter());
-    }
-    else {
-      RichTextUtil.rewriteContent(root, instances);
-    }
+    RichTextUtil.rewriteContent(root, new TestRewriteContentHandler());
     return toStringContentOnly(root);
   }
 
@@ -178,7 +176,7 @@ public class RichTextUtilTest {
    * Serializes all content/children of this element.
    * @return Serialized content.
    */
-  private static String toStringContentOnly(Element element) {
+  private String toStringContentOnly(Element element) {
     StringBuilder sb = new StringBuilder();
     XMLOutputter xmlOutputter = new XMLOutputter();
     for (Object content : element.getContent()) {
@@ -201,7 +199,9 @@ public class RichTextUtilTest {
     return sb.toString();
   }
 
-  static class Rewriter implements RewriteContentHandler {
+  static class TestRewriteContentHandler implements RewriteContentHandler {
+
+    private boolean mReplaceOnce;
 
     @Override
     public List<Content> rewriteElement(Element element) {
@@ -237,25 +237,7 @@ public class RichTextUtilTest {
         return content;
       }
 
-      return null;
-    }
-
-    @Override
-    public List<Content> rewriteText(Text text) {
-      // noting to do
-      return null;
-    }
-
-  }
-
-  static class RewriterReplaceOnce implements RewriteContentHandler {
-
-    private boolean mReplaceOnce;
-
-    @Override
-    public List<Content> rewriteElement(Element element) {
-
-      if (StringUtils.equals(element.getName(), "to-replace-once")) {
+      else if (StringUtils.equals(element.getName(), "to-replace-once")) {
         if (!mReplaceOnce) {
           List<Content> content = new ArrayList<Content>();
           content.add(new Element("replaced-element-once").addContent(element.cloneContent()));
@@ -275,14 +257,6 @@ public class RichTextUtilTest {
       // noting to do
       return null;
     }
-
-  }
-
-  @Test
-  public void testXhtmlEntities() throws Exception {
-
-    Element element = RichTextUtil.parseText("Der Jodelkaiser aus dem &Ouml;tztal.", true);
-    assertEquals("text", "Der Jodelkaiser aus dem Ötztal.", element.getText());
 
   }
 

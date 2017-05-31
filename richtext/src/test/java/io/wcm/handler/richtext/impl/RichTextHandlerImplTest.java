@@ -22,16 +22,28 @@ package io.wcm.handler.richtext.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.List;
+
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.Model;
+import org.jdom2.Content;
+import org.jdom2.Element;
+import org.jdom2.Text;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.richtext.DefaultRewriteContentHandler;
 import io.wcm.handler.richtext.RichText;
 import io.wcm.handler.richtext.RichTextHandler;
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.TextMode;
+import io.wcm.handler.richtext.spi.RichTextHandlerConfig;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
+import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -65,6 +77,11 @@ public class RichTextHandlerImplTest {
       + "aus<span></span> dem "
       + "<a href=\"http://www.jodelkaiser.de\" target=\"_blank\">Ötztal</a> "
       + "ist wieder daheim.</p>";
+
+  private static final String RICHTEXT_FRAGMENT_REWRITTEN_CUSTOM_REWRITER = "<P>der <STRONG>jodelkaiser</STRONG> "
+      + "aus<SPAN></SPAN> dem "
+      + "<A href=\"http://www.jodelkaiser.de\" target=\"_blank\">ötztal</A> "
+      + "ist wieder daheim.</P>";
 
   private static final String PLAINTEXT_FRAGMENT = "Der Jodelkaiser\naus dem Ötztal\nist wieder daheim.";
   private static final String PLAINTEXT_FRAGMENT_REWRITTEN = "Der Jodelkaiser<br />aus dem Ötztal<br />ist wieder daheim.";
@@ -134,6 +151,38 @@ public class RichTextHandlerImplTest {
             RichTextNameConstants.PN_TEXT_IS_RICH, false));
     RichText richText = richTextHandler.get(resource).build();
     assertEquals(PLAINTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
+  }
+
+  @Test
+  public void testContentWithCustomRewriterContentHandler() {
+    context.registerService(RichTextHandlerConfig.class, new RichTextHandlerConfig() {
+      @Override
+      public List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {
+        return ImmutableList.<Class<? extends RewriteContentHandler>>of(
+            DefaultRewriteContentHandler.class, CustomRewriteContentHandler.class);
+      }
+    });
+
+    RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
+    RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT).build();
+    assertEquals(RICHTEXT_FRAGMENT_REWRITTEN_CUSTOM_REWRITER, richText.getMarkup());
+  }
+
+
+  @Model(adaptables = { SlingHttpServletRequest.class, Resource.class })
+  public static class CustomRewriteContentHandler implements RewriteContentHandler {
+
+    @Override
+    public List<Content> rewriteElement(Element element) {
+      element.setName(element.getName().toUpperCase());
+      return null;
+    }
+
+    @Override
+    public List<Content> rewriteText(Text text) {
+      return ImmutableList.<Content>of(new Text(text.getText().toLowerCase()));
+    }
+
   }
 
 }
