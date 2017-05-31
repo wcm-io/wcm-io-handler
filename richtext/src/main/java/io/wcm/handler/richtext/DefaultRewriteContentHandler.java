@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.richtext.impl;
+package io.wcm.handler.richtext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -42,6 +42,8 @@ import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.google.common.collect.ImmutableSet;
@@ -56,17 +58,16 @@ import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.richtext.impl.DataPropertyUtil;
 import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
- * Default implementation of {@link RichTextRewriteContentHandlerImpl}.
+ * Default implementation of {@link RewriteContentHandler}.
  */
-@Model(adaptables = {
-    SlingHttpServletRequest.class, Resource.class
-}, adapters = RewriteContentHandler.class)
-public final class RichTextRewriteContentHandlerImpl implements RewriteContentHandler {
+@Model(adaptables = { SlingHttpServletRequest.class, Resource.class })
+public final class DefaultRewriteContentHandler implements RewriteContentHandler {
 
   @Self
   private Adaptable adaptable;
@@ -78,6 +79,8 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
   private LinkHandlerConfig linkHandlerConfig;
   @Self
   private MediaHandler mediaHandler;
+
+  private static final Logger log = LoggerFactory.getLogger(DefaultRewriteContentHandler.class);
 
   /**
    * List of all tag names that should not be rendered "self-closing" to avoid interpretation errors in browsers
@@ -206,11 +209,11 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
 
   /**
    * Support data structures where link metadata is stored in mutliple HTML5 data-* attributes.
-   * @param pResourceProps Valuemap to write link metadata to
+   * @param resourceProps ValueMap to write link metadata to
    * @param element Link element
    * @return true if any metadata attribute was found
    */
-  private boolean getAnchorMetadataFromData(ValueMap pResourceProps, Element element) {
+  private boolean getAnchorMetadataFromData(ValueMap resourceProps, Element element) {
     boolean foundAny = false;
 
     List<Attribute> attributes = element.getAttributes();
@@ -226,7 +229,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
               for (int i = 0; i < jsonArray.length(); i++) {
                 values[i] = jsonArray.optString(i);
               }
-              pResourceProps.put(property, values);
+              resourceProps.put(property, values);
             }
             catch (JSONException ex) {
               // ignore
@@ -235,7 +238,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
           else {
             // decode if required
             value = decodeIfEncoded(value);
-            pResourceProps.put(property, value);
+            resourceProps.put(property, value);
           }
           foundAny = true;
         }
@@ -247,10 +250,10 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
 
   /**
    * Support legacy data structures where link metadata is stored as JSON fragment in single HTML5 data attribute.
-   * @param pResourceProps Valuemap to write link metadata to
+   * @param resourceProps ValueMap to write link metadata to
    * @param element Link element
    */
-  private boolean getAnchorLegacyMetadataFromSingleData(ValueMap pResourceProps, Element element) {
+  private boolean getAnchorLegacyMetadataFromSingleData(ValueMap resourceProps, Element element) {
     boolean foundAny = false;
 
     JSONObject metadata = null;
@@ -262,7 +265,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
           metadata = new JSONObject(metadataString);
         }
         catch (JSONException ex) {
-          RichTextHandlerImpl.log.debug("Invalid link metadata: " + metadataString, ex);
+          log.debug("Invalid link metadata: " + metadataString, ex);
         }
       }
     }
@@ -270,7 +273,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
       JSONArray names = metadata.names();
       for (int i = 0; i < names.length(); i++) {
         String name = names.optString(i);
-        pResourceProps.put(name, metadata.opt(name));
+        resourceProps.put(name, metadata.opt(name));
         foundAny = true;
       }
     }
@@ -280,10 +283,10 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
 
   /**
    * Support legacy data structures where link metadata is stored as JSON fragment in rel attribute.
-   * @param pResourceProps Valuemap to write link metadata to
+   * @param resourceProps ValueMap to write link metadata to
    * @param element Link element
    */
-  private void getAnchorLegacyMetadataFromRel(ValueMap pResourceProps, Element element) {
+  private void getAnchorLegacyMetadataFromRel(ValueMap resourceProps, Element element) {
     // Check href attribute - do not change elements with no href or links to anchor names
     String href = element.getAttributeValue("href");
     String linkWindowTarget = element.getAttributeValue("target");
@@ -299,7 +302,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
         metadata = new JSONObject(metadataString);
       }
       catch (JSONException ex) {
-        RichTextHandlerImpl.log.debug("Invalid link metadata: " + metadataString, ex);
+        log.debug("Invalid link metadata: " + metadataString, ex);
       }
     }
     if (metadata == null) {
@@ -320,13 +323,13 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
           for (int j = 0; j < valueArray.length(); j++) {
             values.add(valueArray.optString(j));
           }
-          pResourceProps.put(metadataPropertyName, values.toArray(new String[values.size()]));
+          resourceProps.put(metadataPropertyName, values.toArray(new String[values.size()]));
         }
         else {
           // store simple value
           Object value = metadata.opt(metadataPropertyName);
           if (value != null) {
-            pResourceProps.put(metadataPropertyName, value);
+            resourceProps.put(metadataPropertyName, value);
           }
         }
       }
@@ -334,7 +337,7 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
 
     // detect link type
     LinkType linkType = null;
-    String linkTypeString = pResourceProps.get(LinkNameConstants.PN_LINK_TYPE, String.class);
+    String linkTypeString = resourceProps.get(LinkNameConstants.PN_LINK_TYPE, String.class);
     for (Class<? extends LinkType> candidateClass : linkHandlerConfig.getLinkTypes()) {
       LinkType candidate = AdaptTo.notNull(adaptable, candidateClass);
       if (StringUtils.isNotEmpty(linkTypeString)) {
@@ -362,8 +365,8 @@ public final class RichTextRewriteContentHandlerImpl implements RewriteContentHa
     }
 
     // store link reference (property depending on link type)
-    pResourceProps.put(linkType.getPrimaryLinkRefProperty(), href);
-    pResourceProps.put(LinkNameConstants.PN_LINK_WINDOW_TARGET, linkWindowTarget);
+    resourceProps.put(linkType.getPrimaryLinkRefProperty(), href);
+    resourceProps.put(LinkNameConstants.PN_LINK_WINDOW_TARGET, linkWindowTarget);
 
   }
 

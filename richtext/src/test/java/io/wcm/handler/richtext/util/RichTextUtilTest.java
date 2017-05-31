@@ -158,6 +158,14 @@ public class RichTextUtilTest {
 
   }
 
+  @Test
+  public void testXhtmlEntities() throws Exception {
+
+    Element element = RichTextUtil.parseText("Der Jodelkaiser aus dem &Ouml;tztal.", true);
+    assertEquals("text", "Der Jodelkaiser aus dem Ötztal.", element.getText());
+
+  }
+
   private String rewriteContent(String input) throws Exception {
     Element root = RichTextUtil.parseText(input);
     RichTextUtil.rewriteContent(root, new TestRewriteContentHandler());
@@ -249,14 +257,6 @@ public class RichTextUtilTest {
       // noting to do
       return null;
     }
-
-  }
-
-  @Test
-  public void testXhtmlEntities() throws Exception {
-
-    Element element = RichTextUtil.parseText("Der Jodelkaiser aus dem &Ouml;tztal.", true);
-    assertEquals("text", "Der Jodelkaiser aus dem Ötztal.", element.getText());
 
   }
 

@@ -29,6 +29,7 @@ import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
 import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.richtext.impl.DefaultRichTextHandlerConfig;
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
 import io.wcm.handler.url.impl.UrlHandlerConfigAdapterFactory;
@@ -86,6 +87,7 @@ public final class AppAemContext {
       context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig());
       context.registerInjectActivateService(new LinkHandlerConfigAdapterFactory());
       context.registerInjectActivateService(new DefaultLinkHandlerConfig());
+      context.registerInjectActivateService(new DefaultRichTextHandlerConfig());
 
       // context path strategy
       MockCAConfig.contextPathStrategyAbsoluteParent(context, DummyUrlHandlerConfig.SITE_ROOT_LEVEL);
