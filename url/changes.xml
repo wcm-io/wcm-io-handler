@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert">
         Introduce SiteRootDetector service, and use it by default in DefaultUrlHandlerConfig.
       </action>
+      <action type="update" dev="sseifert">
+        Get SiteConfig only for site root and cache results for a short time to speed up massive URL resolving.
+      </action>
       <action type="fix" dev="sseifert">
         LinkHandlerConfig.isRedirect: Use ResourceType.is to be independent of Sling ResourceResolver implementation version.
       </action>

@@ -41,6 +41,8 @@ import io.wcm.sling.commons.resource.ResourcePath;
 @Component(service = SiteRootDetector.class)
 public class SiteRootDetectorImpl implements SiteRootDetector {
 
+  private static final int INVALID_SITE_ROOT_LEVEL = -1;
+
   @Reference
   private ConfigurationResourceResolver configurationResourceResolver;
 
@@ -55,14 +57,14 @@ public class SiteRootDetectorImpl implements SiteRootDetector {
   @Override
   public int getSiteRootLevel(Resource contextResource) {
     if (contextResource == null) {
-      return 0;
+      return INVALID_SITE_ROOT_LEVEL;
     }
     try {
       return cache.get(contextResource.getPath(), () -> detectSiteRootLevel(contextResource));
     }
     catch (ExecutionException ex) {
       log.warn("Unexpected exception.", ex);
-      return 0;
+      return INVALID_SITE_ROOT_LEVEL;
     }
   }
 
@@ -76,7 +78,7 @@ public class SiteRootDetectorImpl implements SiteRootDetector {
       }
       return level;
     }
-    return 0;
+    return INVALID_SITE_ROOT_LEVEL;
   }
 
 }

@@ -20,10 +20,7 @@
 package io.wcm.handler.url.impl.modes;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.caconfig.ConfigurationBuilder;
 
 import io.wcm.handler.url.SiteConfig;
 
@@ -37,16 +34,7 @@ class UrlConfig {
   private final String siteUrlAuthor;
 
   UrlConfig(Adaptable adaptable) {
-    SiteConfig config = null;
-    if (adaptable instanceof Resource) {
-      config = adaptable.adaptTo(ConfigurationBuilder.class).as(SiteConfig.class);
-    }
-    else if (adaptable instanceof SlingHttpServletRequest) {
-      Resource resource = ((SlingHttpServletRequest)adaptable).getResource();
-      if (resource != null) {
-        config = resource.adaptTo(ConfigurationBuilder.class).as(SiteConfig.class);
-      }
-    }
+    SiteConfig config = adaptable.adaptTo(SiteConfig.class);
     if (config != null) {
       this.siteUrl = config.siteUrl();
       this.siteUrlSecure = StringUtils.defaultString(config.siteUrlSecure(), this.siteUrl);

@@ -53,11 +53,11 @@ public class SiteRootDetectorImplTest {
 
   @Test
   public void testGetSiteRootLevel() {
-    assertEquals(0, underTest.getSiteRootLevel(context.create().resource("/content")));
+    assertEquals(-1, underTest.getSiteRootLevel(context.create().resource("/content")));
     assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2")));
     assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2/test3")));
     assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2/test3/test4/test5")));
-    assertEquals(0, underTest.getSiteRootLevel(null));
+    assertEquals(-1, underTest.getSiteRootLevel(null));
   }
 
 }
