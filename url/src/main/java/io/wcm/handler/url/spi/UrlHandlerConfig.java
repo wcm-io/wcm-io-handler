@@ -43,7 +43,7 @@ public abstract class UrlHandlerConfig implements ContextAwareService {
   /**
    * Returns the absolute path level where the root page of the site is located.
    * @param contextResource Context resource that is assumed to be inside the site context.
-   * @return Root level or 0 if it could not be detected
+   * @return Root level or -1 if it could not be detected
    */
   public abstract int getSiteRootLevel(Resource contextResource);
 

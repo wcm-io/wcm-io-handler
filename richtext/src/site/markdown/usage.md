@@ -55,5 +55,36 @@ Sightly template example:
 ```
 
 
+### Configuring and tailoring the rich text processing
+
+Optionally you can provide an OSGi service to specify in more detail the rich text processing needs of your application. For this you have to extend the [RichTextHandlerConfig][richtext-handler-config] class. Via [Context-Aware Services][sling-commons-caservices] you can make sure the SPI customization affects only resources (content pages, DAM assets) that are relevant for your application. Thus it is possible to provide different customizations for different applications running in the same AEM instance.
+
+With this you can:
+
+* Define additional or alternative [RewriteContentHandler][rewriter-content-handler] implementations that rewrite the rich text fragment before rendering it to the page
+
+Example:
+
+```java
+@Component(service = RichTextHandlerConfig.class, property = {
+    ContextAwareService.PROPERTY_CONTEXT_PATH_PATTERN + "=^/content/(dam/)?myapp(/.*)?$"
+})
+public class RichTextHandlerConfigImpl extends RichTextHandlerConfig {
+
+  private static final List<Class<? extends RewriteContentHandler>> REWRITE_CONTENT_HANDLERS
+      = ImmutableList.<Class<? extends RewriteContentHandler>>of(
+      DefaultRewriteContentHandler.class, MyCustomRewriteContentHandler.class);
+
+  @Override
+  public List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {
+    return REWRITE_CONTENT_HANDLERS;
+  }
+
+}
+```
+
 [richtext-handler]: apidocs/io/wcm/handler/richtext/RichTextHandler.html
+[richtext-handler-config]: apidocs/io/wcm/handler/richtext/spi/RichTextHandlerConfig.html
+[rewriter-content-handler]: apidocs/io/wcm/handler/richtext/util/RewriteContentHandler.html
 [url-handler]: ../url/
+[sling-commons-caservices]: ../../sling/commons/context-aware-services.html

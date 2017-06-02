@@ -124,6 +124,30 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
+  public void testInternalLinkFullUrlWithPort() {
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+
+    Link link = new Link(new InternalLinkType(), null);
+    link.setUrl("https://host1:8080/sample.html#fragment1");
+    link.setAnchor(new Anchor().setHRef("/sample.html#fragment1"));
+
+    // test without url parameters
+    postProcessor.process(link);
+    assertEquals("https://host1:8080/sample.html#fragment1", link.getUrl());
+
+    // test with url parameters
+    context.request().setQueryString("debugClientLibs=true&abc=123");
+
+    postProcessor.process(link);
+    if (adaptable() instanceof SlingHttpServletRequest) {
+      assertEquals("https://host1:8080/sample.html?debugClientLibs=true#fragment1", link.getUrl());
+    }
+    else {
+      assertEquals("https://host1:8080/sample.html#fragment1", link.getUrl());
+    }
+  }
+
+  @Test
   public void testInternalLinkWithCustomParameterList() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), AbcInternalLinkInheritUrlParamLinkPostProcessor.class);
 

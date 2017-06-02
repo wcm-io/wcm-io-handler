@@ -25,10 +25,10 @@ import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Converts case sensitive headless camel case property names to case insensitive HTML5 data property names and vice
- * versa.
+ * Converts case sensitive headless camel case property names to case insensitive HTML5 data property names
+ * and vice versa.
  */
-final class DataPropertyUtil {
+public final class DataPropertyUtil {
 
   private static final String HTML5_DATA_PREFIX = "data-";
   private static final Pattern HEADLESS_CAMEL_CASE_NAME_PATTERN = Pattern.compile("^[a-z][a-zA-Z0-9]*$");
@@ -110,14 +110,14 @@ final class DataPropertyUtil {
   }
 
   /**
-   * @param pName Property name
+   * @param name Property name
    * @return true if property name starts with "data-" prefix, and has only lowercase, number or hyphen chars.
    */
-  public static boolean isHtml5DataName(String pName) {
-    if (StringUtils.isEmpty(pName)) {
+  public static boolean isHtml5DataName(String name) {
+    if (StringUtils.isEmpty(name)) {
       return false;
     }
-    return HTML5_DATA_NAME_PATTERN.matcher(pName).matches();
+    return HTML5_DATA_NAME_PATTERN.matcher(name).matches();
   }
 
 }

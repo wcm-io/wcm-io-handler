@@ -27,8 +27,12 @@ import org.jdom2.Text;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Helper interface for rewriteContent method.
- * Handles rewrite operations for single elements.
+ * Allows to rewrite DOM elements and text elements.
+ * <p>
+ * If used for {@link io.wcm.handler.richtext.spi.RichTextHandlerConfig} this interface has to be
+ * implemented by a Sling Model class. The adaptables should be
+ * {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.
+ * </p>
  */
 @ConsumerType
 public interface RewriteContentHandler {

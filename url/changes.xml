@@ -23,6 +23,15 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.1.0" date="2017-06-02">
+      <action type="add" dev="sseifert">
+        Introduce SiteRootDetector service, and use it by default in DefaultUrlHandlerConfig.
+      </action>
+      <action type="update" dev="sseifert">
+        Get SiteConfig only for site root and cache results for a short time to speed up massive URL resolving.
+      </action>
+    </release>
+
     <release version="1.0.0" date="2017-04-04">
       <action type="update" dev="sseifert">
         Switch to AEM 6.1 and Java 8 as minimum versions.

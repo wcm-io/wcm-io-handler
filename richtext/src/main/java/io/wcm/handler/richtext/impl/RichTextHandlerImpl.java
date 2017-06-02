@@ -24,9 +24,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -45,9 +47,11 @@ import io.wcm.handler.richtext.RichTextHandler;
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.RichTextRequest;
 import io.wcm.handler.richtext.TextMode;
+import io.wcm.handler.richtext.spi.RichTextHandlerConfig;
 import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.handler.richtext.util.RichTextUtil;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
@@ -61,9 +65,13 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   static final Logger log = LoggerFactory.getLogger(RichTextHandlerImpl.class);
 
   @Self
-  private RewriteContentHandler rewriteContentHandler;
+  private Adaptable adaptable;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
+  @OSGiService
+  private ContextAwareServiceResolver serviceResolver;
+
+  private List<RewriteContentHandler> rewriteContentHandlers;
 
   @Override
   public RichTextBuilder get(Resource resource) {
@@ -122,7 +130,10 @@ public final class RichTextHandlerImpl implements RichTextHandler {
       Element contentParent = RichTextUtil.parseText(text, true);
 
       // Rewrite content (e.g. anchor tags)
-      RichTextUtil.rewriteContent(contentParent, rewriteContentHandler);
+      List<RewriteContentHandler> rewriters = getRewriterContentHandlers();
+      for (RewriteContentHandler rewriter : rewriters) {
+        RichTextUtil.rewriteContent(contentParent, rewriter);
+      }
 
       // return xhtml elements
       return ImmutableList.copyOf(contentParent.cloneContent());
@@ -154,6 +165,22 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   @Override
   public boolean isEmpty(String text) {
     return RichTextUtil.isEmpty(text);
+  }
+
+  private List<RewriteContentHandler> getRewriterContentHandlers() {
+    if (rewriteContentHandlers == null) {
+      RichTextHandlerConfig config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
+      rewriteContentHandlers = new ArrayList<>();
+      for (Class<? extends RewriteContentHandler> clazz : config.getRewriteContentHandlers()) {
+        RewriteContentHandler rewriter = adaptable.adaptTo(clazz);
+        if (rewriter == null) {
+          throw new RuntimeException("Unable to adapt " + adaptable.getClass() + " to " + clazz.getName() + ". "
+              + "Make sure the class is a Sling Model and adaptable from Resource and SlingHttpServletRequest.");
+        }
+        rewriteContentHandlers.add(rewriter);
+      }
+    }
+    return rewriteContentHandlers;
   }
 
 }

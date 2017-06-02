@@ -19,45 +19,45 @@
  */
 package io.wcm.handler.url.impl;
 
-import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
-import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
-import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
+import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import io.wcm.handler.url.SiteRootDetector;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DefaultUrlHandlerConfigTest {
 
   private static final int ROOT_LEVEL = 2;
 
   @Rule
-  public AemContext context = new AemContextBuilder()
-      .plugin(CACONFIG)
-      .plugin(WCMIO_SLING, WCMIO_CACONFIG)
-      .build();
+  public AemContext context = new AemContext();
+
+  @Mock
+  private SiteRootDetector siteRootDetector;
 
   private UrlHandlerConfig underTest;
 
   @Before
   public void setUp() throws Exception {
-    MockCAConfig.contextPathStrategyAbsoluteParent(context, ROOT_LEVEL);
+    context.registerService(SiteRootDetector.class, siteRootDetector);
     underTest = context.registerInjectActivateService(new DefaultUrlHandlerConfig());
   }
 
   @Test
   public void testGetSiteRootLevel() {
-    assertEquals(0, underTest.getSiteRootLevel(context.create().resource("/content")));
-    assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2")));
-    assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2/test3")));
-    assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2/test3/test4/test5")));
-    assertEquals(0, underTest.getSiteRootLevel(null));
+    Resource resource = context.create().resource("/content/test1");
+    when(siteRootDetector.getSiteRootLevel(resource)).thenReturn(ROOT_LEVEL);
+    assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(resource));
   }
 
 }

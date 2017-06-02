@@ -34,7 +34,7 @@ import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.url.UrlHandler;
 
 /**
- * Linkhandler postprocessor to inherit URL parametres to internal links.
+ * Linkhandler post processor to inherit URL parameters to internal links.
  */
 @ConsumerType
 public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor implements LinkProcessor {
@@ -62,7 +62,7 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
         URI uri = new URI(url);
         String path = uri.getPath();
         if (uri.getScheme() != null && uri.getHost() != null) {
-          path = uri.getScheme() + "://" + uri.getHost() + path;
+          path = uri.getScheme() + "://" + uri.getHost() + (uri.getPort() == -1 ? "" : (":" + uri.getPort())) + path;
         }
         url = urlHandler.get(path)
             .queryString(uri.getRawQuery(), this.inheritUrlParameterNames)
