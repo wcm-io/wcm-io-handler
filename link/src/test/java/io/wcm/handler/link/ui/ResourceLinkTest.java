@@ -24,7 +24,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,7 +32,6 @@ import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 public class ResourceLinkTest {
@@ -41,29 +39,17 @@ public class ResourceLinkTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
-  private Resource validLinkResource;
-  private Resource invalidLinkResource;
-
   @Before
   public void setUp() {
     context.create().page(ROOTPATH_CONTENT + "/page1");
-
-    validLinkResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/validLink",
-        ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://www.dummysite.org")
-        .build());
-
-    invalidLinkResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/invalidLink",
-        ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/link")
-        .build());
   }
 
   @Test
   public void testValidLink() {
-    context.currentResource(validLinkResource);
+    context.currentResource(context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/validLink",
+        LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID,
+        LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://www.dummysite.org"));
+
     ResourceLink underTest = context.request().adaptTo(ResourceLink.class);
     assertTrue(underTest.isValid());
     assertEquals("http://www.dummysite.org", underTest.getMetadata().getUrl());
@@ -72,7 +58,10 @@ public class ResourceLinkTest {
 
   @Test
   public void testInvalidLink() {
-    context.currentResource(invalidLinkResource);
+    context.currentResource(context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/invalidLink",
+        LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
+        LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/link"));
+
     ResourceLink underTest = context.request().adaptTo(ResourceLink.class);
     assertFalse(underTest.isValid());
   }
