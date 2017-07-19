@@ -1,7 +1,7 @@
 {
   "jcr:primaryType": "nt:unstructured",
   "sling:resourceType": "granite/ui/components/foundation/section",
-  "cq:showOnCreate": false,
+  "jcr:title": "Link",
   "layout": {
     "sling:resourceType": "granite/ui/components/foundation/layouts/fixedcolumns"
   },
