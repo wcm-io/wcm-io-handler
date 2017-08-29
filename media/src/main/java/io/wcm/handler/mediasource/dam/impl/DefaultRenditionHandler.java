@@ -419,22 +419,22 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if height is missing - calculate from width
     if (height == 0 && width > 0) {
-      height = (int)Math.round(width * ratio);
+      height = (int)Math.round(width / ratio);
     }
 
     // if width is missing - calculate from height
     if (width == 0 && height > 0) {
-      width = (int)Math.round(height / ratio);
+      width = (int)Math.round(height * ratio);
     }
 
     // return virtual rendition
-    if (widthValue > 0 && heightValue > 0) {
+    if (width > 0 && height > 0) {
       if (rendition instanceof VirtualCropRenditionMetadata) {
         VirtualCropRenditionMetadata cropRendition = (VirtualCropRenditionMetadata)rendition;
-        return new VirtualCropRenditionMetadata(cropRendition.getRendition(), widthValue, heightValue, cropRendition.getCropDimension());
+        return new VirtualCropRenditionMetadata(cropRendition.getRendition(), width, height, cropRendition.getCropDimension());
       }
       else {
-        return new VirtualRenditionMetadata(rendition.getRendition(), widthValue, heightValue);
+        return new VirtualRenditionMetadata(rendition.getRendition(), width, height);
       }
     }
     else {
