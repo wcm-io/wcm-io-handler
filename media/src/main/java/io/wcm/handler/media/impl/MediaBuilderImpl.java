@@ -27,6 +27,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
 
 /**
@@ -177,6 +178,24 @@ final class MediaBuilderImpl implements MediaBuilder {
   @Override
   public MediaBuilder dummyImageUrl(String value) {
     this.mediaArgs.dummyImageUrl(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder includeAssetThumbnails(boolean value) {
+    this.mediaArgs.includeAssetThumbnails(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder dragDropSupport(DragDropSupport value) {
+    this.mediaArgs.dragDropSupport(value);
+    return this;
+  }
+
+  @Override
+  public MediaBuilder property(String key, Object value) {
+    this.mediaArgs.property(key, value);
     return this;
   }
 
