@@ -36,6 +36,7 @@
 
   <name>Handler Commons</name>
   <description>Functionality shared by the handler implementations.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io/wcm-io-handler.git</connection>

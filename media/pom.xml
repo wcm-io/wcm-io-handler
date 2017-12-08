@@ -36,6 +36,7 @@
 
   <name>Media Handler</name>
   <description>Media resolving, processing and markup generation.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io/wcm-io-handler.git</connection>
