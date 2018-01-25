@@ -4,24 +4,9 @@
 
   "cq:dialog": {
     "jcr:primaryType": "nt:unstructured",
-    "jcr:title": "Page",
-    "extraClientlibs": [
-      "cq.common.wcm",
-      "cq.siteadmin.admin.properties"
-    ],
-    "mode": "edit",
-    "sling:resourceType": "cq/gui/components/authoring/dialog",
     "content": {
-      "class": "cq-dialog-content-page",
-      "sling:resourceType": "granite/ui/components/foundation/container",
       "items": {
         "tabs": {
-          "rel": "cq-siteadmin-admin-properties-tabs",
-          "sling:resourceType": "granite/ui/components/foundation/container",
-          "layout": {
-            "type": "nav",
-            "sling:resourceType": "granite/ui/components/foundation/layouts/tabs"
-          },
           "items": {
 
             "link": {
