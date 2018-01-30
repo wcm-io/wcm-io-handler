@@ -38,7 +38,7 @@ import io.wcm.sling.models.annotations.AemObject;
  * Model for detecting site root pages.
  */
 @ProviderType
-@Model(adaptables = SlingHttpServletRequest.class)
+@Model(adaptables = {SlingHttpServletRequest.class, Resource.class})
 public final class SiteRoot {
 
   private Page siteRootPage;
