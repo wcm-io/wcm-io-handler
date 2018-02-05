@@ -45,6 +45,10 @@ public class SiteRootTest {
   public void testGetRootPath() {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertEquals("/content/unittest/de_test/brand/de", underTest.getRootPath());
+
+    // check that SiteRoot also works with resources
+    underTest = context.currentResource().adaptTo(SiteRoot.class);
+    assertEquals("/content/unittest/de_test/brand/de", underTest.getRootPath());
   }
 
   @Test
@@ -57,6 +61,10 @@ public class SiteRootTest {
   @Test
   public void testGetRootPage() {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
+    assertEquals("/content/unittest/de_test/brand/de", underTest.getRootPage().getPath());
+
+    // check that SiteRoot also works with resources
+    underTest = context.currentResource().adaptTo(SiteRoot.class);
     assertEquals("/content/unittest/de_test/brand/de", underTest.getRootPage().getPath());
   }
 
