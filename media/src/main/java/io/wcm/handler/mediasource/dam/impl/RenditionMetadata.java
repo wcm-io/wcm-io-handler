@@ -199,6 +199,10 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
           + "." + MediaFileServlet.SELECTOR_DOWNLOAD
           + "." + MediaFileServlet.EXTENSION, getFileName());
     }
+    else if (isOriginalRendition(this.rendition)) {
+      // use original asset path when referencing the original rendition
+      return this.rendition.getAsset().getPath();
+    }
     else {
       return RenditionMetadata.buildMediaPath(this.rendition.getPath() + ".", getFileName());
     }
