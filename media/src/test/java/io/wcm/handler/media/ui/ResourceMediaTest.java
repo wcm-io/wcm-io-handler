@@ -78,8 +78,7 @@ public class ResourceMediaTest {
   public void testWithoutMediaFormat() {
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
     assertTrue(underTest.isValid());
-    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg",
-        underTest.getMetadata().getUrl());
+    assertEquals("/content/dam/asset1.jpg", underTest.getMetadata().getUrl());
   }
 
   @Test
