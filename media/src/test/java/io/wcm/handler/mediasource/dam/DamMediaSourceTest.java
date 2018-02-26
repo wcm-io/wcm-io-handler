@@ -340,7 +340,8 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
     assertNotNull("rendition?", media.getRendition());
-    assertEquals("rendition.mediaUrl", "/content/dam/test/flashWithoutFallback.swf", media.getRendition().getUrl());
+    assertEquals("rendition.mediaUrl", "/content/dam/test/flashWithoutFallback.swf/_jcr_content/renditions/original./flashWithoutFallback.swf",
+        media.getRendition().getUrl());
   }
 
   @Test
@@ -390,7 +391,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl();
     assertNotNull("returned url?", url);
-    assertEquals("url as expected?", "/content/dam/test/standard.jpg", url);
+    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url);
   }
 
   @Test
@@ -453,7 +454,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl();
     assertNotNull("returned url?", url);
-    assertEquals("url as expected?", "http://www.dummysite.org/content/dam/test/standard.jpg", url);
+    assertEquals("url as expected?", "http://www.dummysite.org/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url);
 
   }
 
@@ -514,7 +515,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   public void testGetMediaMarkup() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     assertEquals(
-        "<img src=\"/content/dam/test/standard.jpg\" alt=\"Editorial Standard 1\" height=\"102\" width=\"215\" />",
+        "<img src=\"/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg\" alt=\"Editorial Standard 1\" height=\"102\" width=\"215\" />",
         media.getMarkup());
   }
 
@@ -533,7 +534,9 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertTrue("valid?", media.isValid());
     assertNotNull("asset?", media.getAsset());
     assertEquals("renditions", 1, media.getRenditions().size());
-    assertEquals("rendition.mediaUrl", "/content/dam/test/standard.jpg", media.getUrl());
+    assertEquals("rendition.mediaUrl",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
+        media.getUrl());
     assertEquals(EDITORIAL_1COL, media.getRendition().getMediaFormat());
   }
 
@@ -546,7 +549,9 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("renditions", 3, media.getRenditions().size());
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
 
-    assertEquals("rendition.mediaUrl.1", "/content/dam/test/standard.jpg", renditions.get(0).getUrl());
+    assertEquals("rendition.mediaUrl.1",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
+        renditions.get(0).getUrl());
     assertEquals(EDITORIAL_1COL, renditions.get(0).getMediaFormat());
 
     assertEquals("rendition.mediaUrl.2",
