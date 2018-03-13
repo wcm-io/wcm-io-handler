@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.impl.AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION;
+import static org.apache.sling.api.servlets.HttpConstants.METHOD_GET;
+
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -29,16 +32,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.commons.util.DamUtil;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
-
-import static org.apache.sling.api.servlets.HttpConstants.METHOD_GET;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -46,7 +43,8 @@ import org.osgi.service.metatype.annotations.AttributeType;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
-import static io.wcm.handler.media.impl.AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION;
+import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.commons.util.DamUtil;
 
 /**
  * Servlet filter that sets the Content-Disposition header according to it's configuration.
@@ -56,10 +54,10 @@ import static io.wcm.handler.media.impl.AbstractMediaFileServlet.HEADER_CONTENT_
  *
  * The filter-pattern ensures, that we don't intercept any requests that are usually processed by the "Sling ContentDispositionFilter""
  */
-@Component(service = {Filter.class}, immediate = true, property = {
-  "sling.filter.scope=request",
-  "sling.filter.pattern=/content/dam/.*/_jcr_content/.*",
-  "service.ranking=-25001"
+@Component(service = Filter.class, property = {
+    "sling.filter.scope=request",
+    "sling.filter.pattern=/content/dam/.*/(jcr:content|_jcr_content)/renditions/.*",
+    "service.ranking=-25001"
 })
 @Designate(ocd = MediaContentDispositionFilter.Config.class)
 public final class MediaContentDispositionFilter implements Filter {
