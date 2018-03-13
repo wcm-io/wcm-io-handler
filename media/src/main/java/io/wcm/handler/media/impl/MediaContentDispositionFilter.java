@@ -36,7 +36,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
+
 import static org.apache.sling.api.servlets.HttpConstants.METHOD_GET;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -45,21 +47,19 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import static io.wcm.handler.media.impl.AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION;
-import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Servlet filter that sets the Content-Disposition header according to it's configuration.
  *
- * The filter is called BEFORE the Sling Security Content-Disposition Filter and explicitly set's the
- * Content-Disposition Header to "inline" for all non-blacklisted mimetypes.
+ * The filter is called AFTER the Sling Security Content-Disposition Filter and explicitly overrides the Content-Disposition Header to "inline" for all
+ * non-blacklisted mimetypes.
  *
- * The filter-pattern ensures, that we don't intercept any requests that are usually processed by the "Sling
- * ContentDispositionFilter""
+ * The filter-pattern ensures, that we don't intercept any requests that are usually processed by the "Sling ContentDispositionFilter""
  */
 @Component(service = {Filter.class}, immediate = true, property = {
   "sling.filter.scope=request",
   "sling.filter.pattern=/content/dam/.*/_jcr_content/.*",
-  "service.ranking=-24999"
+  "service.ranking=-25001"
 })
 @Designate(ocd = MediaContentDispositionFilter.Config.class)
 public final class MediaContentDispositionFilter implements Filter {
@@ -68,13 +68,13 @@ public final class MediaContentDispositionFilter implements Filter {
   @interface Config {
 
     @AttributeDefinition(name = "Enabled",
-        description = "Enables this filter",
-        type = AttributeType.BOOLEAN)
+      description = "Enables this filter",
+      type = AttributeType.BOOLEAN)
     boolean enabled() default true;
 
-    @AttributeDefinition(name = "Whitelisted Mime Types",
-        description = "Mime types that should be served with content-disposition:inline")
-    String[] whitelistedMimeTypes() default {ContentType.GIF, ContentType.PNG, ContentType.JPEG, "image/svg+xml"};
+    @AttributeDefinition(name = "Blacklisted Mime Types",
+      description = "Mime types that should be NOT be handled by this filter which sets content-disposition:inline")
+    String[] blacklistedMimeTypes() default {"text/html", "application/octet-stream"};
   }
 
   private Config config;
@@ -92,10 +92,10 @@ public final class MediaContentDispositionFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
     if (config.enabled()) {
-      SlingHttpServletRequest slingRequest = (SlingHttpServletRequest) request;
-      SlingHttpServletResponse slingResponse = (SlingHttpServletResponse) response;
+      SlingHttpServletRequest slingRequest = (SlingHttpServletRequest)request;
+      SlingHttpServletResponse slingResponse = (SlingHttpServletResponse)response;
       // only check if this is a GET request and there are configured whitelist mime types
-      if (accepts(slingRequest) && config.whitelistedMimeTypes().length > 0) {
+      if (accepts(slingRequest) && config.blacklistedMimeTypes().length > 0) {
         setContentDisposition(slingRequest, slingResponse);
       }
     }
@@ -109,7 +109,7 @@ public final class MediaContentDispositionFilter implements Filter {
     if (asset != null) {
       String mimeType = asset.getMimeType();
       if (StringUtils.isNotBlank(mimeType)
-          && Arrays.asList(config.whitelistedMimeTypes()).contains(mimeType.toLowerCase())) {
+        && !Arrays.asList(config.blacklistedMimeTypes()).contains(mimeType.toLowerCase())) {
         response.setHeader(HEADER_CONTENT_DISPOSITION, "inline");
       }
     }
