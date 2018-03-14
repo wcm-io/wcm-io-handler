@@ -24,6 +24,9 @@
   <body>
   
     <release version="1.0.8" date="not released">
+      <action type="update" dev="amuthmann">
+        Add AssetRenditionContentDispositionFilter to apply 'Dam Safe Binary' content disposition filter logic also to asset rendition's paths.
+      </action>
       <action type="fix" dev="sseifert">
         Use deep URL to reference 'original' rendition instead of asset URL (revert change from release 1.0.6).
       </action>
