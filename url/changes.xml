@@ -28,7 +28,7 @@
         Make SiteRoot model adaptable from Resource.
       </action>
     </release>
-    
+
     <release version="1.1.0" date="2017-06-02">
       <action type="add" dev="sseifert">
         Introduce SiteRootDetector service, and use it by default in DefaultUrlHandlerConfig.
