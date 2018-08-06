@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
@@ -251,7 +250,6 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
     Boolean isSizeMatchingMediaFormat = visitMediaFormats(mediaArgs, new MediaFormatVisitor<Boolean>() {
       @Override
-      @SuppressFBWarnings("NP_BOOLEAN_RETURN_NULL")
       public Boolean visit(MediaFormat mediaFormat) {
         if (mediaFormat.getEffectiveMinWidth() > 0
             || mediaFormat.getEffectiveMaxWidth() > 0
