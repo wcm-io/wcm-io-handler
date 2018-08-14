@@ -20,6 +20,7 @@
 package io.wcm.handler.link;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -38,6 +39,7 @@ public interface LinkHandler {
   /**
    * Special link used to notify invalid links.
    */
+  @NotNull
   String INVALID_LINK = "/invalid///link";
 
   /**
@@ -45,6 +47,7 @@ public interface LinkHandler {
    * @param resource Resource containing properties that define the link target
    * @return Link builder
    */
+  @NotNull
   LinkBuilder get(Resource resource);
 
   /**
@@ -52,6 +55,7 @@ public interface LinkHandler {
    * @param page Target content page
    * @return Link builder
    */
+  @NotNull
   LinkBuilder get(Page page);
 
   /**
@@ -59,6 +63,7 @@ public interface LinkHandler {
    * @param linkRequest Link handling request
    * @return Link builder
    */
-  LinkBuilder get(LinkRequest linkRequest);
+  @NotNull
+  LinkBuilder get(@NotNull LinkRequest linkRequest);
 
 }

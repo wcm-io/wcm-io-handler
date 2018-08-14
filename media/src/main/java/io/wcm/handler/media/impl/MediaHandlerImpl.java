@@ -96,7 +96,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  public @NotNull MediaBuilder get(MediaRequest mediaRequest) {
+  public @NotNull MediaBuilder get(@NotNull MediaRequest mediaRequest) {
     return new MediaBuilderImpl(mediaRequest, this);
   }
 

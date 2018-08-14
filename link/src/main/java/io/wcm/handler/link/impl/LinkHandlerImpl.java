@@ -27,6 +27,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.wcm.api.Page;
 
@@ -57,17 +58,17 @@ public final class LinkHandlerImpl implements LinkHandler {
   private Page currentPage;
 
   @Override
-  public LinkBuilder get(Resource resource) {
+  public @NotNull LinkBuilder get(Resource resource) {
     return new LinkBuilderImpl(resource, this);
   }
 
   @Override
-  public LinkBuilder get(Page page) {
+  public @NotNull LinkBuilder get(Page page) {
     return new LinkBuilderImpl(page, this);
   }
 
   @Override
-  public LinkBuilder get(LinkRequest linkRequest) {
+  public @NotNull LinkBuilder get(@NotNull LinkRequest linkRequest) {
     return new LinkBuilderImpl(linkRequest, this);
   }
 
@@ -76,7 +77,9 @@ public final class LinkHandlerImpl implements LinkHandler {
    * @param linkRequest Link request
    * @return Link metadata (never null)
    */
-  Link processRequest(LinkRequest linkRequest) {
+  @NotNull
+  @SuppressWarnings({ "null", "unused" })
+  Link processRequest(@NotNull LinkRequest linkRequest) {
 
     // detect link type - first accepting wins
     LinkType linkType = null;

@@ -101,7 +101,7 @@ public interface MediaHandler {
    * @return Media builder
    */
   @NotNull
-  MediaBuilder get(MediaRequest mediaRequest);
+  MediaBuilder get(@NotNull MediaRequest mediaRequest);
 
   /**
    * Checks if the given HTML element is valid.

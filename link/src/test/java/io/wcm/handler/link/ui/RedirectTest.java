@@ -37,6 +37,7 @@ import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 public class RedirectTest {
 
   @Rule

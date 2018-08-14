@@ -31,6 +31,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -63,7 +65,7 @@ public final class RichTextUtil {
    * @param text XHTML text string (root element not needed)
    * @return true if text block is empty
    */
-  public static boolean isEmpty(String text) {
+  public static boolean isEmpty(@Nullable String text) {
     return isEmpty(text, EMPTYTEXT_DEFAULT_TRESHOLD);
   }
 
@@ -75,7 +77,8 @@ public final class RichTextUtil {
    * @param treshold Treshold value - only strings with less than this number of characters are checked.
    * @return true if text block is empty
    */
-  public static boolean isEmpty(String text, int treshold) {
+  @SuppressWarnings("null")
+  public static boolean isEmpty(@Nullable String text, int treshold) {
 
     // check if text block is really empty
     if (StringUtils.isEmpty(text)) {
@@ -102,7 +105,7 @@ public final class RichTextUtil {
    * @param text XHTML text string (root element not needed)
    * @throws JDOMException Is thrown if the text could not be parsed as XHTML
    */
-  public static void addParsedText(Element parent, String text) throws JDOMException {
+  public static void addParsedText(@NotNull Element parent, @NotNull String text) throws JDOMException {
     addParsedText(parent, text, false);
   }
 
@@ -113,7 +116,7 @@ public final class RichTextUtil {
    * @param xhtmlEntities If set to true, Resolving of XHtml entities in XHtml fragment is supported.
    * @throws JDOMException Is thrown if the text could not be parsed as XHTML
    */
-  public static void addParsedText(Element parent, String text, boolean xhtmlEntities) throws JDOMException {
+  public static void addParsedText(@NotNull Element parent, @NotNull String text, boolean xhtmlEntities) throws JDOMException {
     Element root = parseText(text, xhtmlEntities);
     parent.addContent(root.cloneContent());
   }
@@ -124,7 +127,7 @@ public final class RichTextUtil {
    * @return Root element with parsed xhtml content
    * @throws JDOMException Is thrown if the text could not be parsed as XHTML
    */
-  public static Element parseText(String text) throws JDOMException {
+  public static Element parseText(@NotNull String text) throws JDOMException {
     return parseText(text, false);
   }
 
@@ -135,7 +138,8 @@ public final class RichTextUtil {
    * @return Root element with parsed xhtml content
    * @throws JDOMException Is thrown if the text could not be parsed as XHTML
    */
-  public static Element parseText(String text, boolean xhtmlEntities) throws JDOMException {
+  @SuppressWarnings("null")
+  public static @NotNull Element parseText(@NotNull String text, boolean xhtmlEntities) throws JDOMException {
 
     // add root element
     String xhtmlString =
@@ -164,7 +168,7 @@ public final class RichTextUtil {
    * @param parent Parent element
    * @param rewriteContentHandler Rewrite content handler
    */
-  public static void rewriteContent(Element parent, RewriteContentHandler rewriteContentHandler) {
+  public static void rewriteContent(@NotNull Element parent, @NotNull RewriteContentHandler rewriteContentHandler) {
 
     // iterate through content list and build new content list
     List<Content> originalContent = parent.getContent();

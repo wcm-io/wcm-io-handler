@@ -24,6 +24,8 @@ import java.util.List;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
@@ -45,7 +47,8 @@ public interface RewriteContentHandler {
    *         Return empty list to remove this element.
    *         Return list with other content to replace element with new content.
    */
-  List<Content> rewriteElement(Element element);
+  @Nullable
+  List<Content> rewriteElement(@NotNull Element element);
 
   /**
    * Checks if the given text node has to be rewritten.
@@ -55,6 +58,7 @@ public interface RewriteContentHandler {
    *         Return empty list to remove the element.
    *         Return list with other content to replace element with new content.
    */
-  List<Content> rewriteText(Text text);
+  @Nullable
+  List<Content> rewriteText(@NotNull Text text);
 
 }

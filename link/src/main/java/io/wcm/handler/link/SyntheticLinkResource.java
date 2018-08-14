@@ -26,6 +26,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.SyntheticResource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -43,7 +44,7 @@ public final class SyntheticLinkResource extends SyntheticResource {
    * Instantiate resource with static path/resource type
    * @param resourceResolver Resource resolver
    */
-  public SyntheticLinkResource(ResourceResolver resourceResolver) {
+  public SyntheticLinkResource(@NotNull ResourceResolver resourceResolver) {
     this(resourceResolver, new HashMap<String, Object>());
   }
 
@@ -52,7 +53,7 @@ public final class SyntheticLinkResource extends SyntheticResource {
    * @param resourceResolver Resource resolver
    * @param properties Properties for resource
    */
-  public SyntheticLinkResource(ResourceResolver resourceResolver, Map<String, Object> properties) {
+  public SyntheticLinkResource(@NotNull ResourceResolver resourceResolver, @NotNull Map<String, Object> properties) {
     super(resourceResolver, PATH, PATH);
     this.properties = new ValueMapDecorator(properties);
   }

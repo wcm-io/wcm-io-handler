@@ -20,6 +20,7 @@
 package io.wcm.handler.link.type.helpers;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.url.UrlHandler;
@@ -46,7 +47,7 @@ public final class InternalLinkResolverOptions {
    * @param value Name of the property in which the primary link reference is stored
    * @return this
    */
-  public InternalLinkResolverOptions primaryLinkRefProperty(String value) {
+  public @NotNull InternalLinkResolverOptions primaryLinkRefProperty(String value) {
     this.primaryLinkRefProperty = value;
     return this;
   }
@@ -70,7 +71,7 @@ public final class InternalLinkResolverOptions {
    *          inner-most configuration scope/site and then resolved.
    * @return this
    */
-  public InternalLinkResolverOptions rewritePathToContext(boolean value) {
+  public @NotNull InternalLinkResolverOptions rewritePathToContext(boolean value) {
     this.rewritePathToContext = value;
     return this;
   }
@@ -96,7 +97,7 @@ public final class InternalLinkResolverOptions {
    *          additional the flag "rewritePathToContext" is set to false.
    * @return this
    */
-  public InternalLinkResolverOptions useTargetContext(boolean value) {
+  public @NotNull InternalLinkResolverOptions useTargetContext(boolean value) {
     this.useTargetContext = value;
     return this;
   }

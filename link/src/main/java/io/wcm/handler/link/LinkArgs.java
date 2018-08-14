@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.url.UrlMode;
@@ -75,7 +76,7 @@ public final class LinkArgs implements Cloneable {
    * @param value If set to true, link handler returns a dummy link in edit mode when link is invalid.
    * @return this
    */
-  public LinkArgs dummyLink(boolean value) {
+  public @NotNull LinkArgs dummyLink(boolean value) {
     this.dummyLink = value;
     return this;
   }
@@ -91,7 +92,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Custom dummy link url. If null default dummy url is used.
    * @return this
    */
-  public LinkArgs dummyLinkUrl(String value) {
+  public @NotNull LinkArgs dummyLinkUrl(String value) {
     this.dummyLinkUrl = value;
     return this;
   }
@@ -107,7 +108,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Selector string
    * @return this
    */
-  public LinkArgs selectors(String value) {
+  public @NotNull LinkArgs selectors(String value) {
     this.selectors = value;
     return this;
   }
@@ -123,7 +124,7 @@ public final class LinkArgs implements Cloneable {
    * @param value File extension
    * @return this
    */
-  public LinkArgs extension(String value) {
+  public @NotNull LinkArgs extension(String value) {
     this.extension = value;
     return this;
   }
@@ -139,7 +140,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Suffix string
    * @return this
    */
-  public LinkArgs suffix(String value) {
+  public @NotNull LinkArgs suffix(String value) {
     this.suffix = value;
     return this;
   }
@@ -155,7 +156,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Query parameters string (properly url-encoded)
    * @return this
    */
-  public LinkArgs queryString(String value) {
+  public @NotNull LinkArgs queryString(String value) {
     this.queryString = value;
     return this;
   }
@@ -171,7 +172,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Fragment identifier
    * @return this
    */
-  public LinkArgs fragment(String value) {
+  public @NotNull LinkArgs fragment(String value) {
     this.fragment = value;
     return this;
   }
@@ -181,7 +182,7 @@ public final class LinkArgs implements Cloneable {
    * @param map Property map. Is merged with properties already set.
    * @return this
    */
-  public LinkArgs properties(Map<String, Object> map) {
+  public @NotNull LinkArgs properties(Map<String, Object> map) {
     if (map == null) {
       throw new IllegalArgumentException("Map argument must not be null.");
     }
@@ -195,7 +196,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Property value
    * @return this
    */
-  public LinkArgs property(String key, Object value) {
+  public @NotNull LinkArgs property(String key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("Key argument must not be null.");
     }

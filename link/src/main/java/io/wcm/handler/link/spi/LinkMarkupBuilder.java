@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.link.spi;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.commons.dom.Anchor;
@@ -39,13 +41,14 @@ public interface LinkMarkupBuilder {
    * @param link Link metadata
    * @return true if this markup builder can handle the given link
    */
-  boolean accepts(Link link);
+  boolean accepts(@NotNull Link link);
 
   /**
    * Build link anchor markup
    * @param link Link metadata with resolved link information
    * @return Anchor or null if link is invalid
    */
-  Anchor build(Link link);
+  @Nullable
+  Anchor build(@NotNull Link link);
 
 }

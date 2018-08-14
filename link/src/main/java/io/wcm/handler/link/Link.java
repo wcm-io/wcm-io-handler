@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jdom2.Attribute;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -41,8 +42,8 @@ import io.wcm.wcm.commons.util.ToStringStyle;
 @ProviderType
 public final class Link {
 
-  private final LinkType linkType;
-  private LinkRequest linkRequest;
+  private final @NotNull LinkType linkType;
+  private @NotNull LinkRequest linkRequest;
   private boolean linkReferenceInvalid;
   private Anchor anchor;
   private String url;
@@ -54,7 +55,7 @@ public final class Link {
    * @param linkType Link type
    * @param linkRequest Processed link reference
    */
-  public Link(LinkType linkType, LinkRequest linkRequest) {
+  public Link(@NotNull LinkType linkType, @NotNull LinkRequest linkRequest) {
     this.linkRequest = linkRequest;
     this.linkType = linkType;
   }
@@ -62,21 +63,21 @@ public final class Link {
   /**
    * @return Link type
    */
-  public LinkType getLinkType() {
+  public @NotNull LinkType getLinkType() {
     return this.linkType;
   }
 
   /**
    * @return Link request
    */
-  public LinkRequest getLinkRequest() {
+  public @NotNull LinkRequest getLinkRequest() {
     return this.linkRequest;
   }
 
   /**
    * @param linkRequest Link request
    */
-  public void setLinkRequest(LinkRequest linkRequest) {
+  public void setLinkRequest(@NotNull LinkRequest linkRequest) {
     this.linkRequest = linkRequest;
   }
 
@@ -194,6 +195,7 @@ public final class Link {
   /**
    * @return true if link is valid and was resolved successfully
    */
+  @SuppressWarnings("null")
   public boolean isValid() {
     return getLinkType() != null
         && getUrl() != null

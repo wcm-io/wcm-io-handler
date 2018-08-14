@@ -24,6 +24,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceMetadata;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Synthetic resource implementation which support navigating it's parents until it reaches an existing resource.
@@ -80,7 +81,7 @@ final class SyntheticNavigatableResource extends AbstractResource {
    * @param path Path
    * @return Resource (never null)
    */
-  static Resource get(String path, ResourceResolver resolver) {
+  static @NotNull Resource get(String path, ResourceResolver resolver) {
     Resource resource = resolver.getResource(path);
     if (resource != null) {
       return resource;

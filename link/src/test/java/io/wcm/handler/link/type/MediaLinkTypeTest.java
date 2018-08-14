@@ -46,6 +46,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 /**
  * Test {@link MediaLinkType}
  */
+@SuppressWarnings("null")
 public class MediaLinkTypeTest {
 
   @Rule

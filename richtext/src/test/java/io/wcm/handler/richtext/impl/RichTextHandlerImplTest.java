@@ -51,6 +51,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 /**
  * Test {@link RichTextHandler}
  */
+@SuppressWarnings("null")
 public class RichTextHandlerImplTest {
 
   @Rule

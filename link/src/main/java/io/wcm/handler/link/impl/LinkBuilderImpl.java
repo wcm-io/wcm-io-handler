@@ -20,6 +20,7 @@
 package io.wcm.handler.link.impl;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.wcm.api.Page;
 
@@ -65,7 +66,7 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
-  public LinkBuilder args(LinkArgs value) {
+  public @NotNull LinkBuilder args(LinkArgs value) {
     if (value == null) {
       throw new IllegalArgumentException("LinkArgs is null.");
     }
@@ -75,55 +76,55 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
-  public LinkBuilder urlMode(UrlMode value) {
+  public @NotNull LinkBuilder urlMode(UrlMode value) {
     this.linkArgs.urlMode(value);
     return this;
   }
 
   @Override
-  public LinkBuilder dummyLink(boolean value) {
+  public @NotNull LinkBuilder dummyLink(boolean value) {
     this.linkArgs.dummyLink(value);
     return this;
   }
 
   @Override
-  public LinkBuilder dummyLinkUrl(String value) {
+  public @NotNull LinkBuilder dummyLinkUrl(String value) {
     this.linkArgs.dummyLinkUrl(value);
     return this;
   }
 
   @Override
-  public LinkBuilder selectors(String value) {
+  public @NotNull LinkBuilder selectors(String value) {
     this.linkArgs.selectors(value);
     return this;
   }
 
   @Override
-  public LinkBuilder extension(String value) {
+  public @NotNull LinkBuilder extension(String value) {
     this.linkArgs.extension(value);
     return this;
   }
 
   @Override
-  public LinkBuilder suffix(String value) {
+  public @NotNull LinkBuilder suffix(String value) {
     this.linkArgs.suffix(value);
     return this;
   }
 
   @Override
-  public LinkBuilder queryString(String value) {
+  public @NotNull LinkBuilder queryString(String value) {
     this.linkArgs.queryString(value);
     return this;
   }
 
   @Override
-  public LinkBuilder fragment(String value) {
+  public @NotNull LinkBuilder fragment(String value) {
     this.linkArgs.fragment(value);
     return this;
   }
 
   @Override
-  public Link build() {
+  public @NotNull Link build() {
     LinkRequest request = new LinkRequest(this.resource, this.page, this.linkArgs);
     return linkHandler.processRequest(request);
   }
@@ -142,6 +143,5 @@ final class LinkBuilderImpl implements LinkBuilder {
   public String buildUrl() {
     return build().getUrl();
   }
-
 
 }

@@ -28,6 +28,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.link.Link;
@@ -56,12 +57,12 @@ public final class InternalCrossScopeLinkType extends LinkType {
   /**
    * Link type ID
    */
-  public static final String ID = "internalCrossScope";
+  public static final @NotNull String ID = "internalCrossScope";
 
-  private final InternalLinkResolverOptions resolverOptions = new InternalLinkResolverOptions()
-  .primaryLinkRefProperty(getPrimaryLinkRefProperty())
-  .rewritePathToContext(false)
-  .useTargetContext(true);
+  private final @NotNull InternalLinkResolverOptions resolverOptions = new InternalLinkResolverOptions()
+      .primaryLinkRefProperty(getPrimaryLinkRefProperty())
+      .rewritePathToContext(false)
+      .useTargetContext(true);
 
   @Self
   private InternalLinkResolver internalLinkResolver;
@@ -70,7 +71,7 @@ public final class InternalCrossScopeLinkType extends LinkType {
    * @return Link type ID (is stored as identifier in repository)
    */
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return ID;
   }
 
@@ -80,14 +81,14 @@ public final class InternalCrossScopeLinkType extends LinkType {
   }
 
   @Override
-  public boolean accepts(String linkRef) {
+  public boolean accepts(@NotNull String linkRef) {
     // accept as internal link if the ref starts with "/content/"
     return StringUtils.startsWith(linkRef, "/content/")
         && !MediaLinkType.isDefaultMediaContentPath(linkRef);
   }
 
   @Override
-  public boolean accepts(LinkRequest linkRequest) {
+  public boolean accepts(@NotNull LinkRequest linkRequest) {
     if (internalLinkResolver.acceptPage(linkRequest.getPage(), resolverOptions)) {
       // support direct links to pages
       return true;
@@ -97,7 +98,7 @@ public final class InternalCrossScopeLinkType extends LinkType {
   }
 
   @Override
-  public Link resolveLink(Link link) {
+  public @NotNull Link resolveLink(@NotNull Link link) {
     return internalLinkResolver.resolveLink(link, resolverOptions);
   }
 
@@ -107,7 +108,7 @@ public final class InternalCrossScopeLinkType extends LinkType {
    * @param pageRef Path to target page
    * @return Synthetic link resource
    */
-  public static Resource getSyntheticLinkResource(ResourceResolver resourceResolver, String pageRef) {
+  public static @NotNull Resource getSyntheticLinkResource(@NotNull ResourceResolver resourceResolver, @NotNull String pageRef) {
     Map<String, Object> map = new HashMap<>();
     map.put(LinkNameConstants.PN_LINK_TYPE, ID);
     map.put(LinkNameConstants.PN_LINK_CONTENT_REF, pageRef);

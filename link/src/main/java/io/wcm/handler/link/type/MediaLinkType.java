@@ -29,6 +29,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.link.Link;
@@ -59,7 +60,7 @@ public final class MediaLinkType extends LinkType {
   /**
    * Link type ID
    */
-  public static final String ID = "media";
+  public static final @NotNull String ID = "media";
 
   @Self
   private MediaHandler mediaHandler;
@@ -68,7 +69,7 @@ public final class MediaLinkType extends LinkType {
    * @return Link type ID (is stored as identifier in repository)
    */
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return ID;
   }
 
@@ -78,13 +79,14 @@ public final class MediaLinkType extends LinkType {
   }
 
   @Override
-  public boolean accepts(String linkRef) {
+  public boolean accepts(@NotNull String linkRef) {
     // accept as media link if the ref is inside default media subtrees
     return MediaLinkType.isDefaultMediaContentPath(linkRef);
   }
 
+  @SuppressWarnings("null")
   @Override
-  public Link resolveLink(Link link) {
+  public @NotNull Link resolveLink(@NotNull Link link) {
     LinkRequest linkRequest = link.getLinkRequest();
     ValueMap props = linkRequest.getResourceProperties();
 
@@ -130,7 +132,7 @@ public final class MediaLinkType extends LinkType {
    * @param mediaRef Media asset reference
    * @return Synthetic link resource
    */
-  public static Resource getSyntheticLinkResource(ResourceResolver resourceResolver, String mediaRef) {
+  public static @NotNull Resource getSyntheticLinkResource(@NotNull ResourceResolver resourceResolver, @NotNull String mediaRef) {
     Map<String, Object> map = new HashMap<>();
     map.put(LinkNameConstants.PN_LINK_TYPE, ID);
     map.put(LinkNameConstants.PN_LINK_MEDIA_REF, mediaRef);

@@ -28,6 +28,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.link.Link;
@@ -48,13 +49,13 @@ public final class ExternalLinkType extends LinkType {
   /**
    * Link type ID
    */
-  public static final String ID = "external";
+  public static final @NotNull String ID = "external";
 
   /**
    * @return Link type ID (is stored as identifier in repository)
    */
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return ID;
   }
 
@@ -64,14 +65,14 @@ public final class ExternalLinkType extends LinkType {
   }
 
   @Override
-  public boolean accepts(String linkRef) {
+  public boolean accepts(@NotNull String linkRef) {
     // accept as external link if the ref contains "://" and mailto links
     return StringUtils.contains(linkRef, "://")
         || StringUtils.startsWith(linkRef, "mailto:");
   }
 
   @Override
-  public Link resolveLink(Link link) {
+  public @NotNull Link resolveLink(@NotNull Link link) {
     ValueMap props = link.getLinkRequest().getResourceProperties();
 
     // get external URL from link properties
@@ -94,7 +95,7 @@ public final class ExternalLinkType extends LinkType {
    * @param url Link URL
    * @return Synthetic link resource
    */
-  public static Resource getSyntheticLinkResource(ResourceResolver resourceResolver, String url) {
+  public static @NotNull Resource getSyntheticLinkResource(@NotNull ResourceResolver resourceResolver, @NotNull String url) {
     Map<String, Object> map = new HashMap<>();
     map.put(LinkNameConstants.PN_LINK_TYPE, ID);
     map.put(LinkNameConstants.PN_LINK_EXTERNAL_REF, url);
