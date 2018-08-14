@@ -44,6 +44,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 /**
  * Test {@link ExternalLinkType} methods.
  */
+@SuppressWarnings("null")
 public class ExternalLinkTypeTest {
 
   @Rule

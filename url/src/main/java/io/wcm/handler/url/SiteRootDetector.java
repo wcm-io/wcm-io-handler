@@ -20,6 +20,7 @@
 package io.wcm.handler.url;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -34,6 +35,6 @@ public interface SiteRootDetector {
    * @param contextResource Context resource that is assumed to be inside the site context.
    * @return Root level or -1 if it could not be detected
    */
-  int getSiteRootLevel(Resource contextResource);
+  int getSiteRootLevel(@Nullable Resource contextResource);
 
 }

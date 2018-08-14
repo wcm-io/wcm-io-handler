@@ -21,6 +21,8 @@ package io.wcm.handler.media;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
@@ -38,6 +40,7 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    * Get externalized URL pointing to the rendition.
    * @return Rendition URL
    */
+  @Nullable
   String getUrl();
 
   /**
@@ -45,16 +48,19 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    * rendition the path points to the binary from which the virtual rendition is derived from.
    * @return Repository path
    */
+  @Nullable
   String getPath();
 
   /**
    * @return File name of the renditions source binary
    */
+  @Nullable
   String getFileName();
 
   /**
    * @return File extension of the renditions source binary
    */
+  @Nullable
   String getFileExtension();
 
   /**
@@ -65,16 +71,19 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   /**
    * @return Mime type of the renditions source binary.
    */
+  @Nullable
   String getMimeType();
 
   /**
    * @return Media format that matches with the resolved rendition. Null if no media format was specified for resolving.
    */
+  @Nullable
   MediaFormat getMediaFormat();
 
   /**
    * @return Properties of rendition
    */
+  @NotNull
   ValueMap getProperties();
 
   /**

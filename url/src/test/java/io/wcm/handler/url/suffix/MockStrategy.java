@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 
+@SuppressWarnings("null")
 class MockStrategy implements SuffixStateKeepingStrategy {
 
   private final String incomingSuffix;

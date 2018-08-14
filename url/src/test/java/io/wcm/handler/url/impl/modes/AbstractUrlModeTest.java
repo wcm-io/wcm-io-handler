@@ -39,6 +39,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
+@SuppressWarnings("null")
 public abstract class AbstractUrlModeTest {
 
   @Rule

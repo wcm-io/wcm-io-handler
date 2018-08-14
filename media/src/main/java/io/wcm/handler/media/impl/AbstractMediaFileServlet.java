@@ -98,6 +98,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return true if the resource is not modified and should not be delivered anew
    * @throws IOException
    */
+  @SuppressWarnings("null")
   protected boolean isNotModified(Resource resource, SlingHttpServletRequest request,
       SlingHttpServletResponse response) throws IOException {
     // check resource's modification date against the If-Modified-Since header and send 304 if resource wasn't modified
@@ -112,6 +113,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Binary data or null if not binary data found
    * @throws IOException
    */
+  @SuppressWarnings({ "null", "unused" })
   protected byte[] getBinaryData(Resource resource, SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {
@@ -146,6 +148,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param response Response
    * @throws IOException
    */
+  @SuppressWarnings("null")
   protected void sendBinaryData(byte[] binaryData, String contentType,
       SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
 

@@ -54,6 +54,7 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
 /**
  * Test {@link LinkHandlerImpl} methods.
  */
+@SuppressWarnings("null")
 public class LinkHandlerImplTest {
 
   static final String APP_ID = "linkHandlerImplTestApp";

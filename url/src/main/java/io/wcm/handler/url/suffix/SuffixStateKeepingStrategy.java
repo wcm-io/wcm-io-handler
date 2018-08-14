@@ -22,6 +22,7 @@ package io.wcm.handler.url.suffix;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
@@ -37,6 +38,7 @@ public interface SuffixStateKeepingStrategy {
    * @param request Current request
    * @return a list of suffix parts
    */
-  List<String> getSuffixPartsToKeep(SlingHttpServletRequest request);
+  @NotNull
+  List<String> getSuffixPartsToKeep(@NotNull SlingHttpServletRequest request);
 
 }

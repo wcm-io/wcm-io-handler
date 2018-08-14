@@ -30,7 +30,8 @@ import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
-import io.wcm.handler.url.impl.UrlHandlerConfigAdapterFactory;
+import io.wcm.handler.url.impl.SiteRootDetectorImpl;
+import io.wcm.handler.url.impl.UrlHandlerAdapterFactory;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
@@ -77,7 +78,8 @@ public final class AppAemContext {
     public void execute(AemContext context) throws Exception {
 
       // handler SPI
-      context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new SiteRootDetectorImpl());
+      context.registerInjectActivateService(new UrlHandlerAdapterFactory());
       context.registerInjectActivateService(new DefaultUrlHandlerConfig());
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
       context.registerInjectActivateService(new MediaHandlerConfigAdapterFactory());

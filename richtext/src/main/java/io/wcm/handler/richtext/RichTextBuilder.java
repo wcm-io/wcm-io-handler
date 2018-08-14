@@ -22,6 +22,8 @@ package io.wcm.handler.richtext;
 import java.util.Collection;
 
 import org.jdom2.Content;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.MediaArgs;
@@ -38,6 +40,7 @@ public interface RichTextBuilder {
    * @param textMode Text mode
    * @return Rich text builder
    */
+  @NotNull
   RichTextBuilder textMode(TextMode textMode);
 
   /**
@@ -45,6 +48,7 @@ public interface RichTextBuilder {
    * @param mediaArgs Media arguments
    * @return Rich text builder
    */
+  @NotNull
   RichTextBuilder mediaArgs(MediaArgs mediaArgs);
 
   /**
@@ -52,24 +56,28 @@ public interface RichTextBuilder {
    * @param urlMode URL mode
    * @return Rich text builder
    */
+  @NotNull
   RichTextBuilder urlMode(UrlMode urlMode);
 
   /**
    * Build formatted markup and return metadata object containing results.
    * @return Rich text metadata. Never null, if the resolving failed the isValid() method returns false.
    */
+  @NotNull
   RichText build();
 
   /**
    * Build formatted markup string.
    * @return Formatted markup string or null if invalid or empty.
    */
+  @Nullable
   String buildMarkup();
 
   /**
    * Build formatted markup as DOM elements.
    * @return DOM elements or empty collection if invalid or empty.
    */
+  @NotNull
   Collection<Content> buildContent();
 
 }

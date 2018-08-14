@@ -35,6 +35,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +77,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   private UrlHandler urlHandler;
 
   @Override
-  public final boolean accepts(Media media) {
+  public final boolean accepts(@NotNull Media media) {
     if (!media.isValid()) {
       return false;
     }
@@ -124,7 +125,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   @Override
-  public final HtmlElement<?> build(Media media) {
+  public final HtmlElement<?> build(@NotNull Media media) {
     return getVideoPlayerElement(media);
   }
 
@@ -133,7 +134,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @param media Media metadata
    * @return Media element
    */
-  protected Video getVideoPlayerElement(Media media) {
+  protected Video getVideoPlayerElement(@NotNull Media media) {
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
 
     Video video = new Video();
@@ -155,6 +156,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @param video Video
    * @param media Media metadata
    */
+  @SuppressWarnings("null")
   protected void addSources(Video video, Media media) {
     Asset asset = getDamAsset(media);
     if (asset == null) {
@@ -280,7 +282,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   @Override
-  public final boolean isValidMedia(HtmlElement<?> element) {
+  public final boolean isValidMedia(@NotNull HtmlElement<?> element) {
     return (element instanceof Video);
   }
 

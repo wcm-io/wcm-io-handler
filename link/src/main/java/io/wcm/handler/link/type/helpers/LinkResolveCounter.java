@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.link.type.helpers;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Counts number of recursive link resolve requests to detect endless loops.
  * Max. 5 hops are allowed in {@link #isMaximumReached()} method.
@@ -78,7 +80,8 @@ public final class LinkResolveCounter {
    * @return Counter for current request/thread.
    *         If instance was not set in thread before it is newly created and attached to the current thread.
    */
-  public static LinkResolveCounter get() {
+  @SuppressWarnings("null")
+  public static @NotNull LinkResolveCounter get() {
     return THREAD_LOCAL.get();
   }
 

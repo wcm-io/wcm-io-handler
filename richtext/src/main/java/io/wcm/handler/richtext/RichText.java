@@ -27,6 +27,8 @@ import org.jdom2.Content;
 import org.jdom2.output.Format;
 import org.jdom2.output.Format.TextMode;
 import org.jdom2.output.XMLOutputter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.wcm.commons.util.ToStringStyle;
@@ -39,14 +41,14 @@ public final class RichText {
 
   private static final Format JDOM_FORMAT = Format.getCompactFormat().setTextMode(TextMode.PRESERVE);
 
-  private final RichTextRequest richTextRequest;
+  private final @NotNull RichTextRequest richTextRequest;
   private final List<Content> content;
 
   /**
    * @param richTextRequest Rich text request
    * @param content Content
    */
-  public RichText(RichTextRequest richTextRequest, List<Content> content) {
+  public RichText(@NotNull RichTextRequest richTextRequest, @Nullable List<Content> content) {
     this.richTextRequest = richTextRequest;
     this.content = content;
   }
@@ -54,7 +56,7 @@ public final class RichText {
   /**
    * @return Rich text request
    */
-  public RichTextRequest getRichTextRequest() {
+  public @NotNull RichTextRequest getRichTextRequest() {
     return this.richTextRequest;
   }
 

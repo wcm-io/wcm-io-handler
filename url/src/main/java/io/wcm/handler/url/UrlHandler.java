@@ -20,6 +20,8 @@
 package io.wcm.handler.url;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -39,6 +41,7 @@ public interface UrlHandler {
    * Selector that is always added if a Sling-URL contains a suffix (to avoid files and directories with same name in
    * dispatcher cache)
    */
+  @NotNull
   String SELECTOR_SUFFIX = "suffix";
 
   /**
@@ -46,21 +49,24 @@ public interface UrlHandler {
    * @param path Path to start URL building with
    * @return URL builder which allows to chain further optional parameters before building the URL string.
    */
-  UrlBuilder get(String path);
+  @NotNull
+  UrlBuilder get(@NotNull String path);
 
   /**
    * Builds and optionally externalizes an URL using a builder pattern.
    * @param resource Resource, URL building is started with its path
    * @return URL builder which allows to chain further optional parameters before building the URL string.
    */
-  UrlBuilder get(Resource resource);
+  @NotNull
+  UrlBuilder get(@NotNull Resource resource);
 
   /**
    * Builds and optionally externalizes an URL using a builder pattern.
    * @param page Page Page, URL building is started with its path
    * @return URL builder which allows to chain further optional parameters before building the URL string.
    */
-  UrlBuilder get(Page page);
+  @NotNull
+  UrlBuilder get(@NotNull Page page);
 
   /**
    * Rewrites given path to current site or context.
@@ -71,7 +77,8 @@ public interface UrlHandler {
    * @param resource Resource to rewrite path from
    * @return Rewritten path or null if resource invalid
    */
-  String rewritePathToContext(Resource resource);
+  @Nullable
+  String rewritePathToContext(@NotNull Resource resource);
 
   /**
    * Rewrites given path to given site or context.
@@ -83,6 +90,7 @@ public interface UrlHandler {
    * @param contextResource Context resource to which the path should be rewritten to
    * @return Rewritten path or null if resource or context resource is invalid
    */
-  String rewritePathToContext(Resource resource, Resource contextResource);
+  @Nullable
+  String rewritePathToContext(@NotNull Resource resource, @NotNull Resource contextResource);
 
 }

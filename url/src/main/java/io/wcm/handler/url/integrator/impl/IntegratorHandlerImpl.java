@@ -31,6 +31,8 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
@@ -70,6 +72,7 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
   /**
    * Detect integrator template modes - check selectors in current url.
    */
+  @SuppressWarnings("null")
   private void detectIntegratorTemplateModes() {
     // integrator mode cannot be active if no modes defined
     if (urlHandlerConfig.getIntegratorModes().isEmpty()) {
@@ -108,8 +111,9 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * the secure integrator mode selector is included in the current request.
    * @return Integrator template selector
    */
+  @SuppressWarnings("null")
   @Override
-  public String getIntegratorTemplateSelector() {
+  public @NotNull String getIntegratorTemplateSelector() {
     if (currentPage != null && urlHandlerConfig.isIntegrator(currentPage)) {
       if (isResourceUrlSecure(currentPage)) {
         return SELECTOR_INTEGRATORTEMPLATE_SECURE;
@@ -131,12 +135,12 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * @return Integrator mode (simple or extended)
    */
   @Override
-  public IntegratorMode getIntegratorMode() {
+  public @NotNull IntegratorMode getIntegratorMode() {
     return getIntegratorMode(currentPage);
   }
 
   @Override
-  public IntegratorMode getIntegratorMode(Page page) {
+  public @NotNull IntegratorMode getIntegratorMode(@Nullable Page page) {
     ValueMap props = getPagePropertiesNullSafe(page);
     return getIntegratorMode(props);
   }
@@ -147,7 +151,8 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * @param properties Content container
    * @return Integrator mode
    */
-  private IntegratorMode getIntegratorMode(ValueMap properties) {
+  @SuppressWarnings("null")
+  private @NotNull IntegratorMode getIntegratorMode(ValueMap properties) {
     IntegratorMode mode = null;
     Collection<IntegratorMode> integratorModes = urlHandlerConfig.getIntegratorModes();
     String modeString = properties.get(IntegratorNameConstants.PN_INTEGRATOR_MODE, String.class);
@@ -189,6 +194,7 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * Checks whether resource URLs should be rendered in secure mode or not.
    * @return true if resource URLs should be rendered in secure mode
    */
+  @SuppressWarnings("null")
   private boolean isResourceUrlSecure(Page page) {
     ValueMap props = getPagePropertiesNullSafe(page);
     IntegratorMode mode = getIntegratorMode(props);

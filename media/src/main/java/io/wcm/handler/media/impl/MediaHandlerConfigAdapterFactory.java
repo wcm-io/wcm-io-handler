@@ -41,7 +41,7 @@ public class MediaHandlerConfigAdapterFactory implements AdapterFactory {
   @Reference
   private ContextAwareServiceResolver serviceResolver;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "null" })
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == MediaHandlerConfig.class) {

@@ -24,6 +24,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.Anchor;
@@ -41,12 +42,12 @@ import io.wcm.handler.link.spi.LinkMarkupBuilder;
 public final class SimpleLinkMarkupBuilder implements LinkMarkupBuilder {
 
   @Override
-  public boolean accepts(Link link) {
+  public boolean accepts(@NotNull Link link) {
     return link.isValid() && StringUtils.isNotEmpty(link.getUrl());
   }
 
   @Override
-  public Anchor build(Link link) {
+  public Anchor build(@NotNull Link link) {
     ValueMap props = link.getLinkRequest().getResourceProperties();
 
     // build anchor

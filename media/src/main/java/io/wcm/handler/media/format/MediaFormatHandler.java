@@ -22,6 +22,8 @@ package io.wcm.handler.media.format;
 import java.util.Comparator;
 import java.util.SortedSet;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -46,12 +48,14 @@ public interface MediaFormatHandler {
    * @param mediaFormatName Media format name
    * @return Media format or null if no match found
    */
-  MediaFormat getMediaFormat(String mediaFormatName);
+  @Nullable
+  MediaFormat getMediaFormat(@NotNull String mediaFormatName);
 
   /**
    * Get media formats defined by a CMS application that is responsible for the given media library path.
    * @return Media formats sorted by combined title
    */
+  @NotNull
   SortedSet<MediaFormat> getMediaFormats();
 
   /**
@@ -59,7 +63,8 @@ public interface MediaFormatHandler {
    * @param comparator Comparator for set
    * @return Media formats
    */
-  SortedSet<MediaFormat> getMediaFormats(Comparator<MediaFormat> comparator);
+  @NotNull
+  SortedSet<MediaFormat> getMediaFormats(@NotNull Comparator<MediaFormat> comparator);
 
   /**
    * Get list of media formats that have the same (or bigger) resolution as the requested media format
@@ -68,7 +73,8 @@ public interface MediaFormatHandler {
    * @param filterRenditionGroup Only check media formats of the same rendition group.
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
-  SortedSet<MediaFormat> getSameBiggerMediaFormats(MediaFormat mediaFormatRequested, boolean filterRenditionGroup);
+  @NotNull
+  SortedSet<MediaFormat> getSameBiggerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup);
 
   /**
    * Get list of possible media formats that can be rendered from the given media format, i.e. same size or smaller
@@ -77,7 +83,8 @@ public interface MediaFormatHandler {
    * @param filterRenditionGroup Only check media formats of the same rendition group.
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
-  SortedSet<MediaFormat> getSameSmallerMediaFormats(MediaFormat mediaFormatRequested, boolean filterRenditionGroup);
+  @NotNull
+  SortedSet<MediaFormat> getSameSmallerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup);
 
   /**
    * Detect matching media format.
@@ -87,7 +94,8 @@ public interface MediaFormatHandler {
    * @param height Image height (or 0 if not image)
    * @return Media format or null if no matching media format found
    */
-  MediaFormat detectMediaFormat(String extension, long fileSize, long width, long height);
+  @Nullable
+  MediaFormat detectMediaFormat(@Nullable String extension, long fileSize, long width, long height);
   /**
    * Detect all matching media formats.
    * @param extension File extension
@@ -96,6 +104,7 @@ public interface MediaFormatHandler {
    * @param height Image height (or 0 if not image)
    * @return Matching media formats sorted by their ranking or an empty list if no matching format was found
    */
-  SortedSet<MediaFormat> detectMediaFormats(String extension, long fileSize, long width, long height);
+  @NotNull
+  SortedSet<MediaFormat> detectMediaFormats(@Nullable String extension, long fileSize, long width, long height);
 
 }

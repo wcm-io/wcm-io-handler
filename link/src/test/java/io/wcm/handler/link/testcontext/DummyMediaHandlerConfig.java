@@ -29,6 +29,7 @@ import io.wcm.handler.media.spi.MediaSource;
 /**
  * Dummy media configuration
  */
+@SuppressWarnings("null")
 public class DummyMediaHandlerConfig extends MediaHandlerConfig {
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES =

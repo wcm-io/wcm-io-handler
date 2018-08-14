@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.spi;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -37,6 +39,7 @@ public interface MediaMarkupBuilder {
   /**
    * Dummy image
    */
+  @NotNull
   String DUMMY_IMAGE = "/apps/wcm-io/handler/media/docroot/resources/img/media-dummy.png";
 
   /**
@@ -49,14 +52,15 @@ public interface MediaMarkupBuilder {
    * @param media Media metadata
    * @return true if this markup builder can handle the given media
    */
-  boolean accepts(Media media);
+  boolean accepts(@NotNull Media media);
 
   /**
    * Build media element markup
    * @param media Media metadata
    * @return Media element or null if media is invalid
    */
-  HtmlElement<?> build(Media media);
+  @Nullable
+  HtmlElement<?> build(@NotNull Media media);
 
   /**
    * Checks if the given HTML element is valid.
@@ -64,6 +68,6 @@ public interface MediaMarkupBuilder {
    * @param element Media markup element.
    * @return true if media element is invalid
    */
-  boolean isValidMedia(HtmlElement<?> element);
+  boolean isValidMedia(@NotNull HtmlElement<?> element);
 
 }

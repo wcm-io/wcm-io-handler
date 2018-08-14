@@ -20,6 +20,7 @@
 package io.wcm.handler.richtext;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -38,6 +39,7 @@ public interface RichTextHandler {
    * @param resource Resource
    * @return Rich text builder
    */
+  @NotNull
   RichTextBuilder get(Resource resource);
 
   /**
@@ -45,6 +47,7 @@ public interface RichTextHandler {
    * @param text Raw text
    * @return Rich text builder
    */
+  @NotNull
   RichTextBuilder get(String text);
 
   /**

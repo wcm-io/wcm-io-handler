@@ -24,6 +24,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.WCMMode;
@@ -47,14 +48,14 @@ public final class DummyLinkMarkupBuilder implements LinkMarkupBuilder {
   private WCMMode wcmMode;
 
   @Override
-  public boolean accepts(Link link) {
+  public boolean accepts(@NotNull Link link) {
     return (!link.isValid() || link.getUrl() == null)
         && wcmMode == WCMMode.EDIT
         && link.getLinkRequest().getLinkArgs().isDummyLink();
   }
 
   @Override
-  public Anchor build(Link link) {
+  public Anchor build(@NotNull Link link) {
     // build anchor
     String url = StringUtils.defaultString(link.getLinkRequest().getLinkArgs().getDummyLinkUrl(), LinkHandler.INVALID_LINK);
     return new Anchor(url);

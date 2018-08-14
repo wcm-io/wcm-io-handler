@@ -25,6 +25,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.dam.api.Asset;
 
@@ -67,6 +68,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
     this.adaptable = adaptable;
   }
 
+  @SuppressWarnings("null")
   @Override
   public String getUrl() {
     if (this.rendition != null) {
@@ -152,12 +154,13 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  public ValueMap getProperties() {
+  @SuppressWarnings("null")
+  public @NotNull ValueMap getProperties() {
     if (this.rendition != null) {
       return this.rendition.getRendition().adaptTo(Resource.class).getValueMap();
     }
     else {
-      return null;
+      return ValueMap.EMPTY;
     }
   }
 

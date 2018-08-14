@@ -21,6 +21,7 @@ package io.wcm.handler.richtext.spi;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
@@ -45,7 +46,8 @@ public abstract class RichTextHandlerConfig implements ContextAwareService {
    * are called on after another for the whole rich text fragment.
    * @return Available rewrite content handler
    */
-  public List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {
+  @SuppressWarnings("null")
+  public @NotNull List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {
     return DEFAULT_REWRITE_CONTENT_HANDLERS;
   }
 

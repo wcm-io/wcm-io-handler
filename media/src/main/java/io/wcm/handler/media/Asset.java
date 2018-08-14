@@ -21,6 +21,8 @@ package io.wcm.handler.media;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -33,61 +35,71 @@ public interface Asset extends Adaptable {
   /**
    * @return Title of media item
    */
+  @Nullable
   String getTitle();
 
   /**
    * @return Alternative text for media item
    */
+  @Nullable
   String getAltText();
 
   /**
    * @return Description for this media item
    */
+  @Nullable
   String getDescription();
 
   /**
    * Internal path pointing to media item, if it is stored in the JCR repository.
    * @return Repository path
    */
+  @NotNull
   String getPath();
 
   /**
    * @return Properties of media item
    */
+  @NotNull
   ValueMap getProperties();
 
   /**
    * Get the default rendition without specifying and media args.
    * @return {@link Rendition} instance or null if no rendition exists
    */
+  @Nullable
   Rendition getDefaultRendition();
 
   /**
    * Get the first rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
-   * @return {@link Rendition} for the first matching rendition or null if not match found.
+   * @return {@link Rendition} for the first matching rendition or null if no match found.
    */
-  Rendition getRendition(MediaArgs mediaArgs);
+  @Nullable
+  Rendition getRendition(@NotNull MediaArgs mediaArgs);
 
   /**
    * Get the first image rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
-   * @return {@link Rendition} for the first matching rendition or null if not match found.
+   * @return {@link Rendition} for the first matching rendition or null if no match found.
    */
-  Rendition getImageRendition(MediaArgs mediaArgs);
+  @Nullable
+  Rendition getImageRendition(@NotNull MediaArgs mediaArgs);
 
   /**
    * Get the first flash rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
-   * @return {@link Rendition} for the first matching rendition or null if not match found.
+   * @return {@link Rendition} for the first matching rendition or null if no match found.
    */
-  Rendition getFlashRendition(MediaArgs mediaArgs);
+  @Nullable
+  Rendition getFlashRendition(@NotNull MediaArgs mediaArgs);
 
   /**
    * Get the first download rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
-   * @return {@link Rendition} for the first matching rendition or null if not match found.
+   * @return {@link Rendition} for the first matching rendition or null if no match found.
    */
-  Rendition getDownloadRendition(MediaArgs mediaArgs);
+  @Nullable
+  Rendition getDownloadRendition(@NotNull MediaArgs mediaArgs);
 
 }

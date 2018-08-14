@@ -53,6 +53,7 @@ class UrlExternalizerTransformer extends AbstractSAXPipe implements Transformer 
     urlHandler = pipelineContext.getRequest().adaptTo(UrlHandler.class);
   }
 
+  @SuppressWarnings("null")
   @Override
   public void startElement(String nsUri, String name, String raw, Attributes attrs) throws SAXException {
 

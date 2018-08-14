@@ -30,6 +30,7 @@ import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.wcm.commons.util.RunMode;
 
+@SuppressWarnings("null")
 public class FullUrlPublishForceNonSecureUrlModeTest extends AbstractUrlModeTest {
 
   @Override

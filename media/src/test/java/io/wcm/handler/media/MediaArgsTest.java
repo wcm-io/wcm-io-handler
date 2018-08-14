@@ -40,6 +40,7 @@ import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
+@SuppressWarnings("null")
 public class MediaArgsTest {
 
   @Test

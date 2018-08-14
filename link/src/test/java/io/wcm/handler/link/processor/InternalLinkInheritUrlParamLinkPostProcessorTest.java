@@ -42,6 +42,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
 /**
  * Test {@link AbstractInternalLinkInheritUrlParamLinkPostProcessor}.
  */
+@SuppressWarnings("null")
 public class InternalLinkInheritUrlParamLinkPostProcessorTest {
 
   @Rule

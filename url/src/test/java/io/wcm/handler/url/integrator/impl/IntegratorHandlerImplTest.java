@@ -122,6 +122,7 @@ public class IntegratorHandlerImplTest {
     assertEquals(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE, underTest.getIntegratorTemplateSelector());
   }
 
+  @SuppressWarnings("unused")
   @Test
   public void testIntegratorPageNull() {
     context.currentPage((Page)null);

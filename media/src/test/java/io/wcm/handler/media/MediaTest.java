@@ -41,6 +41,7 @@ import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.media.spi.MediaSource;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class MediaTest {
 
   @Mock

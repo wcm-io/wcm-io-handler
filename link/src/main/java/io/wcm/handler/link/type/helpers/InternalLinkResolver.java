@@ -30,6 +30,8 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.settings.SlingSettingsService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -86,7 +88,8 @@ public final class InternalLinkResolver {
    * @param options Options
    * @return true if link is acceptable
    */
-  public boolean acceptPage(Page page, InternalLinkResolverOptions options) {
+  @SuppressWarnings("deprecation")
+  public boolean acceptPage(@Nullable Page page, @NotNull InternalLinkResolverOptions options) {
     if (page == null) {
       return false;
     }
@@ -116,7 +119,8 @@ public final class InternalLinkResolver {
    * @param options Options to influence the link resolution process
    * @return Resolved link object
    */
-  public Link resolveLink(Link link, InternalLinkResolverOptions options) {
+  @SuppressWarnings("null")
+  public @NotNull Link resolveLink(@NotNull Link link, @NotNull InternalLinkResolverOptions options) {
     LinkRequest linkRequest = link.getLinkRequest();
     ValueMap props = linkRequest.getResourceProperties();
 

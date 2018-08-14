@@ -36,6 +36,7 @@ import io.wcm.handler.media.spi.MediaSource;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
+@SuppressWarnings("null")
 public class DummyMediaSource extends MediaSource {
 
   @Override

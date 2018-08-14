@@ -21,6 +21,8 @@ package io.wcm.handler.link.spi;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.link.Link;
@@ -41,19 +43,19 @@ public abstract class LinkType {
   /**
    * @return Link type ID (is stored as identifier in repository)
    */
-  public abstract String getId();
+  public abstract @NotNull String getId();
 
   /**
    * @return Name of the property in which the primary link reference is stored
    */
-  public abstract String getPrimaryLinkRefProperty();
+  public abstract @Nullable String getPrimaryLinkRefProperty();
 
   /**
    * Checks whether a link reference can be handled by this link type
    * @param linkRequest Link reference
    * @return true if this link type can handle the given link reference
    */
-  public boolean accepts(LinkRequest linkRequest) {
+  public boolean accepts(@NotNull LinkRequest linkRequest) {
     ValueMap props = linkRequest.getResourceProperties();
     // check for matching link type ID in link resource
     String linkTypeId = props.get(LinkNameConstants.PN_LINK_TYPE, String.class);
@@ -72,13 +74,13 @@ public abstract class LinkType {
    * @param linkRef Link reference string
    * @return true if this link type can handle the given link reference
    */
-  public abstract boolean accepts(String linkRef);
+  public abstract boolean accepts(@NotNull String linkRef);
 
   /**
    * Resolves a link
    * @param link Link metadata
    * @return Resolved link metadata. Never null.
    */
-  public abstract Link resolveLink(Link link);
+  public abstract @NotNull Link resolveLink(@NotNull Link link);
 
 }

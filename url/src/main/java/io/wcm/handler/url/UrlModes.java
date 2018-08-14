@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.url;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.wcm.handler.url.impl.modes.DefaultUrlMode;
 import io.wcm.handler.url.impl.modes.FullUrlForceNonSecureUrlMode;
 import io.wcm.handler.url.impl.modes.FullUrlForceSecureUrlMode;
@@ -43,13 +45,13 @@ public final class UrlModes {
    * state of the page.
    * </p>
    */
-  public static final UrlMode DEFAULT = new DefaultUrlMode();
+  public static final @NotNull UrlMode DEFAULT = new DefaultUrlMode();
 
   /**
    * Default mode: Does generate a externalized URL without any protocol and hostname,
    * independent of any setting in context-specific configuration.
    */
-  public static final UrlMode NO_HOSTNAME = new NoHostnameUrlMode();
+  public static final @NotNull UrlMode NO_HOSTNAME = new NoHostnameUrlMode();
 
   /**
    * Enforce the generation of a full URL with protocol and hostname.
@@ -61,7 +63,7 @@ public final class UrlModes {
    * On author instance always the author URL is used.
    * </p>
    */
-  public static final UrlMode FULL_URL = new FullUrlUrlMode(false);
+  public static final @NotNull UrlMode FULL_URL = new FullUrlUrlMode(false);
 
   /**
    * Enforce the generation of a full URL with protocol and hostname and non-secure mode.
@@ -69,7 +71,7 @@ public final class UrlModes {
    * On author instance always the author URL is used.
    * </p>
    */
-  public static final UrlMode FULL_URL_FORCENONSECURE = new FullUrlForceNonSecureUrlMode(false);
+  public static final @NotNull UrlMode FULL_URL_FORCENONSECURE = new FullUrlForceNonSecureUrlMode(false);
 
   /**
    * Enforce the generation of a full URL with protocol and hostname and secure mode.
@@ -80,7 +82,7 @@ public final class UrlModes {
    * On author instance always the author URL is used.
    * </p>
    */
-  public static final UrlMode FULL_URL_FORCESECURE = new FullUrlForceSecureUrlMode(false);
+  public static final @NotNull UrlMode FULL_URL_FORCESECURE = new FullUrlForceSecureUrlMode(false);
 
   /**
    * Enforce the generation of a full URL with hostname and "//" as protocol (protocol-relative mode).
@@ -92,7 +94,7 @@ public final class UrlModes {
    * On author instance always the author URL is used.
    * </p>
    */
-  public static final UrlMode FULL_URL_PROTOCOLRELATIVE = new FullUrlProtocolRelativeUrlMode(false);
+  public static final @NotNull UrlMode FULL_URL_PROTOCOLRELATIVE = new FullUrlProtocolRelativeUrlMode(false);
 
   /**
    * Enforce the generation of a full URL with protocol and hostname.
@@ -104,7 +106,7 @@ public final class UrlModes {
    * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
    * </p>
    */
-  public static final UrlMode FULL_URL_PUBLISH = new FullUrlUrlMode(true);
+  public static final @NotNull UrlMode FULL_URL_PUBLISH = new FullUrlUrlMode(true);
 
   /**
    * Enforce the generation of a full URL with protocol and hostname and non-secure mode.
@@ -112,7 +114,7 @@ public final class UrlModes {
    * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
    * </p>
    */
-  public static final UrlMode FULL_URL_PUBLISH_FORCENONSECURE = new FullUrlForceNonSecureUrlMode(true);
+  public static final @NotNull UrlMode FULL_URL_PUBLISH_FORCENONSECURE = new FullUrlForceNonSecureUrlMode(true);
 
   /**
    * Enforce the generation of a full URL with protocol and hostname and secure mode.
@@ -123,7 +125,7 @@ public final class UrlModes {
    * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
    * </p>
    */
-  public static final UrlMode FULL_URL_PUBLISH_FORCESECURE = new FullUrlForceSecureUrlMode(true);
+  public static final @NotNull UrlMode FULL_URL_PUBLISH_FORCESECURE = new FullUrlForceSecureUrlMode(true);
 
   /**
    * Enforce the generation of a full URL with hostname and "//" as protocol (protocol-relative mode).
@@ -135,6 +137,6 @@ public final class UrlModes {
    * Always uses the Site URLs configured for the publish instance, even if running on an author instance.
    * </p>
    */
-  public static final UrlMode FULL_URL_PUBLISH_PROTOCOLRELATIVE = new FullUrlProtocolRelativeUrlMode(true);
+  public static final @NotNull UrlMode FULL_URL_PUBLISH_PROTOCOLRELATIVE = new FullUrlProtocolRelativeUrlMode(true);
 
 }

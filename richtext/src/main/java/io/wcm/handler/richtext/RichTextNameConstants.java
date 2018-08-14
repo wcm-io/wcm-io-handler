@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.richtext;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -45,11 +46,11 @@ public final class RichTextNameConstants {
   /**
    * Default property for storing rich text.
    */
-  public static final String PN_TEXT = "text";
+  public static final @NotNull String PN_TEXT = "text";
 
   /**
    * Property that denotes if the text property contains rich text (true) or plain text (false).
    */
-  public static final String PN_TEXT_IS_RICH = "textIsRich";
+  public static final @NotNull String PN_TEXT_IS_RICH = "textIsRich";
 
 }

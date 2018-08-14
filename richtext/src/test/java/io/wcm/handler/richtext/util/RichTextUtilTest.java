@@ -35,6 +35,7 @@ import org.jdom2.Text;
 import org.jdom2.output.XMLOutputter;
 import org.junit.Test;
 
+@SuppressWarnings("null")
 public class RichTextUtilTest {
 
   @Test

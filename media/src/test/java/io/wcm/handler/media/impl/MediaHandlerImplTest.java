@@ -64,6 +64,7 @@ import io.wcm.testing.mock.aem.junit.AemContextCallback;
 /**
  * Test {@link MediaHandlerImpl} methods.
  */
+@SuppressWarnings("null")
 public class MediaHandlerImplTest {
 
   @Rule

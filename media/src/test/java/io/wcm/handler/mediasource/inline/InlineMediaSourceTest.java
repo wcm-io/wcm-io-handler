@@ -75,6 +75,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 /**
  * Test {@link InlineMediaSource}
  */
+@SuppressWarnings("null")
 public class InlineMediaSourceTest {
 
   @Rule

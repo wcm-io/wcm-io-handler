@@ -68,6 +68,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
  * Test {@link MediaFormatHandler}
  */
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class MediaFormatHandlerTest {
 
   @Rule

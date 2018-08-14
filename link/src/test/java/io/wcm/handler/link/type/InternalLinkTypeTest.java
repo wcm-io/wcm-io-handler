@@ -54,6 +54,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 /**
  * Test {@link InternalLinkType} methods.
  */
+@SuppressWarnings("null")
 public class InternalLinkTypeTest {
 
   @Rule
