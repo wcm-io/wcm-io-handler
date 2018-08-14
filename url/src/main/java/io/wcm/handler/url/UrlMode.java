@@ -23,6 +23,8 @@ import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -43,6 +45,7 @@ public interface UrlMode {
   /**
    * @return Id uniquely identifying the URL mode
    */
+  @NotNull
   String getId();
 
   /**
@@ -54,7 +57,9 @@ public interface UrlMode {
    * @param targetPage Target page to which internal link points to.
    * @return Prefix or null
    */
-  String getLinkUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Page targetPage);
+  @Nullable
+  String getLinkUrlPrefix(@NotNull Adaptable adaptable, @NotNull Set<String> runModes,
+      @Nullable Page currentPage, @Nullable Page targetPage);
 
   /**
    * Get prefix (scheme, hostname and context path or integrator placeholder) for externalizing a resource URL.
@@ -66,6 +71,8 @@ public interface UrlMode {
    *          (may be null if it could not be resolved)
    * @return Prefix or null
    */
-  String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource);
+  @Nullable
+  String getResourceUrlPrefix(@NotNull Adaptable adaptable, @NotNull Set<String> runModes,
+      @Nullable Page currentPage, @Nullable Resource targetResource);
 
 }

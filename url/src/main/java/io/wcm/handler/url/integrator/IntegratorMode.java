@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.url.integrator;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -30,6 +31,7 @@ public interface IntegratorMode {
   /**
    * @return Integrator mode ID (is stored as identifier in repository)
    */
+  @NotNull
   String getId();
 
   /**

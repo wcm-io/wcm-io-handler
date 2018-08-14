@@ -43,6 +43,7 @@ import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 public class SuffixParserTest {
 
   @Rule
@@ -91,6 +92,7 @@ public class SuffixParserTest {
         .build());
   }
 
+  @SuppressWarnings("unused")
   @Test
   public void testGetLongIntBooleanStringString() {
     // create UrlSuffixHelper with single-part suffix in request

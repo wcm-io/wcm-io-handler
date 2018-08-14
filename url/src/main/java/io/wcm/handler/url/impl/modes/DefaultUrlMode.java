@@ -25,6 +25,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
@@ -42,18 +44,20 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 public final class DefaultUrlMode extends AbstractUrlMode {
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return "DEFAULT";
   }
 
   @Override
-  public String getLinkUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Page targetPage) {
+  public String getLinkUrlPrefix(@NotNull Adaptable adaptable, @NotNull Set<String> runModes,
+      @Nullable Page currentPage, @Nullable Page targetPage) {
     // default to full url for content URLs
     return UrlModes.FULL_URL.getLinkUrlPrefix(adaptable, runModes, currentPage, targetPage);
   }
 
   @Override
-  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource) {
+  public String getResourceUrlPrefix(@NotNull Adaptable adaptable, @NotNull Set<String> runModes,
+      @Nullable Page currentPage, @Nullable Resource targetResource) {
     // in integrator template mode or if resource is from another site default to full URL mode, otherwise to no-hostname mode
     IntegratorHandler integratorHandler = AdaptTo.notNull(adaptable, IntegratorHandler.class);
     if (integratorHandler.isIntegratorTemplateMode()
@@ -71,6 +75,7 @@ public final class DefaultUrlMode extends AbstractUrlMode {
    * @param targetResource Target resource (may be null)
    * @return true if the target resources is located in another site/context with separate url configuration
    */
+  @SuppressWarnings("null")
   private boolean linksToOtherDomain(Adaptable adaptable, Page currentPage, Resource targetResource) {
     if (currentPage == null || targetResource == null) {
       return false;

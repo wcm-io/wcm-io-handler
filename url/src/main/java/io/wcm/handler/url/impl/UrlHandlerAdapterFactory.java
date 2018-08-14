@@ -68,7 +68,7 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
       .maximumSize(10000)
       .build();
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "null" })
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == UrlHandlerConfig.class) {

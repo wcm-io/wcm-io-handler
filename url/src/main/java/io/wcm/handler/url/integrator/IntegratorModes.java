@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.url.integrator;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Default integrator modes sufficient for the most usecases.
  */
@@ -31,7 +33,7 @@ public enum IntegratorModes implements IntegratorMode {
   SIMPLE {
 
     @Override
-    public String getId() {
+    public @NotNull String getId() {
       return "simple";
     }
 
@@ -55,7 +57,7 @@ public enum IntegratorModes implements IntegratorMode {
   EXTENDED {
 
     @Override
-    public String getId() {
+    public @NotNull String getId() {
       return "extended";
     }
 

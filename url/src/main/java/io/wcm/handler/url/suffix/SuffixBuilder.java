@@ -42,6 +42,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -81,7 +82,7 @@ public final class SuffixBuilder {
    * @param stateStrategy the strategy to use to decide which parts of the suffix of the current request needs to be
    *          kept in new constructed links
    */
-  public SuffixBuilder(SlingHttpServletRequest request, SuffixStateKeepingStrategy stateStrategy) {
+  public SuffixBuilder(@NotNull SlingHttpServletRequest request, @NotNull SuffixStateKeepingStrategy stateStrategy) {
     this.initialSuffixParts = stateStrategy.getSuffixPartsToKeep(request);
   }
 
@@ -91,14 +92,14 @@ public final class SuffixBuilder {
    * @param request Sling request
    * @param suffixPartFilter the filter that is called for each suffix part
    */
-  public SuffixBuilder(SlingHttpServletRequest request, Predicate<String> suffixPartFilter) {
+  public SuffixBuilder(@NotNull SlingHttpServletRequest request, @NotNull Predicate<String> suffixPartFilter) {
     this(request, new FilteringSuffixStateStrategy(suffixPartFilter));
   }
 
   /**
    * @return a {@link SuffixBuilder} that discards all existing suffix state when constructing a new suffix
    */
-  public static SuffixBuilder thatDiscardsAllSuffixState() {
+  public static @NotNull SuffixBuilder thatDiscardsAllSuffixState() {
     return new SuffixBuilder();
   }
 
@@ -106,7 +107,7 @@ public final class SuffixBuilder {
    * @param request Sling request
    * @return a {@link SuffixBuilder} that discards everything but the *resource* parts of the suffix
    */
-  public static SuffixBuilder thatKeepsResourceParts(SlingHttpServletRequest request) {
+  public static @NotNull SuffixBuilder thatKeepsResourceParts(@NotNull SlingHttpServletRequest request) {
     Predicate<String> filter = new IncludeResourcePartsFilter();
     return new SuffixBuilder(request, filter);
   }
@@ -116,7 +117,8 @@ public final class SuffixBuilder {
    * @param keysToKeep Keys to keep
    * @return a {@link SuffixBuilder} that keeps only the named key/value-parts defined by pKeysToKeep
    */
-  public static SuffixBuilder thatKeepsNamedParts(SlingHttpServletRequest request, String... keysToKeep) {
+  public static @NotNull SuffixBuilder thatKeepsNamedParts(@NotNull SlingHttpServletRequest request,
+      @NotNull String @NotNull ... keysToKeep) {
     Predicate<String> filter = new IncludeNamedPartsFilter(keysToKeep);
     return new SuffixBuilder(request, filter);
   }
@@ -127,7 +129,9 @@ public final class SuffixBuilder {
    * @return a {@link SuffixBuilder} that keeps the named key/value-parts defined by pKeysToKeep and all resource
    *         parts
    */
-  public static SuffixBuilder thatKeepsNamedPartsAndResources(SlingHttpServletRequest request, String... keysToKeep) {
+  @SuppressWarnings("null")
+  public static @NotNull SuffixBuilder thatKeepsNamedPartsAndResources(@NotNull SlingHttpServletRequest request,
+      @NotNull String @NotNull... keysToKeep) {
     Predicate<String> filter = FilterOperators.or(new IncludeResourcePartsFilter(), new IncludeNamedPartsFilter(keysToKeep));
     return new SuffixBuilder(request, filter);
   }
@@ -137,7 +141,7 @@ public final class SuffixBuilder {
    * @return a {@link SuffixBuilder} that keeps all parts from the current request's suffix when constructing a new
    *         suffix
    */
-  public static SuffixBuilder thatKeepsAllParts(SlingHttpServletRequest request) {
+  public static @NotNull SuffixBuilder thatKeepsAllParts(@NotNull SlingHttpServletRequest request) {
     return new SuffixBuilder(request, new IncludeAllPartsFilter());
   }
 
@@ -145,7 +149,7 @@ public final class SuffixBuilder {
    * @param request Sling request
    * @return a {@link SuffixBuilder} that will discard the resource parts, but keep all named key/value-parts
    */
-  public static SuffixBuilder thatDiscardsResourceParts(SlingHttpServletRequest request) {
+  public static @NotNull SuffixBuilder thatDiscardsResourceParts(@NotNull SlingHttpServletRequest request) {
     ExcludeResourcePartsFilter filter = new ExcludeResourcePartsFilter();
     return new SuffixBuilder(request, filter);
   }
@@ -156,7 +160,8 @@ public final class SuffixBuilder {
    * @return a {@link SuffixBuilder} that will keep all parts except those named key/value-parts defined by
    *         pKeysToDiscard
    */
-  public static SuffixBuilder thatDiscardsNamedParts(SlingHttpServletRequest request, String... keysToDiscard) {
+  public static @NotNull SuffixBuilder thatDiscardsNamedParts(@NotNull SlingHttpServletRequest request,
+      @NotNull String @NotNull... keysToDiscard) {
     return new SuffixBuilder(request, new ExcludeNamedPartsFilter(keysToDiscard));
   }
 
@@ -165,7 +170,9 @@ public final class SuffixBuilder {
    * @param keysToDiscard the keys of the named parts to discard
    * @return {@link SuffixBuilder} that will discard all resource parts and the named parts defined by pKeysToDiscard
    */
-  public static SuffixBuilder thatDiscardsResourceAndNamedParts(SlingHttpServletRequest request, String... keysToDiscard) {
+  @SuppressWarnings("null")
+  public static @NotNull SuffixBuilder thatDiscardsResourceAndNamedParts(@NotNull SlingHttpServletRequest request,
+      @NotNull String @NotNull... keysToDiscard) {
     Predicate<String> filter = FilterOperators.and(new ExcludeResourcePartsFilter(), new ExcludeNamedPartsFilter(keysToDiscard));
     return new SuffixBuilder(request, filter);
   }
@@ -177,8 +184,9 @@ public final class SuffixBuilder {
    * @return {@link SuffixBuilder} that will discard *one specific resource path* and the named parts defined by
    *         pKeysToDiscard
    */
-  public static SuffixBuilder thatDiscardsSpecificResourceAndNamedParts(SlingHttpServletRequest request, String resourcePathToDiscard,
-      String... keysToDiscard) {
+  @SuppressWarnings("null")
+  public static @NotNull SuffixBuilder thatDiscardsSpecificResourceAndNamedParts(@NotNull SlingHttpServletRequest request,
+      @NotNull String resourcePathToDiscard, @NotNull String @NotNull... keysToDiscard) {
     Predicate<String> filter = FilterOperators.and(new ExcludeSpecificResourceFilter(resourcePathToDiscard), new ExcludeNamedPartsFilter(keysToDiscard));
     return new SuffixBuilder(request, filter);
   }
@@ -189,7 +197,8 @@ public final class SuffixBuilder {
    * @param value the value
    * @return this
    */
-  public SuffixBuilder put(String key, Object value) {
+  @SuppressWarnings({ "null", "unused" })
+  public @NotNull SuffixBuilder put(@NotNull String key, @NotNull Object value) {
     if (key == null) {
       throw new IllegalArgumentException("Key must not be null");
     }
@@ -205,7 +214,8 @@ public final class SuffixBuilder {
    * @param map map of key-value pairs
    * @return this
    */
-  public SuffixBuilder putAll(Map<String, Object> map) {
+  @SuppressWarnings("null")
+  public @NotNull SuffixBuilder putAll(@NotNull Map<String, Object> map) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
@@ -229,7 +239,7 @@ public final class SuffixBuilder {
    * @param suffixBaseResource the base resource used to construct the relative path
    * @return this
    */
-  public SuffixBuilder resource(Resource resource, Resource suffixBaseResource) {
+  public @NotNull SuffixBuilder resource(@NotNull Resource resource, @NotNull Resource suffixBaseResource) {
     // get relative path to base resource
     String relativePath = getRelativePath(resource, suffixBaseResource);
     resourcePaths.add(relativePath);
@@ -244,7 +254,8 @@ public final class SuffixBuilder {
    * @param baseResource base resource to construct relative path
    * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
    */
-  public SuffixBuilder resources(List<Resource> resources, Resource baseResource) {
+  @SuppressWarnings("null")
+  public @NotNull SuffixBuilder resources(@NotNull List<Resource> resources, @NotNull Resource baseResource) {
     for (Resource resource : resources) {
       resource(resource, baseResource);
     }
@@ -257,7 +268,7 @@ public final class SuffixBuilder {
    * @param suffixBasePage the base page used to construct the relative path
    * @return this
    */
-  public SuffixBuilder page(Page page, Page suffixBasePage) {
+  public @NotNull SuffixBuilder page(@NotNull Page page, @NotNull Page suffixBasePage) {
     return resource(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
   }
 
@@ -269,7 +280,8 @@ public final class SuffixBuilder {
    * @param suffixBasePage the base page used to construct the relative path
    * @return this
    */
-  public SuffixBuilder pages(List<Page> pages, Page suffixBasePage) {
+  @SuppressWarnings("null")
+  public @NotNull SuffixBuilder pages(@NotNull List<Page> pages, @NotNull Page suffixBasePage) {
     List<Resource> resources = Lists.transform(pages, new Function<Page, Resource>() {
       @Override
       public Resource apply(Page page) {
@@ -283,7 +295,8 @@ public final class SuffixBuilder {
    * Build complete suffix.
    * @return the suffix
    */
-  public String build() {
+  @SuppressWarnings("null")
+  public @NotNull String build() {
     SortedMap<String, Object> sortedParameterMap = new TreeMap<>(parameterMap);
 
     // gather resource paths in a treeset (having them in a defined order helps with caching)

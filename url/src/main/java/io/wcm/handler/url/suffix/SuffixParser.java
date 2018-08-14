@@ -33,6 +33,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -53,7 +55,7 @@ public final class SuffixParser {
    * suffix state when constructing a new suffix)
    * @param request Sling request
    */
-  public SuffixParser(SlingHttpServletRequest request) {
+  public SuffixParser(@NotNull SlingHttpServletRequest request) {
     this.request = request;
   }
 
@@ -63,7 +65,7 @@ public final class SuffixParser {
    * @param request Sling request
    * @param suffixPartFilter the filter that is called for each suffix part
    */
-  public SuffixParser(SlingHttpServletRequest request, Predicate<String> suffixPartFilter) {
+  public SuffixParser(@NotNull SlingHttpServletRequest request, @NotNull Predicate<String> suffixPartFilter) {
     this.request = request;
   }
 
@@ -76,7 +78,7 @@ public final class SuffixParser {
    * @return the value of that named parameter (or the default value if not used)
    */
   @SuppressWarnings("unchecked")
-  public <T> T get(String key, Class<T> clazz) {
+  public <T> @Nullable T get(@NotNull String key, @NotNull Class<T> clazz) {
     if (clazz == String.class) {
       return (T)getString(key, (String)null);
     }
@@ -101,7 +103,7 @@ public final class SuffixParser {
    * @return the value of that named parameter (or the default value if not used)
    */
   @SuppressWarnings("unchecked")
-  public <T> T get(String key, T defaultValue) {
+  public <T> @Nullable T get(@NotNull String key, @Nullable T defaultValue) {
     if (defaultValue instanceof String || defaultValue == null) {
       return (T)getString(key, (String)defaultValue);
     }
@@ -182,7 +184,7 @@ public final class SuffixParser {
    * node
    * @return the Resource or null if no such resource exists
    */
-  public Resource getResource() {
+  public @Nullable Resource getResource() {
     return getResource((Predicate<Resource>)null, (Resource)null);
   }
 
@@ -191,7 +193,7 @@ public final class SuffixParser {
    * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return the resource or null if no such resource was selected by suffix
    */
-  public Resource getResource(Resource baseResource) {
+  public @Nullable Resource getResource(@NotNull Resource baseResource) {
     return getResource((Predicate<Resource>)null, baseResource);
   }
 
@@ -201,7 +203,7 @@ public final class SuffixParser {
    * @param filter a filter that selects only the resource you're interested in.
    * @return the resource or null if no such resource was selected by suffix
    */
-  public Resource getResource(Predicate<Resource> filter) {
+  public @Nullable Resource getResource(@NotNull Predicate<Resource> filter) {
     return getResource(filter, (Resource)null);
   }
 
@@ -211,7 +213,7 @@ public final class SuffixParser {
    * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return the first {@link Resource} or null
    */
-  public Resource getResource(Predicate<Resource> filter, Resource baseResource) {
+  public @Nullable Resource getResource(@Nullable Predicate<Resource> filter, @Nullable Resource baseResource) {
     List<Resource> suffixResources = getResources(filter, baseResource);
     if (suffixResources.isEmpty()) {
       return null;
@@ -225,7 +227,7 @@ public final class SuffixParser {
    * Get the resources within the current page selected in the suffix of the URL
    * @return a list containing the Resources
    */
-  public List<Resource> getResources() {
+  public @NotNull List<Resource> getResources() {
     return getResources((Predicate<Resource>)null, (Resource)null);
   }
 
@@ -234,7 +236,7 @@ public final class SuffixParser {
    * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return a list containing the Resources
    */
-  public List<Resource> getResources(Resource baseResource) {
+  public @NotNull List<Resource> getResources(@NotNull Resource baseResource) {
     return getResources((Predicate<Resource>)null, baseResource);
   }
 
@@ -243,7 +245,7 @@ public final class SuffixParser {
    * @param filter optional filter to select only specific resources
    * @return a list containing the Resources
    */
-  public List<Resource> getResources(Predicate<Resource> filter) {
+  public @NotNull List<Resource> getResources(@NotNull Predicate<Resource> filter) {
     return getResources(filter, (Resource)null);
   }
 
@@ -253,7 +255,7 @@ public final class SuffixParser {
    * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return a list containing the Resources
    */
-  public List<Resource> getResources(Predicate<Resource> filter, Resource baseResource) {
+  public @NotNull List<Resource> getResources(@Nullable Predicate<Resource> filter, @Nullable Resource baseResource) {
 
     // resolve base path or fallback to current page's content if not specified
     Resource baseResourceToUse = baseResource;
@@ -275,7 +277,7 @@ public final class SuffixParser {
    * to the current page path.
    * @return the page or null if no such page was selected by suffix
    */
-  public Page getPage() {
+  public @Nullable Page getPage() {
     return getPage((Predicate<Page>)null, (Page)null);
   }
 
@@ -284,7 +286,7 @@ public final class SuffixParser {
    * @param basePage the suffix page is relative to this page path (null for current page)
    * @return the page or null if no such page was selected by suffix
    */
-  public Page getPage(Page basePage) {
+  public @Nullable Page getPage(@NotNull Page basePage) {
     return getPage((Predicate<Page>)null, basePage);
   }
 
@@ -294,7 +296,7 @@ public final class SuffixParser {
    * @param filter a filter that selects only the page you're interested in.
    * @return the page or null if no such page was selected by suffix
    */
-  public Page getPage(Predicate<Page> filter) {
+  public @Nullable Page getPage(@NotNull Predicate<Page> filter) {
     return getPage(filter, (Page)null);
   }
 
@@ -304,7 +306,7 @@ public final class SuffixParser {
    * @param basePage the suffix path is relative to this page path (null for current page)
    * @return the first {@link Page} or null
    */
-  public Page getPage(Predicate<Page> filter, Page basePage) {
+  public @Nullable Page getPage(@Nullable Predicate<Page> filter, @Nullable Page basePage) {
     List<Page> suffixPages = getPages(filter, basePage);
     if (suffixPages.isEmpty()) {
       return null;
@@ -319,7 +321,7 @@ public final class SuffixParser {
    * to the current page path.
    * @return a list containing the Pages
    */
-  public List<Page> getPages() {
+  public @NotNull List<Page> getPages() {
     return getPages((Predicate<Page>)null, (Page)null);
   }
 
@@ -329,7 +331,7 @@ public final class SuffixParser {
    * @param filter optional filter to select only specific pages
    * @return a list containing the Pages
    */
-  public List<Page> getPages(Predicate<Page> filter) {
+  public @NotNull List<Page> getPages(@NotNull Predicate<Page> filter) {
     return getPages(filter, (Page)null);
   }
 
@@ -339,7 +341,8 @@ public final class SuffixParser {
    * @param basePage the suffix path is relative to this page path (null for current page)
    * @return a list containing the Pages
    */
-  public List<Page> getPages(final Predicate<Page> filter, final Page basePage) {
+  @SuppressWarnings({ "null", "unused" })
+  public @NotNull List<Page> getPages(@Nullable final Predicate<Page> filter, @Nullable final Page basePage) {
     Resource baseResourceToUse = null;
 
     // detect pages page to use
@@ -379,7 +382,7 @@ public final class SuffixParser {
     });
   }
 
-  private List<Resource> getResourcesWithBaseResource(Predicate<Resource> filter, Resource baseResource) {
+  private @NotNull List<Resource> getResourcesWithBaseResource(@Nullable Predicate<Resource> filter, @Nullable Resource baseResource) {
     // split the suffix to extract the paths of the selected components
     String[] suffixParts = splitSuffix(request.getRequestPathInfo().getSuffix());
 

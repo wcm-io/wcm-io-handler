@@ -22,6 +22,8 @@ package io.wcm.handler.url;
 import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -37,28 +39,32 @@ public interface UrlBuilder {
    * @param selectors Selector string
    * @return URL builder
    */
-  UrlBuilder selectors(String selectors);
+  @NotNull
+  UrlBuilder selectors(@NotNull String selectors);
 
   /**
    * Set file extension
    * @param extension file extension
    * @return URL builder
    */
-  UrlBuilder extension(String extension);
+  @NotNull
+  UrlBuilder extension(@NotNull String extension);
 
   /**
    * Set suffix
    * @param suffix Suffix string
    * @return URL builder
    */
-  UrlBuilder suffix(String suffix);
+  @NotNull
+  UrlBuilder suffix(@NotNull String suffix);
 
   /**
    * Set query parameters string
    * @param queryString Query parameters string (properly url-encoded)
    * @return URL builder
    */
-  UrlBuilder queryString(String queryString);
+  @NotNull
+  UrlBuilder queryString(@NotNull String queryString);
 
   /**
    * Set query parameters string
@@ -66,26 +72,30 @@ public interface UrlBuilder {
    * @param inheritableParameterNames Names of query string parameters that should be inherited from the current request
    * @return URL builder
    */
-  UrlBuilder queryString(String queryString, Set<String> inheritableParameterNames);
+  @NotNull
+  UrlBuilder queryString(@NotNull String queryString, @NotNull Set<String> inheritableParameterNames);
 
   /**
    * Set fragment identifier
    * @param fragment Fragment identifier
    * @return URL builder
    */
-  UrlBuilder fragment(String fragment);
+  @NotNull
+  UrlBuilder fragment(@NotNull String fragment);
 
   /**
    * Set URL mode for externalizing the URL
    * @param urlMode URL mode. If null, default URL mode is used.
    * @return URL builder
    */
-  UrlBuilder urlMode(UrlMode urlMode);
+  @NotNull
+  UrlBuilder urlMode(@NotNull UrlMode urlMode);
 
   /**
    * Build URL
    * @return URL
    */
+  @Nullable
   String build();
 
   /**
@@ -93,6 +103,7 @@ public interface UrlBuilder {
    * This may only be used if a page was given in the {@link UrlHandler#get(Page)} call.
    * @return URL
    */
+  @Nullable
   String buildExternalLinkUrl();
 
   /**
@@ -100,12 +111,14 @@ public interface UrlBuilder {
    * @param targetPage Target page of internal link (e.g. for checking url configuration and secure mode)
    * @return URL
    */
-  String buildExternalLinkUrl(Page targetPage);
+  @Nullable
+  String buildExternalLinkUrl(@Nullable Page targetPage);
 
   /**
    * Build externalized URL that links to a resource (e.g. image, CSS or JavaScript reference).
    * @return URL
    */
+  @Nullable
   String buildExternalResourceUrl();
 
   /**
@@ -113,6 +126,7 @@ public interface UrlBuilder {
    * @param targetResource Target resource of resource link (e.g. for checking url configuration)
    * @return URL
    */
-  String buildExternalResourceUrl(Resource targetResource);
+  @Nullable
+  String buildExternalResourceUrl(@Nullable Resource targetResource);
 
 }

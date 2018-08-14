@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.url.integrator;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -37,10 +39,12 @@ public interface IntegratorHandler {
   /**
    * Selector for "integrator template" mode.
    */
+  @NotNull
   String SELECTOR_INTEGRATORTEMPLATE = "integratortemplate";
   /**
    * Selector for "integrator template" secure mode.
    */
+  @NotNull
   String SELECTOR_INTEGRATORTEMPLATE_SECURE = "integratortemplatesecure";
 
   /**
@@ -62,12 +66,14 @@ public interface IntegratorHandler {
    * the secure integrator mode selector is included in the current request.
    * @return Integrator template selector
    */
+  @NotNull
   String getIntegratorTemplateSelector();
 
   /**
    * Get integrator mode configured for the current page.
    * @return Integrator mode
    */
+  @NotNull
   IntegratorMode getIntegratorMode();
 
   /**
@@ -75,6 +81,7 @@ public interface IntegratorHandler {
    * @param page Page
    * @return Integrator mode
    */
-  IntegratorMode getIntegratorMode(Page page);
+  @NotNull
+  IntegratorMode getIntegratorMode(@Nullable Page page);
 
 }

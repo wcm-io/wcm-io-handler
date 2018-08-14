@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.url.integrator;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -44,11 +45,11 @@ public final class IntegratorNameConstants {
   /**
    * Integrator mode
    */
-  public static final String PN_INTEGRATOR_MODE = "integratorMode";
+  public static final @NotNull String PN_INTEGRATOR_MODE = "integratorMode";
 
   /**
    * Integrator protocol
    */
-  public static final String PN_INTEGRATOR_PROTOCOL = "integratorProtocol";
+  public static final @NotNull String PN_INTEGRATOR_PROTOCOL = "integratorProtocol";
 
 }
