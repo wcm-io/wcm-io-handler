@@ -27,6 +27,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,37 +66,37 @@ public final class MediaHandlerImpl implements MediaHandler {
   private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
-  public MediaBuilder get(Resource resource) {
+  public @NotNull MediaBuilder get(Resource resource) {
     return new MediaBuilderImpl(resource, this);
   }
 
   @Override
-  public MediaBuilder get(Resource resource, MediaArgs mediaArgs) {
+  public @NotNull MediaBuilder get(Resource resource, MediaArgs mediaArgs) {
     return get(resource).args(mediaArgs);
   }
 
   @Override
-  public MediaBuilder get(Resource resource, MediaFormat... mediaFormats) {
+  public @NotNull MediaBuilder get(Resource resource, MediaFormat... mediaFormats) {
     return get(resource).mediaFormats(mediaFormats);
   }
 
   @Override
-  public MediaBuilder get(String mediaRef) {
+  public @NotNull MediaBuilder get(String mediaRef) {
     return new MediaBuilderImpl(mediaRef, this);
   }
 
   @Override
-  public MediaBuilder get(String mediaRef, MediaArgs mediaArgs) {
+  public @NotNull MediaBuilder get(String mediaRef, MediaArgs mediaArgs) {
     return get(mediaRef).args(mediaArgs);
   }
 
   @Override
-  public MediaBuilder get(String mediaRef, MediaFormat... mediaFormats) {
+  public @NotNull MediaBuilder get(String mediaRef, MediaFormat... mediaFormats) {
     return get(mediaRef).mediaFormats(mediaFormats);
   }
 
   @Override
-  public MediaBuilder get(MediaRequest mediaRequest) {
+  public @NotNull MediaBuilder get(MediaRequest mediaRequest) {
     return new MediaBuilderImpl(mediaRequest, this);
   }
 
@@ -104,7 +105,9 @@ public final class MediaHandlerImpl implements MediaHandler {
    * @param mediaRequest Media request
    * @return Media metadata (never null)
    */
-  Media processRequest(final MediaRequest mediaRequest) {
+  @SuppressWarnings({ "null", "unused" })
+  @NotNull
+  Media processRequest(@NotNull final MediaRequest mediaRequest) {
 
     // detect media source
     MediaSource mediaSource = null;
@@ -184,6 +187,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
+  @SuppressWarnings("null")
   public boolean isValidElement(HtmlElement<?> element) {
 
     // it it is null it is always invalid
@@ -211,6 +215,7 @@ public final class MediaHandlerImpl implements MediaHandler {
    * @param mediaArgs Media args
    * @return true if resolving was successful.
    */
+  @SuppressWarnings("null")
   private boolean resolveMediaFormats(MediaArgs mediaArgs) {
     // resolved media formats already set? done.
     if (mediaArgs.getMediaFormats() != null) {

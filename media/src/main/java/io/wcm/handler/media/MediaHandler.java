@@ -20,6 +20,7 @@
 package io.wcm.handler.media;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -43,6 +44,7 @@ public interface MediaHandler {
    *          resource.
    * @return Media builder
    */
+  @NotNull
   MediaBuilder get(Resource resource);
 
   /**
@@ -53,6 +55,7 @@ public interface MediaHandler {
    * @param mediaArgs Additional arguments affecting media resolving
    * @return Media builder
    */
+  @NotNull
   MediaBuilder get(Resource resource, MediaArgs mediaArgs);
 
   /**
@@ -63,6 +66,7 @@ public interface MediaHandler {
    * @param mediaFormats Media format(s)
    * @return Media builder
    */
+  @NotNull
   MediaBuilder get(Resource resource, MediaFormat... mediaFormats);
 
   /**
@@ -70,6 +74,7 @@ public interface MediaHandler {
    * @param mediaRef Reference to media item (in most cases a repository path to the DAM asset).
    * @return Media builder
    */
+  @NotNull
   MediaBuilder get(String mediaRef);
 
   /**
@@ -78,6 +83,7 @@ public interface MediaHandler {
    * @param mediaArgs Additional arguments affecting media resolving
    * @return Media builder
    */
+  @NotNull
   MediaBuilder get(String mediaRef, MediaArgs mediaArgs);
 
   /**
@@ -86,6 +92,7 @@ public interface MediaHandler {
    * @param mediaFormats Media format(s)
    * @return Media builder
    */
+  @NotNull
   MediaBuilder get(String mediaRef, MediaFormat... mediaFormats);
 
   /**
@@ -93,6 +100,7 @@ public interface MediaHandler {
    * @param mediaRequest Media handling request
    * @return Media builder
    */
+  @NotNull
   MediaBuilder get(MediaRequest mediaRequest);
 
   /**

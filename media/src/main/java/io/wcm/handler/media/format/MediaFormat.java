@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.Dimension;
@@ -86,21 +88,23 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Media format name
    */
-  public String getName() {
+  @SuppressWarnings("null")
+  public @NotNull String getName() {
     return this.name;
   }
 
   /**
    * @return Media format label
    */
-  public String getLabel() {
+  @SuppressWarnings("null")
+  public @NotNull String getLabel() {
     return StringUtils.defaultString(this.label, this.name);
   }
 
   /**
    * @return Media format description
    */
-  public String getDescription() {
+  public @Nullable String getDescription() {
     return this.description;
   }
 

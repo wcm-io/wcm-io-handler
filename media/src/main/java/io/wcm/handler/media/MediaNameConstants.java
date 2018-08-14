@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -45,66 +46,66 @@ public final class MediaNameConstants {
   /**
    * Media format node type
    */
-  public static final String NT_MEDIAFORMAT = "wcmio:MediaFormat";
+  public static final @NotNull String NT_MEDIAFORMAT = "wcmio:MediaFormat";
 
   /**
    * Media source
    */
-  public static final String PN_MEDIA_SOURCE = "mediaSource";
+  public static final @NotNull String PN_MEDIA_SOURCE = "mediaSource";
 
   /**
    * Default property name for reference to media library item
    */
-  public static final String PN_MEDIA_REF = "mediaRef";
+  public static final @NotNull String PN_MEDIA_REF = "mediaRef";
 
   /**
    * Default property name for cropping paraemters
    */
-  public static final String PN_MEDIA_CROP = "mediaCrop";
+  public static final @NotNull String PN_MEDIA_CROP = "mediaCrop";
 
   /**
    * Default node name for inline media item stored in node within the content page
    */
-  public static final String NN_MEDIA_INLINE = "mediaInline";
+  public static final @NotNull String NN_MEDIA_INLINE = "mediaInline";
 
   /**
    * Default property name for media alt. text
    */
-  public static final String PN_MEDIA_ALTTEXT = "mediaAltText";
+  public static final @NotNull String PN_MEDIA_ALTTEXT = "mediaAltText";
 
   /**
    * Default property name for flash variables
    */
-  public static final String PN_FLASH_VARS = "flashVars";
+  public static final @NotNull String PN_FLASH_VARS = "flashVars";
 
   /**
    * CSS class for dummy image
    */
-  public static final String CSS_DUMMYIMAGE = "wcmio_mediahandler_wcm_dummy";
+  public static final @NotNull String CSS_DUMMYIMAGE = "wcmio_mediahandler_wcm_dummy";
 
   /**
    * CSS class for "Added in Diff Mode"
    */
-  public static final String CSS_DIFF_ADDED = "wcmio_mediahandler_wcm_diff_added";
+  public static final @NotNull String CSS_DIFF_ADDED = "wcmio_mediahandler_wcm_diff_added";
 
   /**
    * CSS class for "Updated in Diff Mode"
    */
-  public static final String CSS_DIFF_UPDATED = "wcmio_mediahandler_wcm_diff_updated";
+  public static final @NotNull String CSS_DIFF_UPDATED = "wcmio_mediahandler_wcm_diff_updated";
 
   /**
    * CSS class for "Removed in Diff Mode"
    */
-  public static final String CSS_DIFF_REMOVED = "wcmio_mediahandler_wcm_diff_removed";
+  public static final @NotNull String CSS_DIFF_REMOVED = "wcmio_mediahandler_wcm_diff_removed";
 
   /**
    * Property name for responsive breakpoint (mq)
    */
-  public static final String PROP_BREAKPOINT = "mq";
+  public static final @NotNull String PROP_BREAKPOINT = "mq";
 
   /**
    * Property name for setting additional CSS classes
    */
-  public static final String PROP_CSS_CLASS = "cssClass";
+  public static final @NotNull String PROP_CSS_CLASS = "cssClass";
 
 }

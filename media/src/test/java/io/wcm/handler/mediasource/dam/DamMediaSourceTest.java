@@ -70,6 +70,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 /**
  * Test {@link DamMediaSource}
  */
+@SuppressWarnings("null")
 public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test

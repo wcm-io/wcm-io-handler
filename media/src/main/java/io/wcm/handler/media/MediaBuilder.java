@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -37,6 +38,7 @@ public interface MediaBuilder {
    * @param mediaArgs Media arguments
    * @return Media builder
    */
+  @NotNull
   MediaBuilder args(MediaArgs mediaArgs);
 
 
@@ -45,6 +47,7 @@ public interface MediaBuilder {
    * @param values Media formats
    * @return this
    */
+  @NotNull
   MediaBuilder mediaFormats(MediaFormat... values);
 
   /**
@@ -53,6 +56,7 @@ public interface MediaBuilder {
    * @param values Media formats
    * @return this
    */
+  @NotNull
   MediaBuilder mandatoryMediaFormats(MediaFormat... values);
 
   /**
@@ -60,6 +64,7 @@ public interface MediaBuilder {
    * @param value Media format
    * @return this
    */
+  @NotNull
   MediaBuilder mediaFormat(MediaFormat value);
 
   /**
@@ -68,6 +73,7 @@ public interface MediaBuilder {
    * @param value Resolving of all media formats is mandatory.
    * @return this
    */
+  @NotNull
   MediaBuilder mediaFormatsMandatory(boolean value);
 
   /**
@@ -75,6 +81,7 @@ public interface MediaBuilder {
    * @param values Media format names.
    * @return this
    */
+  @NotNull
   MediaBuilder mediaFormatNames(String... values);
 
   /**
@@ -83,6 +90,7 @@ public interface MediaBuilder {
    * @param values Media format names.
    * @return this
    */
+  @NotNull
   MediaBuilder mandatoryMediaFormatNames(String... values);
 
   /**
@@ -90,24 +98,28 @@ public interface MediaBuilder {
    * @param value Media format name
    * @return this
    */
+  @NotNull
   MediaBuilder mediaFormatName(String value);
 
   /**
    * @param values File extensions
    * @return this
    */
+  @NotNull
   MediaBuilder fileExtensions(String... values);
 
   /**
    * @param value File extension
    * @return this
    */
+  @NotNull
   MediaBuilder fileExtension(String value);
 
   /**
    * @param value URS mode
    * @return this
    */
+  @NotNull
   MediaBuilder urlMode(UrlMode value);
 
   /**
@@ -115,6 +127,7 @@ public interface MediaBuilder {
    * @param value Fixed width
    * @return this
    */
+  @NotNull
   MediaBuilder fixedWidth(long value);
 
   /**
@@ -122,6 +135,7 @@ public interface MediaBuilder {
    * @param value Fixed height
    * @return this
    */
+  @NotNull
   MediaBuilder fixedHeight(long value);
 
   /**
@@ -130,6 +144,7 @@ public interface MediaBuilder {
    * @param heightValue Fixed height
    * @return this
    */
+  @NotNull
   MediaBuilder fixedDimension(long widthValue, long heightValue);
 
   /**
@@ -137,6 +152,7 @@ public interface MediaBuilder {
    *          for forcing a "Save as" dialog on the client
    * @return this
    */
+  @NotNull
   MediaBuilder contentDispositionAttachment(boolean value);
 
   /**
@@ -144,18 +160,21 @@ public interface MediaBuilder {
    * @param value Custom alternative text. If null or empty, the default alt text from media library is used.
    * @return this
    */
+  @NotNull
   MediaBuilder altText(String value);
 
   /**
    * @param value If set to false, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
+  @NotNull
   MediaBuilder dummyImage(boolean value);
 
   /**
    * @param value Url of custom dummy image. If null default dummy image is used.
    * @return this
    */
+  @NotNull
   MediaBuilder dummyImageUrl(String value);
 
   /**
@@ -163,6 +182,7 @@ public interface MediaBuilder {
    *          taken into account as well when trying to resolve the media request.
    * @return Media builder
    */
+  @NotNull
   MediaBuilder includeAssetThumbnails(boolean value);
 
   /**
@@ -170,6 +190,7 @@ public interface MediaBuilder {
    * @param value Drag&amp;Drop support
    * @return Media builder
    */
+  @NotNull
   MediaBuilder dragDropSupport(DragDropSupport value);
 
   /**
@@ -178,6 +199,7 @@ public interface MediaBuilder {
    * @param value Property value
    * @return Media builder
    */
+  @NotNull
   MediaBuilder property(String key, Object value);
 
   /**
@@ -185,6 +207,7 @@ public interface MediaBuilder {
    * @param refProperty Property or node name
    * @return Media builder
    */
+  @NotNull
   MediaBuilder refProperty(String refProperty);
 
   /**
@@ -192,12 +215,14 @@ public interface MediaBuilder {
    * @param cropProperty Property name
    * @return Media builder
    */
+  @NotNull
   MediaBuilder cropProperty(String cropProperty);
 
   /**
    * Resolve media and return metadata objects that contains all results.
    * @return Media metadata object. Never null, if the resolving failed the isValid() method returns false.
    */
+  @NotNull
   Media build();
 
   /**

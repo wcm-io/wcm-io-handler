@@ -29,6 +29,8 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.jcr.JcrConstants;
@@ -61,15 +63,15 @@ public final class InlineMediaSource extends MediaSource {
   /**
    * Media source ID
    */
-  public static final String ID = "inline";
+  public static final @NotNull String ID = "inline";
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return ID;
   }
 
   @Override
-  public boolean accepts(MediaRequest mediaRequest) {
+  public boolean accepts(@NotNull MediaRequest mediaRequest) {
     // if no media source id is defined fallback to auto-detection of inline media object in resource
     String mediaSourceId = mediaRequest.getResourceProperties().get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
     if (StringUtils.isEmpty(mediaSourceId)) {
@@ -82,19 +84,20 @@ public final class InlineMediaSource extends MediaSource {
   }
 
   @Override
-  public boolean accepts(String mediaRef) {
+  public boolean accepts(@Nullable String mediaRef) {
     // not supported
     return false;
   }
 
+  @SuppressWarnings("null")
   @Override
-  public String getPrimaryMediaRefProperty() {
+  public @NotNull String getPrimaryMediaRefProperty() {
     // not supported
     return null;
   }
 
   @Override
-  public Media resolveMedia(Media media) {
+  public @NotNull Media resolveMedia(@NotNull Media media) {
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // the resource that was referenced originally (and may contain additional attributes)
@@ -216,6 +219,7 @@ public final class InlineMediaSource extends MediaSource {
    * @param fileName File name
    * @return Cleaned up file name
    */
+  @SuppressWarnings("null")
   private String cleanupFileName(String fileName) {
     String processedFileName = fileName;
 
@@ -261,7 +265,7 @@ public final class InlineMediaSource extends MediaSource {
   }
 
   @Override
-  public void enableMediaDrop(HtmlElement element, MediaRequest mediaRequest) {
+  public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     // not supported
   }
 

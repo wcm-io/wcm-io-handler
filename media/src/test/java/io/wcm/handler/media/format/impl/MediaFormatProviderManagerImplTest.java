@@ -42,6 +42,7 @@ import io.wcm.sling.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
+@SuppressWarnings("null")
 public class MediaFormatProviderManagerImplTest {
 
   private static final MediaFormat MF11 = MediaFormatBuilder.create("mf11").description("desc-from-1").build();

@@ -49,6 +49,7 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class MediaMarkupBuilderUtilTest {
 
   private static final String VERSION_LABEL = "v1";

@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.spi;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.media.Media;
@@ -38,6 +39,7 @@ public interface MediaProcessor {
    * @param media Media metadata
    * @return Processed media metadata (never null)
    */
-  Media process(Media media);
+  @NotNull
+  Media process(@NotNull Media media);
 
 }

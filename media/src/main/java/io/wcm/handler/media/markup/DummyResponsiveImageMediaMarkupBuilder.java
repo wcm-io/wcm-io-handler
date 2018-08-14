@@ -27,6 +27,7 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.WCMMode;
@@ -63,7 +64,7 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
   private MediaHandlerConfig mediaHandlerConfig;
 
   @Override
-  public final boolean accepts(Media media) {
+  public final boolean accepts(@NotNull Media media) {
     // accept if not rendition was found and in edit mode
     // and multiple media formats are mandatory, and dummy image is not suppressed
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
@@ -75,8 +76,9 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
         && mediaArgs.isDummyImage() && mediaArgs.isMediaFormatsMandatory();
   }
 
+  @SuppressWarnings({ "null", "unused" })
   @Override
-  public final HtmlElement<?> build(Media media) {
+  public final HtmlElement<?> build(@NotNull Media media) {
     HtmlElement<?> mediaElement = getImageElement(media);
 
     // set responsive image sources
@@ -170,7 +172,7 @@ public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMa
   }
 
   @Override
-  public final boolean isValidMedia(HtmlElement<?> element) {
+  public final boolean isValidMedia(@NotNull HtmlElement<?> element) {
     return false;
   }
 

@@ -27,7 +27,7 @@ import org.junit.Test;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 
-
+@SuppressWarnings("null")
 public class ResponsiveMediaFormatsBuilderTest {
 
   @Test

@@ -54,6 +54,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
    * @param mediaElement Media element
    * @param media Media
    */
+  @SuppressWarnings("null")
   protected void applyWcmMarkup(HtmlElement<?> mediaElement, Media media) {
     // further processing in edit or preview mode
     Resource resource = media.getMediaRequest().getResource();
