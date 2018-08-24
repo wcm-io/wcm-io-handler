@@ -37,6 +37,7 @@ import org.mockito.stubbing.Answer;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 public class ExternalizerTest {
 
   @Rule

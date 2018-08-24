@@ -179,7 +179,6 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
    * @param element DOM element
    * @return Link metadata
    */
-  @SuppressWarnings("null")
   private Link getAnchorLink(Element element) {
     SyntheticLinkResource resource = new SyntheticLinkResource(resourceResolver);
     ValueMap resourceProps = resource.getValueMap();

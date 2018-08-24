@@ -47,13 +47,13 @@ class UrlExternalizerTransformer extends AbstractSAXPipe implements Transformer 
   private static final Logger log = LoggerFactory.getLogger(UrlExternalizerTransformer.class.getName());
 
   @Override
+  @SuppressWarnings("null")
   public void init(ProcessingContext pipelineContext, ProcessingComponentConfiguration config) {
     log.trace("Initialize UrlExternalizerTransformer with config: {}", config.getConfiguration());
     transformerConfig = new UrlExternalizerTransformerConfig(config.getConfiguration());
     urlHandler = pipelineContext.getRequest().adaptTo(UrlHandler.class);
   }
 
-  @SuppressWarnings("null")
   @Override
   public void startElement(String nsUri, String name, String raw, Attributes attrs) throws SAXException {
 

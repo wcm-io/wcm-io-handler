@@ -37,7 +37,6 @@ import com.google.common.collect.ImmutableList;
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.Span;
 
-@SuppressWarnings("null")
 public class RichTextTest {
 
   private RichTextRequest richTextRequest;

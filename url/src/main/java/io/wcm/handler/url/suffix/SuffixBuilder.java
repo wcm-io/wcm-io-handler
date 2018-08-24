@@ -129,7 +129,6 @@ public final class SuffixBuilder {
    * @return a {@link SuffixBuilder} that keeps the named key/value-parts defined by pKeysToKeep and all resource
    *         parts
    */
-  @SuppressWarnings("null")
   public static @NotNull SuffixBuilder thatKeepsNamedPartsAndResources(@NotNull SlingHttpServletRequest request,
       @NotNull String @NotNull... keysToKeep) {
     Predicate<String> filter = FilterOperators.or(new IncludeResourcePartsFilter(), new IncludeNamedPartsFilter(keysToKeep));
@@ -170,7 +169,6 @@ public final class SuffixBuilder {
    * @param keysToDiscard the keys of the named parts to discard
    * @return {@link SuffixBuilder} that will discard all resource parts and the named parts defined by pKeysToDiscard
    */
-  @SuppressWarnings("null")
   public static @NotNull SuffixBuilder thatDiscardsResourceAndNamedParts(@NotNull SlingHttpServletRequest request,
       @NotNull String @NotNull... keysToDiscard) {
     Predicate<String> filter = FilterOperators.and(new ExcludeResourcePartsFilter(), new ExcludeNamedPartsFilter(keysToDiscard));
@@ -184,7 +182,6 @@ public final class SuffixBuilder {
    * @return {@link SuffixBuilder} that will discard *one specific resource path* and the named parts defined by
    *         pKeysToDiscard
    */
-  @SuppressWarnings("null")
   public static @NotNull SuffixBuilder thatDiscardsSpecificResourceAndNamedParts(@NotNull SlingHttpServletRequest request,
       @NotNull String resourcePathToDiscard, @NotNull String @NotNull... keysToDiscard) {
     Predicate<String> filter = FilterOperators.and(new ExcludeSpecificResourceFilter(resourcePathToDiscard), new ExcludeNamedPartsFilter(keysToDiscard));
@@ -214,7 +211,6 @@ public final class SuffixBuilder {
    * @param map map of key-value pairs
    * @return this
    */
-  @SuppressWarnings("null")
   public @NotNull SuffixBuilder putAll(@NotNull Map<String, Object> map) {
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       put(entry.getKey(), entry.getValue());
@@ -254,7 +250,6 @@ public final class SuffixBuilder {
    * @param baseResource base resource to construct relative path
    * @return the suffix containing the map-content as encoded key value-pairs (and eventually other parts)
    */
-  @SuppressWarnings("null")
   public @NotNull SuffixBuilder resources(@NotNull List<Resource> resources, @NotNull Resource baseResource) {
     for (Resource resource : resources) {
       resource(resource, baseResource);
@@ -295,7 +290,6 @@ public final class SuffixBuilder {
    * Build complete suffix.
    * @return the suffix
    */
-  @SuppressWarnings("null")
   public @NotNull String build() {
     SortedMap<String, Object> sortedParameterMap = new TreeMap<>(parameterMap);
 

@@ -35,7 +35,6 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
 public class DefaultUrlHandlerConfigTest {
 
   private static final int ROOT_LEVEL = 2;

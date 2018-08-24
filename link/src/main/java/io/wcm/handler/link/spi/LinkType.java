@@ -55,6 +55,7 @@ public abstract class LinkType {
    * @param linkRequest Link reference
    * @return true if this link type can handle the given link reference
    */
+  @SuppressWarnings("null")
   public boolean accepts(@NotNull LinkRequest linkRequest) {
     ValueMap props = linkRequest.getResourceProperties();
     // check for matching link type ID in link resource

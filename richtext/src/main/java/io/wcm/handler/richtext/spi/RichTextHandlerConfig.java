@@ -46,7 +46,6 @@ public abstract class RichTextHandlerConfig implements ContextAwareService {
    * are called on after another for the whole rich text fragment.
    * @return Available rewrite content handler
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {
     return DEFAULT_REWRITE_CONTENT_HANDLERS;
   }

@@ -47,6 +47,7 @@ public final class SimpleLinkMarkupBuilder implements LinkMarkupBuilder {
   }
 
   @Override
+  @SuppressWarnings("null")
   public Anchor build(@NotNull Link link) {
     ValueMap props = link.getLinkRequest().getResourceProperties();
 

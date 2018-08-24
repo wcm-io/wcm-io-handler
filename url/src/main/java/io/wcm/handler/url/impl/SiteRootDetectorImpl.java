@@ -69,7 +69,6 @@ public class SiteRootDetectorImpl implements SiteRootDetector {
     }
   }
 
-  @SuppressWarnings("null")
   private int detectSiteRootLevel(@Nullable Resource contextResource) {
     if (contextResource != null) {
       // assumption: inner-most context-aware configuration context path is site root path

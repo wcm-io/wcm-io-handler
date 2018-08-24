@@ -233,6 +233,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param userId User id
    * @throws RepositoryException
    */
+  @SuppressWarnings("null")
   private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) throws RepositoryException {
     // -- this is currently DISABLED due to WCMIO-28, concurrency issues with DAM workflows
     /*
@@ -250,6 +251,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param assetPath Asset path
    * @return Asset or null if path is invalid
    */
+  @SuppressWarnings("null")
   private Asset getAsset(String assetPath, ResourceResolver resolver) {
     Resource assetResource = resolver.getResource(assetPath);
     if (assetResource != null) {

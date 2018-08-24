@@ -80,7 +80,6 @@ public final class LinkResolveCounter {
    * @return Counter for current request/thread.
    *         If instance was not set in thread before it is newly created and attached to the current thread.
    */
-  @SuppressWarnings("null")
   public static @NotNull LinkResolveCounter get() {
     return THREAD_LOCAL.get();
   }

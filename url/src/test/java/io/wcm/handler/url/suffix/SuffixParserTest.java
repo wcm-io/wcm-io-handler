@@ -92,7 +92,6 @@ public class SuffixParserTest {
         .build());
   }
 
-  @SuppressWarnings("unused")
   @Test
   public void testGetLongIntBooleanStringString() {
     // create UrlSuffixHelper with single-part suffix in request

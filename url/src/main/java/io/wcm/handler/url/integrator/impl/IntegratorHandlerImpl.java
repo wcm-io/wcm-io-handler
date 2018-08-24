@@ -72,7 +72,6 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
   /**
    * Detect integrator template modes - check selectors in current url.
    */
-  @SuppressWarnings("null")
   private void detectIntegratorTemplateModes() {
     // integrator mode cannot be active if no modes defined
     if (urlHandlerConfig.getIntegratorModes().isEmpty()) {
@@ -111,7 +110,6 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * the secure integrator mode selector is included in the current request.
    * @return Integrator template selector
    */
-  @SuppressWarnings("null")
   @Override
   public @NotNull String getIntegratorTemplateSelector() {
     if (currentPage != null && urlHandlerConfig.isIntegrator(currentPage)) {
@@ -176,6 +174,7 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * @param properties Content container
    * @return Integrator protocol
    */
+  @SuppressWarnings("null")
   private IntegratorProtocol getIntegratorProtocol(ValueMap properties) {
     IntegratorProtocol protocol = IntegratorProtocol.AUTO;
     try {
@@ -194,7 +193,6 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * Checks whether resource URLs should be rendered in secure mode or not.
    * @return true if resource URLs should be rendered in secure mode
    */
-  @SuppressWarnings("null")
   private boolean isResourceUrlSecure(Page page) {
     ValueMap props = getPagePropertiesNullSafe(page);
     IntegratorMode mode = getIntegratorMode(props);

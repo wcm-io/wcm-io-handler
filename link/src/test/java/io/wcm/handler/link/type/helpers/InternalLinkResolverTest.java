@@ -43,7 +43,6 @@ import io.wcm.testing.mock.aem.junit.AemContext;
  * Most of the logic of {@link InternalLinkResolver} is tested in the InternalLinkTypeTest.
  * This tests only some special feature not used by InternalLinkType.
  */
-@SuppressWarnings("null")
 public class InternalLinkResolverTest {
 
   @Rule

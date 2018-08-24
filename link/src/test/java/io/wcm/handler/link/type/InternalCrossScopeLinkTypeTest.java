@@ -45,7 +45,6 @@ import io.wcm.testing.mock.aem.junit.AemContext;
  * Test {@link InternalCrossScopeLinkType} methods.
  * Most of the test cases are identical to {@link InternalLinkTypeTest}, so they are not duplicated here.
  */
-@SuppressWarnings("null")
 public class InternalCrossScopeLinkTypeTest {
 
   @Rule

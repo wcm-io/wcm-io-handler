@@ -55,7 +55,6 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   /**
    * @return Supported media sources
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends MediaSource>> getSources() {
     return DEFAULT_MEDIA_SOURCES;
   }
@@ -63,7 +62,6 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   /**
    * @return Available media markup builders
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
     return DEFAULT_MEDIA_MARKUP_BUILDERS;
   }
@@ -71,7 +69,6 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   /**
    * @return List of media metadata pre processors (optional). The processors are applied in list order.
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends MediaProcessor>> getPreProcessors() {
     // no processors
     return ImmutableList.of();
@@ -80,7 +77,6 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   /**
    * @return List of media metadata post processors (optional). The processors are applied in list order.
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends MediaProcessor>> getPostProcessors() {
     // no processors
     return ImmutableList.of();

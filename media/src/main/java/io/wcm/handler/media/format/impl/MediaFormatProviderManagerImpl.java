@@ -52,7 +52,6 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
       .build();
 
   @Override
-  @SuppressWarnings("null")
   public SortedSet<MediaFormat> getMediaFormats(Resource contextResource) {
     ResolveAllResult<MediaFormatProvider> result = serviceResolver.resolveAll(MediaFormatProvider.class, contextResource);
     String key = result.getCombinedKey();

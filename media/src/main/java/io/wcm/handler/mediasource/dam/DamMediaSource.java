@@ -97,6 +97,7 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
+  @SuppressWarnings("null")
   public @NotNull Media resolveMedia(@NotNull Media media) {
     String mediaRef = getMediaRef(media.getMediaRequest());
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();

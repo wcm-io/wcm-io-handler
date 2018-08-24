@@ -284,7 +284,6 @@ public final class MediaFormatBuilder {
    * Builds the media format definition.
    * @return Media format definition
    */
-  @SuppressWarnings("null")
   public @NotNull MediaFormat build() {
     if (this.name == null) {
       throw new IllegalArgumentException("Name is missing.");

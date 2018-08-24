@@ -47,7 +47,6 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
     return SITE_ROOT_LEVEL;
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull List<IntegratorMode> getIntegratorModes() {
     return INTEGRATOR_MODES;

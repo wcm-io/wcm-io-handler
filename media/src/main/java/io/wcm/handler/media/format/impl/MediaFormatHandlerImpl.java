@@ -90,7 +90,6 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * Get media formats defined by a CMS application that is responsible for the given media library path.
    * @return Media formats sorted by media format name.
    */
-  @SuppressWarnings("null")
   @Override
   public @NotNull SortedSet<MediaFormat> getMediaFormats() {
     return getMediaFormatsForCurrentResource();
@@ -101,7 +100,6 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @param comparator Comparator for set
    * @return Media formats
    */
-  @SuppressWarnings("null")
   @Override
   public @NotNull SortedSet<MediaFormat> getMediaFormats(@NotNull Comparator<MediaFormat> comparator) {
     SortedSet<MediaFormat> set = new TreeSet<>(comparator);

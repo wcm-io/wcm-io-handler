@@ -71,6 +71,7 @@ public final class InlineMediaSource extends MediaSource {
   }
 
   @Override
+  @SuppressWarnings("null")
   public boolean accepts(@NotNull MediaRequest mediaRequest) {
     // if no media source id is defined fallback to auto-detection of inline media object in resource
     String mediaSourceId = mediaRequest.getResourceProperties().get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
@@ -89,9 +90,8 @@ public final class InlineMediaSource extends MediaSource {
     return false;
   }
 
-  @SuppressWarnings("null")
   @Override
-  public @NotNull String getPrimaryMediaRefProperty() {
+  public @Nullable String getPrimaryMediaRefProperty() {
     // not supported
     return null;
   }
@@ -175,6 +175,7 @@ public final class InlineMediaSource extends MediaSource {
    * @param ntResourceResource nt:resource resource
    * @return Detected or virtual filename. Never null.
    */
+  @SuppressWarnings("null")
   private String detectFileName(Resource referencedResource, Resource ntFileResource,
       Resource ntResourceResource) {
     // detect file name
@@ -219,7 +220,6 @@ public final class InlineMediaSource extends MediaSource {
    * @param fileName File name
    * @return Cleaned up file name
    */
-  @SuppressWarnings("null")
   private String cleanupFileName(String fileName) {
     String processedFileName = fileName;
 

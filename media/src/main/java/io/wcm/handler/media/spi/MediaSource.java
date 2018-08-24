@@ -67,6 +67,7 @@ public abstract class MediaSource {
    * @param mediaRequest Media request
    * @return true if this media source can handle the given media request
    */
+  @SuppressWarnings("null")
   public boolean accepts(@NotNull MediaRequest mediaRequest) {
     // if an explicit media request is set check this first
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
@@ -114,6 +115,7 @@ public abstract class MediaSource {
    * @param mediaRequest Media request
    * @return Path or null if not present
    */
+  @SuppressWarnings("null")
   protected final String getMediaRef(MediaRequest mediaRequest) {
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
       return mediaRequest.getMediaRef();
@@ -145,6 +147,7 @@ public abstract class MediaSource {
    * @param mediaRequest Media request
    * @return Crop dimension or null if not set or invalid
    */
+  @SuppressWarnings("null")
   protected final CropDimension getMediaCropDimension(MediaRequest mediaRequest) {
     if (mediaRequest.getResource() != null) {
       String cropProperty = getMediaCropProperty(mediaRequest);
@@ -200,7 +203,6 @@ public abstract class MediaSource {
    * @param mediaArgs Media args
    * @return true if a rendition was found
    */
-  @SuppressWarnings("null")
   private boolean resolveFirstMatchRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     Rendition rendition = asset.getRendition(mediaArgs);
     if (rendition != null) {

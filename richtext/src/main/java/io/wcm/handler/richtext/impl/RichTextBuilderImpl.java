@@ -93,7 +93,6 @@ final class RichTextBuilderImpl implements RichTextBuilder {
     return build().getMarkup();
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull Collection<Content> buildContent() {
     return build().getContent();

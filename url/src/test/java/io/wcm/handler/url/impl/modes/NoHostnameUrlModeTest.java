@@ -28,7 +28,6 @@ import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.util.RunMode;
 
-@SuppressWarnings("null")
 public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
 
   @Override

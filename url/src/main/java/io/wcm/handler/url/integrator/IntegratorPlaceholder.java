@@ -83,7 +83,6 @@ public final class IntegratorPlaceholder {
    * @param placeholder Placeholder
    * @return Placeholder name
    */
-  @SuppressWarnings("null")
   private static @NotNull String getPlaceholderName(@NotNull String placeholder) {
     return StringUtils.remove(placeholder, "###");
   }

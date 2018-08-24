@@ -120,6 +120,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @param media Media metadata
    * @return DAM asset or null
    */
+  @SuppressWarnings("null")
   protected Asset getDamAsset(Media media) {
     return media.getAsset().adaptTo(Asset.class);
   }
@@ -156,7 +157,6 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @param video Video
    * @param media Media metadata
    */
-  @SuppressWarnings("null")
   protected void addSources(Video video, Media media) {
     Asset asset = getDamAsset(media);
     if (asset == null) {

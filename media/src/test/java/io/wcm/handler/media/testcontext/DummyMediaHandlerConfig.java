@@ -41,7 +41,6 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
       );
 
   @Override
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
   }

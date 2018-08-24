@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableMap;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
-@SuppressWarnings("null")
 public class LinkArgsTest {
 
   @Test

@@ -61,7 +61,6 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
   /**
    * @return Supported link types
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends LinkType>> getLinkTypes() {
     return DEFAULT_LINK_TYPES;
   }
@@ -69,7 +68,6 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
   /**
    * @return Available link markup builders
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends LinkMarkupBuilder>> getMarkupBuilders() {
     return DEFAULT_LINK_MARKUP_BUILDERS;
   }
@@ -77,7 +75,6 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
   /**
    * @return List of link metadata pre processors (optional). The processors are applied in list order.
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends LinkProcessor>> getPreProcessors() {
     // no processors
     return ImmutableList.of();
@@ -86,7 +83,6 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
   /**
    * @return List of link metadata post processors (optional). The processors are applied in list order.
    */
-  @SuppressWarnings("null")
   public @NotNull List<Class<? extends LinkProcessor>> getPostProcessors() {
     return DEFAULT_POST_PROCESSORS;
   }

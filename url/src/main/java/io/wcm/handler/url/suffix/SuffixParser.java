@@ -255,6 +255,7 @@ public final class SuffixParser {
    * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return a list containing the Resources
    */
+  @SuppressWarnings("null")
   public @NotNull List<Resource> getResources(@Nullable Predicate<Resource> filter, @Nullable Resource baseResource) {
 
     // resolve base path or fallback to current page's content if not specified

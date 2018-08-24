@@ -215,7 +215,6 @@ public final class MediaHandlerImpl implements MediaHandler {
    * @param mediaArgs Media args
    * @return true if resolving was successful.
    */
-  @SuppressWarnings("null")
   private boolean resolveMediaFormats(MediaArgs mediaArgs) {
     // resolved media formats already set? done.
     if (mediaArgs.getMediaFormats() != null) {

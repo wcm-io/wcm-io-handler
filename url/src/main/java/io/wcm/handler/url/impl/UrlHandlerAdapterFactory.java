@@ -150,6 +150,7 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
     };
   }
 
+  @SuppressWarnings("null")
   private SiteConfig getSiteConfigForResource(Resource contextResource) {
     return contextResource.adaptTo(ConfigurationBuilder.class).as(SiteConfig.class);
   }

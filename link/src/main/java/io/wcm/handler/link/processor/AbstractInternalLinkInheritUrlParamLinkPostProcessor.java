@@ -54,7 +54,6 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
     this.inheritUrlParameterNames = inheritUrlParameterNames;
   }
 
-  @SuppressWarnings("null")
   @Override
   public final @NotNull Link process(@NotNull Link link) {
 

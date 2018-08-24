@@ -138,7 +138,6 @@ public final class RichTextUtil {
    * @return Root element with parsed xhtml content
    * @throws JDOMException Is thrown if the text could not be parsed as XHTML
    */
-  @SuppressWarnings("null")
   public static @NotNull Element parseText(@NotNull String text, boolean xhtmlEntities) throws JDOMException {
 
     // add root element

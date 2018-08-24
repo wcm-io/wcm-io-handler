@@ -36,6 +36,7 @@ import com.day.image.Layer;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
+@SuppressWarnings("null")
 public class VirtualRenditionMetadataTest extends AbstractDamTest {
 
   private VirtualRenditionMetadata underTest;

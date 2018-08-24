@@ -23,6 +23,8 @@ import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
 import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
@@ -75,7 +77,7 @@ public final class AppAemContext {
    */
   private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
     @Override
-    public void execute(AemContext context) throws Exception {
+    public void execute(@NotNull AemContext context) throws Exception {
 
       // handler SPI
       context.registerInjectActivateService(new SiteRootDetectorImpl());

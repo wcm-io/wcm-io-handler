@@ -86,23 +86,21 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
+  @SuppressWarnings("null")
   public String getDescription() {
     return this.properties.get(DamConstants.DC_DESCRIPTION, String.class);
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull String getPath() {
     return this.damAsset.getPath();
   }
 
-  @SuppressWarnings("null")
   @Override
   public @NotNull ValueMap getProperties() {
     return this.properties;
   }
 
-  @SuppressWarnings("null")
   @Override
   public Rendition getDefaultRendition() {
     return getRendition(this.defaultMediaArgs);

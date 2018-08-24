@@ -88,7 +88,6 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Media format name
    */
-  @SuppressWarnings("null")
   public @NotNull String getName() {
     return this.name;
   }
@@ -96,7 +95,6 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Media format label
    */
-  @SuppressWarnings("null")
   public @NotNull String getLabel() {
     return StringUtils.defaultString(this.label, this.name);
   }

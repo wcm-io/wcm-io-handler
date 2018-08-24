@@ -72,19 +72,16 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  @SuppressWarnings("null")
   public @NotNull String getPath() {
     return this.resource.getPath();
   }
 
   @Override
-  @SuppressWarnings("null")
   public @NotNull ValueMap getProperties() {
     return this.resource.getValueMap();
   }
 
   @Override
-  @SuppressWarnings("null")
   public Rendition getDefaultRendition() {
     return getRendition(this.defaultMediaArgs);
   }

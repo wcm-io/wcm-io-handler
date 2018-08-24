@@ -236,7 +236,6 @@ public final class UrlHandlerImpl implements UrlHandler {
     return path + selectorPart.toString() + extensionPart.toString() + suffixPart.toString();
   }
 
-  @SuppressWarnings("null")
   String appendQueryString(String url, String queryString, Set<String> inheritableParameterNames) {
     if (StringUtils.isEmpty(url)) {
       return url;

@@ -448,6 +448,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param mediaFormatVisitor Media format visitor
    * @return Return value form media format visitor, if any returned a value that is not null
    */
+  @SuppressWarnings("null")
   private <T> T visitMediaFormats(MediaArgs mediaArgs, MediaFormatVisitor<T> mediaFormatVisitor) {
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     if (mediaFormats != null) {

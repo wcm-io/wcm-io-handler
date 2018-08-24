@@ -105,6 +105,7 @@ public final class AssetRenditionContentDispositionFilter implements Filter {
     filterChain.doFilter(request, response);
   }
 
+  @SuppressWarnings("null")
   private void setContentDisposition(SlingHttpServletRequest request, SlingHttpServletResponse response) {
     Resource resource = request.getResource();
 

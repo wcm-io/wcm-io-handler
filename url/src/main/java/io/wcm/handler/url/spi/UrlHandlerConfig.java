@@ -78,7 +78,6 @@ public abstract class UrlHandlerConfig implements ContextAwareService {
   /**
    * @return Supported integrator modes
    */
-  @SuppressWarnings("null")
   public @NotNull Collection<IntegratorMode> getIntegratorModes() {
     // not supported by default
     return ImmutableList.of();

@@ -100,6 +100,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     return new RichText(richTextRequest, content);
   }
 
+  @SuppressWarnings("null")
   private String getRawText(RichTextRequest richTextRequest) {
     if (richTextRequest.getResource() != null) {
       return richTextRequest.getResourceProperties().get(RichTextNameConstants.PN_TEXT, String.class);
@@ -122,7 +123,6 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     }
   }
 
-  @SuppressWarnings("null")
   private List<Content> processRichText(String text, UrlMode urlMode, MediaArgs mediaArgs) {
     if (isEmpty(text)) {
       return ImmutableList.of();

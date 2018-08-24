@@ -37,7 +37,7 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
-
+@SuppressWarnings("null")
 public class VirtualCropRenditionMetadataTest extends AbstractDamTest {
 
   private Rendition rendition;

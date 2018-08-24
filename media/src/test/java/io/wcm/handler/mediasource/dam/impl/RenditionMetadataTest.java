@@ -41,6 +41,7 @@ import io.wcm.handler.mediasource.dam.AbstractDamTest;
 /**
  * Tests the {@link RenditionMetadata}, especially the compareTo method
  */
+@SuppressWarnings("null")
 public class RenditionMetadataTest extends AbstractDamTest {
 
   private RenditionMetadata originalRendition;

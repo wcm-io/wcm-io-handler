@@ -37,7 +37,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 /**
  * Unit tests with DAM sample content
  */
-@SuppressWarnings("null")
 public abstract class AbstractDamTest {
 
   @Rule

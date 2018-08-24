@@ -36,6 +36,7 @@ import io.wcm.handler.mediasource.dam.AbstractDamTest;
 /**
  * Tests for {@link CropRenditionHandler}
  */
+@SuppressWarnings("null")
 public class CropRenditionHandlerTest extends AbstractDamTest {
 
   private CropRenditionHandler underTest;

@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableMap;
 
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
-@SuppressWarnings("null")
 public class UrlExternalizerTransformerConfigTest {
 
   private UrlExternalizerTransformerConfig underTest;
