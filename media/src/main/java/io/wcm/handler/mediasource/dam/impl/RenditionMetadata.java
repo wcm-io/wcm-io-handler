@@ -54,6 +54,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   /**
    * @param rendition DAM rendition
    */
+  @SuppressWarnings("null")
   RenditionMetadata(Rendition rendition) {
     this.rendition = rendition;
 
@@ -316,6 +317,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
   }
 
+  @SuppressWarnings("null")
   protected Layer getLayer() {
     if (FileExtension.isImage(getFileExtension())) {
       return this.rendition.adaptTo(Resource.class).adaptTo(Layer.class);
@@ -325,6 +327,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
   }
 
+  @SuppressWarnings("null")
   protected InputStream getInputStream() {
     return this.rendition.adaptTo(Resource.class).adaptTo(InputStream.class);
   }

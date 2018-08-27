@@ -20,6 +20,7 @@
 package io.wcm.handler.url.integrator;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -35,27 +36,27 @@ public final class IntegratorPlaceholder {
   /**
    * Placeholder for the main content markup of the external application.
    */
-  public static final String APP_INCLUDE_CONTENT = "###APP_INCLUDE_CONTENT###";
+  public static final @NotNull String APP_INCLUDE_CONTENT = "###APP_INCLUDE_CONTENT###";
 
   /**
    * Placeholder for markup of the external application that should be placed in the HTML HEAD element.
    */
-  public static final String APP_INCLUDE_HEADER = "###APP_INCLUDE_HEADER###";
+  public static final @NotNull String APP_INCLUDE_HEADER = "###APP_INCLUDE_HEADER###";
 
   /**
    * Placeholder for markup of the external application that should be placed before the end of the BODY element.
    */
-  public static final String APP_INCLUDE_FOOTER = "###APP_INCLUDE_FOOTER###";
+  public static final @NotNull String APP_INCLUDE_FOOTER = "###APP_INCLUDE_FOOTER###";
 
   /**
    * Placeholder for scheme and hostname in URLs pointing to content pages (non-secure mode, HTTP).
    */
-  public static final String URL_CONTENT = "###URL_CONTENT###";
+  public static final @NotNull String URL_CONTENT = "###URL_CONTENT###";
 
   /**
    * Placeholder for scheme and hostname in URLs pointing to content pages (secure mode, HTTPS).
    */
-  public static final String URL_CONTENT_SECURE = "###URL_CONTENT_SECURE###";
+  public static final @NotNull String URL_CONTENT_SECURE = "###URL_CONTENT_SECURE###";
 
   /**
    * Placeholder for scheme and hostname in URLs pointing to resources (e.g. CSS/JS/Image references or AJAX requests).
@@ -63,7 +64,7 @@ public final class IntegratorPlaceholder {
    * same origin policy the external application may decide to route these URLs through a proxy with its own
    * scheme and hostname.
    */
-  public static final String URL_CONTENT_PROXY = "###URL_CONTENT_PROXY###";
+  public static final @NotNull String URL_CONTENT_PROXY = "###URL_CONTENT_PROXY###";
 
 
   /**
@@ -71,7 +72,7 @@ public final class IntegratorPlaceholder {
    * @param placeholder Placeholder
    * @return Tag with comments
    */
-  public static String getTagWithComments(String placeholder) {
+  public static @NotNull String getTagWithComments(@NotNull String placeholder) {
     return "\n<!-- " + getPlaceholderName(placeholder) + " START -->\n"
         + placeholder
         + "\n<!-- " + getPlaceholderName(placeholder) + " END -->\n";
@@ -82,7 +83,7 @@ public final class IntegratorPlaceholder {
    * @param placeholder Placeholder
    * @return Placeholder name
    */
-  private static String getPlaceholderName(String placeholder) {
+  private static @NotNull String getPlaceholderName(@NotNull String placeholder) {
     return StringUtils.remove(placeholder, "###");
   }
 

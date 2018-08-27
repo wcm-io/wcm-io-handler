@@ -57,6 +57,7 @@ import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 public class UrlHandlerImplTest {
 
   @Rule

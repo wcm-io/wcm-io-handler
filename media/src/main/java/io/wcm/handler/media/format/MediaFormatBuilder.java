@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -67,7 +68,7 @@ public final class MediaFormatBuilder {
    * @param name Media format name. Only characters, numbers, hyphen and underline are allowed.
    * @return Media format builder
    */
-  public static MediaFormatBuilder create(String name) {
+  public static @NotNull MediaFormatBuilder create(@NotNull String name) {
     return new MediaFormatBuilder(name);
   }
 
@@ -75,7 +76,7 @@ public final class MediaFormatBuilder {
    * @param value Label for displaying to user
    * @return this
    */
-  public MediaFormatBuilder label(String value) {
+  public @NotNull MediaFormatBuilder label(String value) {
     this.label = value;
     return this;
   }
@@ -84,7 +85,7 @@ public final class MediaFormatBuilder {
    * @param value Description for displaying to user
    * @return this
    */
-  public MediaFormatBuilder description(String value) {
+  public @NotNull MediaFormatBuilder description(String value) {
     this.description = value;
     return this;
   }
@@ -93,7 +94,7 @@ public final class MediaFormatBuilder {
    * @param value Fixed image width (px)
    * @return this
    */
-  public MediaFormatBuilder width(long value) {
+  public @NotNull MediaFormatBuilder width(long value) {
     this.width = value;
     return this;
   }
@@ -102,7 +103,7 @@ public final class MediaFormatBuilder {
    * @param value Image width min (px)
    * @return this
    */
-  public MediaFormatBuilder minWidth(long value) {
+  public @NotNull MediaFormatBuilder minWidth(long value) {
     this.minWidth = value;
     return this;
   }
@@ -111,7 +112,7 @@ public final class MediaFormatBuilder {
    * @param value Image width max (px)
    * @return this
    */
-  public MediaFormatBuilder maxWidth(long value) {
+  public @NotNull MediaFormatBuilder maxWidth(long value) {
     this.maxWidth = value;
     return this;
   }
@@ -121,7 +122,7 @@ public final class MediaFormatBuilder {
    * @param max Image width max (px)
    * @return this
    */
-  public MediaFormatBuilder width(long min, long max) {
+  public @NotNull MediaFormatBuilder width(long min, long max) {
     this.minWidth = min;
     this.maxWidth = max;
     return this;
@@ -131,7 +132,7 @@ public final class MediaFormatBuilder {
    * @param value Fixed image height (px)
    * @return this
    */
-  public MediaFormatBuilder height(long value) {
+  public @NotNull MediaFormatBuilder height(long value) {
     this.height = value;
     return this;
   }
@@ -140,7 +141,7 @@ public final class MediaFormatBuilder {
    * @param value Image height min (px)
    * @return this
    */
-  public MediaFormatBuilder minHeight(long value) {
+  public @NotNull MediaFormatBuilder minHeight(long value) {
     this.minHeight = value;
     return this;
   }
@@ -149,7 +150,7 @@ public final class MediaFormatBuilder {
    * @param value Image height max (px)
    * @return this
    */
-  public MediaFormatBuilder maxHeight(long value) {
+  public @NotNull MediaFormatBuilder maxHeight(long value) {
     this.maxHeight = value;
     return this;
   }
@@ -159,7 +160,7 @@ public final class MediaFormatBuilder {
    * @param max Image height max (px)
    * @return this
    */
-  public MediaFormatBuilder height(long min, long max) {
+  public @NotNull MediaFormatBuilder height(long min, long max) {
     this.minHeight = min;
     this.maxHeight = max;
     return this;
@@ -170,7 +171,7 @@ public final class MediaFormatBuilder {
    * @param heightValue Fixed image height (px)
    * @return this
    */
-  public MediaFormatBuilder fixedDimension(long widthValue, long heightValue) {
+  public @NotNull MediaFormatBuilder fixedDimension(long widthValue, long heightValue) {
     this.width = widthValue;
     this.height = heightValue;
     return this;
@@ -180,7 +181,7 @@ public final class MediaFormatBuilder {
    * @param value Ratio (width/height)
    * @return this
    */
-  public MediaFormatBuilder ratio(double value) {
+  public @NotNull MediaFormatBuilder ratio(double value) {
     this.ratio = value;
     return this;
   }
@@ -192,7 +193,7 @@ public final class MediaFormatBuilder {
    *          display)
    * @return this
    */
-  public MediaFormatBuilder ratio(long widthValue, long heightValue) {
+  public @NotNull MediaFormatBuilder ratio(long widthValue, long heightValue) {
     this.ratioWidth = widthValue;
     this.ratioHeight = heightValue;
     return this;
@@ -202,7 +203,7 @@ public final class MediaFormatBuilder {
    * @param value Max. file size (bytes)
    * @return this
    */
-  public MediaFormatBuilder fileSizeMax(long value) {
+  public @NotNull MediaFormatBuilder fileSizeMax(long value) {
     this.fileSizeMax = value;
     return this;
   }
@@ -211,7 +212,7 @@ public final class MediaFormatBuilder {
    * @param value Allowed file extensions
    * @return this
    */
-  public MediaFormatBuilder extensions(String... value) {
+  public @NotNull MediaFormatBuilder extensions(String... value) {
     this.extensions = value != null ? value.clone() : null;
     return this;
   }
@@ -220,7 +221,7 @@ public final class MediaFormatBuilder {
    * @param value Rendition group id
    * @return this
    */
-  public MediaFormatBuilder renditionGroup(String value) {
+  public @NotNull MediaFormatBuilder renditionGroup(String value) {
     this.renditionGroup = value;
     return this;
   }
@@ -229,7 +230,7 @@ public final class MediaFormatBuilder {
    * @param value Media assets with this format should be downloaded and not displayed directly
    * @return this
    */
-  public MediaFormatBuilder download(boolean value) {
+  public @NotNull MediaFormatBuilder download(boolean value) {
     this.download = value;
     return this;
   }
@@ -238,7 +239,7 @@ public final class MediaFormatBuilder {
    * @param value For internal use only (not displayed for user)
    * @return this
    */
-  public MediaFormatBuilder internal(boolean value) {
+  public @NotNull MediaFormatBuilder internal(boolean value) {
     this.internal = value;
     return this;
   }
@@ -247,7 +248,7 @@ public final class MediaFormatBuilder {
    * @param value Ranking for controlling priority in auto-detection. Lowest value = highest priority.
    * @return this
    */
-  public MediaFormatBuilder ranking(int value) {
+  public @NotNull MediaFormatBuilder ranking(int value) {
     this.ranking = value;
     return this;
   }
@@ -257,7 +258,7 @@ public final class MediaFormatBuilder {
    * @param map Property map. Is merged with properties already set in builder.
    * @return this
    */
-  public MediaFormatBuilder properties(Map<String, Object> map) {
+  public @NotNull MediaFormatBuilder properties(Map<String, Object> map) {
     if (map == null) {
       throw new IllegalArgumentException("Map argument must not be null.");
     }
@@ -271,7 +272,7 @@ public final class MediaFormatBuilder {
    * @param value Property value
    * @return this
    */
-  public MediaFormatBuilder property(String key, Object value) {
+  public @NotNull MediaFormatBuilder property(String key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("Key argument must not be null.");
     }
@@ -283,7 +284,7 @@ public final class MediaFormatBuilder {
    * Builds the media format definition.
    * @return Media format definition
    */
-  public MediaFormat build() {
+  public @NotNull MediaFormat build() {
     if (this.name == null) {
       throw new IllegalArgumentException("Name is missing.");
     }

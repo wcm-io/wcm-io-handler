@@ -21,6 +21,8 @@ package io.wcm.handler.media.testcontext;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -39,7 +41,7 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
       );
 
   @Override
-  public List<Class<? extends MediaSource>> getSources() {
+  public @NotNull List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
   }
 

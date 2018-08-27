@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import io.wcm.handler.url.SiteRootDetector;
-import io.wcm.sling.commons.resource.ResourcePath;
+import io.wcm.wcm.commons.util.Path;
 
 /**
  * Implements {@link SiteRootDetector}.
@@ -55,7 +56,7 @@ public class SiteRootDetectorImpl implements SiteRootDetector {
       .build();
 
   @Override
-  public int getSiteRootLevel(Resource contextResource) {
+  public int getSiteRootLevel(@Nullable Resource contextResource) {
     if (contextResource == null) {
       return INVALID_SITE_ROOT_LEVEL;
     }
@@ -68,15 +69,17 @@ public class SiteRootDetectorImpl implements SiteRootDetector {
     }
   }
 
-  private int detectSiteRootLevel(Resource contextResource) {
-    // assumption: inner-most context-aware configuration context path is site root path
-    String siteRootpath = configurationResourceResolver.getContextPath(contextResource);
-    if (siteRootpath != null) {
-      int level = ResourcePath.getAbsoluteLevel(siteRootpath);
-      if (log.isDebugEnabled()) {
-        log.debug("Detect site root level for {}: {}", contextResource.getPath(), level);
+  private int detectSiteRootLevel(@Nullable Resource contextResource) {
+    if (contextResource != null) {
+      // assumption: inner-most context-aware configuration context path is site root path
+      String siteRootpath = configurationResourceResolver.getContextPath(contextResource);
+      if (siteRootpath != null) {
+        int level = Path.getAbsoluteLevel(siteRootpath, contextResource.getResourceResolver());
+        if (log.isDebugEnabled()) {
+          log.debug("Detect site root level for {}: {}", contextResource.getPath(), level);
+        }
+        return level;
       }
-      return level;
     }
     return INVALID_SITE_ROOT_LEVEL;
   }

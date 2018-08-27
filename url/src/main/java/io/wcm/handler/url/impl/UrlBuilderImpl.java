@@ -23,6 +23,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
@@ -81,45 +83,45 @@ final class UrlBuilderImpl implements UrlBuilder {
   }
 
   @Override
-  public UrlBuilder selectors(String value) {
+  public @NotNull UrlBuilder selectors(String value) {
     this.selectors = value;
     return this;
   }
 
   @Override
-  public UrlBuilder extension(String value) {
+  public @NotNull UrlBuilder extension(String value) {
     this.extension = value;
     return this;
   }
 
   @Override
-  public UrlBuilder suffix(String value) {
+  public @NotNull UrlBuilder suffix(String value) {
     this.suffix = value;
     return this;
   }
 
   @Override
-  public UrlBuilder queryString(String value) {
+  public @NotNull UrlBuilder queryString(String value) {
     this.queryString = value;
     this.inheritableParameterNames = null;
     return this;
   }
 
   @Override
-  public UrlBuilder queryString(String value, Set<String> inheritableParamNames) {
+  public @NotNull UrlBuilder queryString(String value, Set<String> inheritableParamNames) {
     this.queryString = value;
     this.inheritableParameterNames = inheritableParamNames;
     return this;
   }
 
   @Override
-  public UrlBuilder fragment(String value) {
+  public @NotNull UrlBuilder fragment(String value) {
     this.fragment = value;
     return this;
   }
 
   @Override
-  public UrlBuilder urlMode(UrlMode value) {
+  public @NotNull UrlBuilder urlMode(UrlMode value) {
     this.urlMode = value;
     return this;
   }
@@ -142,7 +144,8 @@ final class UrlBuilderImpl implements UrlBuilder {
   }
 
   @Override
-  public String buildExternalLinkUrl(Page targetPage) {
+  @SuppressWarnings("null")
+  public String buildExternalLinkUrl(@Nullable Page targetPage) {
     Page targetPageToUse = targetPage;
     if (targetPageToUse == null) {
       targetPageToUse = page;
@@ -160,7 +163,8 @@ final class UrlBuilderImpl implements UrlBuilder {
   }
 
   @Override
-  public String buildExternalResourceUrl(Resource targetResource) {
+  @SuppressWarnings("null")
+  public String buildExternalResourceUrl(@Nullable Resource targetResource) {
     Resource targetResourceToUse = targetResource;
     if (targetResourceToUse == null) {
       targetResourceToUse = resource;

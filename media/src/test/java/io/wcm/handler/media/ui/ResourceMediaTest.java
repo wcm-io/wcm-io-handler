@@ -40,6 +40,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
+@SuppressWarnings("null")
 public class ResourceMediaTest {
 
   @Rule

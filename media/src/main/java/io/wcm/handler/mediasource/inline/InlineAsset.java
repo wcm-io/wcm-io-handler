@@ -24,6 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
@@ -71,12 +72,12 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public String getPath() {
+  public @NotNull String getPath() {
     return this.resource.getPath();
   }
 
   @Override
-  public ValueMap getProperties() {
+  public @NotNull ValueMap getProperties() {
     return this.resource.getValueMap();
   }
 
@@ -86,7 +87,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getRendition(MediaArgs mediaArgs) {
+  public Rendition getRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getInlineRendition(mediaArgs);
 
     // check if rendition is valid - otherwise return null
@@ -98,7 +99,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getImageRendition(MediaArgs mediaArgs) {
+  public Rendition getImageRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isImage()) {
       return rendition;
@@ -109,7 +110,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getFlashRendition(MediaArgs mediaArgs) {
+  public Rendition getFlashRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isFlash()) {
       return rendition;
@@ -120,7 +121,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getDownloadRendition(MediaArgs mediaArgs) {
+  public Rendition getDownloadRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isDownload()) {
       return rendition;

@@ -22,6 +22,7 @@ package io.wcm.handler.media;
 import java.util.Collection;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.ImmutableList;
@@ -36,8 +37,8 @@ import io.wcm.wcm.commons.util.ToStringStyle;
 @ProviderType
 public final class Media {
 
-  private final MediaSource mediaSource;
-  private MediaRequest mediaRequest;
+  private final @NotNull MediaSource mediaSource;
+  private @NotNull MediaRequest mediaRequest;
   private HtmlElement<?> element;
   private String url;
   private Asset asset;
@@ -49,7 +50,7 @@ public final class Media {
    * @param mediaSource Media source
    * @param mediaRequest Processed media request
    */
-  public Media(MediaSource mediaSource, MediaRequest mediaRequest) {
+  public Media(@NotNull MediaSource mediaSource, @NotNull MediaRequest mediaRequest) {
     this.mediaSource = mediaSource;
     this.mediaRequest = mediaRequest;
   }
@@ -57,21 +58,21 @@ public final class Media {
   /**
    * @return Media source
    */
-  public MediaSource getMediaSource() {
+  public @NotNull MediaSource getMediaSource() {
     return this.mediaSource;
   }
 
   /**
    * @return Media handling request
    */
-  public MediaRequest getMediaRequest() {
+  public @NotNull MediaRequest getMediaRequest() {
     return this.mediaRequest;
   }
 
   /**
    * @param mediaRequest Media handling request
    */
-  public void setMediaRequest(MediaRequest mediaRequest) {
+  public void setMediaRequest(@NotNull MediaRequest mediaRequest) {
     this.mediaRequest = mediaRequest;
   }
 

@@ -22,7 +22,13 @@
 <document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/changes/1.0.0"
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
-  
+
+    <release version="1.0.10" date="2018-08-27">
+      <action type="update" dev="sseifert">
+        Add Jetbrains NotNull/Nullable annotations to API.
+      </action>
+    </release>
+
     <release version="1.0.8" date="2018-03-14">
       <action type="update" dev="amuthmann">
         Add AssetRenditionContentDispositionFilter to apply 'Dam Safe Binary' content disposition filter logic also to asset rendition's paths.

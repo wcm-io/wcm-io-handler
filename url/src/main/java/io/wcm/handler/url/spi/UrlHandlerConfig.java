@@ -22,6 +22,7 @@ package io.wcm.handler.url.spi;
 import java.util.Collection;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
@@ -52,7 +53,7 @@ public abstract class UrlHandlerConfig implements ContextAwareService {
    * @param page Page Page
    * @return true if secure mode is required
    */
-  public boolean isSecure(Page page) {
+  public boolean isSecure(@NotNull Page page) {
     // not supported by default
     return false;
   }
@@ -62,7 +63,7 @@ public abstract class UrlHandlerConfig implements ContextAwareService {
    * @param page Page
    * @return true if Page is a integrator page
    */
-  public boolean isIntegrator(Page page) {
+  public boolean isIntegrator(@NotNull Page page) {
     // not supported by default
     return false;
   }
@@ -70,14 +71,14 @@ public abstract class UrlHandlerConfig implements ContextAwareService {
   /**
    * @return Default URL mode that is used if no URL mode is specified
    */
-  public UrlMode getDefaultUrlMode() {
+  public @NotNull UrlMode getDefaultUrlMode() {
     return UrlModes.DEFAULT;
   }
 
   /**
    * @return Supported integrator modes
    */
-  public Collection<IntegratorMode> getIntegratorModes() {
+  public @NotNull Collection<IntegratorMode> getIntegratorModes() {
     // not supported by default
     return ImmutableList.of();
   }

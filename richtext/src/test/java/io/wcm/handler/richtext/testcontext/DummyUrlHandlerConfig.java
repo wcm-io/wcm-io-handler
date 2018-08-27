@@ -32,6 +32,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 /**
  * Dummy url configuration
  */
+@SuppressWarnings("null")
 public class DummyUrlHandlerConfig extends UrlHandlerConfig {
 
   public static final int SITE_ROOT_LEVEL = 4;

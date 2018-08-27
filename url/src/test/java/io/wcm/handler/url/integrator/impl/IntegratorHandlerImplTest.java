@@ -40,6 +40,7 @@ import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 public class IntegratorHandlerImplTest {
 
   private static final String PAGE_PATH = "/content/unittest/de_test/brand/de/section/page";
@@ -122,6 +123,7 @@ public class IntegratorHandlerImplTest {
     assertEquals(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE, underTest.getIntegratorTemplateSelector());
   }
 
+  @SuppressWarnings("unused")
   @Test
   public void testIntegratorPageNull() {
     context.currentPage((Page)null);

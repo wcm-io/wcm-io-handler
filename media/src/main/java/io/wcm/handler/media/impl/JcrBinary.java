@@ -67,6 +67,7 @@ public final class JcrBinary {
    * @param resource Resource pointing to JCR node with primary type nt:file or nt:resource
    * @return Mime type or null if no mime type set or if node is not of type nt:resource or nt:file
    */
+  @SuppressWarnings("null")
   public static String getMimeType(Resource resource) {
     if (isNtResource(resource)) {
       return resource.getValueMap().get(JcrConstants.JCR_MIMETYPE, String.class);

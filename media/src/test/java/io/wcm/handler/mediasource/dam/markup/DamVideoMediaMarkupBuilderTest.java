@@ -41,6 +41,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
+@SuppressWarnings("null")
 public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
 
   private Media video;

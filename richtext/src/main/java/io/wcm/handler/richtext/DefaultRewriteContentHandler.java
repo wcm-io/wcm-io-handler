@@ -42,6 +42,7 @@ import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +107,7 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
    *         Return list with other content to replace element with new content.
    */
   @Override
-  public List<Content> rewriteElement(Element element) {
+  public List<Content> rewriteElement(@NotNull Element element) {
 
     // rewrite anchor elements
     if (StringUtils.equalsIgnoreCase(element.getName(), "a")) {
@@ -286,6 +287,7 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
    * @param resourceProps ValueMap to write link metadata to
    * @param element Link element
    */
+  @SuppressWarnings("null")
   private void getAnchorLegacyMetadataFromRel(ValueMap resourceProps, Element element) {
     // Check href attribute - do not change elements with no href or links to anchor names
     String href = element.getAttributeValue("href");
@@ -459,7 +461,7 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
   }
 
   @Override
-  public List<Content> rewriteText(Text text) {
+  public List<Content> rewriteText(@NotNull Text text) {
     // nothing to do with text element
     return null;
   }

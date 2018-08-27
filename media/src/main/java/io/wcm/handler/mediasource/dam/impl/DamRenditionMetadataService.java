@@ -97,6 +97,7 @@ public final class DamRenditionMetadataService implements EventHandler {
   @Reference
   private SlingSettingsService slingSettings;
 
+  @SuppressWarnings("deprecation")
   @Activate
   private void activate(ComponentContext componentContext, Config config) {
     // Activate only in author mode, and check enabled status in service configuration as well
@@ -164,6 +165,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param asset Asset
    * @param renditionPath Rendition path
    */
+  @SuppressWarnings({ "unused", "null" })
   private void renditionAddedOrUpdated(Asset asset, String renditionPath, String userId, ResourceResolver resolver) {
     String renditionNodeName = Text.getName(renditionPath);
 
@@ -231,6 +233,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param userId User id
    * @throws RepositoryException
    */
+  @SuppressWarnings("null")
   private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) throws RepositoryException {
     // -- this is currently DISABLED due to WCMIO-28, concurrency issues with DAM workflows
     /*
@@ -248,6 +251,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param assetPath Asset path
    * @return Asset or null if path is invalid
    */
+  @SuppressWarnings("null")
   private Asset getAsset(String assetPath, ResourceResolver resolver) {
     Resource assetResource = resolver.getResource(assetPath);
     if (assetResource != null) {
@@ -264,6 +268,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param createIfNotExists if true the node is (tried to be) created automatically if it does not exist
    * @return Node or null if it does not exist or could not be created
    */
+  @SuppressWarnings("null")
   private Node getRenditionsMetadataNode(Asset asset, boolean createIfNotExists) {
     try {
       Node assetNode = asset.adaptTo(Node.class);

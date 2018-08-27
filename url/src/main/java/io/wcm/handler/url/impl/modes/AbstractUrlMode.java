@@ -52,6 +52,7 @@ abstract class AbstractUrlMode implements UrlMode {
    * @param targetPage Target page (may be null)
    * @return Url config (never null)
    */
+  @SuppressWarnings("null")
   protected UrlConfig getUrlConfigForTarget(Adaptable adaptable, Page targetPage) {
     Resource targetResource = null;
     if (targetPage != null) {

@@ -21,6 +21,7 @@ package io.wcm.handler.link.spi;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
@@ -60,21 +61,21 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
   /**
    * @return Supported link types
    */
-  public List<Class<? extends LinkType>> getLinkTypes() {
+  public @NotNull List<Class<? extends LinkType>> getLinkTypes() {
     return DEFAULT_LINK_TYPES;
   }
 
   /**
    * @return Available link markup builders
    */
-  public List<Class<? extends LinkMarkupBuilder>> getMarkupBuilders() {
+  public @NotNull List<Class<? extends LinkMarkupBuilder>> getMarkupBuilders() {
     return DEFAULT_LINK_MARKUP_BUILDERS;
   }
 
   /**
    * @return List of link metadata pre processors (optional). The processors are applied in list order.
    */
-  public List<Class<? extends LinkProcessor>> getPreProcessors() {
+  public @NotNull List<Class<? extends LinkProcessor>> getPreProcessors() {
     // no processors
     return ImmutableList.of();
   }
@@ -82,7 +83,7 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
   /**
    * @return List of link metadata post processors (optional). The processors are applied in list order.
    */
-  public List<Class<? extends LinkProcessor>> getPostProcessors() {
+  public @NotNull List<Class<? extends LinkProcessor>> getPostProcessors() {
     return DEFAULT_POST_PROCESSORS;
   }
 
@@ -93,7 +94,7 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
    * @param page Page
    * @return true if Page is acceptable as link target.
    */
-  public boolean isValidLinkTarget(Page page) {
+  public boolean isValidLinkTarget(@NotNull Page page) {
     // by default accept all pages
     return true;
   }
@@ -103,7 +104,7 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
    * @param page Page
    * @return true if Page is a redirect page
    */
-  public boolean isRedirect(Page page) {
+  public boolean isRedirect(@NotNull Page page) {
     return ResourceType.is(page.getContentResource(), REDIRECT_RESOURCE_TYPE);
   }
 

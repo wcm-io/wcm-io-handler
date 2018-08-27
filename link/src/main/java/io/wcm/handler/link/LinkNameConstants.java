@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.link;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -44,61 +45,61 @@ public final class LinkNameConstants {
   /**
    * Link title
    */
-  public static final String PN_LINK_TITLE = "linkTitle";
+  public static final @NotNull String PN_LINK_TITLE = "linkTitle";
 
   /**
    * Link type
    */
-  public static final String PN_LINK_TYPE = "linkType";
+  public static final @NotNull String PN_LINK_TYPE = "linkType";
 
   /**
    * Internal content page path
    */
-  public static final String PN_LINK_CONTENT_REF = "linkContentRef";
+  public static final @NotNull String PN_LINK_CONTENT_REF = "linkContentRef";
 
   /**
    * Internal media library item path
    */
-  public static final String PN_LINK_MEDIA_REF = "linkMediaRef";
+  public static final @NotNull String PN_LINK_MEDIA_REF = "linkMediaRef";
 
   /**
    * External URL
    */
-  public static final String PN_LINK_EXTERNAL_REF = "linkExternalRef";
+  public static final @NotNull String PN_LINK_EXTERNAL_REF = "linkExternalRef";
 
   /**
    * Name of fragment
    */
-  public static final String PN_LINK_FRAGMENT = "linkFragment";
+  public static final @NotNull String PN_LINK_FRAGMENT = "linkFragment";
 
   /**
    * Open media library item with download dialog
    */
-  public static final String PN_LINK_QUERY_PARAM = "linkQueryParam";
+  public static final @NotNull String PN_LINK_QUERY_PARAM = "linkQueryParam";
 
   /**
    * Window target name
    */
-  public static final String PN_LINK_WINDOW_TARGET = "linkWindowTarget";
+  public static final @NotNull String PN_LINK_WINDOW_TARGET = "linkWindowTarget";
 
   /**
    * Window width (px)
    */
-  public static final String PN_LINK_WINDOW_WIDTH = "linkWindowWidth";
+  public static final @NotNull String PN_LINK_WINDOW_WIDTH = "linkWindowWidth";
 
   /**
    * Window height (px)
    */
-  public static final String PN_LINK_WINDOW_HEIGHT = "linkWindowHeight";
+  public static final @NotNull String PN_LINK_WINDOW_HEIGHT = "linkWindowHeight";
 
   /**
    * Window features
    */
-  public static final String PN_LINK_WINDOW_FEATURES = "linkWindowFeatures";
+  public static final @NotNull String PN_LINK_WINDOW_FEATURES = "linkWindowFeatures";
 
   /**
    * Open media library item with download dialog
    */
-  public static final String PN_LINK_MEDIA_DOWNLOAD = "linkMediaDownload";
+  public static final @NotNull String PN_LINK_MEDIA_DOWNLOAD = "linkMediaDownload";
 
 }

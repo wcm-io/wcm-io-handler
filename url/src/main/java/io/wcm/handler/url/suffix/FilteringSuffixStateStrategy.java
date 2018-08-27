@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -45,7 +46,7 @@ public final class FilteringSuffixStateStrategy implements SuffixStateKeepingStr
   }
 
   @Override
-  public List<String> getSuffixPartsToKeep(SlingHttpServletRequest request) {
+  public @NotNull List<String> getSuffixPartsToKeep(@NotNull SlingHttpServletRequest request) {
 
     // get and split suffix parts from the current request
     String existingSuffix = request.getRequestPathInfo().getSuffix();

@@ -33,6 +33,8 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.WCMMode;
@@ -77,25 +79,26 @@ public final class DamMediaSource extends MediaSource {
   /**
    * Media source ID
    */
-  public static final String ID = "dam";
+  public static final @NotNull String ID = "dam";
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return ID;
   }
 
   @Override
-  public boolean accepts(String mediaRef) {
+  public boolean accepts(@Nullable String mediaRef) {
     return StringUtils.startsWith(mediaRef, "/content/dam/");
   }
 
   @Override
-  public String getPrimaryMediaRefProperty() {
+  public @NotNull String getPrimaryMediaRefProperty() {
     return MediaNameConstants.PN_MEDIA_REF;
   }
 
   @Override
-  public Media resolveMedia(Media media) {
+  @SuppressWarnings("null")
+  public @NotNull Media resolveMedia(@NotNull Media media) {
     String mediaRef = getMediaRef(media.getMediaRequest());
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
@@ -149,8 +152,9 @@ public final class DamMediaSource extends MediaSource {
     return media;
   }
 
+  @SuppressWarnings("null")
   @Override
-  public void enableMediaDrop(HtmlElement element, MediaRequest mediaRequest) {
+  public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
     }

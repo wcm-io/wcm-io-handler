@@ -20,5 +20,5 @@
 /**
  * URL Handler API.
  */
-@org.osgi.annotation.versioning.Version("1.1.0")
+@org.osgi.annotation.versioning.Version("1.1.1")
 package io.wcm.handler.url;

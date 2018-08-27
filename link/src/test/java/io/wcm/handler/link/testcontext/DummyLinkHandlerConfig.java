@@ -37,6 +37,7 @@ import io.wcm.handler.link.type.MediaLinkType;
 /**
  * Dummy link configuration
  */
+@SuppressWarnings("null")
 public class DummyLinkHandlerConfig extends LinkHandlerConfig {
 
   private static final List<Class<? extends LinkType>> LINK_TYPES = ImmutableList.<Class<? extends LinkType>>of(

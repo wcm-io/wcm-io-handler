@@ -23,6 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.commons.DiffInfo;
@@ -59,8 +61,9 @@ public final class MediaMarkupBuilderUtil {
    * @param refProperty Name of property for media library item reference. If null, default name is used.
    * @param request Servlet request
    */
-  public static void addDiffDecoration(HtmlElement<?> mediaElement, Resource resource, String refProperty,
-      SlingHttpServletRequest request) {
+  @SuppressWarnings("null")
+  public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
+      @NotNull String refProperty, @NotNull SlingHttpServletRequest request) {
 
     PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
     Page currentPage = pageManager.getContainingPage(request.getResource());
@@ -117,7 +120,7 @@ public final class MediaMarkupBuilderUtil {
    * @param media Media metadata
    * @return Dimension
    */
-  public static Dimension getMediaformatDimension(Media media) {
+  public static @NotNull Dimension getMediaformatDimension(@NotNull Media media) {
     // Create dummy image element to be displayed in Edit mode as placeholder.
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
@@ -151,7 +154,8 @@ public final class MediaMarkupBuilderUtil {
    * @param wcmComponentContext WCM component context
    * @return true if drag&amp;droup can be applied.
    */
-  public static boolean canApplyDragDropSupport(MediaRequest mediaRequest, ComponentContext wcmComponentContext) {
+  public static boolean canApplyDragDropSupport(@NotNull MediaRequest mediaRequest,
+      @Nullable ComponentContext wcmComponentContext) {
     switch (mediaRequest.getMediaArgs().getDragDropSupport()) {
       case ALWAYS:
         return true;

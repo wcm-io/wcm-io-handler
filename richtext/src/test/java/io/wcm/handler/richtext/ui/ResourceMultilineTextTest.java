@@ -35,6 +35,7 @@ import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("null")
 public class ResourceMultilineTextTest {
 
   @Rule

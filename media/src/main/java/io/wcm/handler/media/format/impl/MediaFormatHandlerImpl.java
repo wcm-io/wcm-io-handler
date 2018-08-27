@@ -31,6 +31,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableSortedSet;
 
@@ -80,7 +82,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Media format or null if no match found
    */
   @Override
-  public MediaFormat getMediaFormat(String mediaFormatName) {
+  public MediaFormat getMediaFormat(@NotNull String mediaFormatName) {
     return getMediaFormatMap().get(mediaFormatName);
   }
 
@@ -89,7 +91,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Media formats sorted by media format name.
    */
   @Override
-  public SortedSet<MediaFormat> getMediaFormats() {
+  public @NotNull SortedSet<MediaFormat> getMediaFormats() {
     return getMediaFormatsForCurrentResource();
   }
 
@@ -99,7 +101,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Media formats
    */
   @Override
-  public SortedSet<MediaFormat> getMediaFormats(Comparator<MediaFormat> comparator) {
+  public @NotNull SortedSet<MediaFormat> getMediaFormats(@NotNull Comparator<MediaFormat> comparator) {
     SortedSet<MediaFormat> set = new TreeSet<>(comparator);
     set.addAll(getMediaFormatsForCurrentResource());
     return ImmutableSortedSet.copyOf(set);
@@ -113,7 +115,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
   @Override
-  public SortedSet<MediaFormat> getSameBiggerMediaFormats(MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
+  public @NotNull SortedSet<MediaFormat> getSameBiggerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
     SortedSet<MediaFormat> matchingFormats = new TreeSet<>(new MediaFormatSizeRankingComparator());
 
     // if filter by rendition group is enabled, but the requested media format does not define one,
@@ -160,7 +162,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
   @Override
-  public SortedSet<MediaFormat> getSameSmallerMediaFormats(MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
+  public @NotNull SortedSet<MediaFormat> getSameSmallerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
     SortedSet<MediaFormat> matchingFormats = new TreeSet<>(new MediaFormatSizeRankingComparator());
 
     // if filter by rendition group is enabled, but the requested media format does not define one,
@@ -270,7 +272,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Media format or null if no matching media format found
    */
   @Override
-  public MediaFormat detectMediaFormat(String extension, long fileSize, long width, long height) {
+  public MediaFormat detectMediaFormat(@Nullable String extension, long fileSize, long width, long height) {
     SortedSet<MediaFormat> matchingFormats = detectMediaFormats(extension, fileSize, width, height);
     return !matchingFormats.isEmpty() ? matchingFormats.first() : null;
   }
@@ -284,7 +286,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats sorted by their ranking or an empty list if no matching format was found
    */
   @Override
-  public SortedSet<MediaFormat> detectMediaFormats(String extension, long fileSize, long width, long height) {
+  public @NotNull SortedSet<MediaFormat> detectMediaFormats(@Nullable String extension, long fileSize, long width, long height) {
 
     // sort media formats by ranking
     SortedSet<MediaFormat> matchingFormats = new TreeSet<>(new MediaFormatRankingComparator());

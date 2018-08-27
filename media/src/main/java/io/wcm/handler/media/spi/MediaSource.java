@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
@@ -53,19 +55,20 @@ public abstract class MediaSource {
   /**
    * @return Media source ID
    */
-  public abstract String getId();
+  public abstract @NotNull String getId();
 
   /**
    * @return Name of the property in which the primary media request is stored
    */
-  public abstract String getPrimaryMediaRefProperty();
+  public abstract @Nullable String getPrimaryMediaRefProperty();
 
   /**
    * Checks whether a media request can be handled by this media source
    * @param mediaRequest Media request
    * @return true if this media source can handle the given media request
    */
-  public boolean accepts(MediaRequest mediaRequest) {
+  @SuppressWarnings("null")
+  public boolean accepts(@NotNull MediaRequest mediaRequest) {
     // if an explicit media request is set check this first
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
       return accepts(mediaRequest.getMediaRef());
@@ -90,14 +93,14 @@ public abstract class MediaSource {
    * @param mediaRef Media request string
    * @return true if this media source can handle the given media request
    */
-  public abstract boolean accepts(String mediaRef);
+  public abstract boolean accepts(@Nullable String mediaRef);
 
   /**
    * Resolves a media request
    * @param media Media metadata
    * @return Resolved media metadata. Never null.
    */
-  public abstract Media resolveMedia(Media media);
+  public abstract @NotNull Media resolveMedia(@NotNull Media media);
 
   /**
    * Create a ExtJS drop area for given HTML element to enable drag and drop of media library items
@@ -105,13 +108,14 @@ public abstract class MediaSource {
    * @param element Html element
    * @param mediaRequest Media request to detect media args and property names
    */
-  public abstract void enableMediaDrop(HtmlElement<?> element, MediaRequest mediaRequest);
+  public abstract void enableMediaDrop(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest);
 
   /**
    * Get media request path to media library
    * @param mediaRequest Media request
    * @return Path or null if not present
    */
+  @SuppressWarnings("null")
   protected final String getMediaRef(MediaRequest mediaRequest) {
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
       return mediaRequest.getMediaRef();
@@ -143,6 +147,7 @@ public abstract class MediaSource {
    * @param mediaRequest Media request
    * @return Crop dimension or null if not set or invalid
    */
+  @SuppressWarnings("null")
   protected final CropDimension getMediaCropDimension(MediaRequest mediaRequest) {
     if (mediaRequest.getResource() != null) {
       String cropProperty = getMediaCropProperty(mediaRequest);

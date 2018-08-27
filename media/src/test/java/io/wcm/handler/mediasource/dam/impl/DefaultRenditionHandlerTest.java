@@ -30,6 +30,7 @@ import com.day.cq.dam.api.Asset;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
+@SuppressWarnings("null")
 public class DefaultRenditionHandlerTest extends AbstractDamTest {
 
   private DefaultRenditionHandler underTest;

@@ -33,6 +33,7 @@ class UrlConfig {
   private final String siteUrlSecure;
   private final String siteUrlAuthor;
 
+  @SuppressWarnings({ "null", "unused" })
   UrlConfig(Adaptable adaptable) {
     SiteConfig config = adaptable.adaptTo(SiteConfig.class);
     if (config != null) {

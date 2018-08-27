@@ -28,6 +28,7 @@ import java.io.IOException;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
@@ -62,7 +63,7 @@ public final class AppAemContext {
    */
   private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
     @Override
-    public void execute(AemContext context) throws PersistenceException, IOException {
+    public void execute(@NotNull AemContext context) throws PersistenceException, IOException {
 
       // handler SPI
       context.registerInjectActivateService(new SiteRootDetectorImpl());

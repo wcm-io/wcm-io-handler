@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -32,7 +33,7 @@ import org.osgi.annotation.versioning.ProviderType;
 public final class DiscardSuffixStateStrategy implements SuffixStateKeepingStrategy {
 
   @Override
-  public List<String> getSuffixPartsToKeep(SlingHttpServletRequest request) {
+  public @NotNull List<String> getSuffixPartsToKeep(@NotNull SlingHttpServletRequest request) {
     // just return a empty list
     return new ArrayList<String>();
   }

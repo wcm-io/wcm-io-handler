@@ -59,6 +59,7 @@ public class ResourceMultilineText {
   private String markup;
 
   @PostConstruct
+  @SuppressWarnings("null")
   private void activate() {
     String plainTextString = resource.getValueMap().get(propertyName, String.class);
     markup = richTextHandler.get(plainTextString).textMode(TextMode.PLAIN).buildMarkup();

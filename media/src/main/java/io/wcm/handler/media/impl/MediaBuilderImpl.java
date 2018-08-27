@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
@@ -70,7 +71,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public MediaBuilder args(MediaArgs value) {
+  public @NotNull MediaBuilder args(MediaArgs value) {
     if (value == null) {
       throw new IllegalArgumentException("MediaArgs is null.");
     }
@@ -80,139 +81,139 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public MediaBuilder mediaFormats(MediaFormat... values) {
+  public @NotNull MediaBuilder mediaFormats(MediaFormat... values) {
     this.mediaArgs.mediaFormats(values);
     return this;
   }
 
   @Override
-  public MediaBuilder mandatoryMediaFormats(MediaFormat... values) {
+  public @NotNull MediaBuilder mandatoryMediaFormats(MediaFormat... values) {
     this.mediaArgs.mandatoryMediaFormats(values);
     return this;
   }
 
   @Override
-  public MediaBuilder mediaFormat(MediaFormat value) {
+  public @NotNull MediaBuilder mediaFormat(MediaFormat value) {
     this.mediaArgs.mediaFormat(value);
     return this;
   }
 
   @Override
-  public MediaBuilder mediaFormatsMandatory(boolean value) {
+  public @NotNull MediaBuilder mediaFormatsMandatory(boolean value) {
     this.mediaArgs.mediaFormatsMandatory(value);
     return this;
   }
 
   @Override
-  public MediaBuilder mediaFormatNames(String... values) {
+  public @NotNull MediaBuilder mediaFormatNames(String... values) {
     this.mediaArgs.mediaFormatNames(values);
     return this;
   }
 
   @Override
-  public MediaBuilder mandatoryMediaFormatNames(String... values) {
+  public @NotNull MediaBuilder mandatoryMediaFormatNames(String... values) {
     this.mediaArgs.mandatoryMediaFormatNames(values);
     return this;
   }
 
   @Override
-  public MediaBuilder mediaFormatName(String value) {
+  public @NotNull MediaBuilder mediaFormatName(String value) {
     this.mediaArgs.mediaFormatName(value);
     return this;
   }
 
   @Override
-  public MediaBuilder fileExtensions(String... values) {
+  public @NotNull MediaBuilder fileExtensions(String... values) {
     this.mediaArgs.fileExtensions(values);
     return this;
   }
 
   @Override
-  public MediaBuilder fileExtension(String value) {
+  public @NotNull MediaBuilder fileExtension(String value) {
     this.mediaArgs.fileExtension(value);
     return this;
   }
 
   @Override
-  public MediaBuilder urlMode(UrlMode value) {
+  public @NotNull MediaBuilder urlMode(UrlMode value) {
     this.mediaArgs.urlMode(value);
     return this;
   }
 
   @Override
-  public MediaBuilder fixedWidth(long value) {
+  public @NotNull MediaBuilder fixedWidth(long value) {
     this.mediaArgs.fixedWidth(value);
     return this;
   }
 
   @Override
-  public MediaBuilder fixedHeight(long value) {
+  public @NotNull MediaBuilder fixedHeight(long value) {
     this.mediaArgs.fixedHeight(value);
     return this;
   }
 
   @Override
-  public MediaBuilder fixedDimension(long widthValue, long heightValue) {
+  public @NotNull MediaBuilder fixedDimension(long widthValue, long heightValue) {
     this.mediaArgs.fixedDimension(widthValue, heightValue);
     return this;
   }
 
   @Override
-  public MediaBuilder contentDispositionAttachment(boolean value) {
+  public @NotNull MediaBuilder contentDispositionAttachment(boolean value) {
     this.mediaArgs.contentDispositionAttachment(value);
     return this;
   }
 
   @Override
-  public MediaBuilder altText(String value) {
+  public @NotNull MediaBuilder altText(String value) {
     this.mediaArgs.altText(value);
     return this;
   }
 
   @Override
-  public MediaBuilder dummyImage(boolean value) {
+  public @NotNull MediaBuilder dummyImage(boolean value) {
     this.mediaArgs.dummyImage(value);
     return this;
   }
 
   @Override
-  public MediaBuilder dummyImageUrl(String value) {
+  public @NotNull MediaBuilder dummyImageUrl(String value) {
     this.mediaArgs.dummyImageUrl(value);
     return this;
   }
 
   @Override
-  public MediaBuilder includeAssetThumbnails(boolean value) {
+  public @NotNull MediaBuilder includeAssetThumbnails(boolean value) {
     this.mediaArgs.includeAssetThumbnails(value);
     return this;
   }
 
   @Override
-  public MediaBuilder dragDropSupport(DragDropSupport value) {
+  public @NotNull MediaBuilder dragDropSupport(DragDropSupport value) {
     this.mediaArgs.dragDropSupport(value);
     return this;
   }
 
   @Override
-  public MediaBuilder property(String key, Object value) {
+  public @NotNull MediaBuilder property(String key, Object value) {
     this.mediaArgs.property(key, value);
     return this;
   }
 
   @Override
-  public MediaBuilder refProperty(String value) {
+  public @NotNull MediaBuilder refProperty(String value) {
     this.refProperty = value;
     return this;
   }
 
   @Override
-  public MediaBuilder cropProperty(String value) {
+  public @NotNull MediaBuilder cropProperty(String value) {
     this.cropProperty = value;
     return this;
   }
 
   @Override
-  public Media build() {
+  public @NotNull Media build() {
     MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
         this.refProperty, this.cropProperty);
     return mediaHandler.processRequest(request);

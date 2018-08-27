@@ -22,6 +22,7 @@ package io.wcm.handler.media.testcontext;
 import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 
@@ -47,7 +48,7 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
   }
 
   @Override
-  public List<IntegratorMode> getIntegratorModes() {
+  public @NotNull List<IntegratorMode> getIntegratorModes() {
     return INTEGRATOR_MODES;
   }
 

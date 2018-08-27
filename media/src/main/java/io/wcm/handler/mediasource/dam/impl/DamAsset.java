@@ -25,6 +25,7 @@ import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.dam.api.DamConstants;
 
@@ -85,17 +86,18 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
+  @SuppressWarnings("null")
   public String getDescription() {
     return this.properties.get(DamConstants.DC_DESCRIPTION, String.class);
   }
 
   @Override
-  public String getPath() {
+  public @NotNull String getPath() {
     return this.damAsset.getPath();
   }
 
   @Override
-  public ValueMap getProperties() {
+  public @NotNull ValueMap getProperties() {
     return this.properties;
   }
 
@@ -105,7 +107,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getRendition(MediaArgs mediaArgs) {
+  public Rendition getRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getDamRendition(mediaArgs);
 
     // check if rendition is valid - otherwise return null
@@ -117,7 +119,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getImageRendition(MediaArgs mediaArgs) {
+  public Rendition getImageRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isImage()) {
       return rendition;
@@ -128,7 +130,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getFlashRendition(MediaArgs mediaArgs) {
+  public Rendition getFlashRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isFlash()) {
       return rendition;
@@ -139,7 +141,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  public Rendition getDownloadRendition(MediaArgs mediaArgs) {
+  public Rendition getDownloadRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
     if (rendition != null && rendition.isDownload()) {
       return rendition;

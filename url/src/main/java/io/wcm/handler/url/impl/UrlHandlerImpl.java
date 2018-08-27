@@ -33,6 +33,7 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.settings.SlingSettingsService;
+import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.wcm.api.Page;
 
@@ -67,22 +68,23 @@ public final class UrlHandlerImpl implements UrlHandler {
   private Page currentPage;
 
   @Override
-  public UrlBuilder get(String path) {
+  public @NotNull UrlBuilder get(@NotNull String path) {
     return new UrlBuilderImpl(path, this);
   }
 
   @Override
-  public UrlBuilder get(Resource resource) {
+  public @NotNull UrlBuilder get(@NotNull Resource resource) {
     return new UrlBuilderImpl(resource, this);
   }
 
   @Override
-  public UrlBuilder get(Page page) {
+  public @NotNull UrlBuilder get(@NotNull Page page) {
     return new UrlBuilderImpl(page, this);
   }
 
   @Override
-  public String rewritePathToContext(final Resource resource) {
+  @SuppressWarnings({ "null", "unused" })
+  public String rewritePathToContext(@NotNull final Resource resource) {
     if (resource == null) {
       return null;
     }
@@ -95,7 +97,8 @@ public final class UrlHandlerImpl implements UrlHandler {
   }
 
   @Override
-  public String rewritePathToContext(final Resource resource, final Resource contextResource) {
+  @SuppressWarnings({ "null", "unused" })
+  public String rewritePathToContext(@NotNull final Resource resource, @NotNull final Resource contextResource) {
     if (resource == null) {
       return null;
     }
@@ -150,6 +153,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     return externalizedUrl;
   }
 
+  @SuppressWarnings("null")
   private String getLinkUrlPrefix(UrlMode urlMode, Page targetPage) {
     UrlMode mode = ObjectUtils.defaultIfNull(urlMode, urlHandlerConfig.getDefaultUrlMode());
     return mode.getLinkUrlPrefix(self, slingSettings.getRunModes(), currentPage, targetPage);
@@ -183,6 +187,7 @@ public final class UrlHandlerImpl implements UrlHandler {
     return externalizedUrl;
   }
 
+  @SuppressWarnings("null")
   private String getResourceUrlPrefix(UrlMode urlMode, Resource targetResource) {
     UrlMode mode = ObjectUtils.defaultIfNull(urlMode, urlHandlerConfig.getDefaultUrlMode());
     return mode.getResourceUrlPrefix(self, slingSettings.getRunModes(), currentPage, targetResource);

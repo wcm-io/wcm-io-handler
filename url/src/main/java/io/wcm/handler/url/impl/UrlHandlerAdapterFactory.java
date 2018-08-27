@@ -68,7 +68,7 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
       .maximumSize(10000)
       .build();
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "null" })
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == UrlHandlerConfig.class) {
@@ -150,6 +150,7 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
     };
   }
 
+  @SuppressWarnings("null")
   private SiteConfig getSiteConfigForResource(Resource contextResource) {
     return contextResource.adaptTo(ConfigurationBuilder.class).as(SiteConfig.class);
   }

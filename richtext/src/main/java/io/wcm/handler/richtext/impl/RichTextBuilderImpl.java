@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.apache.sling.api.resource.Resource;
 import org.jdom2.Content;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.richtext.RichText;
@@ -63,25 +64,25 @@ final class RichTextBuilderImpl implements RichTextBuilder {
   }
 
   @Override
-  public RichTextBuilder urlMode(UrlMode value) {
+  public @NotNull RichTextBuilder urlMode(UrlMode value) {
     this.urlMode = value;
     return this;
   }
 
   @Override
-  public RichTextBuilder textMode(TextMode value) {
+  public @NotNull RichTextBuilder textMode(TextMode value) {
     this.textMode = value;
     return this;
   }
 
   @Override
-  public RichTextBuilder mediaArgs(MediaArgs value) {
+  public @NotNull RichTextBuilder mediaArgs(MediaArgs value) {
     this.mediaArgs = value;
     return this;
   }
 
   @Override
-  public RichText build() {
+  public @NotNull RichText build() {
     RichTextRequest request = new RichTextRequest(this.resource, this.text, this.urlMode,
         this.textMode, this.mediaArgs);
     return this.richTextHandler.processRequest(request);
@@ -93,7 +94,7 @@ final class RichTextBuilderImpl implements RichTextBuilder {
   }
 
   @Override
-  public Collection<Content> buildContent() {
+  public @NotNull Collection<Content> buildContent() {
     return build().getContent();
   }
 

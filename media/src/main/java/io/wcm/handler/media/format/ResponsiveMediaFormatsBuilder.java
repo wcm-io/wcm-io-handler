@@ -22,6 +22,7 @@ package io.wcm.handler.media.format;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.MediaNameConstants;
@@ -45,7 +46,7 @@ public final class ResponsiveMediaFormatsBuilder {
   /**
    * @param mainMediaFormat Main media format from which the reponsive "on-the-fly" formats are derived from.
    */
-  public ResponsiveMediaFormatsBuilder(MediaFormat mainMediaFormat) {
+  public ResponsiveMediaFormatsBuilder(@NotNull MediaFormat mainMediaFormat) {
     this.mainMediaFormat = mainMediaFormat;
   }
 
@@ -56,7 +57,7 @@ public final class ResponsiveMediaFormatsBuilder {
    * @param height Height for the breakpoint
    * @return this
    */
-  public ResponsiveMediaFormatsBuilder breakpoint(String breakpoint, int width, int height) {
+  public ResponsiveMediaFormatsBuilder breakpoint(@NotNull String breakpoint, int width, int height) {
     mediaFormats.add(MediaFormatBuilder.create(buildCombinedName(mainMediaFormat, breakpoint, width, height))
         .label(mainMediaFormat.getLabel())
         .extensions(mainMediaFormat.getExtensions())
@@ -76,7 +77,7 @@ public final class ResponsiveMediaFormatsBuilder {
     return mediaFormats.toArray(new MediaFormat[mediaFormats.size()]);
   }
 
-  static String buildCombinedName(MediaFormat mediaFormat, String breakpoint, int width, int height) {
+  static @NotNull String buildCombinedName(MediaFormat mediaFormat, String breakpoint, int width, int height) {
     return mediaFormat.getName() + "_" + breakpoint + "_" + width + "_" + height;
   }
 

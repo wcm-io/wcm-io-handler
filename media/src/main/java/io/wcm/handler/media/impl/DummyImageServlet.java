@@ -28,6 +28,7 @@ import javax.servlet.Servlet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 
 import com.day.cq.wcm.commons.AbstractImageServlet;
@@ -52,23 +53,24 @@ public final class DummyImageServlet extends AbstractImageServlet {
   /**
    * Dummy image content path
    */
-  public static final String PATH = "/apps/wcm-io/handler/media/content/dummyImage";
+  public static final @NotNull String PATH = "/apps/wcm-io/handler/media/content/dummyImage";
 
   /**
    * Suffix for width
    */
-  public static final String SUFFIX_WIDTH = "width";
+  public static final @NotNull String SUFFIX_WIDTH = "width";
 
   /**
    * Suffix for height
    */
-  public static final String SUFFIX_HEIGHT = "height";
+  public static final @NotNull String SUFFIX_HEIGHT = "height";
 
   /**
    * Suffix for Name of mediaformat (optional)
    */
-  public static final String SUFFIX_MEDIA_FORMAT_NAME = "mf";
+  public static final @NotNull String SUFFIX_MEDIA_FORMAT_NAME = "mf";
 
+  @SuppressWarnings("null")
   @Override
   protected Layer createLayer(ImageContext ctx) throws RepositoryException, IOException {
     SuffixParser parser = new SuffixParser(ctx.request);

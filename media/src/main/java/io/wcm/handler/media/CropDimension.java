@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.wcm.commons.util.ToStringStyle;
@@ -99,14 +100,14 @@ public final class CropDimension extends Dimension {
    * @return Crop string.
    *         Please note: Crop string contains no width/height as 3rd/4th parameter but right, bottom.
    */
-  public String getCropString() {
+  public @NotNull String getCropString() {
     return getLeft() + "," + getTop() + "," + getRight() + "," + getBottom();
   }
 
   /**
    * @return Rectangle
    */
-  public Rectangle2D getRectangle() {
+  public @NotNull Rectangle2D getRectangle() {
     return new Rectangle((int)getLeft(), (int)getTop(), (int)getWidth(), (int)getHeight());
   }
 
@@ -117,7 +118,7 @@ public final class CropDimension extends Dimension {
    * @return Crop dimension instance
    * @throws IllegalArgumentException if crop string syntax is invalid
    */
-  public static CropDimension fromCropString(String cropString) {
+  public static @NotNull CropDimension fromCropString(@NotNull String cropString) {
     if (StringUtils.isEmpty(cropString)) {
       throw new IllegalArgumentException("Invalid crop string: '" + cropString + "'.");
     }

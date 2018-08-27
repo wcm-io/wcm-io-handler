@@ -55,6 +55,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 /**
  * {@link Rendition} implementation for inline media objects stored in a node in a content page.
  */
+@SuppressWarnings("null")
 class InlineRendition extends SlingAdaptable implements Rendition {
 
   private final Adaptable adaptable;
@@ -363,6 +364,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     return StringUtils.substringAfterLast(this.fileName, ".");
   }
 
+  @SuppressWarnings("unused")
   @Override
   public long getFileSize() {
     Node node = this.resource.adaptTo(Node.class);

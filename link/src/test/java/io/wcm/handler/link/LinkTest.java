@@ -40,6 +40,7 @@ import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Rendition;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class LinkTest {
 
   @Mock

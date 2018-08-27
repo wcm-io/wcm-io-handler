@@ -58,6 +58,7 @@ public class ResourceRichText {
   private String markup;
 
   @PostConstruct
+  @SuppressWarnings("null")
   private void activate() {
     String xhtmlString = resource.getValueMap().get(propertyName, String.class);
     markup = richTextHandler.get(xhtmlString).buildMarkup();

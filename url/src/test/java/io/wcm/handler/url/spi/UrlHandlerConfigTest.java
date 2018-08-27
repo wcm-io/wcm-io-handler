@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import io.wcm.handler.url.UrlModes;
 
+@SuppressWarnings("null")
 public class UrlHandlerConfigTest {
 
   private UrlHandlerConfig underTest = new UrlHandlerConfig() {

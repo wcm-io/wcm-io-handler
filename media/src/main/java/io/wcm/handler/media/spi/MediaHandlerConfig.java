@@ -22,6 +22,7 @@ package io.wcm.handler.media.spi;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
@@ -54,21 +55,21 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   /**
    * @return Supported media sources
    */
-  public List<Class<? extends MediaSource>> getSources() {
+  public @NotNull List<Class<? extends MediaSource>> getSources() {
     return DEFAULT_MEDIA_SOURCES;
   }
 
   /**
    * @return Available media markup builders
    */
-  public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
+  public @NotNull List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
     return DEFAULT_MEDIA_MARKUP_BUILDERS;
   }
 
   /**
    * @return List of media metadata pre processors (optional). The processors are applied in list order.
    */
-  public List<Class<? extends MediaProcessor>> getPreProcessors() {
+  public @NotNull List<Class<? extends MediaProcessor>> getPreProcessors() {
     // no processors
     return ImmutableList.of();
   }
@@ -76,7 +77,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   /**
    * @return List of media metadata post processors (optional). The processors are applied in list order.
    */
-  public List<Class<? extends MediaProcessor>> getPostProcessors() {
+  public @NotNull List<Class<? extends MediaProcessor>> getPostProcessors() {
     // no processors
     return ImmutableList.of();
   }

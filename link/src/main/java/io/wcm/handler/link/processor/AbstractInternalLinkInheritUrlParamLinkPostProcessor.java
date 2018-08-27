@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
   }
 
   @Override
-  public final Link process(Link link) {
+  public final @NotNull Link process(@NotNull Link link) {
 
     if (link.isValid() && link.getLinkType().getId() == InternalLinkType.ID) {
       String url = link.getUrl();

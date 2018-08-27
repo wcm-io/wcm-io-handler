@@ -25,6 +25,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.WCMMode;
@@ -58,7 +59,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
   private MediaHandlerConfig mediaHandlerConfig;
 
   @Override
-  public boolean accepts(Media media) {
+  public boolean accepts(@NotNull Media media) {
     // accept if not rendition was found and in edit mode
     // and at least one media format is given, and dummy image is not suppressed
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
@@ -70,8 +71,9 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
         && mediaArgs.isDummyImage();
   }
 
+  @SuppressWarnings({ "null", "unused" })
   @Override
-  public HtmlElement<?> build(Media media) {
+  public HtmlElement<?> build(@NotNull Media media) {
 
     // Create dummy image element to be displayed in Edit mode as placeholder.
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
@@ -102,7 +104,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
   }
 
   @Override
-  public boolean isValidMedia(HtmlElement<?> element) {
+  public boolean isValidMedia(@NotNull HtmlElement<?> element) {
     return false;
   }
 

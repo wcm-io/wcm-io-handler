@@ -28,6 +28,7 @@ import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.models.annotations.Model;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -58,7 +59,7 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
   static final String PROP_SRC = "src";
 
   @Override
-  public final boolean accepts(Media media) {
+  public final boolean accepts(@NotNull Media media) {
     return media.getMediaRequest().getMediaArgs().isMediaFormatsMandatory()
         && media.getRendition() != null
         && media.getRenditions().size() > 1
@@ -66,7 +67,7 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
   }
 
   @Override
-  public final HtmlElement<?> build(Media media) {
+  public final HtmlElement<?> build(@NotNull Media media) {
     HtmlElement<?> mediaElement = getImageElement(media);
 
     // set responsive image sources
@@ -123,6 +124,7 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
    * @param rendition Rendition
    * @return JSON metadata
    */
+  @SuppressWarnings("null")
   protected JSONObject toReponsiveImageSource(Media media, Rendition rendition) {
     try {
       JSONObject source = new JSONObject();
@@ -147,7 +149,7 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
   }
 
   @Override
-  public final boolean isValidMedia(HtmlElement<?> element) {
+  public final boolean isValidMedia(@NotNull HtmlElement<?> element) {
     if (element instanceof Image) {
       Image img = (Image)element;
       // if it's a responsive image, we don't need the src attribute set

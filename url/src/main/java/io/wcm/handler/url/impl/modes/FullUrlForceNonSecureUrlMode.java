@@ -23,6 +23,8 @@ import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
@@ -46,12 +48,14 @@ public final class FullUrlForceNonSecureUrlMode extends AbstractUrlMode {
   }
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return "FULL_URL_FORCENONSECURE";
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  public String getLinkUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Page targetPage) {
+  public String getLinkUrlPrefix(@NotNull Adaptable adaptable, @NotNull Set<String> runModes,
+      @Nullable Page currentPage, @Nullable Page targetPage) {
 
     // if integrator template mode with placeholders is active return link url placeholder
     IntegratorHandler integratorHandler = AdaptTo.notNull(adaptable, IntegratorHandler.class);
@@ -71,8 +75,10 @@ public final class FullUrlForceNonSecureUrlMode extends AbstractUrlMode {
     return config.getSiteUrl();
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  public String getResourceUrlPrefix(Adaptable adaptable, Set<String> runModes, Page currentPage, Resource targetResource) {
+  public String getResourceUrlPrefix(@NotNull Adaptable adaptable, @NotNull Set<String> runModes,
+      @Nullable Page currentPage, @Nullable Resource targetResource) {
 
     // if integrator template mode with placeholders is active return resource url placeholder
     IntegratorHandler integratorHandler = AdaptTo.notNull(adaptable, IntegratorHandler.class);

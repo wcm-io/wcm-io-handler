@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -42,7 +43,7 @@ import io.wcm.handler.media.Rendition;
 public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuilder {
 
   @Override
-  public final boolean accepts(Media media) {
+  public final boolean accepts(@NotNull Media media) {
     // accept if rendition is an image rendition, and resolving was successful
     return media.isValid()
         && media.getRendition() != null
@@ -50,7 +51,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   }
 
   @Override
-  public final HtmlElement<?> build(Media media) {
+  public final HtmlElement<?> build(@NotNull Media media) {
 
     // render media element for rendition
     HtmlElement<?> mediaElement = getImageElement(media);
@@ -109,7 +110,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   }
 
   @Override
-  public final boolean isValidMedia(HtmlElement<?> element) {
+  public final boolean isValidMedia(@NotNull HtmlElement<?> element) {
     if (element instanceof Image) {
       Image img = (Image)element;
       return StringUtils.isNotEmpty(img.getSrc())

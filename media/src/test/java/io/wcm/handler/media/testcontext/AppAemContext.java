@@ -23,6 +23,8 @@ import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
 import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
@@ -30,7 +32,8 @@ import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
-import io.wcm.handler.url.impl.UrlHandlerConfigAdapterFactory;
+import io.wcm.handler.url.impl.SiteRootDetectorImpl;
+import io.wcm.handler.url.impl.UrlHandlerAdapterFactory;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextBuilder;
@@ -74,10 +77,11 @@ public final class AppAemContext {
    */
   private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
     @Override
-    public void execute(AemContext context) throws Exception {
+    public void execute(@NotNull AemContext context) throws Exception {
 
       // handler SPI
-      context.registerInjectActivateService(new UrlHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new SiteRootDetectorImpl());
+      context.registerInjectActivateService(new UrlHandlerAdapterFactory());
       context.registerInjectActivateService(new DefaultUrlHandlerConfig());
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
       context.registerInjectActivateService(new MediaHandlerConfigAdapterFactory());

@@ -34,6 +34,7 @@ import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,16 +75,17 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   private List<RewriteContentHandler> rewriteContentHandlers;
 
   @Override
-  public RichTextBuilder get(Resource resource) {
+  public @NotNull RichTextBuilder get(Resource resource) {
     return new RichTextBuilderImpl(resource, this);
   }
 
   @Override
-  public RichTextBuilder get(String text) {
+  public @NotNull RichTextBuilder get(String text) {
     return new RichTextBuilderImpl(text, this);
   }
 
-  RichText processRequest(RichTextRequest richTextRequest) {
+  @NotNull
+  RichText processRequest(@NotNull RichTextRequest richTextRequest) {
     String text = getRawText(richTextRequest);
     TextMode textMode = getTextMode(richTextRequest);
 
@@ -98,6 +100,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     return new RichText(richTextRequest, content);
   }
 
+  @SuppressWarnings("null")
   private String getRawText(RichTextRequest richTextRequest) {
     if (richTextRequest.getResource() != null) {
       return richTextRequest.getResourceProperties().get(RichTextNameConstants.PN_TEXT, String.class);
@@ -167,6 +170,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     return RichTextUtil.isEmpty(text);
   }
 
+  @SuppressWarnings("null")
   private List<RewriteContentHandler> getRewriterContentHandlers() {
     if (rewriteContentHandlers == null) {
       RichTextHandlerConfig config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);

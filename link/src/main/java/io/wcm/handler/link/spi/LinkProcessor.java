@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.link.spi;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import io.wcm.handler.link.Link;
@@ -38,6 +39,7 @@ public interface LinkProcessor {
    * @param link Link metadata
    * @return Processed link metadata (never null)
    */
-  Link process(Link link);
+  @NotNull
+  Link process(@NotNull Link link);
 
 }

@@ -58,6 +58,7 @@ import io.wcm.testing.mock.aem.junit.AemContext;
  * Test {@link ResponsiveImageMediaMarkupBuilder}
  */
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("null")
 public class ResponsiveImageMediaMarkupBuilderTest {
 
   @Rule

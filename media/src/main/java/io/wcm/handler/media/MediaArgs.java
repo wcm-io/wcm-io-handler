@@ -28,6 +28,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
@@ -94,7 +95,7 @@ public final class MediaArgs implements Cloneable {
    * @param values Media formats
    * @return this
    */
-  public MediaArgs mediaFormats(MediaFormat... values) {
+  public @NotNull MediaArgs mediaFormats(MediaFormat... values) {
     if (values == null || values.length == 0) {
       this.mediaFormats = null;
     }
@@ -110,7 +111,7 @@ public final class MediaArgs implements Cloneable {
    * @param values Media formats
    * @return this
    */
-  public MediaArgs mandatoryMediaFormats(MediaFormat... values) {
+  public @NotNull MediaArgs mandatoryMediaFormats(MediaFormat... values) {
     mediaFormats(values);
     mediaFormatsMandatory(true);
     return this;
@@ -121,7 +122,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Media format
    * @return this
    */
-  public MediaArgs mediaFormat(MediaFormat value) {
+  public @NotNull MediaArgs mediaFormat(MediaFormat value) {
     if (value == null) {
       this.mediaFormats = null;
     }
@@ -147,7 +148,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Resolving of all media formats is mandatory.
    * @return this
    */
-  public MediaArgs mediaFormatsMandatory(boolean value) {
+  public @NotNull MediaArgs mediaFormatsMandatory(boolean value) {
     this.mediaFormatsMandatory = value;
     return this;
   }
@@ -165,7 +166,7 @@ public final class MediaArgs implements Cloneable {
    * @param values Media format names.
    * @return this
    */
-  public MediaArgs mediaFormatNames(String... values) {
+  public @NotNull MediaArgs mediaFormatNames(String... values) {
     if (values == null || values.length == 0) {
       this.mediaFormatNames = null;
     }
@@ -181,7 +182,7 @@ public final class MediaArgs implements Cloneable {
    * @param values Media format names.
    * @return this
    */
-  public MediaArgs mandatoryMediaFormatNames(String... values) {
+  public @NotNull MediaArgs mandatoryMediaFormatNames(String... values) {
     mediaFormatNames(values);
     mediaFormatsMandatory(true);
     return this;
@@ -192,7 +193,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Media format name
    * @return this
    */
-  public MediaArgs mediaFormatName(String value) {
+  public @NotNull MediaArgs mediaFormatName(String value) {
     if (value == null) {
       this.mediaFormatNames = null;
     }
@@ -215,7 +216,7 @@ public final class MediaArgs implements Cloneable {
    * @param values File extensions
    * @return this
    */
-  public MediaArgs fileExtensions(String... values) {
+  public @NotNull MediaArgs fileExtensions(String... values) {
     if (values == null || values.length == 0) {
       this.fileExtensions = null;
     }
@@ -229,7 +230,7 @@ public final class MediaArgs implements Cloneable {
    * @param value File extension
    * @return this
    */
-  public MediaArgs fileExtension(String value) {
+  public @NotNull MediaArgs fileExtension(String value) {
     if (value == null) {
       this.fileExtensions = null;
     }
@@ -252,7 +253,7 @@ public final class MediaArgs implements Cloneable {
    * @param value URS mode
    * @return this
    */
-  public MediaArgs urlMode(UrlMode value) {
+  public @NotNull MediaArgs urlMode(UrlMode value) {
     this.urlMode = value;
     return this;
   }
@@ -270,7 +271,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Fixed width
    * @return this
    */
-  public MediaArgs fixedWidth(long value) {
+  public @NotNull MediaArgs fixedWidth(long value) {
     this.fixedWidth = value;
     return this;
   }
@@ -288,7 +289,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Fixed height
    * @return this
    */
-  public MediaArgs fixedHeight(long value) {
+  public @NotNull MediaArgs fixedHeight(long value) {
     this.fixedHeight = value;
     return this;
   }
@@ -299,7 +300,7 @@ public final class MediaArgs implements Cloneable {
    * @param heightValue Fixed height
    * @return this
    */
-  public MediaArgs fixedDimension(long widthValue, long heightValue) {
+  public @NotNull MediaArgs fixedDimension(long widthValue, long heightValue) {
     this.fixedWidth = widthValue;
     this.fixedHeight = heightValue;
     return this;
@@ -316,7 +317,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Accept only media formats that have the download flag set.
    * @return this
    */
-  public MediaArgs download(boolean value) {
+  public @NotNull MediaArgs download(boolean value) {
     this.download = value;
     return this;
   }
@@ -333,7 +334,7 @@ public final class MediaArgs implements Cloneable {
    *          client
    * @return this
    */
-  public MediaArgs contentDispositionAttachment(boolean value) {
+  public @NotNull MediaArgs contentDispositionAttachment(boolean value) {
     this.contentDispositionAttachment = value;
     return this;
   }
@@ -350,7 +351,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Custom alternative text. If null or empty, the default alt text from media library is used.
    * @return this
    */
-  public MediaArgs altText(String value) {
+  public @NotNull MediaArgs altText(String value) {
     this.altText = value;
     return this;
   }
@@ -366,7 +367,7 @@ public final class MediaArgs implements Cloneable {
    * @param value If set to false, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
-  public MediaArgs dummyImage(boolean value) {
+  public @NotNull MediaArgs dummyImage(boolean value) {
     this.dummyImage = value;
     return this;
   }
@@ -382,7 +383,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Url of custom dummy image. If null default dummy image is used.
    * @return this
    */
-  public MediaArgs dummyImageUrl(String value) {
+  public @NotNull MediaArgs dummyImageUrl(String value) {
     this.dummyImageUrl = value;
     return this;
   }
@@ -400,7 +401,7 @@ public final class MediaArgs implements Cloneable {
    *          taken into account as well when trying to resolve the media request.
    * @return this
    */
-  public MediaArgs includeAssetThumbnails(boolean value) {
+  public @NotNull MediaArgs includeAssetThumbnails(boolean value) {
     this.includeAssetThumbnails = value;
     return this;
   }
@@ -418,7 +419,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Drag&amp;Drop support
    * @return this
    */
-  public MediaArgs dragDropSupport(DragDropSupport value) {
+  public @NotNull MediaArgs dragDropSupport(DragDropSupport value) {
     if (value == null) {
       throw new IllegalArgumentException("No null value allowed for drag&drop support.");
     }
@@ -431,7 +432,7 @@ public final class MediaArgs implements Cloneable {
    * @param map Property map. Is merged with properties already set.
    * @return this
    */
-  public MediaArgs properties(Map<String, Object> map) {
+  public @NotNull MediaArgs properties(Map<String, Object> map) {
     if (map == null) {
       throw new IllegalArgumentException("Map argument must not be null.");
     }
@@ -445,7 +446,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Property value
    * @return this
    */
-  public MediaArgs property(String key, Object value) {
+  public @NotNull MediaArgs property(String key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("Key argument must not be null.");
     }
