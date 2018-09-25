@@ -23,6 +23,7 @@ import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
+import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.link.impl.DefaultLinkHandlerConfig;
@@ -114,7 +115,7 @@ public final class AppAemContext {
           DummyAppTemplate.CONTENT.getTemplatePath()));
 
       // default site config
-      MockCAConfig.writeConfiguration(context, ROOTPATH_CONTENT, SiteConfig.class.getName(),
+      MockContextAwareConfig.writeConfiguration(context, ROOTPATH_CONTENT, SiteConfig.class.getName(),
           "siteUrl", "http://www.dummysite.org",
           "siteUrlSecure", "https://www.dummysite.org",
           "siteUrlAuthor", "https://author.dummysite.org");
@@ -122,7 +123,7 @@ public final class AppAemContext {
       // create site root page and site config for other site
       context.create().page(ROOTPATH_CONTENT_OTHER_SITE,
           DummyAppTemplate.CONTENT.getTemplatePath());
-      MockCAConfig.writeConfiguration(context, ROOTPATH_CONTENT_OTHER_SITE, SiteConfig.class.getName(),
+      MockContextAwareConfig.writeConfiguration(context, ROOTPATH_CONTENT_OTHER_SITE, SiteConfig.class.getName(),
           "siteUrl", "http://en.dummysite.org",
           "siteUrlSecure", "https://en.dummysite.org",
           "siteUrlAuthor", "https://author.dummysite.org");
