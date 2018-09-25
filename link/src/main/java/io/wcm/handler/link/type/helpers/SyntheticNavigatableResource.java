@@ -72,6 +72,9 @@ final class SyntheticNavigatableResource extends AbstractResource {
 
   @Override
   public Resource getParent() {
+    if (path == null) {
+      return null;
+    }
     return SyntheticNavigatableResource.get(ResourceUtil.getParent(path), resolver);
   }
 
