@@ -96,11 +96,11 @@ public final class AppAemContext {
       context.create().page("/content/unittest/de_test/brand/en/section/page");
 
       // default site config
-      MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", SiteConfig.class.getName(),
+      MockContextAwareConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", SiteConfig.class.getName(),
           "siteUrl", "http://de.dummysite.org",
           "siteUrlSecure", "https://de.dummysite.org",
           "siteUrlAuthor", "https://author.dummysite.org");
-      MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/en", SiteConfig.class.getName(),
+      MockContextAwareConfig.writeConfiguration(context, "/content/unittest/de_test/brand/en", SiteConfig.class.getName(),
           "siteUrl", "http://en.dummysite.org",
           "siteUrlSecure", "https://en.dummysite.org",
           "siteUrlAuthor", "https://author.dummysite.org");

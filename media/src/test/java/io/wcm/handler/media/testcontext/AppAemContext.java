@@ -23,6 +23,7 @@ import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
+import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
@@ -106,7 +107,7 @@ public final class AppAemContext {
           DummyAppTemplate.CONTENT.getTemplatePath()));
 
       // default site config
-      MockCAConfig.writeConfiguration(context, ROOTPATH_CONTENT, SiteConfig.class.getName(),
+      MockContextAwareConfig.writeConfiguration(context, ROOTPATH_CONTENT, SiteConfig.class.getName(),
           "siteUrl", "http://www.dummysite.org",
           "siteUrlSecure", "https://www.dummysite.org",
           "siteUrlAuthor", "https://author.dummysite.org");
