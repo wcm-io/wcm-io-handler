@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.settings.SlingSettingsService;
+import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.junit.Before;
 import org.junit.Rule;
 
@@ -37,7 +38,6 @@ import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
 public abstract class AbstractUrlModeTest {
 
@@ -99,7 +99,7 @@ public abstract class AbstractUrlModeTest {
   }
 
   protected void setSiteConfigNoUrl() {
-    MockCAConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", SiteConfig.class.getName(),
+    MockContextAwareConfig.writeConfiguration(context, "/content/unittest/de_test/brand/de", SiteConfig.class.getName(),
         ImmutableValueMap.of());
   }
 

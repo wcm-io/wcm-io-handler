@@ -22,6 +22,7 @@ package io.wcm.handler.link.type.helpers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
@@ -53,6 +54,14 @@ public class SyntheticNavigatableResourceTest {
     assertNotNull(content);
     assertEquals("/content", content.getPath());
     assertFalse(content instanceof SyntheticNavigatableResource);
+  }
+
+  @Test
+  public void testNullPath() {
+    Resource test2 = SyntheticNavigatableResource.get(null, context.resourceResolver());
+    assertNotNull(test2);
+    assertNull(test2.getPath());
+    assertNull(test2.getParent());
   }
 
 }

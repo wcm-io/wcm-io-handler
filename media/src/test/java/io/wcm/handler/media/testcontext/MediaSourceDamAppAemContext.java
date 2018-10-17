@@ -26,6 +26,7 @@ import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import java.io.IOException;
 
 import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.jetbrains.annotations.NotNull;
 
@@ -118,7 +119,7 @@ public final class MediaSourceDamAppAemContext {
           DummyAppTemplate.CONTENT.getTemplatePath()));
 
       // default site config
-      MockCAConfig.writeConfiguration(context, ROOTPATH_CONTENT, SiteConfig.class.getName(),
+      MockContextAwareConfig.writeConfiguration(context, ROOTPATH_CONTENT, SiteConfig.class.getName(),
           "siteUrl", "http://www.dummysite.org",
           "siteUrlSecure", "https://www.dummysite.org",
           "siteUrlAuthor", "https://author.dummysite.org");
