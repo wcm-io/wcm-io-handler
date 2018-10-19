@@ -29,11 +29,10 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
-import com.day.jcr.vault.util.Text;
+import com.day.text.Text;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.models.annotations.AemObject;
-import io.wcm.wcm.commons.util.Path;
 
 /**
  * Model for detecting site root pages.
@@ -71,8 +70,7 @@ public final class SiteRoot {
   public String getRootPath(Resource resource) {
     int rootLevel = urlHandlerConfig.getSiteRootLevel(resource);
     if (rootLevel > 0) {
-      String originalPath = Path.getOriginalPath(resource.getPath(), resource.getResourceResolver());
-      return Text.getAbsoluteParent(originalPath, rootLevel);
+      return Text.getAbsoluteParent(resource.getPath(), rootLevel);
     }
     return null;
   }
