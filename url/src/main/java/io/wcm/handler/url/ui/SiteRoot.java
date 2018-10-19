@@ -29,7 +29,6 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
-import com.day.jcr.vault.util.Text;
 
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.models.annotations.AemObject;
@@ -71,8 +70,7 @@ public final class SiteRoot {
   public String getRootPath(Resource resource) {
     int rootLevel = urlHandlerConfig.getSiteRootLevel(resource);
     if (rootLevel > 0) {
-      String originalPath = Path.getOriginalPath(resource.getPath(), resource.getResourceResolver());
-      return Text.getAbsoluteParent(originalPath, rootLevel);
+      return Path.getAbsoluteParent(resource.getPath(), rootLevel, resource.getResourceResolver());
     }
     return null;
   }
