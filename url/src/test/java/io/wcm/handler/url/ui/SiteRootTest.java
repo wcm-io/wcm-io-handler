@@ -40,6 +40,7 @@ public class SiteRootTest {
   @Before
   public void setUp() {
     context.create().page("/content/unittest/de_test/brand/de/conference");
+    context.create().page("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference");
   }
 
   @Test
@@ -102,6 +103,24 @@ public class SiteRootTest {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertFalse(underTest.isRootPage(context.pageManager().getPage("/content/unittest/de_test/brand/de")));
     assertFalse(underTest.isRootPage(context.pageManager().getPage("/content/unittest/de_test/brand/de/conference")));
+  }
+
+  @Test
+  public void testGetRootPathForLaunch() {
+    context.currentPage("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference");
+    SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
+    assertEquals("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de", underTest.getRootPath());
+
+    // check that SiteRoot also works with resources
+    underTest = context.currentResource().adaptTo(SiteRoot.class);
+    assertEquals("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de", underTest.getRootPath());
+  }
+
+  @Test
+  public void testGetRelativePageForLaunch() {
+    context.currentPage("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference");
+    SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
+    assertEquals("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference", underTest.getRelativePage("/conference").getPath());
   }
 
 }
