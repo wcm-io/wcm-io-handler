@@ -37,7 +37,10 @@
           }
         },
         "internalWell": {
-          "sling:resourceType": "granite/ui/components/foundation/well",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "sling:resourceType": "granite/ui/components/foundation/layouts/well"
+          },
           "class": "hide option-linktype-showhide-target foundation-layout-util-vmargin",
           "showhidetargetvalue": "internal",
           "items": {
@@ -51,7 +54,10 @@
           }
         },
         "externalWell": {
-          "sling:resourceType": "granite/ui/components/foundation/well",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "sling:resourceType": "granite/ui/components/foundation/layouts/well"
+          },
           "class": "hide option-linktype-showhide-target foundation-layout-util-vmargin",
           "showhidetargetvalue": "external",
           "items": {
@@ -64,7 +70,10 @@
           }
         },
         "mediaWell": {
-          "sling:resourceType": "granite/ui/components/foundation/well",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "sling:resourceType": "granite/ui/components/foundation/layouts/well"
+          },
           "class": "hide option-linktype-showhide-target foundation-layout-util-vmargin",
           "showhidetargetvalue": "media",
           "items": {
