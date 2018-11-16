@@ -27,6 +27,9 @@
       <action type="fix" dev="sseifert">
         Eliminate usage of deprecated Granite UI component granite/ui/components/foundation/well.
       </action>
+      <action type="update" dev="sseifert">
+        Hide predefined link/redirect status tabs in page create wizard.
+      </action>
     </release>
 
     <release version="1.0.10" date="2018-10-17">
