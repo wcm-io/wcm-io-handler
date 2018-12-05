@@ -1,7 +1,8 @@
 {
   "jcr:primaryType": "nt:unstructured",
-  "sling:resourceType": "granite/ui/components/foundation/section",
+  "sling:resourceType": "granite/ui/components/foundation/container",
   "jcr:title": "Link",
+  "cq:showOnCreate": false,
   "layout": {
     "sling:resourceType": "granite/ui/components/foundation/layouts/fixedcolumns"
   },
@@ -32,7 +33,10 @@
           }
         },
         "internalWell": {
-          "sling:resourceType": "granite/ui/components/foundation/well",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "sling:resourceType": "granite/ui/components/foundation/layouts/well"
+          },
           "class": "hide option-linktype-showhide-target foundation-layout-util-vmargin",
           "showhidetargetvalue": "internal",
           "items": {
@@ -46,7 +50,10 @@
           }
         },
         "externalWell": {
-          "sling:resourceType": "granite/ui/components/foundation/well",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "sling:resourceType": "granite/ui/components/foundation/layouts/well"
+          },
           "class": "hide option-linktype-showhide-target foundation-layout-util-vmargin",
           "showhidetargetvalue": "external",
           "items": {
@@ -59,7 +66,10 @@
           }
         },
         "mediaWell": {
-          "sling:resourceType": "granite/ui/components/foundation/well",
+          "sling:resourceType": "granite/ui/components/foundation/container",
+          "layout": {
+            "sling:resourceType": "granite/ui/components/foundation/layouts/well"
+          },
           "class": "hide option-linktype-showhide-target foundation-layout-util-vmargin",
           "showhidetargetvalue": "media",
           "items": {
