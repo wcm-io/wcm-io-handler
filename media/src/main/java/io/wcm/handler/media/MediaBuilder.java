@@ -203,7 +203,7 @@ public interface MediaBuilder {
   MediaBuilder property(String key, Object value);
 
   /**
-   * Sets the name of the property from which the media request is read, or node name for inline media.
+   * Sets the name of the property from which the media reference path is read, or node name for inline media.
    * @param refProperty Property or node name
    * @return Media builder
    */
