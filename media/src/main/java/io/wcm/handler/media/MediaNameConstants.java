@@ -59,7 +59,7 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_REF = "mediaRef";
 
   /**
-   * Default property name for cropping paraemters
+   * Default property name for cropping parameters
    */
   public static final @NotNull String PN_MEDIA_CROP = "mediaCrop";
 
@@ -75,7 +75,9 @@ public final class MediaNameConstants {
 
   /**
    * Default property name for flash variables
+   * @deprecated No longer in use
    */
+  @Deprecated
   public static final @NotNull String PN_FLASH_VARS = "flashVars";
 
   /**

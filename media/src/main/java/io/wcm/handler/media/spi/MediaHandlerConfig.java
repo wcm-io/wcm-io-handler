@@ -27,6 +27,7 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
 
+import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
@@ -101,6 +102,34 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
     }
     // return quality "1" for all other mime types
     return 1d;
+  }
+
+  /**
+   * @return Default property name for reference to media library item
+   */
+  public @NotNull String getMediaRefProperty() {
+    return MediaNameConstants.PN_MEDIA_REF;
+  }
+
+  /**
+   * @return Default property name for cropping parameters
+   */
+  public @NotNull String getMediaCropProperty() {
+    return MediaNameConstants.PN_MEDIA_CROP;
+  }
+
+  /**
+   * @return Default property name for media alt. text
+   */
+  public @NotNull String getMediaAltTextProperty() {
+    return MediaNameConstants.PN_MEDIA_ALTTEXT;
+  }
+
+  /**
+   * @return Default node name for inline media item stored in node within the content page
+   */
+  public @NotNull String getMediaInlineNodeName() {
+    return MediaNameConstants.NN_MEDIA_INLINE;
   }
 
 }

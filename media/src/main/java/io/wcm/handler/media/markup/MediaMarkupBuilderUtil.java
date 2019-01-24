@@ -40,6 +40,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.sling.commons.request.RequestParam;
 
@@ -60,10 +61,27 @@ public final class MediaMarkupBuilderUtil {
    * @param resource Resource pointing to JCR node
    * @param refProperty Name of property for media library item reference. If null, default name is used.
    * @param request Servlet request
+   * @deprecated Use
+   *             {@link #addDiffDecoration(HtmlElement, Resource, String, SlingHttpServletRequest, MediaHandlerConfig)}
+   */
+  @Deprecated
+  public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
+      @NotNull String refProperty, @NotNull SlingHttpServletRequest request) {
+    addDiffDecoration(mediaElement, resource, refProperty, request, null);
+  }
+
+  /**
+   * Adds CSS classes that denote the changes to the media element when compared to a different version.
+   * If no diff has been requested by the WCM UI, there won't be any changes to the element.
+   * @param mediaElement Element to be decorated
+   * @param resource Resource pointing to JCR node
+   * @param refProperty Name of property for media library item reference. If null, default name is used.
+   * @param request Servlet request
+   * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    */
   @SuppressWarnings("null")
   public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
-      @NotNull String refProperty, @NotNull SlingHttpServletRequest request) {
+      @NotNull String refProperty, @NotNull SlingHttpServletRequest request, @Nullable MediaHandlerConfig mediaHandlerConfig) {
 
     PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
     Page currentPage = pageManager.getContainingPage(request.getResource());
@@ -94,10 +112,17 @@ public final class MediaMarkupBuilderUtil {
           }
         }
         else {
+          String cropProperty;
+          if (mediaHandlerConfig != null) {
+            cropProperty = mediaHandlerConfig.getMediaCropProperty();
+          }
+          else {
+            cropProperty = MediaNameConstants.PN_MEDIA_CROP;
+          }
 
           // If the mediaRef itself hasn't changed, check the cropping coordinates
-          String currentMediaCrop = currentProperties.get(MediaNameConstants.PN_MEDIA_CROP, String.class);
-          String oldMediaCrop = oldProperties.get(MediaNameConstants.PN_MEDIA_CROP, String.class);
+          String currentMediaCrop = currentProperties.get(cropProperty, String.class);
+          String oldMediaCrop = oldProperties.get(cropProperty, String.class);
           if (!StringUtils.equals(currentMediaCrop, oldMediaCrop)) {
             mediaElement.addCssClass(MediaNameConstants.CSS_DIFF_UPDATED);
           }

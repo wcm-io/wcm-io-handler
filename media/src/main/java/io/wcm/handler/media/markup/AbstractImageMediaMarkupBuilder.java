@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.osgi.annotation.versioning.ConsumerType;
 
@@ -34,6 +35,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.sling.models.annotations.AemObject;
 
@@ -48,6 +50,9 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
 
   @SlingObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private SlingHttpServletRequest request;
+
+  @Self
+  private MediaHandlerConfig mediaHandlerConfig;
 
   /**
    * Apply Markup for Drag&amp;Drop mode and Diff decoration in WCM edit/preview mode.
@@ -70,8 +75,9 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
           media.getMediaSource().enableMediaDrop(mediaElement, media.getMediaRequest());
           // add diff decoration
           if (request != null) {
-            String refProperty = StringUtils.defaultString(media.getMediaRequest().getRefProperty(), MediaNameConstants.PN_MEDIA_REF);
-            MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request);
+            String refProperty = StringUtils.defaultString(media.getMediaRequest().getRefProperty(),
+                mediaHandlerConfig.getMediaRefProperty());
+            MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request, mediaHandlerConfig);
           }
           break;
 

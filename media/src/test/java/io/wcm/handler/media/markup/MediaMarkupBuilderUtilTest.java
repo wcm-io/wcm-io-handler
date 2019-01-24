@@ -47,6 +47,7 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
+import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MediaMarkupBuilderUtilTest {
@@ -80,7 +81,8 @@ public class MediaMarkupBuilderUtilTest {
   @Test
   public void testAddDiffDecoration() {
     Image img = new Image("/dummy/image.gif");
-    MediaMarkupBuilderUtil.addDiffDecoration(img, resource, MediaNameConstants.PN_MEDIA_REF, request);
+    MediaMarkupBuilderUtil.addDiffDecoration(img, resource, MediaNameConstants.PN_MEDIA_REF, request,
+        new DummyMediaHandlerConfig());
     assertEquals(MediaNameConstants.CSS_DIFF_ADDED, img.getCssClass());
   }
 

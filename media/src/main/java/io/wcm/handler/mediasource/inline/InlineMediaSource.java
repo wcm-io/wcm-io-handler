@@ -43,6 +43,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.impl.JcrBinary;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.sling.commons.util.Escape;
 
@@ -57,6 +58,8 @@ public final class InlineMediaSource extends MediaSource {
 
   @Self
   private Adaptable adaptable;
+  @Self
+  private MediaHandlerConfig mediaHandlerConfig;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private MimeTypeService mimeTypeService;
 
@@ -127,11 +130,11 @@ public final class InlineMediaSource extends MediaSource {
     if (StringUtils.isEmpty(mediaArgs.getAltText()) && referencedResource != null) {
       // otherwise check if there is a custom altText specified in the component's properties
       ValueMap props = referencedResource.getValueMap();
-      mediaArgs.altText(props.get(MediaNameConstants.PN_MEDIA_ALTTEXT, String.class));
+      mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
     }
 
     // Check for crop dimensions
-    media.setCropDimension(getMediaCropDimension(media.getMediaRequest()));
+    media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
 
     // detect and clean up file name
     String fileName = detectFileName(referencedResource, ntFileResource, ntResourceResource);
@@ -254,7 +257,7 @@ public final class InlineMediaSource extends MediaSource {
     }
 
     // check if child node exists which is a nt:file node
-    String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), MediaNameConstants.NN_MEDIA_INLINE);
+    String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), mediaHandlerConfig.getMediaInlineNodeName());
     Resource mediaInlineResource = resource.getChild(refProperty);
     if (JcrBinary.isNtFileOrResource(mediaInlineResource)) {
       return mediaInlineResource;
