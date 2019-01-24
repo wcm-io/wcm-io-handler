@@ -30,6 +30,9 @@
       <action type="add" dev="sseifert">
         ResourceMedia: Add optional parameters for refProperty and cropProperty.
       </action>
+      <action type="fix" dev="sseifert">
+        DamMediaSource: Make us of existing "media" drop target instead off adding a new one.
+      </action>
     </release>
 
     <release version="1.0.10" date="2018-08-27">

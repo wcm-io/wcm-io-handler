@@ -21,7 +21,9 @@ package io.wcm.handler.mediasource.dam;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -154,53 +156,72 @@ public final class DamMediaSource extends MediaSource {
     return media;
   }
 
-  @SuppressWarnings("null")
   @Override
+  @SuppressWarnings("null")
   public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
     }
 
-    String refProperty = getMediaRefProperty(mediaRequest, mediaHandlerConfig);
-    if (!StringUtils.startsWith(refProperty, "./")) {
-      refProperty = "./" + refProperty; //NOPMD
-    }
-
-    String cropProperty = getMediaCropProperty(mediaRequest, mediaHandlerConfig);
-    if (!StringUtils.startsWith(cropProperty, "./")) {
-      cropProperty = "./" + cropProperty; //NOPMD
-    }
-
-    String name = refProperty;
-    if (StringUtils.contains(name, "/")) {
-      name = Text.getName(name);
-    }
-
     if (componentContext != null && componentContext.getEditContext() != null
         && MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext)) {
-      Component componentDefinition = WCMUtils.getComponent(resource);
 
-      // set drop target - with path of current component as default resource type
-      Map<String, String> params = new HashMap<String, String>();
-      if (componentDefinition != null) {
-        params.put("./" + ResourceResolver.PROPERTY_RESOURCE_TYPE, componentDefinition.getPath());
-
-        // clear cropping parameters if a new image is inserted via drag&drop
-        params.put(cropProperty, "");
+      String refProperty = getMediaRefProperty(mediaRequest, mediaHandlerConfig);
+      if (!StringUtils.startsWith(refProperty, "./")) {
+        refProperty = "./" + refProperty; //NOPMD
       }
 
-      DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(new String[] {
-          "image/.*" // allow all image mime types
-      }).setGroups(new String[] {
-          "media" // allow drop from DAM contentfinder tab
-      }).setParameters(params);
+      String cropProperty = getMediaCropProperty(mediaRequest, mediaHandlerConfig);
+      if (!StringUtils.startsWith(cropProperty, "./")) {
+        cropProperty = "./" + cropProperty; //NOPMD
+      }
 
-      componentContext.getEditContext().getEditConfig().getDropTargets().put(dropTarget.getId(), dropTarget);
+      String name = refProperty;
+      if (StringUtils.contains(name, "/")) {
+        name = Text.getName(name);
+      }
+
+      // check of drop target for "media" group already exists - get it's id for the cq-dd- css class
+      Optional<String> dropTargetCssClass = getMediaDropTargetID();
+      if (!dropTargetCssClass.isPresent()) {
+        // otherwise add a new drop target and get it's id
+        dropTargetCssClass = addMediaDroptarget(refProperty, cropProperty, name);
+      }
 
       if (element != null) {
-        element.addCssClass(DropTarget.CSS_CLASS_PREFIX + name);
+        element.addCssClass(dropTargetCssClass.get());
       }
     }
+  }
+
+  private Optional<String> getMediaDropTargetID() {
+    return componentContext.getEditContext().getEditConfig().getDropTargets().values().stream()
+        .filter(item -> ArrayUtils.contains(item.getGroups(), "media"))
+        .map(item -> item.getId())
+        .findFirst();
+  }
+
+  private Optional<String> addMediaDroptarget(String refProperty, String cropProperty, String name) {
+    Component componentDefinition = WCMUtils.getComponent(resource);
+
+    // set drop target - with path of current component as default resource type
+    Map<String, String> params = new HashMap<String, String>();
+    if (componentDefinition != null) {
+      params.put("./" + ResourceResolver.PROPERTY_RESOURCE_TYPE, componentDefinition.getPath());
+
+      // clear cropping parameters if a new image is inserted via drag&drop
+      params.put(cropProperty, "");
+    }
+
+    DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(new String[] {
+        "image/.*" // allow all image mime types
+    }).setGroups(new String[] {
+        "media" // allow drop from DAM contentfinder tab
+    }).setParameters(params);
+
+    componentContext.getEditContext().getEditConfig().getDropTargets().put(dropTarget.getId(), dropTarget);
+
+    return Optional.of(dropTarget.getId());
   }
 
   @Override
