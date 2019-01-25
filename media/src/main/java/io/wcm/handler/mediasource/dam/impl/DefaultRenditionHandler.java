@@ -21,7 +21,6 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -45,6 +44,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 class DefaultRenditionHandler implements RenditionHandler {
 
   private Set<RenditionMetadata> renditions;
+  private final RenditionMetadata originalRendition;
   private final Asset asset;
 
   /**
@@ -52,6 +52,9 @@ class DefaultRenditionHandler implements RenditionHandler {
    */
   DefaultRenditionHandler(Asset asset) {
     this.asset = asset;
+
+    Rendition damOriginalRendition = asset.getOriginal();
+    originalRendition = damOriginalRendition != null ? new RenditionMetadata(damOriginalRendition) : null;
   }
 
   /**
@@ -153,7 +156,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if request does not contain any size restrictions return original image or first by filename matching rendition
     if (!isSizeMatchingRequest) {
-      return getFirstRendition(candidates);
+      return getOriginalOrFirstRendition(candidates);
     }
 
     // original rendition is a image - check for matching rendition or build virtual one
@@ -299,7 +302,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // no restriction - return original or first rendition
     else {
-      return getFirstRendition(candidates);
+      return getOriginalOrFirstRendition(candidates);
     }
 
     // none found
@@ -307,13 +310,24 @@ class DefaultRenditionHandler implements RenditionHandler {
   }
 
   /**
-   * Returns the first candidate.
+   * Returns original rendition - if it is contained in the candidate set. Otherwise first candidate is returned.
+   * If a VirtualCropRenditionMetadata is present always the first one is returned.
    * @param candidates Candidates
-   * @return First rendition of candidates or null
+   * @return Original or first rendition of candidates or null
    */
-  private RenditionMetadata getFirstRendition(Set<RenditionMetadata> candidates) {
-    Optional<RenditionMetadata> firstRendition = candidates.stream().findFirst();
-    return firstRendition.orElse(null);
+  private RenditionMetadata getOriginalOrFirstRendition(Set<RenditionMetadata> candidates) {
+    boolean hasCroppingRendition = candidates.stream()
+        .filter(item -> item instanceof VirtualCropRenditionMetadata)
+        .count() > 0;
+    if (!hasCroppingRendition && this.originalRendition != null && candidates.contains(this.originalRendition)) {
+      return this.originalRendition;
+    }
+    else if (!candidates.isEmpty()) {
+      return candidates.iterator().next();
+    }
+    else {
+      return null;
+    }
   }
 
   /**
