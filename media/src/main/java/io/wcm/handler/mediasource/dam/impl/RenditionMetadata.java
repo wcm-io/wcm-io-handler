@@ -19,6 +19,15 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import static com.day.cq.dam.api.DamConstants.EXIF_PIXELXDIMENSION;
+import static com.day.cq.dam.api.DamConstants.EXIF_PIXELYDIMENSION;
+import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
+import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.NN_RENDITIONS_METADATA;
+import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_HEIGHT;
+import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_WIDTH;
+
 import java.io.InputStream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +39,6 @@ import org.apache.sling.api.resource.ValueMap;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
@@ -76,28 +84,28 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     if (isOriginal) {
       // get width/height from metadata for original renditions
       try {
-        imageWidth = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(DamConstants.TIFF_IMAGEWIDTH), "0"));
+        imageWidth = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(TIFF_IMAGEWIDTH), "0"));
       }
       catch (NumberFormatException ex) {
         // ignore
       }
       if (imageWidth == 0) {
         try {
-          imageWidth = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(DamConstants.EXIF_PIXELXDIMENSION), "0"));
+          imageWidth = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(EXIF_PIXELXDIMENSION), "0"));
         }
         catch (NumberFormatException ex) {
           // ignore
         }
       }
       try {
-        imageHeight = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(DamConstants.TIFF_IMAGELENGTH), "0"));
+        imageHeight = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(TIFF_IMAGELENGTH), "0"));
       }
       catch (NumberFormatException ex) {
         // ignore
       }
       if (imageHeight == 0) {
         try {
-          imageHeight = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(DamConstants.EXIF_PIXELYDIMENSION), "0"));
+          imageHeight = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(EXIF_PIXELYDIMENSION), "0"));
         }
         catch (NumberFormatException ex) {
           // ignore
@@ -106,12 +114,12 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
     else if (FileExtension.isImage(this.fileExtension)) {
       // otherwise get from rendition metadata written by {@link DamRenditionMetadataService}
-      String metadataPath = JcrConstants.JCR_CONTENT + "/" + DamRenditionMetadataService.NN_RENDITIONS_METADATA + "/" + rendition.getName();
+      String metadataPath = JcrConstants.JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/" + rendition.getName();
       Resource metadataResource = asset.adaptTo(Resource.class).getChild(metadataPath);
       if (metadataResource != null) {
         ValueMap props = metadataResource.getValueMap();
-        imageWidth = props.get(DamRenditionMetadataService.PN_IMAGE_WIDTH, 0);
-        imageHeight = props.get(DamRenditionMetadataService.PN_IMAGE_HEIGHT, 0);
+        imageWidth = props.get(PN_IMAGE_WIDTH, 0);
+        imageHeight = props.get(PN_IMAGE_HEIGHT, 0);
       }
     }
     this.width = imageWidth;
@@ -123,7 +131,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @return true if rendition is the original file that was uploaded initially
    */
   private boolean isOriginalRendition(Rendition value) {
-    return StringUtils.equals(value.getName(), DamConstants.ORIGINAL_FILE);
+    return StringUtils.equals(value.getName(), ORIGINAL_FILE);
   }
 
   /**

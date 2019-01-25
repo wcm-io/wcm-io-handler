@@ -105,31 +105,70 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * With this switch it's possible to switch all used property and node names from (legacy) wcm.io
+   * Handler standard to Adobe Standard (as used e.g. in Adobe Core WCM Components) - e.g.
+   * using "fileReference" instead of property name "mediaRef" for the asset reference.
+   * <p>
+   * The benefit of the wcm.io Handler standard was that it supported storage multiple asset references
+   * in one single node - but this it not well supported by the Touch UI anyway, so it's not of much
+   * use nowadays.
+   * </p>
+   * <p>
+   * For new projects it is recommended to always use the Adobe standard names. But for backward compatibility
+   * the default values is false.
+   * </p>
+   * @return If true, Adobe standard property and node names are used.
+   */
+  public boolean useAdobeStandardNames() {
+    return false;
+  }
+
+  /**
    * @return Default property name for reference to media library item
    */
   public @NotNull String getMediaRefProperty() {
-    return MediaNameConstants.PN_MEDIA_REF;
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_REF_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_REF;
+    }
   }
 
   /**
    * @return Default property name for cropping parameters
    */
   public @NotNull String getMediaCropProperty() {
-    return MediaNameConstants.PN_MEDIA_CROP;
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_CROP_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_CROP;
+    }
   }
 
   /**
    * @return Default property name for media alt. text
    */
   public @NotNull String getMediaAltTextProperty() {
-    return MediaNameConstants.PN_MEDIA_ALTTEXT;
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_ALTTEXT_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_ALTTEXT;
+    }
   }
 
   /**
    * @return Default node name for inline media item stored in node within the content page
    */
   public @NotNull String getMediaInlineNodeName() {
-    return MediaNameConstants.NN_MEDIA_INLINE;
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.NN_MEDIA_INLINE_STANDARD;
+    }
+    else {
+      return MediaNameConstants.NN_MEDIA_INLINE;
+    }
   }
 
 }

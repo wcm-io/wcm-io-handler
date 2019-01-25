@@ -311,11 +311,15 @@ class DefaultRenditionHandler implements RenditionHandler {
 
   /**
    * Returns original rendition - if it is contained in the candidate set. Otherwise first candidate is returned.
+   * If a VirtualCropRenditionMetadata is present always the first one is returned.
    * @param candidates Candidates
    * @return Original or first rendition of candidates or null
    */
   private RenditionMetadata getOriginalOrFirstRendition(Set<RenditionMetadata> candidates) {
-    if (this.originalRendition != null && candidates.contains(this.originalRendition)) {
+    boolean hasCroppingRendition = candidates.stream()
+        .filter(item -> item instanceof VirtualCropRenditionMetadata)
+        .count() > 0;
+    if (!hasCroppingRendition && this.originalRendition != null && candidates.contains(this.originalRendition)) {
       return this.originalRendition;
     }
     else if (!candidates.isEmpty()) {
