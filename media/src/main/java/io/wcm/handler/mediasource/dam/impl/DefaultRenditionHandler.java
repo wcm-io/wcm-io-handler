@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -44,7 +45,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 class DefaultRenditionHandler implements RenditionHandler {
 
   private Set<RenditionMetadata> renditions;
-  private final RenditionMetadata originalRendition;
   private final Asset asset;
 
   /**
@@ -52,9 +52,6 @@ class DefaultRenditionHandler implements RenditionHandler {
    */
   DefaultRenditionHandler(Asset asset) {
     this.asset = asset;
-
-    Rendition damOriginalRendition = asset.getOriginal();
-    originalRendition = damOriginalRendition != null ? new RenditionMetadata(damOriginalRendition) : null;
   }
 
   /**
@@ -156,7 +153,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if request does not contain any size restrictions return original image or first by filename matching rendition
     if (!isSizeMatchingRequest) {
-      return getOriginalOrFirstRendition(candidates);
+      return getFirstRendition(candidates);
     }
 
     // original rendition is a image - check for matching rendition or build virtual one
@@ -302,7 +299,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // no restriction - return original or first rendition
     else {
-      return getOriginalOrFirstRendition(candidates);
+      return getFirstRendition(candidates);
     }
 
     // none found
@@ -310,20 +307,13 @@ class DefaultRenditionHandler implements RenditionHandler {
   }
 
   /**
-   * Returns original rendition - if it is contained in the candidate set. Otherwise first candidate is returned.
+   * Returns the first candidate.
    * @param candidates Candidates
-   * @return Original or first rendition of candidates or null
+   * @return First rendition of candidates or null
    */
-  private RenditionMetadata getOriginalOrFirstRendition(Set<RenditionMetadata> candidates) {
-    if (this.originalRendition != null && candidates.contains(this.originalRendition)) {
-      return this.originalRendition;
-    }
-    else if (!candidates.isEmpty()) {
-      return candidates.iterator().next();
-    }
-    else {
-      return null;
-    }
+  private RenditionMetadata getFirstRendition(Set<RenditionMetadata> candidates) {
+    Optional<RenditionMetadata> firstRendition = candidates.stream().findFirst();
+    return firstRendition.orElse(null);
   }
 
   /**
