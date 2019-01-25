@@ -54,24 +54,44 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_SOURCE = "mediaSource";
 
   /**
-   * Default property name for reference to media library item
+   * Default property name for reference to media library item (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_REF = "mediaRef";
 
   /**
-   * Default property name for cropping parameters
+   * Default property name for reference to media library item (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_REF_STANDARD = "fileReference";
+
+  /**
+   * Default property name for cropping parameters (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_CROP = "mediaCrop";
 
   /**
-   * Default node name for inline media item stored in node within the content page
+   * Default property name for cropping parameters (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_CROP_STANDARD = "imageCrop";
+
+  /**
+   * Default property name for media alt. text (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String PN_MEDIA_ALTTEXT = "mediaAltText";
+
+  /**
+   * Default property name for media alt. text (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_ALTTEXT_STANDARD = "alt";
+
+  /**
+   * Default node name for inline media item stored in node within the content page (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String NN_MEDIA_INLINE = "mediaInline";
 
   /**
-   * Default property name for media alt. text
+   * Default node name for inline media item stored in node within the content page (Adobe/Core Component standard)
    */
-  public static final @NotNull String PN_MEDIA_ALTTEXT = "mediaAltText";
+  public static final @NotNull String NN_MEDIA_INLINE_STANDARD = "file";
 
   /**
    * Default property name for flash variables
