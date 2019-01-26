@@ -52,13 +52,13 @@ class DamRendition extends SlingAdaptable implements Rendition {
    * @param cropDimension Crop dimension
    * @param mediaArgs Media args
    */
-  DamRendition(Asset asset, CropDimension cropDimension, MediaArgs mediaArgs, Adaptable adaptable) {
+  DamRendition(Asset asset, CropDimension cropDimension, Integer rotation, MediaArgs mediaArgs, Adaptable adaptable) {
     this.mediaArgs = mediaArgs;
 
     // resolve rendition from DAM assets
     RenditionHandler renditionHandler;
-    if (cropDimension != null) {
-      renditionHandler = new CropRenditionHandler(asset, cropDimension);
+    if (cropDimension != null || rotation != null) {
+      renditionHandler = new CropRotateRenditionHandler(asset, cropDimension, rotation);
     }
     else {
       renditionHandler = new DefaultRenditionHandler(asset);

@@ -40,6 +40,7 @@ public final class MediaRequest {
   private final MediaArgs mediaArgs;
   private final String refProperty;
   private final String cropProperty;
+  private final String rotationProperty;
 
   private ValueMap resourceProperties;
 
@@ -65,14 +66,30 @@ public final class MediaRequest {
    * @param mediaArgs Additional arguments affection media resolving
    * @param refProperty Name of the property from which the media request is read
    * @param cropProperty Name of the property which contains the cropping parameters
+   * @deprecated Use {@link #MediaRequest(Resource, String, MediaArgs, String, String, String)}
    */
+  @Deprecated
   public MediaRequest(Resource resource, String mediaRef, MediaArgs mediaArgs,
       String refProperty, String cropProperty) {
+    this(resource, mediaRef, mediaArgs, refProperty, cropProperty, null);
+  }
+
+  /**
+   * @param resource Resource containing reference to media asset
+   * @param mediaRef Reference to media item
+   * @param mediaArgs Additional arguments affection media resolving
+   * @param refProperty Name of the property from which the media request is read
+   * @param cropProperty Name of the property which contains the cropping parameters
+   * @param rotationProperty Name of the property which contains the rotation parameter
+   */
+  public MediaRequest(Resource resource, String mediaRef, MediaArgs mediaArgs,
+      String refProperty, String cropProperty, String rotationProperty) {
     this.resource = resource;
     this.mediaRef = mediaRef;
     this.mediaArgs = mediaArgs != null ? mediaArgs : new MediaArgs();
     this.refProperty = refProperty;
     this.cropProperty = cropProperty;
+    this.rotationProperty = rotationProperty;
 
     // validate parameters
     if (this.resource != null && this.mediaRef != null) {
@@ -113,6 +130,13 @@ public final class MediaRequest {
    */
   public String getCropProperty() {
     return this.cropProperty;
+  }
+
+  /**
+   * @return Name of the property which contains the rotation parameter
+   */
+  public String getRotationProperty() {
+    return this.rotationProperty;
   }
 
   /**

@@ -91,6 +91,39 @@ public class ImageFileServletTest {
   }
 
   @Test
+  public void testGet_Rotation() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.215.102.-.90");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(102, 215);
+  }
+
+  @Test
+  public void testGet_Cropping_Rotation() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.215.102.10,10,25,20.180");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(15, 10);
+  }
+
+  @Test
+  public void testGet_Rotation_InvalidValue() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.215.102.-.45");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(215, 102);
+  }
+
+  @Test
   public void testGet_SizeTooLarge() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.2150.1020");
 

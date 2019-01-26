@@ -36,6 +36,7 @@ import com.day.image.Layer;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.mediasource.dam.impl.CropRotateRenditionHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -81,18 +82,34 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     CropDimension cropDimension = null;
     if (selectors.length >= 4) {
       String cropString = selectors[3];
-      try {
-        cropDimension = CropDimension.fromCropString(cropString);
-      }
-      catch (IllegalArgumentException ex) {
-        // ignore
+      if (!StringUtils.equals(cropString, "-")) {
+        try {
+          cropDimension = CropDimension.fromCropString(cropString);
+        }
+        catch (IllegalArgumentException ex) {
+          // ignore
+        }
       }
     }
 
-    // if resizing requested rescale via layer
+    // check for rotation parameter
+    int rotation = 0;
+    if (selectors.length >= 5) {
+      String rotationString = selectors[4];
+      rotation = NumberUtils.toInt(rotationString);
+      if (!CropRotateRenditionHandler.isValidRotation(rotation)) {
+        rotation = 0;
+      }
+    }
+
     Layer layer = resource.adaptTo(Layer.class);
     if (layer == null) {
       return null;
+    }
+
+    // if required: rotate imaage
+    if (rotation != 0) {
+      layer.rotate(rotation);
     }
 
     // if required: crop image

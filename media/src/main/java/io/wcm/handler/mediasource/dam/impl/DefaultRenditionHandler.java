@@ -317,7 +317,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    */
   private RenditionMetadata getOriginalOrFirstRendition(Set<RenditionMetadata> candidates) {
     boolean hasCroppingRendition = candidates.stream()
-        .filter(item -> item instanceof VirtualCropRenditionMetadata)
+        .filter(item -> item instanceof VirtualCropRotateRenditionMetadata)
         .count() > 0;
     if (!hasCroppingRendition && this.originalRendition != null && candidates.contains(this.originalRendition)) {
       return this.originalRendition;
@@ -431,9 +431,10 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // return virtual rendition
     if (width > 0 && height > 0) {
-      if (rendition instanceof VirtualCropRenditionMetadata) {
-        VirtualCropRenditionMetadata cropRendition = (VirtualCropRenditionMetadata)rendition;
-        return new VirtualCropRenditionMetadata(cropRendition.getRendition(), width, height, cropRendition.getCropDimension());
+      if (rendition instanceof VirtualCropRotateRenditionMetadata) {
+        VirtualCropRotateRenditionMetadata cropRendition = (VirtualCropRotateRenditionMetadata)rendition;
+        return new VirtualCropRotateRenditionMetadata(cropRendition.getRendition(), width, height,
+            cropRendition.getCropDimension(), cropRendition.getRotation());
       }
       else {
         return new VirtualRenditionMetadata(rendition.getRendition(), width, height);

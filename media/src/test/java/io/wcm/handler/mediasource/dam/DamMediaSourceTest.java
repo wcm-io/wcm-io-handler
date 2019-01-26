@@ -576,7 +576,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
 
     assertEquals("rendition.mediaUrl.1",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.1280.1280.jpg.image_file.215.102.10,5,225,107.file/cq5dam.web.1280.1280.jpg",
+        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.1280.1024.jpg.image_file.215.102.10,5,225,107.file/cq5dam.web.1280.1024.jpg",
         renditions.get(0).getUrl());
     assertEquals(EDITORIAL_1COL, renditions.get(0).getMediaFormat());
 

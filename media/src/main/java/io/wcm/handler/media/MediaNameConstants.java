@@ -74,6 +74,16 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_CROP_STANDARD = "imageCrop";
 
   /**
+   * Default property name for rotate parameter (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String PN_MEDIA_ROTATION = "mediaRotate";
+
+  /**
+   * Default property name for rotate parameter (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_ROTATION_STANDARD = "imageRotate";
+
+  /**
    * Default property name for media alt. text (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_ALTTEXT = "mediaAltText";
@@ -95,9 +105,7 @@ public final class MediaNameConstants {
 
   /**
    * Default property name for flash variables
-   * @deprecated No longer in use
    */
-  @Deprecated
   public static final @NotNull String PN_FLASH_VARS = "flashVars";
 
   /**

@@ -44,6 +44,7 @@ public final class Media {
   private Asset asset;
   private Collection<Rendition> renditions;
   private CropDimension cropDimension;
+  private Integer rotation;
   private MediaInvalidReason mediaInvalidReason;
 
   /**
@@ -174,6 +175,20 @@ public final class Media {
    */
   public void setCropDimension(CropDimension cropDimension) {
     this.cropDimension = cropDimension;
+  }
+
+  /**
+   * @return Image rotation (optional)
+   */
+  public Integer getRotation() {
+    return this.rotation;
+  }
+
+  /**
+   * @param rotation Image Rotation (optional)
+   */
+  public void setRotation(Integer rotation) {
+    this.rotation = rotation;
   }
 
   /**

@@ -219,6 +219,14 @@ public interface MediaBuilder {
   MediaBuilder cropProperty(String cropProperty);
 
   /**
+   * Set the name of the property which contains the rotation parameter.
+   * @param rotationProperty Property name
+   * @return Media builder
+   */
+  @NotNull
+  MediaBuilder rotationProperty(String rotationProperty);
+
+  /**
    * Resolve media and return metadata objects that contains all results.
    * @return Media metadata object. Never null, if the resolving failed the isValid() method returns false.
    */
