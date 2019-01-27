@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,7 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
 
 /**
  * Via {@link MediaSource} OSGi services applications can define additional media sources supported by
@@ -173,7 +175,7 @@ public abstract class MediaSource {
   }
 
   /**
-   * Get (optional) crop dimensions form resource
+   * Get (optional) crop dimensions from resource
    * @param mediaRequest Media request
    * @return Crop dimension or null if not set or invalid
    * @deprecated Use {@link #getMediaCropDimension(MediaRequest, MediaHandlerConfig)}
@@ -184,7 +186,7 @@ public abstract class MediaSource {
   }
 
   /**
-   * Get (optional) crop dimensions form resource
+   * Get (optional) crop dimensions from resource
    * @param mediaRequest Media request
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Crop dimension or null if not set or invalid
@@ -236,6 +238,43 @@ public abstract class MediaSource {
       }
     }
     return cropProperty;
+  }
+
+  /**
+   * Get (optional) rotation from resource
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config
+   * @return Rotation value or null if not set or invalid
+   */
+  @SuppressWarnings("null")
+  protected final @Nullable Integer getMediaRotation(@NotNull MediaRequest mediaRequest,
+      @NotNull MediaHandlerConfig mediaHandlerConfig) {
+    if (mediaRequest.getResource() != null) {
+      String rotationProperty = getMediaRotationProperty(mediaRequest, mediaHandlerConfig);
+      String stringValue = mediaRequest.getResource().getValueMap().get(rotationProperty, String.class);
+      if (StringUtils.isNotEmpty(stringValue)) {
+        int rotationValue = NumberUtils.toInt(stringValue);
+        if (TransformedRenditionHandler.isValidRotation(rotationValue)) {
+          return rotationValue;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get property name containing the rotation parameter
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config
+   * @return Property name
+   */
+  protected final @NotNull String getMediaRotationProperty(@NotNull MediaRequest mediaRequest,
+      @NotNull MediaHandlerConfig mediaHandlerConfig) {
+    String rotationProperty = mediaRequest.getRotationProperty();
+    if (StringUtils.isEmpty(rotationProperty)) {
+      rotationProperty = mediaHandlerConfig.getMediaRotationProperty();
+    }
+    return rotationProperty;
   }
 
   /**

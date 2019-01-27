@@ -148,6 +148,18 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * @return Default property name for rotate parameter
+   */
+  public @NotNull String getMediaRotationProperty() {
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_ROTATION_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_ROTATION;
+    }
+  }
+
+  /**
    * @return Default property name for media alt. text
    */
   public @NotNull String getMediaAltTextProperty() {

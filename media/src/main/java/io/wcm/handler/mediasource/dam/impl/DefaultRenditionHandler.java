@@ -57,6 +57,10 @@ class DefaultRenditionHandler implements RenditionHandler {
     originalRendition = damOriginalRendition != null ? new RenditionMetadata(damOriginalRendition) : null;
   }
 
+  protected RenditionMetadata getOriginalRendition() {
+    return this.originalRendition;
+  }
+
   /**
    * @return All renditions that are available for this asset
    */
@@ -316,10 +320,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @return Original or first rendition of candidates or null
    */
   private RenditionMetadata getOriginalOrFirstRendition(Set<RenditionMetadata> candidates) {
-    boolean hasCroppingRendition = candidates.stream()
-        .filter(item -> item instanceof VirtualCropRenditionMetadata)
-        .count() > 0;
-    if (!hasCroppingRendition && this.originalRendition != null && candidates.contains(this.originalRendition)) {
+    if (this.originalRendition != null && candidates.contains(this.originalRendition)) {
       return this.originalRendition;
     }
     else if (!candidates.isEmpty()) {
@@ -431,9 +432,10 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // return virtual rendition
     if (width > 0 && height > 0) {
-      if (rendition instanceof VirtualCropRenditionMetadata) {
-        VirtualCropRenditionMetadata cropRendition = (VirtualCropRenditionMetadata)rendition;
-        return new VirtualCropRenditionMetadata(cropRendition.getRendition(), width, height, cropRendition.getCropDimension());
+      if (rendition instanceof VirtualTransformedRenditionMetadata) {
+        VirtualTransformedRenditionMetadata cropRendition = (VirtualTransformedRenditionMetadata)rendition;
+        return new VirtualTransformedRenditionMetadata(cropRendition.getRendition(), width, height,
+            cropRendition.getCropDimension(), cropRendition.getRotation());
       }
       else {
         return new VirtualRenditionMetadata(rendition.getRendition(), width, height);

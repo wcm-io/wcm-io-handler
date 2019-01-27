@@ -118,6 +118,7 @@ public final class DamMediaSource extends MediaSource {
 
       // Check for crop dimensions
       media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
+      media.setRotation(getMediaRotation(media.getMediaRequest(), mediaHandlerConfig));
 
       // get DAM Asset to check for available renditions
       com.day.cq.dam.api.Asset damAsset = null;
@@ -166,15 +167,9 @@ public final class DamMediaSource extends MediaSource {
     if (componentContext != null && componentContext.getEditContext() != null
         && MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext)) {
 
-      String refProperty = getMediaRefProperty(mediaRequest, mediaHandlerConfig);
-      if (!StringUtils.startsWith(refProperty, "./")) {
-        refProperty = "./" + refProperty; //NOPMD
-      }
-
-      String cropProperty = getMediaCropProperty(mediaRequest, mediaHandlerConfig);
-      if (!StringUtils.startsWith(cropProperty, "./")) {
-        cropProperty = "./" + cropProperty; //NOPMD
-      }
+      String refProperty = prependDotSlash(getMediaRefProperty(mediaRequest, mediaHandlerConfig));
+      String cropProperty = prependDotSlash(getMediaCropProperty(mediaRequest, mediaHandlerConfig));
+      String rotationProperty = prependDotSlash(getMediaRotationProperty(mediaRequest, mediaHandlerConfig));
 
       String name = refProperty;
       if (StringUtils.contains(name, "/")) {
@@ -185,12 +180,21 @@ public final class DamMediaSource extends MediaSource {
       Optional<String> dropTargetCssClass = getMediaDropTargetID();
       if (!dropTargetCssClass.isPresent()) {
         // otherwise add a new drop target and get it's id
-        dropTargetCssClass = addMediaDroptarget(refProperty, cropProperty, name);
+        dropTargetCssClass = addMediaDroptarget(refProperty, cropProperty, rotationProperty, name);
       }
 
       if (element != null) {
         element.addCssClass(dropTargetCssClass.get());
       }
+    }
+  }
+
+  private String prependDotSlash(String property) {
+    if (!StringUtils.startsWith(property, "./")) {
+      return "./" + property;
+    }
+    else {
+      return property;
     }
   }
 
@@ -201,7 +205,7 @@ public final class DamMediaSource extends MediaSource {
         .findFirst();
   }
 
-  private Optional<String> addMediaDroptarget(String refProperty, String cropProperty, String name) {
+  private Optional<String> addMediaDroptarget(String refProperty, String cropProperty, String rotationProperty, String name) {
     Component componentDefinition = WCMUtils.getComponent(resource);
 
     // set drop target - with path of current component as default resource type
@@ -211,6 +215,7 @@ public final class DamMediaSource extends MediaSource {
 
       // clear cropping parameters if a new image is inserted via drag&drop
       params.put(cropProperty, "");
+      params.put(rotationProperty, "");
     }
 
     DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(new String[] {

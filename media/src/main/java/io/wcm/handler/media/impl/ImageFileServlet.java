@@ -36,6 +36,7 @@ import com.day.image.Layer;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -81,15 +82,26 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     CropDimension cropDimension = null;
     if (selectors.length >= 4) {
       String cropString = selectors[3];
-      try {
-        cropDimension = CropDimension.fromCropString(cropString);
-      }
-      catch (IllegalArgumentException ex) {
-        // ignore
+      if (!StringUtils.equals(cropString, "-")) {
+        try {
+          cropDimension = CropDimension.fromCropString(cropString);
+        }
+        catch (IllegalArgumentException ex) {
+          // ignore
+        }
       }
     }
 
-    // if resizing requested rescale via layer
+    // check for rotation parameter
+    int rotation = 0;
+    if (selectors.length >= 5) {
+      String rotationString = selectors[4];
+      rotation = NumberUtils.toInt(rotationString);
+      if (!TransformedRenditionHandler.isValidRotation(rotation)) {
+        rotation = 0;
+      }
+    }
+
     Layer layer = resource.adaptTo(Layer.class);
     if (layer == null) {
       return null;
@@ -98,6 +110,11 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     // if required: crop image
     if (cropDimension != null) {
       layer.crop(cropDimension.getRectangle());
+    }
+
+    // if required: rotate image
+    if (rotation != 0) {
+      layer.rotate(rotation);
     }
 
     // resize layer
@@ -133,12 +150,12 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   /**
    * Get image filename to be used for the URL with file extension matching the image format which is produced by this
    * servlet.
-   * @param pOriginalFilename Original filename of the image to render.
+   * @param originalFilename Original filename of the image to render.
    * @return Filename to be used for URL.
    */
-  public static String getImageFileName(String pOriginalFilename) {
-    String namePart = StringUtils.substringBeforeLast(pOriginalFilename, ".");
-    String extensionPart = StringUtils.substringAfterLast(pOriginalFilename, ".");
+  public static String getImageFileName(String originalFilename) {
+    String namePart = StringUtils.substringBeforeLast(originalFilename, ".");
+    String extensionPart = StringUtils.substringAfterLast(originalFilename, ".");
 
     // use PNG format if original image is PNG, otherwise always use JPEG
     if (StringUtils.equalsIgnoreCase(extensionPart, FileExtension.PNG)) {

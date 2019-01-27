@@ -284,10 +284,10 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   @Override
   public int compareTo(RenditionMetadata obj) {
     // always prefer the virtual crop rendition
-    if (this instanceof VirtualCropRenditionMetadata) {
+    if (this instanceof VirtualTransformedRenditionMetadata) {
       return -1;
     }
-    else if (obj instanceof VirtualCropRenditionMetadata) {
+    else if (obj instanceof VirtualTransformedRenditionMetadata) {
       return 1;
     }
 

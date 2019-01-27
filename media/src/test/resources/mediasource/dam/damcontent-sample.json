@@ -61,7 +61,7 @@
             "jcr:primaryType":"nt:resource"
           }
         },
-        "cq5dam.web.1280.1280.jpg": {
+        "cq5dam.web.1280.1024.jpg": {
           "jcr:primaryType":"nt:file",
           "jcr:content": {
             "jcr:mimeType":"image/jpeg",
@@ -96,10 +96,10 @@
           "imageWidth": 960,
           "imageHeight": 485
         },
-        "cq5dam.web.1280.1280.jpg": {
+        "cq5dam.web.1280.1024.jpg": {
           "jcr:primaryType":"nt:unstructured",
           "imageWidth": 1280,
-          "imageHeight": 1280
+          "imageHeight": 1024
         }
       }
     }

@@ -25,16 +25,19 @@
 
     <release version="1.1.0" date="not released">
       <action type="add" dev="sseifert">
+        Add support for image rotation.
+      </action>
+      <action type="add" dev="sseifert">
         Allow to configure default property/node names for media reference, cropping, alt. text and inline media node name via MediaHandlerConfig.
       </action>
       <action type="add" dev="sseifert">
         ResourceMedia: Add optional parameters for refProperty and cropProperty.
       </action>
-      <action type="fix" dev="sseifert">
-        DamMediaSource: Make us of existing "media" drop target instead off adding a new one.
+      <action type="update" dev="sseifert">
+        Use original rendition for generating the cropped images instead of the web rendition.
       </action>
       <action type="fix" dev="sseifert">
-        DefaultRenditionHandler: Do not give original rendition higher precedence over other candidations when a virtual cropping rendition is present.
+        DamMediaSource: Make us of existing "media" drop target instead off adding a new one.
       </action>
     </release>
 

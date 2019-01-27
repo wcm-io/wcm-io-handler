@@ -44,6 +44,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private MediaArgs mediaArgs = new MediaArgs();
   private String refProperty;
   private String cropProperty;
+  private String rotationProperty;
 
   MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
     this.resource = resource;
@@ -213,9 +214,15 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder rotationProperty(String value) {
+    this.rotationProperty = value;
+    return this;
+  }
+
+  @Override
   public @NotNull Media build() {
     MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
-        this.refProperty, this.cropProperty);
+        this.refProperty, this.cropProperty, this.rotationProperty);
     return mediaHandler.processRequest(request);
   }
 

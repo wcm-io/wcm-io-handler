@@ -32,19 +32,22 @@ import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 
 /**
- * Virtual rendition that is cropping and downscaling from an existing rendition.
+ * Virtual rendition that is cropping and/or rotating and downscaling from an existing rendition.
  */
-class VirtualCropRenditionMetadata extends RenditionMetadata {
+class VirtualTransformedRenditionMetadata extends RenditionMetadata {
 
   private final long width;
   private final long height;
   private final CropDimension cropDimension;
+  private final Integer rotation;
 
-  VirtualCropRenditionMetadata(Rendition rendition, long width, long height, CropDimension cropDimension) {
+  VirtualTransformedRenditionMetadata(Rendition rendition, long width, long height,
+      CropDimension cropDimension, Integer rotation) {
     super(rendition);
     this.width = width;
     this.height = height;
     this.cropDimension = cropDimension;
+    this.rotation = rotation;
   }
 
   @Override
@@ -73,11 +76,16 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
     return this.cropDimension;
   }
 
+  public Integer getRotation() {
+    return this.rotation;
+  }
+
   @Override
   public String getMediaPath(boolean contentDispositionAttachment) {
     return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
         + "." + getWidth() + "." + getHeight()
-        + "." + this.cropDimension.getCropString()
+        + "." + (this.cropDimension != null ? this.cropDimension.getCropString() : "-")
+        + (this.rotation != null ? "." + this.rotation : "")
         + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
         + "." + MediaFileServlet.EXTENSION, getFileName());
   }
@@ -86,9 +94,14 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
   protected Layer getLayer() {
     Layer layer = super.getLayer();
     if (layer != null) {
-      layer.crop(cropDimension.getRectangle());
-      if (width <= layer.getWidth() && height <= layer.getHeight()) {
-        layer.resize((int)width, (int)height);
+      if (cropDimension != null) {
+        layer.crop(cropDimension.getRectangle());
+        if (width <= layer.getWidth() && height <= layer.getHeight()) {
+          layer.resize((int)width, (int)height);
+        }
+      }
+      if (rotation != null) {
+        layer.rotate(rotation);
       }
     }
     return layer;
@@ -107,6 +120,7 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
         .append(width)
         .append(height)
         .append(cropDimension)
+        .append(rotation)
         .hashCode();
   }
 
@@ -115,13 +129,26 @@ class VirtualCropRenditionMetadata extends RenditionMetadata {
     if (obj == null || obj.getClass() != this.getClass()) {
       return false;
     }
-    VirtualCropRenditionMetadata other = (VirtualCropRenditionMetadata)obj;
+    VirtualTransformedRenditionMetadata other = (VirtualTransformedRenditionMetadata)obj;
     return new EqualsBuilder()
         .append(this.getRendition().getPath(), other.getRendition().getPath())
         .append(this.width, other.width)
         .append(this.height, other.height)
         .append(this.cropDimension, other.cropDimension)
+        .append(this.rotation, other.rotation)
         .build();
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder(super.toString());
+    if (cropDimension != null) {
+      sb.append(", ").append(cropDimension.toString());
+    }
+    if (rotation != null) {
+      sb.append(", rotation:").append(Integer.toString(rotation));
+    }
+    return sb.toString();
   }
 
 }

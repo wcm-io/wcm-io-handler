@@ -135,6 +135,7 @@ public final class InlineMediaSource extends MediaSource {
 
     // Check for crop dimensions
     media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
+    media.setRotation(getMediaRotation(media.getMediaRequest(), mediaHandlerConfig));
 
     // detect and clean up file name
     String fileName = detectFileName(referencedResource, ntFileResource, ntResourceResource);

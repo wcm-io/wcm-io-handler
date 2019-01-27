@@ -236,7 +236,8 @@ public class MediaHandlerImplTest {
           mediaRef,
           mediaArgs,
           request.getRefProperty(),
-          request.getCropProperty()
+          request.getCropProperty(),
+          request.getRotationProperty()
           ));
       return media;
     }

@@ -15,13 +15,13 @@
          },
          "par_standard_mediaRef_crop":{
            "mediaRef":"/content/dam/test/standard.jpg",
-           "mediaCrop": "10,5,168,85",
+           "mediaCrop": "0,0,381,177",
            "sling:resourceType":"test/components/media",
            "jcr:primaryType":"nt:unstructured"
          },
          "par_responsive_mediaRef_crop":{
            "mediaRef":"/content/dam/test/standard.jpg",
-           "mediaCrop": "10,5,225,107",
+           "mediaCrop": "12,12,512,250",
            "sling:resourceType":"test/components/media",
            "jcr:primaryType":"nt:unstructured"
          },
