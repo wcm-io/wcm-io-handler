@@ -26,17 +26,14 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Extended rendition handler supporting cropping and rotating of images.
  */
-public class CropRotateRenditionHandler extends DefaultRenditionHandler {
+public class TransformedRenditionHandler extends DefaultRenditionHandler {
 
   // supported rotation values
   private static final int ROTATE_90 = 90;
@@ -46,35 +43,36 @@ public class CropRotateRenditionHandler extends DefaultRenditionHandler {
   private static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\..*$");
   private final CropDimension cropDimension;
   private final Integer rotation;
-  private final String assetFileExtension;
 
   /**
    * @param asset DAM asset
    * @param cropDimension Crop dimension
    */
-  CropRotateRenditionHandler(Asset asset, CropDimension cropDimension, Integer rotation) {
+  TransformedRenditionHandler(Asset asset, CropDimension cropDimension, Integer rotation) {
     super(asset);
     this.cropDimension = cropDimension;
     this.rotation = (rotation != null && isValidRotation(rotation)) ? rotation : null;
-    assetFileExtension = StringUtils.substringAfterLast(asset.getName(), ".");
   }
 
   /**
    * Searches for the biggest web enabled rendition and, if exists,
-   * adds a {@link VirtualCropRotateRenditionMetadata} to the list.
+   * adds a {@link VirtualTransformedRenditionMetadata} to the list.
    * @param candidates
    * @return {@link Set} of {@link RenditionMetadata}
    */
   @Override
   protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
-    NavigableSet<RenditionMetadata> processedCandidates = rotateSourceRenditions(candidates);
+    NavigableSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);
     if (cropDimension != null) {
-      VirtualCropRotateRenditionMetadata cropRendition = getCropRendition(processedCandidates);
+      VirtualTransformedRenditionMetadata cropRendition = getCropRendition(processedCandidates);
       if (cropRendition != null) {
+        // return only cropped rendition
+        processedCandidates.clear();
         processedCandidates.add(cropRendition);
+        return processedCandidates;
       }
     }
-    return processedCandidates;
+    return rotateSourceRenditions(processedCandidates);
   }
 
   /**
@@ -87,8 +85,10 @@ public class CropRotateRenditionHandler extends DefaultRenditionHandler {
       return new TreeSet<>(candidates);
     }
     return candidates.stream()
-        .map(rendition -> new VirtualCropRotateRenditionMetadata(rendition.getRendition(),
-            rotateMapWidth(rendition), rotateMapHeight(rendition), null, rotation))
+        .map(rendition -> new VirtualTransformedRenditionMetadata(rendition.getRendition(),
+            rotateMapWidth(rendition.getWidth(), rendition.getHeight()),
+            rotateMapHeight(rendition.getWidth(), rendition.getHeight()),
+            null, rotation))
         .collect(Collectors.toCollection(TreeSet::new));
   }
 
@@ -97,22 +97,43 @@ public class CropRotateRenditionHandler extends DefaultRenditionHandler {
    * @param candidates
    * @return Rendition or null if no match found
    */
-  private VirtualCropRotateRenditionMetadata getCropRendition(NavigableSet<RenditionMetadata> candidates) {
+  private VirtualTransformedRenditionMetadata getCropRendition(NavigableSet<RenditionMetadata> candidates) {
+    RenditionMetadata original = getOriginalRendition();
+    if (original == null) {
+      return null;
+    }
+    Double scaleFactor = getCropScaleFactor(candidates);
+    CropDimension scaledCropDimension = new CropDimension(
+        Math.round(cropDimension.getLeft() * scaleFactor),
+        Math.round(cropDimension.getTop() * scaleFactor),
+        Math.round(cropDimension.getWidth() * scaleFactor),
+        Math.round(cropDimension.getHeight() * scaleFactor));
+    return new VirtualTransformedRenditionMetadata(original.getRendition(),
+        rotateMapWidth(scaledCropDimension.getWidth(), scaledCropDimension.getHeight()),
+        rotateMapHeight(scaledCropDimension.getWidth(), scaledCropDimension.getHeight()),
+        scaledCropDimension, rotation);
+  }
+
+  /**
+   * The cropping coordinates are stored with coordinates relating to the web-enabled rendition. But we want
+   * to crop the original image, so we have to scale those values to match the coordinates in the original image.
+   * @return Scale factor
+   */
+  private Double getCropScaleFactor(NavigableSet<RenditionMetadata> candidates) {
+    RenditionMetadata original = getOriginalRendition();
+    RenditionMetadata webEnabled = getWebEnabledRendition(candidates);
+    if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
+      return null;
+    }
+    return (double)original.getWidth() / (double)webEnabled.getWidth();
+  }
+
+  private RenditionMetadata getWebEnabledRendition(NavigableSet<RenditionMetadata> candidates) {
     Iterator<RenditionMetadata> descendingIterator = candidates.descendingIterator();
     while (descendingIterator.hasNext()) {
       RenditionMetadata rendition = descendingIterator.next();
       if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getRendition().getName()).matches()) {
-        RenditionMetadata sourceRendition = new RenditionMetadata(rendition.getRendition());
-        boolean isImage = FileExtension.isImage(assetFileExtension);
-        long sourceRenditionWidth = rotateMapWidth(sourceRendition);
-        long sourceRenditionHeight = rotateMapHeight(sourceRendition);
-        if (isImage
-            && sourceRenditionWidth >= cropDimension.getRight()
-            && sourceRenditionHeight >= cropDimension.getBottom()) {
-          // found biggest virtual rendition for cropped image
-          return new VirtualCropRotateRenditionMetadata(sourceRendition.getRendition(),
-              cropDimension.getWidth(), cropDimension.getHeight(), cropDimension, rotation);
-        }
+        return rendition;
       }
     }
     return null;
@@ -120,29 +141,31 @@ public class CropRotateRenditionHandler extends DefaultRenditionHandler {
 
   /**
    * Swaps width with height if rotated 90° clock-wise or counter clock-wise
-   * @param rendition Rendition
+   * @param width Rendition width
+   * @param height Rendition height
    * @return Width
    */
-  private long rotateMapWidth(RenditionMetadata rendition) {
+  private long rotateMapWidth(long width, long height) {
     if (rotation != null && (rotation == ROTATE_90 || rotation == ROTATE_270)) {
-      return rendition.getHeight();
+      return height;
     }
     else {
-      return rendition.getWidth();
+      return width;
     }
   }
 
   /**
    * Swaps height with width if rotated 90° clock-wise or counter clock-wise
-   * @param rendition Rendition
+   * @param width Rendition width
+   * @param height Rendition height
    * @return Height
    */
-  private long rotateMapHeight(RenditionMetadata rendition) {
+  private long rotateMapHeight(long width, long height) {
     if (rotation != null && (rotation == ROTATE_90 || rotation == ROTATE_270)) {
-      return rendition.getWidth();
+      return width;
     }
     else {
-      return rendition.getHeight();
+      return height;
     }
   }
 

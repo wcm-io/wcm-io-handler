@@ -73,9 +73,9 @@ public class MediaHandlerImplAdobeStandardNamingTest {
     context.runMode("author");
     EventHandler eventHandler = context.registerInjectActivateService(new DamRenditionMetadataService());
 
-    Asset asset = context.create().asset("/content/dam/test.jpg", 10, 10, ContentType.JPEG);
+    Asset asset = context.create().asset("/content/dam/test.jpg", 20, 20, ContentType.JPEG);
 
-    // create crop rendition as expeced by CropRenditionHandler
+    // create crop rendition as expected by CropRenditionHandler
     Rendition rendition = context.create().assetRendition(asset, "cq5dam.web.10.10.jpg", 10, 10, ContentType.JPEG);
     // generate rendition metadata
     eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", rendition.getPath()).toEvent());
@@ -88,7 +88,7 @@ public class MediaHandlerImplAdobeStandardNamingTest {
 
     Media media = mediaHandler.get(resource).build();
     assertTrue(media.isValid());
-    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/cq5dam.web.10.10.jpg.image_file.4.4.2,2,6,6.file/cq5dam.web.10.10.jpg",
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.8.8.4,4,12,12.file/test.jpg",
         media.getElement().getAttributeValue("src"));
 
   }

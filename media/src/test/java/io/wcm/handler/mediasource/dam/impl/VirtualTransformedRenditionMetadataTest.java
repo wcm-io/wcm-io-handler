@@ -38,7 +38,7 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 @SuppressWarnings("null")
-public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
+public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
 
   private Rendition rendition;
   private RenditionMetadata originalRendition;
@@ -57,7 +57,7 @@ public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   public void testGetLayer_cropping() throws Exception {
-    VirtualCropRotateRenditionMetadata underTest = new VirtualCropRotateRenditionMetadata(rendition, 30, 25,
+    VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 30, 25,
         new CropDimension(5, 5, 30, 25), null);
 
     Layer layer = underTest.getLayer();
@@ -67,7 +67,7 @@ public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   public void testGetLayer_cropping_resize() throws Exception {
-    VirtualCropRotateRenditionMetadata underTest = new VirtualCropRotateRenditionMetadata(rendition, 30, 25,
+    VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 30, 25,
         new CropDimension(5, 5, 60, 50), null);
 
     Layer layer = underTest.getLayer();
@@ -77,7 +77,7 @@ public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   public void testGetLayer_rotation() throws Exception {
-    VirtualCropRotateRenditionMetadata underTest = new VirtualCropRotateRenditionMetadata(rendition, 102, 215,
+    VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 102, 215,
         null, 90);
 
     Layer layer = underTest.getLayer();
@@ -87,7 +87,7 @@ public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   public void testGetLayer_cropping_rotation() throws Exception {
-    VirtualCropRotateRenditionMetadata underTest = new VirtualCropRotateRenditionMetadata(rendition, 25, 30,
+    VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 25, 30,
         new CropDimension(5, 5, 25, 30), 180);
 
     Layer layer = underTest.getLayer();
@@ -97,7 +97,7 @@ public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   public void testGetInputStream() throws Exception {
-    VirtualCropRotateRenditionMetadata underTest = new VirtualCropRotateRenditionMetadata(rendition, 108, 51,
+    VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
 
     InputStream is = underTest.getInputStream();
@@ -106,13 +106,13 @@ public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   public void testEquals() {
-    VirtualCropRotateRenditionMetadata m1 = new VirtualCropRotateRenditionMetadata(rendition, 108, 51,
+    VirtualTransformedRenditionMetadata m1 = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
-    VirtualCropRotateRenditionMetadata m2 = new VirtualCropRotateRenditionMetadata(rendition, 108, 51,
+    VirtualTransformedRenditionMetadata m2 = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
-    VirtualCropRotateRenditionMetadata m3 = new VirtualCropRotateRenditionMetadata(rendition, 108, 51,
+    VirtualTransformedRenditionMetadata m3 = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(10, 10, 30, 25), null);
-    VirtualCropRotateRenditionMetadata m4 = new VirtualCropRotateRenditionMetadata(rendition, 108, 51,
+    VirtualTransformedRenditionMetadata m4 = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), 180);
 
     assertTrue(m1.equals(m2));
@@ -122,7 +122,7 @@ public class VirtualCropRotateRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   public void testCompareTo() {
-    VirtualCropRotateRenditionMetadata virtualRendition = new VirtualCropRotateRenditionMetadata(rendition, 108, 51,
+    VirtualTransformedRenditionMetadata virtualRendition = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
     RenditionMetadata biggerRendition = new RenditionMetadata(rendition);
     assertEquals(-1, virtualRendition.compareTo(originalRendition));

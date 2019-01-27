@@ -36,7 +36,7 @@ import com.day.image.Layer;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.mediasource.dam.impl.CropRotateRenditionHandler;
+import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -97,7 +97,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     if (selectors.length >= 5) {
       String rotationString = selectors[4];
       rotation = NumberUtils.toInt(rotationString);
-      if (!CropRotateRenditionHandler.isValidRotation(rotation)) {
+      if (!TransformedRenditionHandler.isValidRotation(rotation)) {
         rotation = 0;
       }
     }
@@ -107,14 +107,14 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       return null;
     }
 
-    // if required: rotate imaage
-    if (rotation != 0) {
-      layer.rotate(rotation);
-    }
-
     // if required: crop image
     if (cropDimension != null) {
       layer.crop(cropDimension.getRectangle());
+    }
+
+    // if required: rotate image
+    if (rotation != 0) {
+      layer.rotate(rotation);
     }
 
     // resize layer
@@ -150,12 +150,12 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   /**
    * Get image filename to be used for the URL with file extension matching the image format which is produced by this
    * servlet.
-   * @param pOriginalFilename Original filename of the image to render.
+   * @param originalFilename Original filename of the image to render.
    * @return Filename to be used for URL.
    */
-  public static String getImageFileName(String pOriginalFilename) {
-    String namePart = StringUtils.substringBeforeLast(pOriginalFilename, ".");
-    String extensionPart = StringUtils.substringAfterLast(pOriginalFilename, ".");
+  public static String getImageFileName(String originalFilename) {
+    String namePart = StringUtils.substringBeforeLast(originalFilename, ".");
+    String extensionPart = StringUtils.substringAfterLast(originalFilename, ".");
 
     // use PNG format if original image is PNG, otherwise always use JPEG
     if (StringUtils.equalsIgnoreCase(extensionPart, FileExtension.PNG)) {

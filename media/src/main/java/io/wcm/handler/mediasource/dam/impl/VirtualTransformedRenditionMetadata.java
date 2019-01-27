@@ -34,14 +34,14 @@ import io.wcm.handler.media.impl.MediaFileServlet;
 /**
  * Virtual rendition that is cropping and/or rotating and downscaling from an existing rendition.
  */
-class VirtualCropRotateRenditionMetadata extends RenditionMetadata {
+class VirtualTransformedRenditionMetadata extends RenditionMetadata {
 
   private final long width;
   private final long height;
   private final CropDimension cropDimension;
   private final Integer rotation;
 
-  VirtualCropRotateRenditionMetadata(Rendition rendition, long width, long height,
+  VirtualTransformedRenditionMetadata(Rendition rendition, long width, long height,
       CropDimension cropDimension, Integer rotation) {
     super(rendition);
     this.width = width;
@@ -94,14 +94,14 @@ class VirtualCropRotateRenditionMetadata extends RenditionMetadata {
   protected Layer getLayer() {
     Layer layer = super.getLayer();
     if (layer != null) {
-      if (rotation != null) {
-        layer.rotate(rotation);
-      }
       if (cropDimension != null) {
         layer.crop(cropDimension.getRectangle());
         if (width <= layer.getWidth() && height <= layer.getHeight()) {
           layer.resize((int)width, (int)height);
         }
+      }
+      if (rotation != null) {
+        layer.rotate(rotation);
       }
     }
     return layer;
@@ -129,7 +129,7 @@ class VirtualCropRotateRenditionMetadata extends RenditionMetadata {
     if (obj == null || obj.getClass() != this.getClass()) {
       return false;
     }
-    VirtualCropRotateRenditionMetadata other = (VirtualCropRotateRenditionMetadata)obj;
+    VirtualTransformedRenditionMetadata other = (VirtualTransformedRenditionMetadata)obj;
     return new EqualsBuilder()
         .append(this.getRendition().getPath(), other.getRendition().getPath())
         .append(this.width, other.width)
@@ -137,6 +137,18 @@ class VirtualCropRotateRenditionMetadata extends RenditionMetadata {
         .append(this.cropDimension, other.cropDimension)
         .append(this.rotation, other.rotation)
         .build();
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder(super.toString());
+    if (cropDimension != null) {
+      sb.append(", ").append(cropDimension.toString());
+    }
+    if (rotation != null) {
+      sb.append(", rotation:").append(Integer.toString(rotation));
+    }
+    return sb.toString();
   }
 
 }

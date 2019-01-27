@@ -58,7 +58,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
     // resolve rendition from DAM assets
     RenditionHandler renditionHandler;
     if (cropDimension != null || rotation != null) {
-      renditionHandler = new CropRotateRenditionHandler(asset, cropDimension, rotation);
+      renditionHandler = new TransformedRenditionHandler(asset, cropDimension, rotation);
     }
     else {
       renditionHandler = new DefaultRenditionHandler(asset);
