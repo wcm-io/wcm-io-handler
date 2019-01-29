@@ -28,16 +28,16 @@
         Add support for image rotation.
       </action>
       <action type="add" dev="sseifert">
-        Allow to configure default property/node names for media reference, cropping, alt. text and inline media node name via MediaHandlerConfig.
+        Allow to configure "Adobe standard" property/node names for media reference, cropping, rotation, alt. text and inline media node name via MediaHandlerConfig.
       </action>
       <action type="add" dev="sseifert">
-        ResourceMedia: Add optional parameters for refProperty and cropProperty.
+        ResourceMedia: Add optional parameters for refProperty, cropProperty and rotationProperty.
       </action>
       <action type="update" dev="sseifert">
         Use original rendition for generating the cropped images instead of the web rendition.
       </action>
       <action type="fix" dev="sseifert">
-        DamMediaSource: Make us of existing "media" drop target instead off adding a new one.
+        DamMediaSource: If a "media" drop target already exists make use of it instead off adding a new one which breaks in-place edit mode.
       </action>
     </release>
 
