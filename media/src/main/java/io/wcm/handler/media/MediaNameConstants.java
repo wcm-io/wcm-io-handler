@@ -105,7 +105,9 @@ public final class MediaNameConstants {
 
   /**
    * Default property name for flash variables
+   * @deprecated Flash support is deprecated
    */
+  @Deprecated
   public static final @NotNull String PN_FLASH_VARS = "flashVars";
 
   /**

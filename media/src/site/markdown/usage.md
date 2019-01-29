@@ -37,13 +37,13 @@ By default, the Media Handler uses it's own set of properties (prefixed with "me
 
 These are the most common properties:
 
-|Property name<br>(wcm.io Default)|Property name<br>(Adobe Standard)|Description
-|---------------------------------|---------------------------------|-----------------------------------------------|
-| `mediaRef`                      | `fileReference`                 | Reference/path to the media asset
-| `mediaCrop`                     | `imageCrop`                     | Cropping parameters for image
-| `mediaRotation`                 | `imageRotation`                 | Rotation parameter for image
-| `mediaAltText`                  | `alt`                           | Alternative text for media
-| `mediaInline`                   | `file`                          | Node name for binary file uploaded to a page
+|Property name<br/>(wcm.io Default) |Property name<br/> (Adobe Standard)|Description
+|-----------------------------------|-----------------------------------|-----------------------------------------------|
+| `mediaRef`                        | `fileReference`                   | Reference/path to the media asset
+| `mediaCrop`                       | `imageCrop`                       | Cropping parameters for image
+| `mediaRotation`                   | `imageRotation`                   | Rotation parameter for image
+| `mediaAltText`                    | `alt`                             | Alternative text for media
+| `mediaInline`                     | `file`                            | Node name for binary file uploaded to a page
 
 Further properties are defined in [MediaNameConstants][media-name-constants]. 
 

@@ -282,6 +282,7 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.height", 0, rendition.getHeight());
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void testMediaInlineSampleImage() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);

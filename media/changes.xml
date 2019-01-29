@@ -36,6 +36,9 @@
       <action type="update" dev="sseifert">
         Use original rendition for generating the cropped images instead of the web rendition.
       </action>
+      <action type="update" dev="sseifert">
+        Deprecate flash rendition support.
+      </action>
       <action type="fix" dev="sseifert">
         DamMediaSource: If a "media" drop target already exists make use of it instead off adding a new one which breaks in-place edit mode.
       </action>

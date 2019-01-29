@@ -131,6 +131,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     }
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public Rendition getFlashRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);

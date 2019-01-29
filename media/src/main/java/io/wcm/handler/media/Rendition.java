@@ -93,7 +93,9 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
 
   /**
    * @return true if the rendition has a flash movie.
+   * @deprecated Flash support is deprecated
    */
+  @Deprecated
   boolean isFlash();
 
   /**
