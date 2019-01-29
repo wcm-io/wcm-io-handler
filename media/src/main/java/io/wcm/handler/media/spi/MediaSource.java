@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,7 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
 
 /**
  * Via {@link MediaSource} OSGi services applications can define additional media sources supported by
@@ -114,14 +116,26 @@ public abstract class MediaSource {
    * Get media request path to media library
    * @param mediaRequest Media request
    * @return Path or null if not present
+   * @deprecated Use {@link #getMediaRef(MediaRequest, MediaHandlerConfig)}
    */
-  @SuppressWarnings("null")
-  protected final String getMediaRef(MediaRequest mediaRequest) {
+  @Deprecated
+  protected final @Nullable String getMediaRef(@NotNull MediaRequest mediaRequest) {
+    return getMediaRef(mediaRequest, null);
+  }
+
+  /**
+   * Get media request path to media library
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
+   * @return Path or null if not present
+   */
+  protected final @Nullable String getMediaRef(@NotNull MediaRequest mediaRequest,
+      @Nullable MediaHandlerConfig mediaHandlerConfig) {
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
       return mediaRequest.getMediaRef();
     }
     else if (mediaRequest.getResource() != null) {
-      String refProperty = getMediaRefProperty(mediaRequest);
+      String refProperty = getMediaRefProperty(mediaRequest, mediaHandlerConfig);
       return mediaRequest.getResource().getValueMap().get(refProperty, String.class);
     }
     else {
@@ -133,24 +147,55 @@ public abstract class MediaSource {
    * Get property name containing the media request path
    * @param mediaRequest Media request
    * @return Property name
+   * @deprecated Use {@link #getMediaRefProperty(MediaRequest, MediaHandlerConfig)}
    */
-  protected final String getMediaRefProperty(MediaRequest mediaRequest) {
+  @Deprecated
+  protected final @Nullable String getMediaRefProperty(@NotNull MediaRequest mediaRequest) {
+    return getMediaRefProperty(mediaRequest, null);
+  }
+
+  /**
+   * Get property name containing the media request path
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
+   * @return Property name
+   */
+  protected final @NotNull String getMediaRefProperty(@NotNull MediaRequest mediaRequest,
+      @Nullable MediaHandlerConfig mediaHandlerConfig) {
     String refProperty = mediaRequest.getRefProperty();
     if (StringUtils.isEmpty(refProperty)) {
-      refProperty = MediaNameConstants.PN_MEDIA_REF;
+      if (mediaHandlerConfig != null) {
+        refProperty = mediaHandlerConfig.getMediaRefProperty();
+      }
+      else {
+        refProperty = MediaNameConstants.PN_MEDIA_REF;
+      }
     }
     return refProperty;
   }
 
   /**
-   * Get (optional) crop dimensions form resource
+   * Get (optional) crop dimensions from resource
    * @param mediaRequest Media request
+   * @return Crop dimension or null if not set or invalid
+   * @deprecated Use {@link #getMediaCropDimension(MediaRequest, MediaHandlerConfig)}
+   */
+  @Deprecated
+  protected final @Nullable CropDimension getMediaCropDimension(@NotNull MediaRequest mediaRequest) {
+    return getMediaCropDimension(mediaRequest, null);
+  }
+
+  /**
+   * Get (optional) crop dimensions from resource
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Crop dimension or null if not set or invalid
    */
   @SuppressWarnings("null")
-  protected final CropDimension getMediaCropDimension(MediaRequest mediaRequest) {
+  protected final @Nullable CropDimension getMediaCropDimension(@NotNull MediaRequest mediaRequest,
+      @Nullable MediaHandlerConfig mediaHandlerConfig) {
     if (mediaRequest.getResource() != null) {
-      String cropProperty = getMediaCropProperty(mediaRequest);
+      String cropProperty = getMediaCropProperty(mediaRequest, mediaHandlerConfig);
       String cropString = mediaRequest.getResource().getValueMap().get(cropProperty, String.class);
       if (StringUtils.isNotEmpty(cropString)) {
         try {
@@ -168,13 +213,68 @@ public abstract class MediaSource {
    * Get property name containing the cropping parameters
    * @param mediaRequest Media request
    * @return Property name
+   * @deprecated Use {@link #getMediaCropProperty(MediaRequest, MediaHandlerConfig)}
    */
-  protected final String getMediaCropProperty(MediaRequest mediaRequest) {
+  @Deprecated
+  protected final @NotNull String getMediaCropProperty(@NotNull MediaRequest mediaRequest) {
+    return getMediaCropProperty(mediaRequest, null);
+  }
+
+  /**
+   * Get property name containing the cropping parameters
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
+   * @return Property name
+   */
+  protected final @NotNull String getMediaCropProperty(@NotNull MediaRequest mediaRequest,
+      @Nullable MediaHandlerConfig mediaHandlerConfig) {
     String cropProperty = mediaRequest.getCropProperty();
     if (StringUtils.isEmpty(cropProperty)) {
-      cropProperty = MediaNameConstants.PN_MEDIA_CROP;
+      if (mediaHandlerConfig != null) {
+        cropProperty = mediaHandlerConfig.getMediaCropProperty();
+      }
+      else {
+        cropProperty = MediaNameConstants.PN_MEDIA_CROP;
+      }
     }
     return cropProperty;
+  }
+
+  /**
+   * Get (optional) rotation from resource
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config
+   * @return Rotation value or null if not set or invalid
+   */
+  @SuppressWarnings("null")
+  protected final @Nullable Integer getMediaRotation(@NotNull MediaRequest mediaRequest,
+      @NotNull MediaHandlerConfig mediaHandlerConfig) {
+    if (mediaRequest.getResource() != null) {
+      String rotationProperty = getMediaRotationProperty(mediaRequest, mediaHandlerConfig);
+      String stringValue = mediaRequest.getResource().getValueMap().get(rotationProperty, String.class);
+      if (StringUtils.isNotEmpty(stringValue)) {
+        int rotationValue = NumberUtils.toInt(stringValue);
+        if (TransformedRenditionHandler.isValidRotation(rotationValue)) {
+          return rotationValue;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get property name containing the rotation parameter
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config
+   * @return Property name
+   */
+  protected final @NotNull String getMediaRotationProperty(@NotNull MediaRequest mediaRequest,
+      @NotNull MediaHandlerConfig mediaHandlerConfig) {
+    String rotationProperty = mediaRequest.getRotationProperty();
+    if (StringUtils.isEmpty(rotationProperty)) {
+      rotationProperty = mediaHandlerConfig.getMediaRotationProperty();
+    }
+    return rotationProperty;
   }
 
   /**

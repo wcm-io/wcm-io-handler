@@ -19,18 +19,21 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import java.util.EnumSet;
+import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
+import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
+import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import java.util.EnumSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.settings.SlingSettingsService;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -45,10 +48,10 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamEvent;
 import com.day.image.Layer;
+import com.google.common.collect.ImmutableMap;
 
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;
@@ -180,23 +183,20 @@ public final class DamRenditionMetadataService implements EventHandler {
     }
 
     // update metadata
-    Node renditionsMetadata = getRenditionsMetadataNode(asset, true);
+    Resource renditionsMetadata = getRenditionsMetadataResource(asset, true);
     if (renditionsMetadata != null) {
       try {
-        Node metadataNode;
-        if (renditionsMetadata.hasNode(renditionNodeName)) {
-          metadataNode = renditionsMetadata.getNode(renditionNodeName);
-        }
-        else {
-          metadataNode = renditionsMetadata.addNode(renditionNodeName, JcrConstants.NT_UNSTRUCTURED);
-        }
-        metadataNode.setProperty(PN_IMAGE_WIDTH, renditionLayer.getWidth());
-        metadataNode.setProperty(PN_IMAGE_HEIGHT, renditionLayer.getHeight());
+        Resource metadataResource = ResourceUtil.getOrCreateResource(renditionsMetadata.getResourceResolver(),
+            renditionsMetadata.getPath() + "/" + renditionNodeName,
+            ImmutableMap.<String, Object>of(JCR_PRIMARYTYPE, NT_UNSTRUCTURED), NT_UNSTRUCTURED, false);
+        ModifiableValueMap props = metadataResource.adaptTo(ModifiableValueMap.class);
+        props.put(PN_IMAGE_WIDTH, renditionLayer.getWidth());
+        props.put(PN_IMAGE_HEIGHT, renditionLayer.getHeight());
         updateLastModifiedAndSave(asset, userId, resolver);
-        log.debug("Updated rendition metadata at " + metadataNode.getPath() + " "
+        log.debug("Updated rendition metadata at " + metadataResource.getPath() + " "
             + "(width=" + renditionLayer.getWidth() + ", height=" + renditionLayer.getHeight() + ").");
       }
-      catch (RepositoryException ex) {
+      catch (PersistenceException ex) {
         log.error("Unable to create or update rendition metadata node for " + renditionPath, ex);
       }
     }
@@ -208,21 +208,21 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param renditionPath Rendition path
    */
   private void renditionRemoved(Asset asset, String renditionPath, String userId, ResourceResolver resolver) {
-    Node renditionsMetadata = getRenditionsMetadataNode(asset, false);
-    if (renditionsMetadata == null) {
+    Resource renditionsResource = getRenditionsMetadataResource(asset, false);
+    if (renditionsResource == null) {
       return;
     }
     try {
       String renditionNodeName = Text.getName(renditionPath);
-      if (renditionsMetadata.hasNode(renditionNodeName)) {
-        Node metadataNode = renditionsMetadata.getNode(renditionNodeName);
-        String pathToRemove = metadataNode.getPath();
-        metadataNode.remove();
+      Resource metadataResource = renditionsResource.getChild(renditionNodeName);
+      if (metadataResource != null) {
+        String pathToRemove = metadataResource.getPath();
+        renditionsResource.getResourceResolver().delete(metadataResource);
         updateLastModifiedAndSave(asset, userId, resolver);
         log.debug("Removed rendition metadata at " + pathToRemove + ".");
       }
     }
-    catch (RepositoryException ex) {
+    catch (PersistenceException ex) {
       log.error("Unable to delete rendition metadata node for " + renditionPath, ex);
     }
   }
@@ -231,19 +231,18 @@ public final class DamRenditionMetadataService implements EventHandler {
    * Updates last modified information and saves the session.
    * @param asset Asset
    * @param userId User id
-   * @throws RepositoryException
+   * @throws PersistenceException
    */
-  @SuppressWarnings("null")
-  private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) throws RepositoryException {
+  private void updateLastModifiedAndSave(Asset asset, String userId, ResourceResolver resolver) throws PersistenceException {
     // -- this is currently DISABLED due to WCMIO-28, concurrency issues with DAM workflows
     /*
     Node node = asset.adaptTo(Node.class);
-    Node contentNode = node.getNode(JcrConstants.JCR_CONTENT);
+    Node contentNode = node.getNode(JCR_CONTENT);
     // this is a workaround to make sure asset is marked as modified
     contentNode.setProperty(JcrConstants.JCR_LASTMODIFIED, Calendar.getInstance());
     contentNode.setProperty(JcrConstants.JCR_LAST_MODIFIED_BY, userId);
      */
-    resolver.adaptTo(Session.class).save();
+    resolver.commit();
   }
 
   /**
@@ -269,20 +268,19 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @return Node or null if it does not exist or could not be created
    */
   @SuppressWarnings("null")
-  private Node getRenditionsMetadataNode(Asset asset, boolean createIfNotExists) {
+  private Resource getRenditionsMetadataResource(Asset asset, boolean createIfNotExists) {
+    Resource assetResource = asset.adaptTo(Resource.class);
+    String renditionsMetadataPath = assetResource.getPath() + "/" + JCR_CONTENT + "/" + NN_RENDITIONS_METADATA;
     try {
-      Node assetNode = asset.adaptTo(Node.class);
-      if (assetNode != null) {
-        Node assetContentNode = assetNode.getNode(JcrConstants.JCR_CONTENT);
-        if (assetContentNode.hasNode(NN_RENDITIONS_METADATA)) {
-          return assetContentNode.getNode(NN_RENDITIONS_METADATA);
-        }
-        else if (createIfNotExists) {
-          return assetContentNode.addNode(NN_RENDITIONS_METADATA, JcrConstants.NT_UNSTRUCTURED);
-        }
+      if (createIfNotExists) {
+        return ResourceUtil.getOrCreateResource(assetResource.getResourceResolver(), renditionsMetadataPath,
+            ImmutableMap.<String, Object>of(JCR_PRIMARYTYPE, NT_UNSTRUCTURED), NT_UNSTRUCTURED, false);
+      }
+      else {
+        return assetResource.getChild(renditionsMetadataPath);
       }
     }
-    catch (RepositoryException ex) {
+    catch (PersistenceException ex) {
       log.error("Unable to get/create renditions metadata node at " + asset.getPath(), ex);
     }
     return null;

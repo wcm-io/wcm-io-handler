@@ -93,7 +93,9 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
 
   /**
    * @return true if the rendition has a flash movie.
+   * @deprecated Flash support is deprecated
    */
+  @Deprecated
   boolean isFlash();
 
   /**
@@ -112,5 +114,18 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    * @return Height in pixels. Returns 0 if no height information is available.
    */
   long getHeight();
+
+  /**
+   * Gets the ratio of the image (width / height).
+   * @return Ratio. Returns 0 if no width or height information is available.
+   */
+  default double getRatio() {
+    long width = getWidth();
+    long height = getHeight();
+    if (width > 0 && height > 0) {
+      return (double)width / (double)height;
+    }
+    return 0d;
+  }
 
 }

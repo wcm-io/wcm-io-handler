@@ -23,6 +23,33 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.1.0" date="2019-01-29">
+      <action type="add" dev="sseifert">
+        Add support for image rotation.
+      </action>
+      <action type="add" dev="sseifert">
+        Allow to configure "Adobe standard" property/node names for media reference, cropping, rotation, alt. text and inline media node name via MediaHandlerConfig.
+      </action>
+      <action type="add" dev="sseifert">
+        ResourceMedia: Add optional parameters for refProperty, cropProperty and rotationProperty.
+      </action>
+      <action type="add" dev="sseifert">
+        Add Rendition.getRatio() method.
+      </action>
+      <action type="update" dev="sseifert">
+        Use original rendition for generating the cropped images instead of the web rendition.
+      </action>
+      <action type="update" dev="sseifert">
+        Deprecate flash rendition support.
+      </action>
+      <action type="fix" dev="sseifert">
+        DamMediaSource: If a "media" drop target already exists make use of it instead off adding a new one which breaks in-place edit mode.
+      </action>
+      <action type="fix" dev="sseifert">
+        ResourceMedia: Add css class using MediaBuilder instead of adding it directly to the DOM element.
+      </action>
+    </release>
+
     <release version="1.0.10" date="2018-08-27">
       <action type="update" dev="sseifert">
         Add Jetbrains NotNull/Nullable annotations to API.

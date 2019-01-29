@@ -21,7 +21,9 @@ package io.wcm.handler.mediasource.dam;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -49,9 +51,9 @@ import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
-import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.sling.models.annotations.AemObject;
@@ -75,6 +77,8 @@ public final class DamMediaSource extends MediaSource {
   private WCMMode wcmMode;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentContext componentContext;
+  @Self
+  private MediaHandlerConfig mediaHandlerConfig;
 
   /**
    * Media source ID
@@ -93,13 +97,13 @@ public final class DamMediaSource extends MediaSource {
 
   @Override
   public @NotNull String getPrimaryMediaRefProperty() {
-    return MediaNameConstants.PN_MEDIA_REF;
+    return mediaHandlerConfig.getMediaRefProperty();
   }
 
   @Override
   @SuppressWarnings("null")
   public @NotNull Media resolveMedia(@NotNull Media media) {
-    String mediaRef = getMediaRef(media.getMediaRequest());
+    String mediaRef = getMediaRef(media.getMediaRequest(), mediaHandlerConfig);
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     boolean renditionsResolved = false;
@@ -109,11 +113,12 @@ public final class DamMediaSource extends MediaSource {
       if (StringUtils.isEmpty(mediaArgs.getAltText())
           && media.getMediaRequest().getResource() != null) {
         ValueMap props = media.getMediaRequest().getResource().getValueMap();
-        mediaArgs.altText(props.get(MediaNameConstants.PN_MEDIA_ALTTEXT, String.class));
+        mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
       }
 
       // Check for crop dimensions
-      media.setCropDimension(getMediaCropDimension(media.getMediaRequest()));
+      media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
+      media.setRotation(getMediaRotation(media.getMediaRequest(), mediaHandlerConfig));
 
       // get DAM Asset to check for available renditions
       com.day.cq.dam.api.Asset damAsset = null;
@@ -152,53 +157,76 @@ public final class DamMediaSource extends MediaSource {
     return media;
   }
 
-  @SuppressWarnings("null")
   @Override
+  @SuppressWarnings("null")
   public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
     }
 
-    String refProperty = getMediaRefProperty(mediaRequest);
-    if (!StringUtils.startsWith(refProperty, "./")) {
-      refProperty = "./" + refProperty; //NOPMD
-    }
-
-    String cropProperty = getMediaCropProperty(mediaRequest);
-    if (!StringUtils.startsWith(cropProperty, "./")) {
-      cropProperty = "./" + cropProperty; //NOPMD
-    }
-
-    String name = refProperty;
-    if (StringUtils.contains(name, "/")) {
-      name = Text.getName(name);
-    }
-
     if (componentContext != null && componentContext.getEditContext() != null
         && MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext)) {
-      Component componentDefinition = WCMUtils.getComponent(resource);
 
-      // set drop target - with path of current component as default resource type
-      Map<String, String> params = new HashMap<String, String>();
-      if (componentDefinition != null) {
-        params.put("./" + ResourceResolver.PROPERTY_RESOURCE_TYPE, componentDefinition.getPath());
+      String refProperty = prependDotSlash(getMediaRefProperty(mediaRequest, mediaHandlerConfig));
+      String cropProperty = prependDotSlash(getMediaCropProperty(mediaRequest, mediaHandlerConfig));
+      String rotationProperty = prependDotSlash(getMediaRotationProperty(mediaRequest, mediaHandlerConfig));
 
-        // clear cropping parameters if a new image is inserted via drag&drop
-        params.put(cropProperty, "");
+      String name = refProperty;
+      if (StringUtils.contains(name, "/")) {
+        name = Text.getName(name);
       }
 
-      DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(new String[] {
-          "image/.*" // allow all image mime types
-      }).setGroups(new String[] {
-          "media" // allow drop from DAM contentfinder tab
-      }).setParameters(params);
-
-      componentContext.getEditContext().getEditConfig().getDropTargets().put(dropTarget.getId(), dropTarget);
+      // check of drop target for "media" group already exists - get it's id for the cq-dd- css class
+      Optional<String> dropTargetCssClass = getMediaDropTargetID();
+      if (!dropTargetCssClass.isPresent()) {
+        // otherwise add a new drop target and get it's id
+        dropTargetCssClass = addMediaDroptarget(refProperty, cropProperty, rotationProperty, name);
+      }
 
       if (element != null) {
-        element.addCssClass(DropTarget.CSS_CLASS_PREFIX + name);
+        element.addCssClass(dropTargetCssClass.get());
       }
     }
+  }
+
+  private String prependDotSlash(String property) {
+    if (!StringUtils.startsWith(property, "./")) {
+      return "./" + property;
+    }
+    else {
+      return property;
+    }
+  }
+
+  private Optional<String> getMediaDropTargetID() {
+    return componentContext.getEditContext().getEditConfig().getDropTargets().values().stream()
+        .filter(item -> ArrayUtils.contains(item.getGroups(), "media"))
+        .map(item -> item.getId())
+        .findFirst();
+  }
+
+  private Optional<String> addMediaDroptarget(String refProperty, String cropProperty, String rotationProperty, String name) {
+    Component componentDefinition = WCMUtils.getComponent(resource);
+
+    // set drop target - with path of current component as default resource type
+    Map<String, String> params = new HashMap<String, String>();
+    if (componentDefinition != null) {
+      params.put("./" + ResourceResolver.PROPERTY_RESOURCE_TYPE, componentDefinition.getPath());
+
+      // clear cropping parameters if a new image is inserted via drag&drop
+      params.put(cropProperty, "");
+      params.put(rotationProperty, "");
+    }
+
+    DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(new String[] {
+        "image/.*" // allow all image mime types
+    }).setGroups(new String[] {
+        "media" // allow drop from DAM contentfinder tab
+    }).setParameters(params);
+
+    componentContext.getEditContext().getEditConfig().getDropTargets().put(dropTarget.getId(), dropTarget);
+
+    return Optional.of(dropTarget.getId());
   }
 
   @Override

@@ -57,6 +57,10 @@ class DefaultRenditionHandler implements RenditionHandler {
     originalRendition = damOriginalRendition != null ? new RenditionMetadata(damOriginalRendition) : null;
   }
 
+  protected RenditionMetadata getOriginalRendition() {
+    return this.originalRendition;
+  }
+
   /**
    * @return All renditions that are available for this asset
    */
@@ -311,6 +315,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
   /**
    * Returns original rendition - if it is contained in the candidate set. Otherwise first candidate is returned.
+   * If a VirtualCropRenditionMetadata is present always the first one is returned.
    * @param candidates Candidates
    * @return Original or first rendition of candidates or null
    */
@@ -427,9 +432,10 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // return virtual rendition
     if (width > 0 && height > 0) {
-      if (rendition instanceof VirtualCropRenditionMetadata) {
-        VirtualCropRenditionMetadata cropRendition = (VirtualCropRenditionMetadata)rendition;
-        return new VirtualCropRenditionMetadata(cropRendition.getRendition(), width, height, cropRendition.getCropDimension());
+      if (rendition instanceof VirtualTransformedRenditionMetadata) {
+        VirtualTransformedRenditionMetadata cropRendition = (VirtualTransformedRenditionMetadata)rendition;
+        return new VirtualTransformedRenditionMetadata(cropRendition.getRendition(), width, height,
+            cropRendition.getCropDimension(), cropRendition.getRotation());
       }
       else {
         return new VirtualRenditionMetadata(rendition.getRendition(), width, height);

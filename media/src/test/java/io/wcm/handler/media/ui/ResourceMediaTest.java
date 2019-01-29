@@ -46,9 +46,11 @@ public class ResourceMediaTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
+  private Asset asset;
+
   @Before
   public void setUp() {
-    Asset asset = context.create().asset("/content/dam/asset1.jpg",
+    asset = context.create().asset("/content/dam/asset1.jpg",
         (int)EDITORIAL_2COL.getWidth(), (int)EDITORIAL_2COL.getHeight(), ContentType.JPEG);
 
     Resource resource = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media",
@@ -90,6 +92,22 @@ public class ResourceMediaTest {
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
     assertTrue(underTest.isValid());
     assertEquals("mycss", underTest.getMetadata().getElement().getCssClass());
+  }
+
+  @Test
+  public void testWithRefCropProperty() {
+    context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
+    context.request().setAttribute("refProperty", "myRefProp");
+    context.request().setAttribute("cropProperty", "myCropProp");
+
+    Resource resource2 = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media2",
+        ImmutableValueMap.of("myRefProp", asset.getPath()));
+    context.currentResource(resource2);
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertTrue(underTest.isValid());
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg",
+        underTest.getMetadata().getUrl());
   }
 
 }

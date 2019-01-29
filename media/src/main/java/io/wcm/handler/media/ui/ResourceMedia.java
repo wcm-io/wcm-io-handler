@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.ui;
 
+import static io.wcm.handler.media.MediaNameConstants.PROP_CSS_CLASS;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +43,10 @@ import io.wcm.handler.media.MediaHandler;
  * </p>
  * <ul>
  * <li><code>mediaFormat</code>: Media format name to restrict the allowed media items</li>
+ * <li><code>refProperty</code>: NHame of the property from which the media reference path is read, or node name for
+ * inline media.</li>
+ * <li><code>cropProperty</code>: Name of the property which contains the cropping parameters</li>
+ * <li><code>rotationProperty</code>: Name of the property which contains the rotation parameter</li>
  * <li><code>cssClass</code>: CSS classes to be applied on the generated media element (most cases img element)</li>
  * </ul>
  */
@@ -49,6 +55,15 @@ public class ResourceMedia {
 
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String mediaFormat;
+
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private String refProperty;
+
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private String cropProperty;
+
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private String rotationProperty;
 
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String cssClass;
@@ -67,12 +82,20 @@ public class ResourceMedia {
     if (StringUtils.isNotEmpty(mediaFormat)) {
       builder.mediaFormatName(mediaFormat);
     }
+    if (StringUtils.isNotEmpty(refProperty)) {
+      builder.refProperty(refProperty);
+    }
+    if (StringUtils.isNotEmpty(cropProperty)) {
+      builder.cropProperty(cropProperty);
+    }
+    if (StringUtils.isNotEmpty(rotationProperty)) {
+      builder.rotationProperty(rotationProperty);
+    }
+    if (StringUtils.isNotEmpty(cssClass)) {
+      builder.property(PROP_CSS_CLASS, cssClass);
+    }
 
     media = builder.build();
-
-    if (media.isValid() && StringUtils.isNotEmpty(cssClass)) {
-      media.getElement().addCssClass(cssClass);
-    }
   }
 
   /**

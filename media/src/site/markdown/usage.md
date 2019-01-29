@@ -31,13 +31,36 @@ See [MediaBuilder][media-builder] for all options.
 
 ### Media properties in resource
 
-When referencing a media in a resource multiple properties are used to describe the media reference. Some of the properties depend on the media source implementation. These are the most common properties:
+When referencing a media in a resource multiple properties are used to describe the media reference. Some of the properties depend on the media source implementation.
 
-* `mediaRef`: Reference/path to the media asset
-* `mediaCrop`: Cropping parameters for image
-* `mediaAltText`: Alternative text for media
+By default, the Media Handler uses it's own set of properties (prefixed with "media"). For new projects it is recommended to switch to the "Adobe Standard" properties which are also by other image components.
 
-Further properties are defined in [MediaNameConstants][media-name-constants]. It is recommended to define an edit dialog which either allows selection a media asset from repository (e.g. browsing DAM hierarchy), or to upload a binary file to the page.
+These are the most common properties:
+
+|Property name<br/>(wcm.io Default) |Property name<br/> (Adobe Standard)|Description
+|-----------------------------------|-----------------------------------|-----------------------------------------------|
+| `mediaRef`                        | `fileReference`                   | Reference/path to the media asset
+| `mediaCrop`                       | `imageCrop`                       | Cropping parameters for image
+| `mediaRotation`                   | `imageRotation`                   | Rotation parameter for image
+| `mediaAltText`                    | `alt`                             | Alternative text for media
+| `mediaInline`                     | `file`                            | Node name for binary file uploaded to a page
+
+Further properties are defined in [MediaNameConstants][media-name-constants]. 
+
+To switch to "Adobe Standard" names add this class to your project (recommended):
+
+```java
+@Component(service = MediaHandlerConfig.class)
+public class MediaHandlerConfigImpl extends MediaHandlerConfig {
+
+  @Override
+  public boolean useAdobeStandardNames() {
+    // use standard name for asset references as used by the core components
+    return true;
+  }
+
+}
+```
 
 
 ### Media formats

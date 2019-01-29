@@ -43,6 +43,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   private final Adaptable adaptable;
   private final com.day.cq.dam.api.Asset damAsset;
   private final CropDimension cropDimension;
+  private final Integer rotation;
   private final MediaArgs defaultMediaArgs;
   private final ValueMap properties;
 
@@ -53,6 +54,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   public DamAsset(com.day.cq.dam.api.Asset damAsset, Media media, Adaptable adaptable) {
     this.damAsset = damAsset;
     this.cropDimension = media.getCropDimension();
+    this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
     this.properties = new ValueMapDecorator(damAsset.getMetadata());
     this.adaptable = adaptable;
@@ -129,6 +131,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     }
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public Rendition getFlashRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
@@ -157,7 +160,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    * @return DAM rendition instance (may be invalid rendition)
    */
   protected Rendition getDamRendition(MediaArgs mediaArgs) {
-    return new DamRendition(this.damAsset, this.cropDimension, mediaArgs, adaptable);
+    return new DamRendition(this.damAsset, this.cropDimension, this.rotation, mediaArgs, adaptable);
   }
 
   @Override

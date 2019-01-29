@@ -54,28 +54,60 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_SOURCE = "mediaSource";
 
   /**
-   * Default property name for reference to media library item
+   * Default property name for reference to media library item (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_REF = "mediaRef";
 
   /**
-   * Default property name for cropping paraemters
+   * Default property name for reference to media library item (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_REF_STANDARD = "fileReference";
+
+  /**
+   * Default property name for cropping parameters (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_CROP = "mediaCrop";
 
   /**
-   * Default node name for inline media item stored in node within the content page
+   * Default property name for cropping parameters (Adobe/Core Component standard)
    */
-  public static final @NotNull String NN_MEDIA_INLINE = "mediaInline";
+  public static final @NotNull String PN_MEDIA_CROP_STANDARD = "imageCrop";
 
   /**
-   * Default property name for media alt. text
+   * Default property name for rotate parameter (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String PN_MEDIA_ROTATION = "mediaRotate";
+
+  /**
+   * Default property name for rotate parameter (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_ROTATION_STANDARD = "imageRotate";
+
+  /**
+   * Default property name for media alt. text (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_ALTTEXT = "mediaAltText";
 
   /**
-   * Default property name for flash variables
+   * Default property name for media alt. text (Adobe/Core Component standard)
    */
+  public static final @NotNull String PN_MEDIA_ALTTEXT_STANDARD = "alt";
+
+  /**
+   * Default node name for inline media item stored in node within the content page (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String NN_MEDIA_INLINE = "mediaInline";
+
+  /**
+   * Default node name for inline media item stored in node within the content page (Adobe/Core Component standard)
+   */
+  public static final @NotNull String NN_MEDIA_INLINE_STANDARD = "file";
+
+  /**
+   * Default property name for flash variables
+   * @deprecated Flash support is deprecated
+   */
+  @Deprecated
   public static final @NotNull String PN_FLASH_VARS = "flashVars";
 
   /**
