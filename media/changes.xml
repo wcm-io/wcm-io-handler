@@ -33,6 +33,9 @@
       <action type="add" dev="sseifert">
         ResourceMedia: Add optional parameters for refProperty, cropProperty and rotationProperty.
       </action>
+      <action type="add" dev="sseifert">
+        Add Rendition.getRatio() method.
+      </action>
       <action type="update" dev="sseifert">
         Use original rendition for generating the cropped images instead of the web rendition.
       </action>

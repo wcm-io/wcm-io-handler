@@ -643,6 +643,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
         rendition0.getUrl());
     assertEquals(160, rendition0.getWidth());
     assertEquals(100, rendition0.getHeight());
+    assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
 
     MediaFormat mediaFormat0 = renditions.get(0).getMediaFormat();
     assertEquals(RATIO.getLabel(), mediaFormat0.getLabel());

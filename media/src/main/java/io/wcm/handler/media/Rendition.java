@@ -115,4 +115,17 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    */
   long getHeight();
 
+  /**
+   * Gets the ratio of the image (width / height).
+   * @return Ratio. Returns 0 if no width or height information is available.
+   */
+  default double getRatio() {
+    long width = getWidth();
+    long height = getHeight();
+    if (width > 0 && height > 0) {
+      return (double)width / (double)height;
+    }
+    return 0d;
+  }
+
 }

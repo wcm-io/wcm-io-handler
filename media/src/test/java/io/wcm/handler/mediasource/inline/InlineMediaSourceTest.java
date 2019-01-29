@@ -310,6 +310,7 @@ public class InlineMediaSourceTest {
     assertEquals("rendition.filesize", 15471, rendition.getFileSize());
     assertEquals("rendition.width", 215, rendition.getWidth());
     assertEquals("rendition.height", 102, rendition.getHeight());
+    assertEquals("rendition.ratio", 215d / 102d, rendition.getRatio(), 0.0001);
 
     assertNotNull(media.getAsset().getImageRendition(new MediaArgs()));
     assertNull(media.getAsset().getFlashRendition(new MediaArgs()));
