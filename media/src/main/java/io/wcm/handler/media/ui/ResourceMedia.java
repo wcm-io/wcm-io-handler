@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.ui;
 
+import static io.wcm.handler.media.MediaNameConstants.PROP_CSS_CLASS;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
@@ -89,12 +91,11 @@ public class ResourceMedia {
     if (StringUtils.isNotEmpty(rotationProperty)) {
       builder.rotationProperty(rotationProperty);
     }
+    if (StringUtils.isNotEmpty(cssClass)) {
+      builder.property(PROP_CSS_CLASS, cssClass);
+    }
 
     media = builder.build();
-
-    if (media.isValid() && StringUtils.isNotEmpty(cssClass)) {
-      media.getElement().addCssClass(cssClass);
-    }
   }
 
   /**

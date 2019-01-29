@@ -42,6 +42,9 @@
       <action type="fix" dev="sseifert">
         DamMediaSource: If a "media" drop target already exists make use of it instead off adding a new one which breaks in-place edit mode.
       </action>
+      <action type="fix" dev="sseifert">
+        ResourceMedia: Add css class using MediaBuilder instead of adding it directly to the DOM element.
+      </action>
     </release>
 
     <release version="1.0.10" date="2018-08-27">
