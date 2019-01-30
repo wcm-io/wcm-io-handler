@@ -21,6 +21,8 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +47,7 @@ public class TransformedRenditionHandlerTest {
   public AemContext context = AppAemContext.newAemContext();
 
   private Asset asset;
+  private Rendition webRendition;
   private CropDimension cropDimension;
 
   @Before
@@ -57,8 +60,8 @@ public class TransformedRenditionHandlerTest {
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 
     // generate web-enabled rendition
-    Rendition rendition = context.create().assetRendition(asset, "cq5dam.web.200.150.jpg", 200, 150, ContentType.JPEG);
-    eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", rendition.getPath()).toEvent());
+    webRendition = context.create().assetRendition(asset, "cq5dam.web.200.150.jpg", 200, 150, ContentType.JPEG);
+    eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", webRendition.getPath()).toEvent());
 
     cropDimension = new CropDimension(20, 10, 100, 30);
   }
@@ -69,6 +72,18 @@ public class TransformedRenditionHandlerTest {
     assertEquals(1, underTest.getAvailableRenditions(new MediaArgs()).size());
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.200.60.40,20,240,80.file/cropTest.jpg",
+        firstRendition.getMediaPath(false));
+  }
+
+  @Test
+  public void testCroppingWithoutWebRendition() throws PersistenceException {
+    // delete web rendition
+    context.resourceResolver().delete(webRendition.adaptTo(Resource.class));
+
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, cropDimension, null);
+    assertEquals(1, underTest.getAvailableRenditions(new MediaArgs()).size());
+    RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
+    assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.100.30.20,10,120,40.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
   }
 

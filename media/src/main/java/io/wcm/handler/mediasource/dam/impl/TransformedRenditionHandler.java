@@ -119,11 +119,11 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
    * to crop the original image, so we have to scale those values to match the coordinates in the original image.
    * @return Scale factor
    */
-  private Double getCropScaleFactor(NavigableSet<RenditionMetadata> candidates) {
+  private double getCropScaleFactor(NavigableSet<RenditionMetadata> candidates) {
     RenditionMetadata original = getOriginalRendition();
     RenditionMetadata webEnabled = getWebEnabledRendition(candidates);
     if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
-      return null;
+      return 1d;
     }
     return (double)original.getWidth() / (double)webEnabled.getWidth();
   }
