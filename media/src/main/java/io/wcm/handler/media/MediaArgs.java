@@ -45,6 +45,7 @@ public final class MediaArgs implements Cloneable {
   private MediaFormat[] mediaFormats;
   private String[] mediaFormatNames;
   private boolean mediaFormatsMandatory;
+  private boolean autoCrop;
   private String[] fileExtensions;
   private UrlMode urlMode;
   private long fixedWidth;
@@ -202,6 +203,24 @@ public final class MediaArgs implements Cloneable {
           value
       };
     }
+    return this;
+  }
+
+  /**
+   * @return Enables "auto-cropping" mode. If no matching rendition is found
+   *         it is tried to generate one by automatically cropping another one.
+   */
+  public boolean isAutoCrop() {
+    return this.autoCrop;
+  }
+
+  /**
+   * @param value Enables "auto-cropping" mode. If no matching rendition is found
+   *          it is tried to generate one by automatically cropping another one.
+   * @return this
+   */
+  public @NotNull MediaArgs autoCrop(boolean value) {
+    this.autoCrop = value;
     return this;
   }
 

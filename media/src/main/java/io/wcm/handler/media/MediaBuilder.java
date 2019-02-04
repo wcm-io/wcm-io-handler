@@ -102,6 +102,14 @@ public interface MediaBuilder {
   MediaBuilder mediaFormatName(String value);
 
   /**
+   * @param value Enables "auto-cropping" mode. If no matching rendition is found
+   *          it is tried to generate one by automatically cropping another one.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder autoCrop(boolean value);
+
+  /**
    * @param values File extensions
    * @return this
    */

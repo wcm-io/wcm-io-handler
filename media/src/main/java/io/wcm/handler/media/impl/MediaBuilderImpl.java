@@ -26,6 +26,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaBuilder;
+import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
@@ -50,6 +51,13 @@ final class MediaBuilderImpl implements MediaBuilder {
     this.resource = resource;
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
+
+    // resolve component properties
+    if (resource != null) {
+      ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource);
+      mediaArgs.mediaFormatNames(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMAT, String[].class));
+      mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+    }
   }
 
   MediaBuilderImpl(String mediaRef, MediaHandlerImpl mediaHandler) {
@@ -68,6 +76,7 @@ final class MediaBuilderImpl implements MediaBuilder {
     this.mediaArgs = mediaRequest.getMediaArgs().clone();
     this.refProperty = mediaRequest.getRefProperty();
     this.cropProperty = mediaRequest.getCropProperty();
+    this.rotationProperty = mediaRequest.getRotationProperty();
     this.mediaHandler = mediaHandler;
   }
 
@@ -120,6 +129,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   @Override
   public @NotNull MediaBuilder mediaFormatName(String value) {
     this.mediaArgs.mediaFormatName(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder autoCrop(boolean value) {
+    this.mediaArgs.autoCrop(value);
     return this;
   }
 
