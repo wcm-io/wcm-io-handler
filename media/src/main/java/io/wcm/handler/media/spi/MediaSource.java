@@ -113,6 +113,15 @@ public abstract class MediaSource {
   public abstract void enableMediaDrop(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest);
 
   /**
+   * Sets list of cropping ratios to a list matching the selected media formats.
+   * @param element Html element
+   * @param mediaRequest Media request to detect media args and property names
+   */
+  public void setCustomIPECropRatios(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
+    // TODO: add default implementation for customizing list of crop ratios
+  }
+
+  /**
    * Get media request path to media library
    * @param mediaRequest Media request
    * @return Path or null if not present

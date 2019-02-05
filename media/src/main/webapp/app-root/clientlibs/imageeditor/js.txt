@@ -1,3 +1,0 @@
-#base=js
-namespace.js
-ImageEditor.PluginMixins.Crop.js

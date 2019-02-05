@@ -1,9 +1,0 @@
-{
-  /*
-   * Extends image IPE with media handler features.
-   */
-  "jcr:primaryType": "cq:ClientLibraryFolder",
-  "categories": [
-    "cq.authoring.editor.core.inlineediting"
-  ]
-}

@@ -33,6 +33,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
+import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
@@ -57,6 +58,7 @@ public final class MediaArgs implements Cloneable {
   private String dummyImageUrl;
   private boolean includeAssetThumbnails;
   private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
+  private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private ValueMap properties;
 
   /**
@@ -447,6 +449,22 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return Whether to set customized list of IPE cropping ratios.
+   */
+  public IPERatioCustomize getIPERatioCustomize() {
+    return this.ipeRatioCustomize;
+  }
+
+  /**
+   * @param value Whether to set customized list of IPE cropping ratios.
+   * @return this
+   */
+  public @NotNull MediaArgs ipeRatioCustomize(IPERatioCustomize value) {
+    this.ipeRatioCustomize = value;
+    return this;
+  }
+
+  /**
    * Custom properties that my be used by application-specific markup builders or processors.
    * @param map Property map. Is merged with properties already set.
    * @return this
@@ -512,6 +530,7 @@ public final class MediaArgs implements Cloneable {
     clone.mediaFormats = ArrayUtils.clone(this.mediaFormats);
     clone.mediaFormatNames = ArrayUtils.clone(this.mediaFormatNames);
     clone.mediaFormatsMandatory = this.mediaFormatsMandatory;
+    clone.autoCrop = this.autoCrop;
     clone.fileExtensions = ArrayUtils.clone(this.fileExtensions);
     clone.urlMode = this.urlMode;
     clone.fixedWidth = this.fixedWidth;
@@ -523,6 +542,7 @@ public final class MediaArgs implements Cloneable {
     clone.dummyImageUrl = this.dummyImageUrl;
     clone.includeAssetThumbnails = this.includeAssetThumbnails;
     clone.dragDropSupport = this.dragDropSupport;
+    clone.ipeRatioCustomize = this.ipeRatioCustomize;
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
     }

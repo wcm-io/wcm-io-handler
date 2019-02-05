@@ -96,6 +96,8 @@
               io.wcm.handler.mediasource.inline
             </Sling-Model-Packages>
 
+            <Sling-Namespaces>wcmio=http://wcm.io/ns</Sling-Namespaces>
+
             <!-- include application path as intial content -->
             <Sling-Initial-Content>SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media</Sling-Initial-Content>
 
