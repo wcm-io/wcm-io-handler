@@ -20,6 +20,8 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
@@ -43,6 +45,8 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  */
 class DamRendition extends SlingAdaptable implements Rendition {
 
+  static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\..*$");
+
   private final Adaptable adaptable;
   private final MediaArgs mediaArgs;
   private final RenditionMetadata rendition;
@@ -63,7 +67,22 @@ class DamRendition extends SlingAdaptable implements Rendition {
     else {
       renditionHandler = new DefaultRenditionHandler(asset);
     }
-    this.rendition = renditionHandler.getRendition(mediaArgs);
+    RenditionMetadata resolvedRendition = renditionHandler.getRendition(mediaArgs);
+
+    // if auto-cropping is enabled, and no cropping or rotation parameters set, try to build a
+    // transformed rendition with automatically devised cropping parameters
+    if (resolvedRendition == null && mediaArgs.isAutoCrop() && renditionHandler instanceof DefaultRenditionHandler) {
+      AutoCropping autoCropping = new AutoCropping(asset, mediaArgs);
+      List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
+      for (CropDimension autoCropDimension : autoCropDimensions) {
+        renditionHandler = new TransformedRenditionHandler(asset, autoCropDimension, null);
+        resolvedRendition = renditionHandler.getRendition(mediaArgs);
+        if (resolvedRendition != null) {
+          break;
+        }
+      }
+    }
+    this.rendition = resolvedRendition;
 
     this.adaptable = adaptable;
   }
