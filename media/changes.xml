@@ -27,6 +27,12 @@
       <action type="add" dev="sseifert">
         Add support for (optional) auto-cropping of DAM assets when no matching rendition exists.
       </action>
+      <action type="add" dev="sseifert">
+        Automatic customization of image in-place edititing crop ratios to ratios from configured media formats.
+      </action>
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.2 as minimum version.
+      </action>
       <action type="fix" dev="sseifert">
         Avoid NPE when cropping an asset without a web rendition.
       </action>

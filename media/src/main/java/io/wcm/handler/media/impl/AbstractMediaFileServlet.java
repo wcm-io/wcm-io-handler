@@ -32,6 +32,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.sling.commons.request.RequestPath;
 import io.wcm.wcm.commons.caching.CacheHeader;
@@ -55,7 +56,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
   public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
   @Override
-  protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
 
     // get binary data resource
     Resource resource = getBinaryDataResource(request);
@@ -112,7 +113,6 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Binary data or null if not binary data found
    * @throws IOException
    */
-  @SuppressWarnings({ "null", "unused" })
   protected byte[] getBinaryData(Resource resource, SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {

@@ -68,6 +68,8 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
         case EDIT:
           // enable drag&drop from content finder
           media.getMediaSource().enableMediaDrop(mediaElement, media.getMediaRequest());
+          // set custom IPE crop ratios
+          media.getMediaSource().setCustomIPECropRatios(mediaElement, media.getMediaRequest());
           break;
 
         case PREVIEW:
@@ -79,6 +81,8 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
                 mediaHandlerConfig.getMediaRefProperty());
             MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request, mediaHandlerConfig);
           }
+          // set custom IPE crop ratios
+          media.getMediaSource().setCustomIPECropRatios(mediaElement, media.getMediaRequest());
           break;
 
         default:

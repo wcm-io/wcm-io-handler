@@ -218,6 +218,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  @SuppressWarnings("null")
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (this.rendition != null) {
       AdapterType result = this.rendition.adaptTo(type);

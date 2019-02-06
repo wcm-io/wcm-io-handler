@@ -76,6 +76,7 @@ public class TransformedRenditionHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   public void testCroppingWithoutWebRendition() throws PersistenceException {
     // delete web rendition
     context.resourceResolver().delete(webRendition.adaptTo(Resource.class));

@@ -32,6 +32,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +43,8 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.wcm.api.WCMMode;
@@ -48,7 +52,9 @@ import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.api.components.EditConfig;
 import com.day.cq.wcm.api.components.EditContext;
+import com.day.cq.wcm.api.components.InplaceEditingConfig;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -62,6 +68,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder;
+import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.url.integrator.IntegratorHandler;
@@ -622,6 +629,44 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
     underTest.enableMediaDrop(div, mediaRequest);
     assertEquals(DropTarget.CSS_CLASS_PREFIX + MediaNameConstants.PN_MEDIA_REF, div.getCssClass());
+  }
+
+  @Test
+  public void testCustomizeIPEConfig() {
+    // simulate component context
+    ComponentContext wcmComponentContext = mock(ComponentContext.class);
+    context.request().setAttribute(ComponentContext.CONTEXT_ATTR_NAME, wcmComponentContext);
+    when(wcmComponentContext.getResource()).thenReturn(parStandardMediaRef);
+    when(wcmComponentContext.getEditContext()).thenReturn(mock(EditContext.class));
+
+    EditConfig editConfig = mock(EditConfig.class);
+    when(wcmComponentContext.getEditContext().getEditConfig()).thenReturn(editConfig);
+
+    // build ipe config with a fixed path set
+    InplaceEditingConfig ipeConfig = mock(InplaceEditingConfig.class);
+    when(editConfig.getInplaceEditingConfig()).thenReturn(ipeConfig);
+    when(ipeConfig.getEditorType()).thenReturn("image");
+    when(ipeConfig.getConfigPath()).thenReturn("/original/ipeconfig/path");
+
+    // simulate request with media formats
+    WCMMode.EDIT.toRequest(context.request());
+    HtmlElement div = new Div();
+    MediaRequest mediaRequest = new MediaRequest(parStandardMediaRef, new MediaArgs().mediaFormats(EDITORIAL_1COL));
+    DamMediaSource underTest = context.request().adaptTo(DamMediaSource.class);
+
+    // ensure a custom ipe config with a path pointing to IPEConfigResourceProvider is set
+    String expectedPath = IPEConfigResourceProvider.buildPath(parStandardMediaRef.getPath(),
+        ImmutableSet.of("editorial_1col"));
+    doAnswer(new Answer<Object>() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        InplaceEditingConfig customIpeConfig = invocation.getArgument(0);
+        assertEquals(expectedPath, customIpeConfig.getConfigPath());
+        return null;
+      }
+    }).when(editConfig).setInplaceEditingConfig(any(InplaceEditingConfig.class));
+
+    underTest.setCustomIPECropRatios(div, mediaRequest);
   }
 
   @Test

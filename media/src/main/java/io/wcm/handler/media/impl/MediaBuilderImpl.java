@@ -55,7 +55,6 @@ final class MediaBuilderImpl implements MediaBuilder {
     // resolve component properties
     if (resource != null) {
       ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource);
-      mediaArgs.mediaFormatNames(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMAT, String[].class));
       mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
     }
   }

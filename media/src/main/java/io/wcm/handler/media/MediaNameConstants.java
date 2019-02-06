@@ -143,11 +143,6 @@ public final class MediaNameConstants {
   /**
    * Enable "auto-cropping" mode for this component by setting to true. Property is to be set on component or in policy.
    */
-  public static final @NotNull String PN_COMPONENT_MEDIA_AUTOCROP = "mediaCropAuto";
-
-  /**
-   * List of media format(s) supported by this component. Property is to be set on component or in policy.
-   */
-  public static final @NotNull String PN_COMPONENT_MEDIA_FORMAT = "mediaFormat";
+  public static final @NotNull String PN_COMPONENT_MEDIA_AUTOCROP = "wcmio:mediaCropAuto";
 
 }
