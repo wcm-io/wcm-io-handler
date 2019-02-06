@@ -69,7 +69,6 @@ public abstract class MediaSource {
    * @param mediaRequest Media request
    * @return true if this media source can handle the given media request
    */
-  @SuppressWarnings("null")
   public boolean accepts(@NotNull MediaRequest mediaRequest) {
     // if an explicit media request is set check this first
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
@@ -255,7 +254,6 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config
    * @return Rotation value or null if not set or invalid
    */
-  @SuppressWarnings("null")
   protected final @Nullable Integer getMediaRotation(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
     if (mediaRequest.getResource() != null) {

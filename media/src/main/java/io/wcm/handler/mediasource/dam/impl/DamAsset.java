@@ -88,7 +88,6 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  @SuppressWarnings("null")
   public String getDescription() {
     return this.properties.get(DamConstants.DC_DESCRIPTION, String.class);
   }

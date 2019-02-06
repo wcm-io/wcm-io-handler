@@ -364,7 +364,6 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     return StringUtils.substringAfterLast(this.fileName, ".");
   }
 
-  @SuppressWarnings("unused")
   @Override
   public long getFileSize() {
     Node node = this.resource.adaptTo(Node.class);

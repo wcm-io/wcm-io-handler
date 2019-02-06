@@ -113,7 +113,6 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Binary data or null if not binary data found
    * @throws IOException
    */
-  @SuppressWarnings({ "null", "unused" })
   protected byte[] getBinaryData(Resource resource, SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {

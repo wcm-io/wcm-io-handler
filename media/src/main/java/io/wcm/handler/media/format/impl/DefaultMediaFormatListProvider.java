@@ -90,7 +90,6 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
     }
   }
 
-  @SuppressWarnings({ "null", "unused" })
   protected Set<MediaFormat> getMediaFormats(SlingHttpServletRequest request) {
     MediaFormatHandler mediaFormatHandler = request.adaptTo(MediaFormatHandler.class);
     if (mediaFormatHandler != null) {
