@@ -30,15 +30,20 @@ import org.apache.commons.lang3.StringUtils;
 class PathParser {
 
   public static final String NN_ASPECT_RATIOS = "aspectRatios";
+  static final String NN_MEDIA_FORMAT = "wcmio:mediaFormat";
+  static final String NN_CONFIG = "wcmio:config";
 
   private static final Pattern PATH_PATTERN = Pattern.compile(
-      "^" + IPEConfigResourceProvider.IPECONFIG_OVERLAY_ROOTPATH + "((/[^/]+)+)/wcmio:content(/.*)$");
+      "^" + IPEConfigResourceProvider.IPECONFIG_OVERLAY_ROOTPATH + "((/[^/]+)+)"
+          + "/" + NN_MEDIA_FORMAT + "((/[^/]+)+)"
+          + "/" + NN_CONFIG + "(/.*)?$");
 
   private static final Pattern PLUGINS_CROP_PATH_PATTERN = Pattern.compile(
       "^.*/plugins/crop(/" + NN_ASPECT_RATIOS + "(/([^/]+))?)?$");
 
-  private final String overlayPath;
-  private final SortedSet<String> mediaFormatNames;
+  private String componentContentPath;
+  private String relativeConfigPath;
+  private SortedSet<String> mediaFormatNames;
 
   private boolean pluginsCropNode;
   private boolean aspectRatiosNode;
@@ -46,33 +51,36 @@ class PathParser {
 
   PathParser(String path) {
     Matcher matcher = PATH_PATTERN.matcher(path);
-    if (!matcher.matches()) {
-      this.overlayPath = null;
-      this.mediaFormatNames = null;
-    }
-    else {
-      this.overlayPath = matcher.group(3);
-      String[] names = StringUtils.split(matcher.group(1), "/");
+    if (matcher.matches()) {
+      this.componentContentPath = matcher.group(1);
+      String[] names = StringUtils.split(matcher.group(3), "/");
       this.mediaFormatNames = new TreeSet<>(Arrays.asList(names));
+      this.relativeConfigPath = matcher.group(5);
 
-      // check if resource path is around the "aspectRatios" node of crop plugin
-      Matcher pluginsCropPathMatcher = PLUGINS_CROP_PATH_PATTERN.matcher(this.overlayPath);
-      if (pluginsCropPathMatcher.matches()) {
-        if (StringUtils.isEmpty(pluginsCropPathMatcher.group(1))) {
-          pluginsCropNode = true;
-        }
-        else if (StringUtils.isEmpty(pluginsCropPathMatcher.group(2))) {
-          aspectRatiosNode = true;
-        }
-        else {
-          aspectRatioItemName = pluginsCropPathMatcher.group(3);
+      // check if related config path is around the "aspectRatios" node of crop plugin
+      if (StringUtils.isNotEmpty(this.relativeConfigPath)) {
+        Matcher pluginsCropPathMatcher = PLUGINS_CROP_PATH_PATTERN.matcher(this.relativeConfigPath);
+        if (pluginsCropPathMatcher.matches()) {
+          if (StringUtils.isEmpty(pluginsCropPathMatcher.group(1))) {
+            pluginsCropNode = true;
+          }
+          else if (StringUtils.isEmpty(pluginsCropPathMatcher.group(2))) {
+            aspectRatiosNode = true;
+          }
+          else {
+            aspectRatioItemName = pluginsCropPathMatcher.group(3);
+          }
         }
       }
     }
   }
 
-  public String getOverlayPath() {
-    return this.overlayPath;
+  public String getComponentContentPath() {
+    return this.componentContentPath;
+  }
+
+  public String getRelativeConfigPath() {
+    return this.relativeConfigPath;
   }
 
   public SortedSet<String> getMediaFormatNames() {
@@ -80,7 +88,7 @@ class PathParser {
   }
 
   public boolean isValid() {
-    return StringUtils.isNotEmpty(this.overlayPath);
+    return StringUtils.isNotEmpty(this.componentContentPath);
   }
 
   public boolean isPluginsCropNode() {

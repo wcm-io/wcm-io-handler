@@ -117,7 +117,7 @@ public abstract class MediaSource {
    * @param mediaRequest Media request to detect media args and property names
    */
   public void setCustomIPECropRatios(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
-    // TODO: add default implementation for customizing list of crop ratios
+    // can be implemented by subclasses
   }
 
   /**

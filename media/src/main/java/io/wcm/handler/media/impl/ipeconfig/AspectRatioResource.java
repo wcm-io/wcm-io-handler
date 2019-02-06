@@ -20,25 +20,35 @@
 package io.wcm.handler.media.impl.ipeconfig;
 
 import org.apache.sling.api.resource.AbstractResource;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceMetadata;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class OverlayResourceWrapper extends AbstractResource {
+import com.google.common.collect.ImmutableMap;
+
+import io.wcm.handler.media.format.MediaFormat;
+
+/**
+ * Virtual resource returning name and ratio of media format.
+ */
+class AspectRatioResource extends AbstractResource {
 
   private final ResourceResolver resolver;
-  private final Resource overlayedResource;
   private final String path;
   private final ResourceMetadata resourceMetadata;
+  private final ValueMap properties;
 
-  OverlayResourceWrapper(@NotNull Resource resource, String path) {
-    this.resolver = resource.getResourceResolver();
-    this.overlayedResource = resource;
+  AspectRatioResource(ResourceResolver resolver, MediaFormat mediaFormat, String path) {
+    this.resolver = resolver;
     this.path = path;
     this.resourceMetadata = buildMetadata(path);
+
+    this.properties = new ValueMapDecorator(ImmutableMap.<String, Object>of(
+        "name", mediaFormat.getLabel(),
+        "ratio", 1 / mediaFormat.getRatio()));
   }
 
   private static ResourceMetadata buildMetadata(String path) {
@@ -63,26 +73,23 @@ class OverlayResourceWrapper extends AbstractResource {
   }
 
   @Override
+  @SuppressWarnings("null")
   public @NotNull String getResourceType() {
-    return overlayedResource.getResourceType();
+    return null;
   }
 
   @Override
   public @Nullable String getResourceSuperType() {
-    return overlayedResource.getResourceSuperType();
+    return null;
   }
 
   @Override
   @SuppressWarnings({ "unchecked", "null" })
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == ValueMap.class) {
-      return (AdapterType)overlayedResource.getValueMap();
+      return (AdapterType)properties;
     }
     return super.adaptTo(type);
-  }
-
-  public Resource getOverlayedResource() {
-    return this.overlayedResource;
   }
 
 }

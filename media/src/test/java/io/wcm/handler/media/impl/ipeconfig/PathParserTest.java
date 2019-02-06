@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl.ipeconfig;
 
+import static io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider.buildPath;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -28,23 +29,24 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-
 public class PathParserTest {
 
   @Test
   public void testInvalidPath() {
     assertFalse(new PathParser("/invalid/path").isValid());
     assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig").isValid());
-    assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig/mf1").isValid());
-    assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig/mf1/wcmio:content").isValid());
+    assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig/my/path").isValid());
+    assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig/my/path/wcmio:mediaFormat").isValid());
+    assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig/my/path/wcmio:mediaFormat/mf1/mf2").isValid());
   }
 
   @Test
   public void testValidPath() {
-    PathParser underTest = new PathParser("/wcmio:mediaHandler/ipeConfig/mf1/mf2/wcmio:content/my/path");
+    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1", "mf2")));
     assertTrue(underTest.isValid());
+    assertEquals("/my/path", underTest.getComponentContentPath());
     assertEquals(ImmutableSet.of("mf1", "mf2"), underTest.getMediaFormatNames());
-    assertEquals("/my/path", underTest.getOverlayPath());
+    assertNull(underTest.getRelativeConfigPath());
 
     assertFalse(underTest.isPluginsCropNode());
     assertFalse(underTest.isAspectRatiosNode());
@@ -54,10 +56,11 @@ public class PathParserTest {
 
   @Test
   public void testPluginsCropNode() {
-    PathParser underTest = new PathParser("/wcmio:mediaHandler/ipeConfig/mf1/wcmio:content/my/path/plugins/crop");
+    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop");
     assertTrue(underTest.isValid());
+    assertEquals("/my/path", underTest.getComponentContentPath());
     assertEquals(ImmutableSet.of("mf1"), underTest.getMediaFormatNames());
-    assertEquals("/my/path/plugins/crop", underTest.getOverlayPath());
+    assertEquals("/plugins/crop", underTest.getRelativeConfigPath());
 
     assertTrue(underTest.isPluginsCropNode());
     assertFalse(underTest.isAspectRatiosNode());
@@ -67,10 +70,11 @@ public class PathParserTest {
 
   @Test
   public void testAspectRatiosNode() {
-    PathParser underTest = new PathParser("/wcmio:mediaHandler/ipeConfig/mf1/wcmio:content/my/path/plugins/crop/aspectRatios");
+    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop/aspectRatios");
     assertTrue(underTest.isValid());
+    assertEquals("/my/path", underTest.getComponentContentPath());
     assertEquals(ImmutableSet.of("mf1"), underTest.getMediaFormatNames());
-    assertEquals("/my/path/plugins/crop/aspectRatios", underTest.getOverlayPath());
+    assertEquals("/plugins/crop/aspectRatios", underTest.getRelativeConfigPath());
 
     assertFalse(underTest.isPluginsCropNode());
     assertTrue(underTest.isAspectRatiosNode());
@@ -80,10 +84,11 @@ public class PathParserTest {
 
   @Test
   public void testAspectRatioItem() {
-    PathParser underTest = new PathParser("/wcmio:mediaHandler/ipeConfig/mf1/wcmio:content/my/path/plugins/crop/aspectRatios/mf2");
+    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop/aspectRatios/mf2");
     assertTrue(underTest.isValid());
+    assertEquals("/my/path", underTest.getComponentContentPath());
     assertEquals(ImmutableSet.of("mf1"), underTest.getMediaFormatNames());
-    assertEquals("/my/path/plugins/crop/aspectRatios/mf2", underTest.getOverlayPath());
+    assertEquals("/plugins/crop/aspectRatios/mf2", underTest.getRelativeConfigPath());
 
     assertFalse(underTest.isPluginsCropNode());
     assertFalse(underTest.isAspectRatiosNode());
