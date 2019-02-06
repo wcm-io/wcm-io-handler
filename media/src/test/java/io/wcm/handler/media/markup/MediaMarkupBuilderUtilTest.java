@@ -70,6 +70,7 @@ public class MediaMarkupBuilderUtilTest {
   private ComponentContext componentContext;
 
   @Before
+  @SuppressWarnings("null")
   public void setUp() throws Exception {
     when(request.getResourceResolver()).thenReturn(resolver);
     when(resolver.adaptTo(PageManager.class)).thenReturn(pageManager);

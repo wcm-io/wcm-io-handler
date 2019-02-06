@@ -164,7 +164,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "null" })
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == com.day.cq.dam.api.Asset.class) {
       return (AdapterType)this.damAsset;
