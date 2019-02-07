@@ -29,6 +29,22 @@
       self._$pathfield.val(event.path);
     });
 
+    self._$pathfield.on("change", function(event) {
+      var assetPath = self._$pathfield.val();
+      var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
+      self._$element.trigger($.Event("assetselected", {
+        path: assetPath,
+        group: "media",
+        mimetype: self._detectMimeType(assetPath),
+        param: {},
+        thumbnail: $("<img src='" + thumbnailUrl + "'>")
+      }));
+    });
+
+    self._element.on("coral-fileupload:load", function (event) {
+      self._$pathfield.val("");
+    });
+
   };
 
   FileUploadExtension.prototype._isMimeTypeAllowed = function (mimeType)  {
@@ -44,6 +60,20 @@
       }
     });
     return isAllowed;
+  };
+
+  FileUploadExtension.prototype._detectMimeType = function (assetPath)  {
+    var fileExtension = assetPath.substring(assetPath.lastIndexOf('.')+1, assetPath.length);
+    if (fileExtension == "jpg" || fileExtension == "jpeg") {
+      return "image/jpeg";
+    }
+    if (fileExtension == "png") {
+      return "image/png";
+    }
+    if (fileExtension == "gif") {
+      return "image/gif";
+    }
+    return null;
   };
 
   channel.on("foundation-contentloaded", function (event) {
