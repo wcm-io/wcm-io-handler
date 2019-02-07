@@ -47,7 +47,6 @@ class UrlExternalizerTransformer extends AbstractSAXPipe implements Transformer 
   private static final Logger log = LoggerFactory.getLogger(UrlExternalizerTransformer.class.getName());
 
   @Override
-  @SuppressWarnings("null")
   public void init(ProcessingContext pipelineContext, ProcessingComponentConfiguration config) {
     log.trace("Initialize UrlExternalizerTransformer with config: {}", config.getConfiguration());
     transformerConfig = new UrlExternalizerTransformerConfig(config.getConfiguration());

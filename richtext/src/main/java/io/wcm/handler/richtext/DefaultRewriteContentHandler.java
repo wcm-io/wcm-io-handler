@@ -287,7 +287,6 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
    * @param resourceProps ValueMap to write link metadata to
    * @param element Link element
    */
-  @SuppressWarnings("null")
   private void getAnchorLegacyMetadataFromRel(ValueMap resourceProps, Element element) {
     // Check href attribute - do not change elements with no href or links to anchor names
     String href = element.getAttributeValue("href");

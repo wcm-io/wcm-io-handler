@@ -144,7 +144,6 @@ final class UrlBuilderImpl implements UrlBuilder {
   }
 
   @Override
-  @SuppressWarnings("null")
   public String buildExternalLinkUrl(@Nullable Page targetPage) {
     Page targetPageToUse = targetPage;
     if (targetPageToUse == null) {
@@ -163,7 +162,6 @@ final class UrlBuilderImpl implements UrlBuilder {
   }
 
   @Override
-  @SuppressWarnings("null")
   public String buildExternalResourceUrl(@Nullable Resource targetResource) {
     Resource targetResourceToUse = targetResource;
     if (targetResourceToUse == null) {

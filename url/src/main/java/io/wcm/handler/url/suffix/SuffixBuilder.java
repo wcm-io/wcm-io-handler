@@ -57,6 +57,7 @@ import io.wcm.handler.url.suffix.impl.FilterOperators;
 import io.wcm.handler.url.suffix.impl.IncludeAllPartsFilter;
 import io.wcm.handler.url.suffix.impl.IncludeNamedPartsFilter;
 import io.wcm.handler.url.suffix.impl.IncludeResourcePartsFilter;
+import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
  * Builds suffixes to be used in Sling URLs and that can be parsed with {@link SuffixParser}.
@@ -264,7 +265,7 @@ public final class SuffixBuilder {
    * @return this
    */
   public @NotNull SuffixBuilder page(@NotNull Page page, @NotNull Page suffixBasePage) {
-    return resource(page.adaptTo(Resource.class), suffixBasePage.adaptTo(Resource.class));
+    return resource(AdaptTo.notNull(page, Resource.class), AdaptTo.notNull(suffixBasePage, Resource.class));
   }
 
   /**

@@ -111,6 +111,7 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
     // get site config for site root resource and cache the result (for a short time)
     try {
       return siteConfigCache.get(siteRootPath, () -> {
+        @SuppressWarnings("null")
         Resource siteRootResource = contextResource.getResourceResolver().getResource(siteRootPath);
         return getSiteConfigForResourceCacheable(siteRootResource);
       });

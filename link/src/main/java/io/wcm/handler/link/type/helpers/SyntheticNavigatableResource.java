@@ -41,11 +41,12 @@ final class SyntheticNavigatableResource extends AbstractResource {
   }
 
   @Override
-  public String getPath() {
+  public @NotNull String getPath() {
     return path;
   }
 
   @Override
+  @SuppressWarnings("null")
   public String getResourceType() {
     return null;
   }
@@ -56,17 +57,16 @@ final class SyntheticNavigatableResource extends AbstractResource {
   }
 
   @Override
-  public ResourceMetadata getResourceMetadata() {
+  public @NotNull ResourceMetadata getResourceMetadata() {
     if (metadata == null) {
       metadata = new ResourceMetadata();
       metadata.setResolutionPath(path);
-      metadata.lock();
     }
     return metadata;
   }
 
   @Override
-  public ResourceResolver getResourceResolver() {
+  public @NotNull ResourceResolver getResourceResolver() {
     return resolver;
   }
 
