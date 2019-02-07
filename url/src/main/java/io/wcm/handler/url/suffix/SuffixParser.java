@@ -42,6 +42,8 @@ import com.day.cq.wcm.api.PageManager;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
+import io.wcm.sling.commons.adapter.AdaptTo;
+
 /**
  * Parses suffixes from Sling URLs build with {@link SuffixBuilder}.
  */
@@ -342,13 +344,12 @@ public final class SuffixParser {
    * @param basePage the suffix path is relative to this page path (null for current page)
    * @return a list containing the Pages
    */
-  @SuppressWarnings({ "null", "unused" })
   public @NotNull List<Page> getPages(@Nullable final Predicate<Page> filter, @Nullable final Page basePage) {
     Resource baseResourceToUse = null;
 
     // detect pages page to use
     if (basePage == null) {
-      PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
+      PageManager pageManager = AdaptTo.notNull(request.getResourceResolver(), PageManager.class);
       Page currentPage = pageManager.getContainingPage(request.getResource());
       if (currentPage != null) {
         baseResourceToUse = currentPage.adaptTo(Resource.class);
@@ -377,7 +378,8 @@ public final class SuffixParser {
     // convert resources back to pages
     return Lists.transform(resources, new Function<Resource, Page>() {
       @Override
-      public Page apply(Resource resource) {
+      @SuppressWarnings("null")
+      public Page apply(@Nullable Resource resource) {
         return resource.adaptTo(Page.class);
       }
     });

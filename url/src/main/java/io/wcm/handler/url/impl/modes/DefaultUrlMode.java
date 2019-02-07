@@ -75,7 +75,6 @@ public final class DefaultUrlMode extends AbstractUrlMode {
    * @param targetResource Target resource (may be null)
    * @return true if the target resources is located in another site/context with separate url configuration
    */
-  @SuppressWarnings("null")
   private boolean linksToOtherDomain(Adaptable adaptable, Page currentPage, Resource targetResource) {
     if (currentPage == null || targetResource == null) {
       return false;
