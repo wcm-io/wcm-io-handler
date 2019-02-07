@@ -28,23 +28,38 @@
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %><%
 
-Map<String,Object> props = new HashMap<>();
+Config cfg = cmp.getConfig();
+
+Map<String,Object> fileUploadProps = new HashMap<>();
+fileUploadProps.put("name", "./file");
+fileUploadProps.put("fileNameParameter", "./fileName");
+fileUploadProps.put("fileReferenceParameter", "./fileReference");
 
 // set media ref properties as configured for media handler
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
-  props.put("name", "./" + mediaHandlerConfig.getMediaInlineNodeName());
-  props.put("fileNameParameter", "./" + mediaHandlerConfig.getMediaInlineNodeName() + "Name");
-  props.put("fileReferenceParameter", "./" + mediaHandlerConfig.getMediaRefProperty());
+  fileUploadProps.put("name", "./" + mediaHandlerConfig.getMediaInlineNodeName());
+  fileUploadProps.put("fileNameParameter", "./" + mediaHandlerConfig.getMediaInlineNodeName() + "Name");
+  fileUploadProps.put("fileReferenceParameter", "./" + mediaHandlerConfig.getMediaRefProperty());
 }
 
 // simulate resource for dialog field def with updated properties
-Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(props));
+Resource fileUpload = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(fileUploadProps));
 
 RequestDispatcherOptions options = new RequestDispatcherOptions();
 options.setForceResourceType("/libs/cq/gui/components/authoring/dialog/fileupload");
-RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(resourceWrapper, options);
+RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(fileUpload, options);
 dispatcher.include(slingRequest, slingResponse);
 
+// add pathfield widget
+Map<String,Object> pathFieldProps = new HashMap<>();
+pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
+pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
+pathFieldProps.put("granite:class", "wcmio-handler-media-fileupload-pathfield");
+Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
+    "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
+
+dispatcher = slingRequest.getRequestDispatcher(pathField);
+dispatcher.include(slingRequest, slingResponse);
 %>
