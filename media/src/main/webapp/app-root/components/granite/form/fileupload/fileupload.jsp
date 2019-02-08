@@ -167,7 +167,7 @@ dispatcher.include(slingRequest, slingResponse);
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
 pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
-pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-pathfield-addon");
+pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
 if (mediaFormats != null && mediaFormats.length > 0) {

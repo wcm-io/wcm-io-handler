@@ -60,6 +60,7 @@
     };
     $.get(validateUrl, params, function(result) {
       if (!result.valid) {
+        self._clearAlert();
         self._showAlert("warning", result.reasonTitle, result.reason);
       }
     });
@@ -70,15 +71,14 @@
    */
   MediaFormatValidate.prototype._showAlert = function (variant, header, content) {
     var self = this;
-    self._clearAlert();
     
     var alert = new Coral.Alert();
     alert.header.innerHTML = header;
     alert.content.innerHTML = content;
     alert.variant = variant;
     
-    self._$alert = $(alert);
-    self._$pathfield.after(alert);
+    self._alert = alert;
+    self._$pathfield.after(self._alert);
   }
   
   /**
@@ -86,9 +86,9 @@
    */
   MediaFormatValidate.prototype._clearAlert = function ()  {
     var self = this;
-    if (self._$alert) { 
-      self._$alert.remove();
-      delete self._$alert;
+    if (self._alert) { 
+      $(self._alert).remove();
+      delete self._alert;
     }
   }
   
@@ -96,7 +96,7 @@
    * Get resource path that is currently edited in the dialog.
    */
   MediaFormatValidate.prototype._getResourcePath = function ()  {
-    var $dataElement = this._$pathfield.closest("form.cq-dialog");
+    var $dataElement = this._$pathfield.closest("form.foundation-form");
     if ($dataElement.length < 1) {
       return null;
     }

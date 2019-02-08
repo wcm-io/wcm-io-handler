@@ -49,13 +49,10 @@
     });
 
     self._$element.on("assetselected", function (event) {
-      var assetPath = event.path;
       if (self._element.disabled) {
         return;
       }
-      if (!self._isMimeTypeAllowed(event.mimetype)) {
-        return;
-      }
+      var assetPath = event.path;
       self._$pathfield.val(assetPath);
       self._validate.validateMediaFormat(assetPath);
     });
@@ -66,6 +63,9 @@
     });
 
     self._$pathfield.on("assetselected", function (event) {
+      if (self._pathfield.disabled) {
+        return;
+      }
       var assetPath = event.path;
       self._triggerAssetSelected(assetPath);
     });
@@ -93,24 +93,6 @@
   };
   
   /**
-   * Check if the given mime type is allowed for the file upload widget.
-   */
-  FileUploadExtension.prototype._isMimeTypeAllowed = function (mimeType)  {
-    var isAllowed = false;
-    var mimeTypes = this._element.accept.split(",");
-    if (mimeTypes == "") {
-      return true;
-    }
-    mimeTypes.some(function (allowedMimeType) {
-      if (allowedMimeType === mimeType || allowedMimeType === "*" || (new RegExp(allowedMimeType)).test(mimeType)) {
-        isAllowed = true;
-        return true;
-      }
-    });
-    return isAllowed;
-  };
-  
-  /**
    * Detect mime type from the file extension.
    */
   FileUploadExtension.prototype._detectMimeType = function (assetPath)  {
@@ -133,13 +115,17 @@
   channel.on("foundation-contentloaded", function (event) {
     $(event.target).find("coral-fileupload.cq-FileUpload").each(function() {
       var pathfield = $(this).closest(".coral-Form-fieldwrapper")
-          .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-pathfield-addon").get(0);
+          .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
       if (pathfield) {
         Coral.commons.ready(this, function (fileUpload) {
-          new FileUploadExtension({
-            element: fileUpload,
-            pathfield: pathfield
-          });
+          // avoid double initialization if contentloaded event is fired twice e.g. in pageprops dialog
+          if (!$(fileUpload).data("js-initialized")) {
+            new FileUploadExtension({
+              element: fileUpload,
+              pathfield: pathfield
+            });
+            $(fileUpload).data("js-initialized", true);
+          }
         });
       }
     });

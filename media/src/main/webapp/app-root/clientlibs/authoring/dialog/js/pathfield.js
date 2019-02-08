@@ -47,6 +47,9 @@
     });
 
     self._$pathfield.on("assetselected", function (event) {
+      if (self._pathfield.disabled) {
+        return;
+      }
       var assetPath = event.path;
       self._$pathfield.val(assetPath);
       self._validate.validateMediaFormat(assetPath);
@@ -60,9 +63,13 @@
   channel.on("foundation-contentloaded", function (event) {
     $(event.target).find("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-pathfield").each(function() {
       Coral.commons.ready(this, function (pathfield) {
-        new PathField({
-          pathfield: pathfield
-        });
+        // avoid double initialization if contentloaded event is fired twice e.g. in pageprops dialog
+        if (!$(pathfield).data("js-initialized")) {
+          new PathField({
+            pathfield: pathfield
+          });
+          $(pathfield).data("js-initialized", true);
+        }
       });
     });
   });
