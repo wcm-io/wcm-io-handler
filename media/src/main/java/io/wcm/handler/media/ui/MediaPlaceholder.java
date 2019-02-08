@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.ui;
 
+import static io.wcm.handler.media.impl.MediaFormatValidateServlet.MEDIA_INVALID_REASON_I18N_PREFIX;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -89,7 +91,7 @@ public class MediaPlaceholder {
     if (mediaMetadata.getMediaInvalidReason() != null
         && mediaMetadata.getMediaInvalidReason() != MediaInvalidReason.MEDIA_REFERENCE_MISSING) {
       // build i18n key
-      return "io.wcm.handler.media.invalidReason." + mediaMetadata.getMediaInvalidReason().name();
+      return MEDIA_INVALID_REASON_I18N_PREFIX + mediaMetadata.getMediaInvalidReason().name();
     }
     else {
       return null;

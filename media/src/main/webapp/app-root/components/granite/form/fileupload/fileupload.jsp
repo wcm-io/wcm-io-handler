@@ -17,6 +17,8 @@
   limitations under the License.
   #L%
 --%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
@@ -26,6 +28,8 @@
 <%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="io.wcm.handler.commons.component.ComponentPropertyResolver"%>
 <%@page import="io.wcm.handler.media.MediaNameConstants"%>
+<%@page import="io.wcm.handler.media.format.MediaFormat"%>
+<%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
@@ -117,6 +121,12 @@ It has the following content structure:
    */
   - mediaFormatsMandatory (Boolean) = 'false'
 
+  /**
+   * Enables "auto-cropping" mode.
+   * If not set the property value is looked up from component properties or policy.
+   */
+  - mediaAutoCrop (Boolean) = 'false'
+
 
 ###--%><%
 
@@ -144,19 +154,45 @@ fileUploadProps.put("allowUpload", cfg.get("allowUpload", false));
 fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
     "image", "image/gif", "image/jpeg", "image/png" }));
 
-//simulate resource for dialog field def with updated properties
-Resource fileUpload = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(fileUploadProps));
-
 // media format properties for validation of associated media reference
 ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource);
 String[] mediaFormats = cfg.get("mediaFormats",
- componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
+    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
 boolean mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
- componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
-if (mediaFormats != null) {
+    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
+boolean mediaCropAuto = cfg.get("mediaCropAuto",
+    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+
+// add info about media formats in field description
+if (mediaFormats != null && mediaFormats.length > 0) {
+  List<String> mediaFormatDescriptions = new ArrayList<>();
+  MediaFormatHandler mediaFormatHandler = contentResource.adaptTo(MediaFormatHandler.class);
+  for (String mediaFormatName : mediaFormats) {
+    MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
+    if (mediaFormat != null) {
+      mediaFormatDescriptions.add(mediaFormat.toString());
+    }
+  }
+  if (!mediaFormatDescriptions.isEmpty()) {
+    String fieldDescription;
+    if (mediaFormatDescriptions.size() == 1) {
+      fieldDescription = "Media format: ";
+    }
+    else {
+      fieldDescription = "Media formats: ";
+    }
+    fieldDescription += StringUtils.join(mediaFormatDescriptions, ", ");
+    fileUploadProps.put("fieldDescription", cfg.get("fieldDescription", fieldDescription));
+  }
+}
+
+// simulate resource for dialog field def with updated properties
+Resource fileUpload = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(fileUploadProps));
+if (mediaFormats != null && mediaFormats.length > 0) {
   Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
   dataProps.put("wcmio-mediaformats-mandatory", mediaFormatsMandatory);
+  dataProps.put("wcmio-media-cropauto", mediaCropAuto);
   GraniteUiSyntheticResource.child(fileUpload, "granite:data", null, new ValueMapDecorator(dataProps));
 }
 
@@ -178,4 +214,5 @@ if (cfg.get("showPathfield", true)) {
   dispatcher = slingRequest.getRequestDispatcher(pathField);
   dispatcher.include(slingRequest, slingResponse);
 }
+
 %>
