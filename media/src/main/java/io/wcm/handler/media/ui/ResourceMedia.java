@@ -31,6 +31,8 @@ import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.RequestAttribute;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaBuilder;
@@ -103,7 +105,7 @@ public class ResourceMedia {
    * Result is never null, check for validness with the {@link Media#isValid()} method.
    * @return Media
    */
-  public Media getMetadata() {
+  public @NotNull Media getMetadata() {
     return media;
   }
 
@@ -116,11 +118,11 @@ public class ResourceMedia {
   }
 
   /**
-   * Returns the XHTML markup for the resolved media object.
+   * Returns the XHTML markup for the resolved media object (if valid).
    * This is in most cases an img element, but may also contain other arbitrary markup.
    * @return Media markup
    */
-  public String getMarkup() {
+  public @Nullable String getMarkup() {
     return media.getMarkup();
   }
 

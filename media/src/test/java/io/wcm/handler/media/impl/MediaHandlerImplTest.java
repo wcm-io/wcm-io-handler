@@ -99,7 +99,7 @@ public class MediaHandlerImplTest {
     assertEquals(UrlModes.FULL_URL, media.getMediaRequest().getMediaArgs().getUrlMode());
 
     // check final link url and html element
-    assertEquals(true, media.isValid());
+    assertTrue(media.isValid());
     assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.getUrl());
     assertNotNull(media.getElement());
     assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", media.getElement().getAttributeValue("src"));
@@ -126,7 +126,7 @@ public class MediaHandlerImplTest {
     assertEquals(UrlModes.FULL_URL, media.getMediaRequest().getMediaArgs().getUrlMode());
 
     // check final link url and html element
-    assertEquals(true, media.isValid());
+    assertTrue(media.isValid());
     assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.pdf", media.getUrl());
     assertNull(media.getElement());
 

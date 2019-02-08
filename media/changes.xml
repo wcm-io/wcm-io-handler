@@ -31,7 +31,13 @@
         Automatic customization of image in-place edititing crop ratios to ratios from configured media formats.
       </action>
       <action type="add" dev="sseifert">
-        Add Granite UI widget 'wcm-io/handler/media/components/granite/form/fileupload'.
+        Add Media Handler-aware File Upload Granite UI widget.
+      </action>
+      <action type="add" dev="sseifert">
+        Add Media Handler-aware placeholder HTL template.
+      </action>
+      <action type="update" dev="sseifert">
+        MediaHandler: Fallback to first media source defined if no matching media source is found.
       </action>
       <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.

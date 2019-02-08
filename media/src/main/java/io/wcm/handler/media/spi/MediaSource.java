@@ -76,12 +76,12 @@ public abstract class MediaSource {
     }
     // otherwise check resource which contains media request properties
     ValueMap props = mediaRequest.getResourceProperties();
-    // check for matching media source ID in link resource
+    // check for matching media source ID in media resource
     String mediaSourceId = props.get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
     if (StringUtils.isNotEmpty(mediaSourceId)) {
       return StringUtils.equals(mediaSourceId, getId());
     }
-    // if not link type is set at all check if link ref attribute contains a valid link
+    // if no media source ID is set at all check if media ref attribute contains a valid reference
     else {
       String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), getPrimaryMediaRefProperty());
       String mediaRef = props.get(refProperty, String.class);
@@ -104,7 +104,7 @@ public abstract class MediaSource {
   public abstract @NotNull Media resolveMedia(@NotNull Media media);
 
   /**
-   * Create a ExtJS drop area for given HTML element to enable drag and drop of media library items
+   * Create a drop area for given HTML element to enable drag and drop of DAM assets
    * from content finder to this element.
    * @param element Html element
    * @param mediaRequest Media request to detect media args and property names

@@ -165,7 +165,7 @@ public class InlineMediaSourceTest {
     Media media = mediaHandler.get(emptyResource).build();
 
     assertFalse("media invalid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
+    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
   }
 
   @Test
@@ -442,7 +442,7 @@ public class InlineMediaSourceTest {
     media = mediaHandler.get(emptyResource, new MediaArgs(SHOWROOM_CONTROLS)).refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse("media invalid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
+    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
     assertNull("rendition invalid", rendition);
 
     // test image resource with media formats with invalid aspect ratio
