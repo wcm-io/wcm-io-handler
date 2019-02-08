@@ -21,7 +21,6 @@
   "use strict";
 
   var FILEUPLOAD_EVENT_NAMESPACE = ".fileupload";
-  var ALERT_CLASS = "wcm-io-handler-media-mediaformat-alert";
 
   var FileUploadExtension = function (config) {
     var self = this;
@@ -31,9 +30,13 @@
     self._$pathfield = $(config.pathfield);
     self._bindEvents();
     
+    // enable asset validation
+    self._validate = new ns.MediaFormatValidate({
+      pathfield: self._pathfield
+    });
     // validate on load
     var assetPath = self._$pathfield.val();
-    self._validateMediaFormat(assetPath);
+    self._validate.validateMediaFormat(assetPath);
   };
   
   /**
@@ -44,7 +47,7 @@
 
     self._$element.find("[coral-fileupload-clear]").on("click", function (e) {
       self._$pathfield.val("");
-      self._validateMediaFormat(null);
+      self._validate.validateMediaFormat(null);
     });
 
     self._$element.on("assetselected", function (event) {
@@ -56,7 +59,7 @@
         return;
       }
       self._$pathfield.val(assetPath);
-      self._validateMediaFormat(assetPath);
+      self._validate.validateMediaFormat(assetPath);
     });
 
     self._$pathfield.on("change", function(event) {
@@ -71,7 +74,7 @@
     
     self._element.on("coral-fileupload:load", function (event) {
       self._$pathfield.val("");
-      self._validateMediaFormat(null);
+      self._validate.validateMediaFormat(null);
     });
 
   };
@@ -127,85 +130,6 @@
   };
   
   /**
-   * Validate selected asset reference against the given media formats.
-   * Show alert warning when asset does not match.
-   */
-  FileUploadExtension.prototype._validateMediaFormat = function (assetPath)  {
-    var self = this;
-
-    self._clearAlert();
-
-    if (!assetPath) {
-      return;
-    }
-    
-    var resourcePath = self._getResourcePath();
-    if (!resourcePath) {
-      return;
-    }
-    
-    var mediaFormats = self._$element.data("wcmio-mediaformats");
-    var mediaFormatsMandatory = self._$element.data("wcmio-mediaformats-mandatory");
-    var mediaCropAuto = self._$element.data("wcmio-media-cropauto");
-    if (!mediaFormats) {
-      return;
-    }
-
-    var validateUrl = resourcePath + ".wcm-io-handler-media-mediaformat-validate.json";
-    var params = {
-        mediaFormats: mediaFormats,
-        mediaFormatsMandatory: mediaFormatsMandatory,
-        mediaCropAuto: mediaCropAuto,
-        mediaRef: assetPath
-    };
-    $.get(validateUrl, params, function(result) {
-      if (!result.valid) {
-        self._showAlert("warning", result.reasonTitle, result.reason);
-      }
-    });
-  };
-
-  /**
-   * Show validation alert.
-   */
-  FileUploadExtension.prototype._showAlert = function (variant, header, content) {
-    var self = this;
-    self._clearAlert();
-    
-    var alert = new Coral.Alert();
-    alert.header.innerHTML = header;
-    alert.content.innerHTML = content;
-    alert.variant = variant;
-    $(alert).addClass(ALERT_CLASS);
-    
-    self._$pathfield.after(alert);
-  }
-  
-  /**
-   * Remove any validation alerts.
-   */
-  FileUploadExtension.prototype._clearAlert = function ()  {
-    $("." + ALERT_CLASS).remove();
-  }
-  
-  /**
-   * Get resource path that is currently edited in the dialog.
-   */
-  FileUploadExtension.prototype._getResourcePath = function ()  {
-    var $dataElement = this._$element.closest("form.cq-dialog");
-    if ($dataElement.length < 1) {
-      return null;
-    }
-
-    var contentPath = $dataElement.attr("action").replace("_jcr_content", "jcr:content");
-    if (!contentPath || contentPath.length < 1) {
-      return null;
-    }
-    
-    return contentPath;
-  };
-  
-  /**
    * Initializes file upload extension when dialog is loaded
    */
   channel.on("foundation-contentloaded", function (event) {
@@ -222,4 +146,4 @@
     }
   });
 
-}(Granite.$, Granite, jQuery(document), document, this));
+}(Granite.$, wcmio.handler.media, jQuery(document), document, this));

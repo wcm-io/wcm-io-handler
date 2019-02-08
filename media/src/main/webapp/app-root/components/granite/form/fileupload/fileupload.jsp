@@ -183,13 +183,6 @@ if (mediaFormats != null && mediaFormats.length > 0) {
 
 // simulate resource for dialog field def with updated properties
 Resource fileUpload = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(fileUploadProps));
-if (mediaFormats != null && mediaFormats.length > 0) {
-  Map<String,Object> dataProps = new HashMap<>();
-  dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
-  dataProps.put("wcmio-mediaformats-mandatory", mediaFormatsMandatory);
-  dataProps.put("wcmio-media-cropauto", mediaCropAuto);
-  GraniteUiSyntheticResource.child(fileUpload, "granite:data", null, new ValueMapDecorator(dataProps));
-}
 
 // render original fileupload widget
 RequestDispatcherOptions options = new RequestDispatcherOptions();
@@ -204,6 +197,13 @@ pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
 pathFieldProps.put("granite:class", "wcmio-handler-media-fileupload-pathfield cq-FileUpload cq-droptarget");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
+if (mediaFormats != null && mediaFormats.length > 0) {
+  Map<String,Object> dataProps = new HashMap<>();
+  dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
+  dataProps.put("wcmio-mediaformats-mandatory", mediaFormatsMandatory);
+  dataProps.put("wcmio-media-cropauto", mediaCropAuto);
+  GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
+}
 
 dispatcher = slingRequest.getRequestDispatcher(pathField);
 dispatcher.include(slingRequest, slingResponse);
