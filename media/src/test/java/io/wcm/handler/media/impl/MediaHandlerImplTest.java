@@ -195,6 +195,32 @@ public class MediaHandlerImplTest {
     assertEquals("/dummy/url", args.getDummyImageUrl());
   }
 
+  @Test
+  public void testComponentProperties() {
+    Resource component = context.create().resource("/apps/app1/components/comp1",
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, true,
+        MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, true);
+
+    Resource resource = context.create().resource("/content/test",
+        "sling:resourceType", component.getPath(),
+        MediaNameConstants.PN_MEDIA_REF, "/content/dummymedia/item1");
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    Media metadata = mediaHandler.get(resource).build();
+
+    MediaFormat[] mediaFormats = metadata.getMediaRequest().getMediaArgs().getMediaFormats();
+    String[] mediaFormatNames = metadata.getMediaRequest().getMediaArgs().getMediaFormatNames();
+
+    assertEquals(2, mediaFormats.length);
+    assertEquals(TestMediaFormats.HOME_STAGE, mediaFormats[0]);
+    assertEquals(TestMediaFormats.HOME_TEASER, mediaFormats[1]);
+    assertNull(mediaFormatNames);
+
+    assertTrue(metadata.getMediaRequest().getMediaArgs().isAutoCrop());
+    assertTrue(metadata.getMediaRequest().getMediaArgs().isMediaFormatsMandatory());
+  }
+
 
   public static class TestMediaHandlerConfig extends MediaHandlerConfig {
 
@@ -229,7 +255,7 @@ public class MediaHandlerImplTest {
     @Override
     public Media process(Media media) {
       MediaRequest request = media.getMediaRequest();
-      String mediaRef = request.getMediaRef() + "/pre1";
+      String mediaRef = request.getMediaRef() != null ? request.getMediaRef() + "/pre1" : null;
       MediaArgs mediaArgs = request.getMediaArgs().urlMode(UrlModes.FULL_URL);
       media.setMediaRequest(new MediaRequest(
           request.getResource(),

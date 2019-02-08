@@ -22,6 +22,7 @@ package io.wcm.handler.media.impl;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 
+import io.wcm.handler.commons.component.ComponentPropertyResolver;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
@@ -56,6 +57,8 @@ final class MediaBuilderImpl implements MediaBuilder {
     if (resource != null) {
       ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource);
       mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+      mediaArgs.mediaFormatNames(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
+      mediaArgs.mediaFormatsMandatory(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
     }
   }
 

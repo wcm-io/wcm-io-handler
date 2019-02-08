@@ -36,6 +36,9 @@
       <action type="add" dev="sseifert">
         Add Media Handler-aware placeholder HTL template.
       </action>
+      <action type="add" dev="sseifert">
+        Add support for component properties for media formats and auto cropping.
+      </action>
       <action type="update" dev="sseifert">
         MediaHandler: Fallback to first media source defined if no matching media source is found.
       </action>

@@ -146,8 +146,8 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * If set to true, media handler never returns a dummy image. Otherwise this can happen
-   * in edit mode.
+   * If set to true, the media handler enforces the resolution of the whole list of given
+   * media formats. The resolution fails if any of the media formats does not match.
    * @param value Resolving of all media formats is mandatory.
    * @return this
    */

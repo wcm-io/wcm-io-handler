@@ -80,6 +80,7 @@
           <instructions>
 
             <Export-Package>
+              io.wcm.handler.commons.component,
               io.wcm.handler.commons.dom,
               io.wcm.handler.commons.editcontext
             </Export-Package>
