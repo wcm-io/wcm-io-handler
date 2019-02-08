@@ -145,4 +145,14 @@ public final class MediaNameConstants {
    */
   public static final @NotNull String PN_COMPONENT_MEDIA_AUTOCROP = "wcmio:mediaCropAuto";
 
+  /**
+   * List of media formats accepted by this component. Property is to be set on component or in policy.
+   */
+  public static final @NotNull String PN_COMPONENT_MEDIA_FORMATS = "wcmio:mediaFormats";
+
+  /**
+   * Resolving of all media formats is mandatory. Property is to be set on component or in policy.
+   */
+  public static final @NotNull String PN_COMPONENT_MEDIA_FORMATS_MANDATORY = "wcmio:mediaFormatsMandatory";
+
 }

@@ -72,7 +72,6 @@ public final class ExternalLinkType extends LinkType {
   }
 
   @Override
-  @SuppressWarnings("null")
   public @NotNull Link resolveLink(@NotNull Link link) {
     ValueMap props = link.getLinkRequest().getResourceProperties();
 

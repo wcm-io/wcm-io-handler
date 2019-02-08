@@ -119,7 +119,6 @@ public final class InternalLinkResolver {
    * @param options Options to influence the link resolution process
    * @return Resolved link object
    */
-  @SuppressWarnings("null")
   public @NotNull Link resolveLink(@NotNull Link link, @NotNull InternalLinkResolverOptions options) {
     LinkRequest linkRequest = link.getLinkRequest();
     ValueMap props = linkRequest.getResourceProperties();

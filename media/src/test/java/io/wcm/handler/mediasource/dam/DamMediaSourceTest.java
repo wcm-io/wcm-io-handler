@@ -106,7 +106,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     // get AssetInfo for empty string path - should not crash but return null
     Media media = mediaHandler().get("").build();
     assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
+    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
     Asset info = media.getAsset();
     assertNull("returned null?", info);
   }
@@ -116,7 +116,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
     // get AssetInfo for null path - should not crash but return null
     Media media = mediaHandler().get((String)null).build();
     assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MEDIA_SOURCE, media.getMediaInvalidReason());
+    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
     Asset info = media.getAsset();
     assertNull("returned null?", info);
   }

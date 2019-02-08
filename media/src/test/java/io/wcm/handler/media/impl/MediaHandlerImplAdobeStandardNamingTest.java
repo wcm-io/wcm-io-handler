@@ -25,7 +25,6 @@ import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.junit.Rule;
 import org.junit.Test;
@@ -62,10 +61,6 @@ public class MediaHandlerImplAdobeStandardNamingTest {
     }
   });
 
-  protected Adaptable adaptable() {
-    return context.request();
-  }
-
   @Test
   public void testMediaResolve() {
 
@@ -84,7 +79,7 @@ public class MediaHandlerImplAdobeStandardNamingTest {
         PN_MEDIA_REF_STANDARD, asset.getPath(),
         PN_MEDIA_CROP_STANDARD, new CropDimension(2, 2, 4, 4).getCropString());
 
-    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(resource).build();
     assertTrue(media.isValid());

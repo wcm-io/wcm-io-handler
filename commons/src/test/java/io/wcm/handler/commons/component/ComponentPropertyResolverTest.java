@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.impl;
+package io.wcm.handler.commons.component;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

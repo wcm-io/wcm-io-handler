@@ -17,11 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.impl;
+package io.wcm.handler.commons.component;
 
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentManager;
@@ -30,13 +31,18 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
  * Resolves properties set on component associated with the given resource.
- * Super components of the component are taken into accout as well.
+ * Super components of the component are taken into account as well.
  */
-class ComponentPropertyResolver {
+@ProviderType
+public final class ComponentPropertyResolver {
 
   private final Component component;
 
-  ComponentPropertyResolver(Resource resource) {
+  /**
+   * Content resource associated with a component (resource type).
+   * @param resource Content resource
+   */
+  public ComponentPropertyResolver(Resource resource) {
     ComponentManager componentManager = AdaptTo.notNull(resource.getResourceResolver(), ComponentManager.class);
     this.component = componentManager.getComponentOfResource(resource);
   }
@@ -45,6 +51,7 @@ class ComponentPropertyResolver {
    * Get property.
    * @param name Property name
    * @param type Property type
+   * @param <T> Parameter type
    * @return Property value or null if not set
    */
   public @Nullable <T> T get(@NotNull String name, @NotNull Class<T> type) {
@@ -55,6 +62,7 @@ class ComponentPropertyResolver {
    * Get property.
    * @param name Property name
    * @param defaultValue Default value
+   * @param <T> Parameter type
    * @return Property value or default value if not set
    */
   public <T> T get(@NotNull String name, @NotNull T defaultValue) {
