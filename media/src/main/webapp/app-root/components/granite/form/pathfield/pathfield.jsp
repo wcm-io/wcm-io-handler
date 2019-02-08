@@ -73,7 +73,7 @@ are overwritten or added.
    * Enables "auto-cropping" mode.
    * If not set the property value is looked up from component properties or policy.
    */
-  - mediaAutoCrop (Boolean) = 'false'
+  - mediaCropAuto (Boolean) = 'false'
 
 
 ###--%><%
