@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.impl.MediaFormatValidateServlet.MEDIA_INVALID_REASON_I18N_PREFIX;
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_FORMATS;
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
@@ -87,7 +88,8 @@ public class MediaFormatValidateServletTest {
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
     JSONObject result = new JSONObject(context.response().getOutputAsString());
     assertEquals(false, result.get("valid"));
-    assertEquals(MediaInvalidReason.NO_MATCHING_RENDITION.name(), result.get("reason"));
+    assertEquals(MEDIA_INVALID_REASON_I18N_PREFIX + MediaInvalidReason.NO_MATCHING_RENDITION.name(),
+        result.get("reason"));
   }
 
 }

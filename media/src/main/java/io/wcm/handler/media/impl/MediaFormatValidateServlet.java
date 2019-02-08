@@ -45,7 +45,6 @@ import com.day.cq.wcm.api.PageManager;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -75,6 +74,7 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
    * Prefix for i18n keys to generated messages for media invalid reasons.
    */
   public static final String MEDIA_INVALID_REASON_I18N_PREFIX = "io.wcm.handler.media.invalidReason.";
+  private static final String ASSET_INVALID_I18N_KEY = "io.wcm.handler.media.assetInvalid";
 
   @Override
   protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
@@ -104,7 +104,10 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
       JSONObject result = new JSONObject();
       result.put("valid", media.isValid());
       if (!media.isValid()) {
-        result.put("reason", getMediaInvalidReasonText(media.getMediaInvalidReason(), request));
+        I18n i18n = getI18n(request);
+        result.put("reason", getI18nText(i18n,
+            MEDIA_INVALID_REASON_I18N_PREFIX + media.getMediaInvalidReason().name()));
+        result.put("reasonTitle", getI18nText(i18n, ASSET_INVALID_I18N_KEY));
       }
       response.setContentType(ContentType.JSON);
       response.getWriter().write(result.toString());
@@ -114,13 +117,12 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
     }
   }
 
-  private String getMediaInvalidReasonText(MediaInvalidReason mediaInvalidReason, SlingHttpServletRequest request) {
-    I18n i18n = getI18n(request);
+  private String getI18nText(I18n i18n, String key) {
     try {
-      return i18n.get(MEDIA_INVALID_REASON_I18N_PREFIX + mediaInvalidReason.name());
+      return i18n.get(key);
     }
     catch (MissingResourceException ex) {
-      return mediaInvalidReason.name();
+      return key;
     }
   }
 

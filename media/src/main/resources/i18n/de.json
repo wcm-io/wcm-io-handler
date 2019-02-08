@@ -1,4 +1,5 @@
 {
+  "io.wcm.handler.media.assetInvalid": "Asset ungültig",
   "io.wcm.handler.media.invalidReason.MEDIA_REFERENCE_MISSING": "Keine Referenz",
   "io.wcm.handler.media.invalidReason.MEDIA_REFERENCE_INVALID": "Ungültige Referenz",
   "io.wcm.handler.media.invalidReason.NO_MATCHING_RENDITION": "Passt nicht zum Medien-Format",

@@ -61,21 +61,34 @@
 
     self._$pathfield.on("change", function(event) {
       var assetPath = self._$pathfield.val();
-      var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
-      self._$element.trigger($.Event("assetselected", {
-        path: assetPath,
-        group: "media",
-        mimetype: self._detectMimeType(assetPath),
-        param: {},
-        thumbnail: $("<img src='" + thumbnailUrl + "'>")
-      }));
+      self._triggerAssetSelected(assetPath);
     });
 
+    self._$pathfield.on("assetselected", function (event) {
+      var assetPath = event.path;
+      self._triggerAssetSelected(assetPath);
+    });
+    
     self._element.on("coral-fileupload:load", function (event) {
       self._$pathfield.val("");
       self._validateMediaFormat(null);
     });
 
+  };
+  
+  /**
+   * Trigger 'assetselected' event on the fileupload widget.
+   */
+  FileUploadExtension.prototype._triggerAssetSelected = function (assetPath)  {
+    var self = this;
+    var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
+    self._$element.trigger($.Event("assetselected", {
+      path: assetPath,
+      group: "media",
+      mimetype: self._detectMimeType(assetPath),
+      param: {},
+      thumbnail: $("<img src='" + thumbnailUrl + "'>")
+    }));
   };
   
   /**
@@ -147,7 +160,7 @@
     };
     $.get(validateUrl, params, function(result) {
       if (!result.valid) {
-        self._showAlert("warning", Granite.I18n.get("Asset invalid"), result.reason);
+        self._showAlert("warning", result.reasonTitle, result.reason);
       }
     });
   };

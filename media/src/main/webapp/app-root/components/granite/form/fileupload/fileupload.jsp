@@ -105,11 +105,6 @@ It has the following content structure:
   - viewInAdminURI (String) = '/assetdetails.html{+item}'
 
   /**
-   * Show pathfield widget additionally to the file upload widget.
-   */
-  - showPathfield (Boolean) = 'true'
-
-  /**
    * List of media formats required by this component.
    * If not set the property value is looked up from component properties or policy.
    */
@@ -203,16 +198,14 @@ RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(fileUpload, opt
 dispatcher.include(slingRequest, slingResponse);
 
 // add pathfield widget
-if (cfg.get("showPathfield", true)) {
-  Map<String,Object> pathFieldProps = new HashMap<>();
-  pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
-  pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
-  pathFieldProps.put("granite:class", "wcmio-handler-media-fileupload-pathfield");
-  Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
-      "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
-  
-  dispatcher = slingRequest.getRequestDispatcher(pathField);
-  dispatcher.include(slingRequest, slingResponse);
-}
+Map<String,Object> pathFieldProps = new HashMap<>();
+pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
+pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
+pathFieldProps.put("granite:class", "wcmio-handler-media-fileupload-pathfield cq-FileUpload cq-droptarget");
+Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
+    "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
+
+dispatcher = slingRequest.getRequestDispatcher(pathField);
+dispatcher.include(slingRequest, slingResponse);
 
 %>
