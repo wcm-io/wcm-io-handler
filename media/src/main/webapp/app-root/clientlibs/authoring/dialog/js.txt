@@ -2,3 +2,4 @@
 namespace.js
 mediaFormatValidate.js
 fileupload.js
+pathfield.js

@@ -35,12 +35,12 @@
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %><%--###
 
-wcm.io Media Handler FileUpload
-===============================
+wcm.io Media Handler PathField
+==============================
 
-A field component for uploading or selecting files from an authoring dialog context.
+A field that allows the user to enter path.
 
-It extends `/libs/cq/gui/components/authoring/dialog/fileupload` component.
+It extends `/libs/granite/ui/components/coral/foundation/form/pathfield` component.
 
 It supports the same properties as it's super component. The following properties
 are overwritten or added.
@@ -50,27 +50,7 @@ are overwritten or added.
   /**
    * The name that identifies the file upload location. E.g. ./file or ./image/file
    */
-  - name (String) = {default value configured in media handler}
-
-  /**
-   * The location for storing the name of the file. E.g. ./fileName or ./image/fileName
-   */
-  - fileNameParameter (String) = {default value configured in media handler}
-
-  /**
-   * The location for storing a DAM file reference. E.g. ./fileReference or ./image/fileReference
-   */
-  - fileReferenceParameter (String) = {default value configured in media handler}
-
-  /**
-   * The browse and selection filter for file selection. E.g. [".png",".jpg"] or ["image/\*"].
-   */
-  - mimeTypes (String) multiple = ["image","image/gif","image/jpeg","image/png"]
-
-  /**
-   * Indicates whether upload from local file system is allowed.
-   */
-  - allowUpload (Boolean) = 'false'
+  - name (String) = {default value configured in media handler for media reference}
 
   /**
    * The path of the root of the pathfield.
@@ -101,26 +81,17 @@ are overwritten or added.
 Config cfg = cmp.getConfig();
 
 // get default values for media ref properties as configured for media handler
-String propNameDefault = "./file";
-String propFileNameDefault = "./fileName";
-String propFileReferenceDefault = "./fileReference";
+String propNameDefault = "./fileReference";
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
-  propNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName();
-  propFileNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName() + "Name";
-  propFileReferenceDefault = "./" + mediaHandlerConfig.getMediaRefProperty();
+  propNameDefault = "./" + mediaHandlerConfig.getMediaRefProperty();
 }
 
-Map<String,Object> fileUploadProps = new HashMap<>();
-fileUploadProps.put("name", cfg.get("name", propNameDefault));
-fileUploadProps.put("fileNameParameter", cfg.get("fileNameParameter", propFileNameDefault));
-fileUploadProps.put("fileReferenceParameter", cfg.get("fileReferenceParameter", propFileReferenceDefault));
-
-// default values for allowUpload and mimeTypes
-fileUploadProps.put("allowUpload", cfg.get("allowUpload", false));
-fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
-    "image", "image/gif", "image/jpeg", "image/png" }));
+Map<String,Object> pathFieldProps = new HashMap<>();
+pathFieldProps.put("name", cfg.get("name", propNameDefault));
+pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
+pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-pathfield");
 
 // media format properties for validation of associated media reference
 ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource);
@@ -150,26 +121,12 @@ if (mediaFormats != null && mediaFormats.length > 0) {
       fieldDescription = "Media formats: ";
     }
     fieldDescription += StringUtils.join(mediaFormatDescriptions, ", ");
-    fileUploadProps.put("fieldDescription", cfg.get("fieldDescription", fieldDescription));
+    pathFieldProps.put("fieldDescription", cfg.get("fieldDescription", fieldDescription));
   }
 }
 
 // simulate resource for dialog field def with updated properties
-Resource fileUpload = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(fileUploadProps));
-
-// render original fileupload widget
-RequestDispatcherOptions options = new RequestDispatcherOptions();
-options.setForceResourceType("cq/gui/components/authoring/dialog/fileupload");
-RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(fileUpload, options);
-dispatcher.include(slingRequest, slingResponse);
-
-// add pathfield widget
-Map<String,Object> pathFieldProps = new HashMap<>();
-pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
-pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
-pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-pathfield-addon");
-Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
-    "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
+Resource pathField = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(pathFieldProps));
 if (mediaFormats != null && mediaFormats.length > 0) {
   Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
@@ -178,7 +135,10 @@ if (mediaFormats != null && mediaFormats.length > 0) {
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }
 
-dispatcher = slingRequest.getRequestDispatcher(pathField);
+// render original fileupload widget
+RequestDispatcherOptions options = new RequestDispatcherOptions();
+options.setForceResourceType("granite/ui/components/coral/foundation/form/pathfield");
+RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(pathField, options);
 dispatcher.include(slingRequest, slingResponse);
 
 %>

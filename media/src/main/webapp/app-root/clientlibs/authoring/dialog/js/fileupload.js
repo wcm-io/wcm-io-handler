@@ -20,8 +20,6 @@
 ;(function ($, ns, channel, document, window, undefined) {
   "use strict";
 
-  var FILEUPLOAD_EVENT_NAMESPACE = ".fileupload";
-
   var FileUploadExtension = function (config) {
     var self = this;
     self._element = config.element;
@@ -133,17 +131,18 @@
    * Initializes file upload extension when dialog is loaded
    */
   channel.on("foundation-contentloaded", function (event) {
-    var pathfield = $(event.target).find("foundation-autocomplete.wcmio-handler-media-fileupload-pathfield").get(0);
-    if (pathfield) {
-      $(event.target).find("coral-fileupload.cq-FileUpload").each(function() {
+    $(event.target).find("coral-fileupload.cq-FileUpload").each(function() {
+      var pathfield = $(this).closest(".coral-Form-fieldwrapper")
+          .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-pathfield-addon").get(0);
+      if (pathfield) {
         Coral.commons.ready(this, function (fileUpload) {
           new FileUploadExtension({
             element: fileUpload,
             pathfield: pathfield
           });
         });
-      });
-    }
+      }
+    });
   });
 
 }(Granite.$, wcmio.handler.media, jQuery(document), document, this));

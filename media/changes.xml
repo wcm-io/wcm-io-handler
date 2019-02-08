@@ -31,7 +31,7 @@
         Automatic customization of image in-place edititing crop ratios to ratios from configured media formats.
       </action>
       <action type="add" dev="sseifert">
-        Add Media Handler-aware File Upload Granite UI widget.
+        Add Media Handler-aware File Upload and Path Field Granite UI widgets.
       </action>
       <action type="add" dev="sseifert">
         Add Media Handler-aware placeholder HTL template.
