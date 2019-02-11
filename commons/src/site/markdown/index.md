@@ -11,6 +11,15 @@ Functionality shared by the handler implementations.
 * [Changelog][changelog]
 
 
+### AEM Version Support Matrix
+
+|Handler Commons version |AEM version supported
+|------------------------|----------------------
+|1.1.x or higher         |AEM 6.2 or up
+|1.0.x                   |AEM 6.1 or up
+|0.x                     |AEM 6.0 or up
+
+
 ### Dependencies
 
 To use this module you have to deploy also:
