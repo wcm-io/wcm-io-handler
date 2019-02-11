@@ -37,14 +37,14 @@ String markup = richTextHandler.get(plainTextString).textMode(TextMode.PLAIN).bu
 ```
 
 
-### Using rich text in Sightly template
+### Using rich text in HTL/Sightly template
 
-To resolve a rich text inside a Sightly template you can use a generic Sling Model for calling the handler:
+To resolve a rich text inside a HTL template you can use a generic Sling Model for calling the handler:
 
 * [ResourceRichText](apidocs/io/wcm/handler/richtext/ui/ResourceRichText.html) - for rendering rich text
 * [ResourceMultilineText](apidocs/io/wcm/handler/richtext/ui/ResourceMultilineText.html) - for converting line breaks in plain text
 
-Sightly template example:
+HTL template example:
 
 ```html
 <sly data-sly-use.richtext="io.wcm.handler.richtext.ui.ResourceRichText"/>

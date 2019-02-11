@@ -121,11 +121,11 @@ if (media.isValid()) {
 A custom markup builder can then generated the image tag with metadata for all breakpoints (depending on the frontend solution).
 
 
-### Using media in Sightly template
+### Using media in HTL/Sightly template
 
-To resolve a media inside a Sightly template you can use a generic Sling Model for calling the handler: [ResourceMedia](apidocs/io/wcm/handler/media/ui/ResourceMedia.html)
+To resolve a media inside a HTL template you can use a generic Sling Model for calling the handler: [ResourceMedia](apidocs/io/wcm/handler/media/ui/ResourceMedia.html)
 
-Sightly template example:
+HTL template example:
 
 ```html
 <sly data-sly-use.media="${'io.wcm.handler.media.ui.ResourceMedia' @ mediaFormat='content'}"

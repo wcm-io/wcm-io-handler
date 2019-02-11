@@ -27,11 +27,28 @@
 <%@page import="com.google.common.collect.ImmutableMap"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
-<%@include file="../../global/global.jsp" %><%
+<%@include file="../../global/global.jsp" %><%--###
 
-/*
- * Special version of pathfield widget which root is set to the site root of the URL handler config.
- */
+wcm.io URL Handler Site Root PathField
+======================================
+
+A field that allows the user to enter path.
+
+It extends `/libs/granite/ui/components/coral/foundation/form/pathfield` component.
+
+It supports the same properties as it's super component. The following properties
+are overwritten or added.
+
+.. gnd:gnd::
+
+  /**
+   * The path of the root of the pathfield. If not set, it's value is set automatically
+   * to the "Site Root" of the current site as configured via the URL Handler configuration.
+   */
+  - rootPath (StringEL) = {site root}
+
+
+###--%><%
 
 String rootPath = "/content";
 
