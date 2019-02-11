@@ -58,6 +58,12 @@ are overwritten or added.
   - rootPath (StringEL) = '/content/dam'
 
   /**
+   * When the field description is not set, it is set automatically with an information about the
+   * supported media formats.
+   */
+  - fieldDescription (String) = {media format information}
+
+  /**
    * List of media formats required by this component.
    * If not set the property value is looked up from component properties or policy.
    */
