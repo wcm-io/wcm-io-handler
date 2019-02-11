@@ -29,7 +29,7 @@ This is a customized Path Field component that allows to reference AEM assets wi
 
 ```json
 "fileReference": {
-  "sling:resourceType": "wcm-io/handler/media/components/granite/form/fileupload",
+  "sling:resourceType": "wcm-io/handler/media/components/granite/form/pathfield",
   "fieldLabel": "Asset reference",
   "rootPath": "/content/dam"
 }
