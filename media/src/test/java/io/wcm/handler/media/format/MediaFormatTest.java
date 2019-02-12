@@ -68,7 +68,7 @@ public class MediaFormatTest {
     MediaFormat mf = create("mf1").fixedDimension(100, 75).build();
     assertEquals(1.333d, mf.getRatio(), 0.001d);
     assertEquals("4:3", mf.getRatioDisplayString());
-    assertEquals("mf1 (100x75px)", mf.getCombinedTitle());
+    assertEquals("mf1 (100x75px; 4:3)", mf.getCombinedTitle());
   }
 
   @Test
@@ -169,21 +169,23 @@ public class MediaFormatTest {
     assertEquals("mf1", mf1.getCombinedTitle());
 
     MediaFormat mf2 = create("mf2").label("MF2").fixedDimension(100, 50).build();
-    assertEquals("MF2 (100x50px)", mf2.getCombinedTitle());
-    assertEquals("MF2 (100x50px)", mf2.toString());
+    assertEquals("MF2 (100x50px; 2:1)", mf2.getCombinedTitle());
+    assertEquals("MF2 (100x50px; 2:1)", mf2.toString());
 
     MediaFormat mf3 = create("mf3").label("MF3").width(50, 100).height(75, 200).build();
     assertEquals("MF3 (50..100x75..200px)", mf3.getCombinedTitle());
 
     MediaFormat mf4 = create("mf4").fixedDimension(100, 50).extensions("gif", "jpg").build();
-    assertEquals("mf4 (100x50px; gif,jpg)", mf4.getCombinedTitle());
+    assertEquals("mf4 (100x50px; 2:1; gif,jpg)", mf4.getCombinedTitle());
 
     MediaFormat mf5 = create("mf5").ratio(16, 9).extensions("gif", "jpg").build();
     assertEquals("mf5 (16:9; gif,jpg)", mf5.getCombinedTitle());
 
-    MediaFormat mf6 = create("mf6").extensions("e1", "e2", "e3", "e4", "e5", "e6", "e7").build();
-    assertEquals("mf6 (e1,e2,e3,e4,e5,e6...)", mf6.getCombinedTitle());
+    MediaFormat mf6 = create("mf6").label("mf6 - 16:9").ratio(16, 9).extensions("gif", "jpg").build();
+    assertEquals("mf6 - 16:9 (gif,jpg)", mf6.getCombinedTitle());
 
+    MediaFormat mf7 = create("mf7").extensions("e1", "e2", "e3", "e4", "e5", "e6", "e7").build();
+    assertEquals("mf7 (e1,e2,e3,e4,e5,e6...)", mf7.getCombinedTitle());
   }
 
   @Test

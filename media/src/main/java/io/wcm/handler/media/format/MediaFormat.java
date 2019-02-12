@@ -488,8 +488,8 @@ public final class MediaFormat implements Comparable<MediaFormat> {
         extParts.add(sbRestrictions.toString());
       }
 
-      // ratio
-      if (hasRatio() && !isFixedDimension()) {
+      // ratio (if label contains a ":" it is assumed a ratio is already contained in the label)
+      if (hasRatio() && !StringUtils.contains(getLabel(), ":")) {
         String ratioString = getRatioDisplayString();
         if (StringUtils.isNotEmpty(ratioString)) {
           extParts.add(ratioString);
