@@ -43,6 +43,9 @@
         MediaHandler: Fallback to first media source defined if no matching media source is found.
       </action>
       <action type="update" dev="sseifert">
+        MediaFormat: Allow to specify ratio with/height as double, and try to guess nice humban-readable ratio display string.
+      </action>
+      <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.
       </action>
       <action type="fix" dev="sseifert">

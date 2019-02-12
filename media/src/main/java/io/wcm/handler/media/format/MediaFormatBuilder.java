@@ -46,8 +46,8 @@ public final class MediaFormatBuilder {
   private long minHeight;
   private long maxHeight;
   private double ratio;
-  private long ratioWidth;
-  private long ratioHeight;
+  private double ratioWidth;
+  private double ratioHeight;
   private long fileSizeMax;
   private String[] extensions;
   private String renditionGroup;
@@ -194,6 +194,19 @@ public final class MediaFormatBuilder {
    * @return this
    */
   public @NotNull MediaFormatBuilder ratio(long widthValue, long heightValue) {
+    this.ratioWidth = widthValue;
+    this.ratioHeight = heightValue;
+    return this;
+  }
+
+  /**
+   * @param widthValue Ratio width sample value (is used for calculating the ratio together with ratioHeight, and for
+   *          display)
+   * @param heightValue Ratio height sample value (is used for calculating the ratio together with ratioWidth, and for
+   *          display)
+   * @return this
+   */
+  public @NotNull MediaFormatBuilder ratio(double widthValue, double heightValue) {
     this.ratioWidth = widthValue;
     this.ratioHeight = heightValue;
     return this;

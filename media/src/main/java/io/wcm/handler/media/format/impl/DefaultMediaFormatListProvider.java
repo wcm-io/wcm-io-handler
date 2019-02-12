@@ -76,8 +76,10 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
             mediaFormatItem.put("widthMin", mediaFormat.getMinWidth());
             mediaFormatItem.put("heightMin", mediaFormat.getMinHeight());
             mediaFormatItem.put("isImage", mediaFormat.isImage());
-            mediaFormatItem.put("ratioWidth", mediaFormat.getRatioWidth());
-            mediaFormatItem.put("ratioHeight", mediaFormat.getRatioHeight());
+            mediaFormatItem.put("ratio", mediaFormat.getRatio());
+            mediaFormatItem.put("ratioWidth", mediaFormat.getRatioWidthAsDouble());
+            mediaFormatItem.put("ratioHeight", mediaFormat.getRatioHeightAsDouble());
+            mediaFormatItem.put("ratioDisplayString", mediaFormat.getRatioDisplayString());
             mediaFormatList.put(mediaFormatItem);
           }
         }

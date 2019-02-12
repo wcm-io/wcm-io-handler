@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl.ipeconfig;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.AbstractResource;
 import org.apache.sling.api.resource.ResourceMetadata;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -47,8 +48,17 @@ class AspectRatioResource extends AbstractResource {
     this.resourceMetadata = buildMetadata(path);
 
     this.properties = new ValueMapDecorator(ImmutableMap.<String, Object>of(
-        "name", mediaFormat.getLabel(),
+        "name", getDisplayString(mediaFormat),
         "ratio", 1 / mediaFormat.getRatio()));
+  }
+
+  private static String getDisplayString(MediaFormat mf) {
+    if (StringUtils.contains(mf.getName(), ":")) {
+      return mf.getName();
+    }
+    else {
+      return mf.getLabel() + " (" + mf.getRatioDisplayString() + ")";
+    }
   }
 
   private static ResourceMetadata buildMetadata(String path) {

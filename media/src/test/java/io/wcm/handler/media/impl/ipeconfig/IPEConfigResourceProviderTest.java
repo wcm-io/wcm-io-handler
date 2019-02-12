@@ -130,9 +130,9 @@ public class IPEConfigResourceProviderTest {
     List<Resource> aspectRatiosChildren = ImmutableList.copyOf(aspectRatios.listChildren());
     assertEquals(2, aspectRatiosChildren.size());
     assertThat(aspectRatiosChildren.get(0), ResourceMatchers.nameAndProps(EDITORIAL_1COL.getName(),
-        "name", EDITORIAL_1COL.getLabel(), "ratio", 1 / EDITORIAL_1COL.getRatio()));
+        "name", EDITORIAL_1COL.getLabel() + " (215:102)", "ratio", 1 / EDITORIAL_1COL.getRatio()));
     assertThat(aspectRatiosChildren.get(1), ResourceMatchers.nameAndProps(SHOWROOM_STANDARD.getName(),
-        "name", SHOWROOM_STANDARD.getLabel(), "ratio", 1 / SHOWROOM_STANDARD.getRatio()));
+        "name", SHOWROOM_STANDARD.getLabel() + " (1055:500)", "ratio", 1 / SHOWROOM_STANDARD.getRatio()));
   }
 
 }
