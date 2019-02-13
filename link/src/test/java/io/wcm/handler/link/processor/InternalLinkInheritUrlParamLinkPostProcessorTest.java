@@ -35,7 +35,7 @@ import io.wcm.handler.link.Link;
 import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
-import io.wcm.handler.link.type.InternalCrossScopeLinkType;
+import io.wcm.handler.link.type.InternalCrossContextLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -193,10 +193,10 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
-  public void testInternalCrossCopeLinkWithDefaultParameterList() {
+  public void testInternalCrossContextLinkWithDefaultParameterList() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
-    Link link = new Link(new InternalCrossScopeLinkType(), null);
+    Link link = new Link(new InternalCrossContextLinkType(), null);
     link.setUrl("/sample.html");
     link.setAnchor(new Anchor().setHRef("/sample.html"));
 

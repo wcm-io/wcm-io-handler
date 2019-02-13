@@ -24,11 +24,11 @@
   <body>
 
     <release version="1.1.0" date="not released">
-      <action type="update" dev="sseifert">
-        Use "Site Root Path" Granite UI widget in link dialog templates.
+      <action type="add" dev="sseifert">
+        Introduce InternalCrossContextLinkType with a dedicated primary link ref property name, and deprecate InternalCrossScopeLinkType.
       </action>
       <action type="update" dev="sseifert">
-        AbstractInternalLinkInheritUrlParamLinkPostProcessor: Support both internal and internal cross-scope link types.
+        Use "Site Root Path" Granite UI widget in link dialog templates.
       </action>
       <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.

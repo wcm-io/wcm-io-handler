@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.spi.LinkProcessor;
-import io.wcm.handler.link.type.InternalCrossScopeLinkType;
+import io.wcm.handler.link.type.InternalCrossContextLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.url.UrlHandler;
 
@@ -60,7 +60,7 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
 
     if (link.isValid()
         && (link.getLinkType().getId() == InternalLinkType.ID
-            || link.getLinkType().getId() == InternalCrossScopeLinkType.ID)) {
+            || link.getLinkType().getId() == InternalCrossContextLinkType.ID)) {
       String url = link.getUrl();
       try {
         URI uri = new URI(url);

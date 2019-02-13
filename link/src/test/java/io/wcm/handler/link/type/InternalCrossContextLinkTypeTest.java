@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,10 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 /**
- * Test InternalCrossScopeLinkType methods.
+ * Test {@link InternalCrossContextLinkType} methods.
  * Most of the test cases are identical to {@link InternalLinkTypeTest}, so they are not duplicated here.
  */
-@SuppressWarnings("deprecation")
-public class InternalCrossScopeLinkTypeTest {
+public class InternalCrossContextLinkTypeTest {
 
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
@@ -78,8 +77,8 @@ public class InternalCrossScopeLinkTypeTest {
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossContextLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF, targetPage.getPath())
         .build());
 
     Link link = linkHandler.get(linkResource).build();
@@ -96,8 +95,8 @@ public class InternalCrossScopeLinkTypeTest {
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossContextLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
         .build());
 
     Link link = linkHandler.get(linkResource).build();

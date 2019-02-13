@@ -58,6 +58,11 @@ public final class LinkNameConstants {
   public static final @NotNull String PN_LINK_CONTENT_REF = "linkContentRef";
 
   /**
+   * Internal content page path (other scope/site)
+   */
+  public static final @NotNull String PN_LINK_CROSSCONTEXT_CONTENT_REF = "linkCrossContextContentRef";
+
+  /**
    * Internal media library item path
    */
   public static final @NotNull String PN_LINK_MEDIA_REF = "linkMediaRef";

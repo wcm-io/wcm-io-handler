@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,18 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Default link type implementations.
- */
-@org.osgi.annotation.versioning.Version("1.1")
 package io.wcm.handler.link.type;
+
+import org.apache.sling.api.adapter.Adaptable;
+
+/**
+ * Test {@link InternalCrossContextLinkType} methods.
+ */
+public class InternalCrossContextLinkTypeWithoutRequestTest extends InternalCrossContextLinkTypeTest {
+
+  @Override
+  protected Adaptable adaptable() {
+    return context.currentResource();
+  }
+
+}

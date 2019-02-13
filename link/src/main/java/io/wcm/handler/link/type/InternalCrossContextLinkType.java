@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,25 +41,23 @@ import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
 
 /**
  * Implementation of {@link io.wcm.handler.link.spi.LinkType} for internal links with supports
- * links between different configuration scopes (which normally relates to different sites/languages).
+ * links between different sites or configuration context paths.
  * Internal links are links to content pages inside the CMS.
  * <p>
- * This link type ensures that links that are referenced from other configuration scopes (sites/languages) are resolved
- * using the URL handler configuration of the target scope, e.g. with the Site URL from the other site.
+ * This link type ensures that links that are referenced from other sites/configuration contexts are resolved
+ * using the URL handler configuration of the target context, e.g. with the Site URL from the other site.
  * </p>
- * @deprecated Please use {@link InternalCrossContextLinkType} instead.
  */
-@Deprecated
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public final class InternalCrossScopeLinkType extends LinkType {
+public final class InternalCrossContextLinkType extends LinkType {
 
   /**
    * Link type ID
    */
-  public static final @NotNull String ID = "internalCrossScope";
+  public static final @NotNull String ID = "internalCrossContext";
 
   private final @NotNull InternalLinkResolverOptions resolverOptions = new InternalLinkResolverOptions()
       .primaryLinkRefProperty(getPrimaryLinkRefProperty())
@@ -79,7 +77,7 @@ public final class InternalCrossScopeLinkType extends LinkType {
 
   @Override
   public String getPrimaryLinkRefProperty() {
-    return LinkNameConstants.PN_LINK_CONTENT_REF;
+    return LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF;
   }
 
   @Override
@@ -113,7 +111,7 @@ public final class InternalCrossScopeLinkType extends LinkType {
   public static @NotNull Resource getSyntheticLinkResource(@NotNull ResourceResolver resourceResolver, @NotNull String pageRef) {
     Map<String, Object> map = new HashMap<>();
     map.put(LinkNameConstants.PN_LINK_TYPE, ID);
-    map.put(LinkNameConstants.PN_LINK_CONTENT_REF, pageRef);
+    map.put(LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF, pageRef);
     return new SyntheticLinkResource(resourceResolver, map);
   }
 

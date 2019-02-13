@@ -30,6 +30,7 @@ import com.google.common.collect.ImmutableList;
 import io.wcm.handler.link.spi.LinkHandlerConfig;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.type.ExternalLinkType;
+import io.wcm.handler.link.type.InternalCrossContextLinkType;
 import io.wcm.handler.link.type.InternalCrossScopeLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
@@ -37,11 +38,12 @@ import io.wcm.handler.link.type.MediaLinkType;
 /**
  * Dummy link configuration
  */
-@SuppressWarnings("null")
+@SuppressWarnings({ "null", "deprecation" })
 public class DummyLinkHandlerConfig extends LinkHandlerConfig {
 
   private static final List<Class<? extends LinkType>> LINK_TYPES = ImmutableList.<Class<? extends LinkType>>of(
       InternalLinkType.class,
+      InternalCrossContextLinkType.class,
       InternalCrossScopeLinkType.class,
       ExternalLinkType.class,
       MediaLinkType.class
