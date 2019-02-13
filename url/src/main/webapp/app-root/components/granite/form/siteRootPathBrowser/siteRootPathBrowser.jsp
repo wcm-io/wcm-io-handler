@@ -29,12 +29,12 @@
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %><%--###
 
-wcm.io URL Handler Site Root PathField
-======================================
+wcm.io URL Handler Site Root PathBrowser
+========================================
 
 A field that allows the user to enter path.
 
-It extends `/libs/granite/ui/components/coral/foundation/form/pathfield` component.
+It extends `/libs/granite/ui/components/coral/foundation/form/pathbrowser` component.
 
 It supports the same properties as it's super component. The following properties
 are overwritten or added.
@@ -69,7 +69,7 @@ ValueMap overwriteProperties = new ValueMapDecorator(ImmutableMap.<String,Object
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
 
 RequestDispatcherOptions options = new RequestDispatcherOptions();
-options.setForceResourceType("granite/ui/components/coral/foundation/form/pathfield");
+options.setForceResourceType("granite/ui/components/coral/foundation/form/pathbrowser");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(resourceWrapper, options);
 dispatcher.include(slingRequest, slingResponse);
 
