@@ -25,6 +25,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
@@ -48,7 +50,7 @@ public final class LinkRequest {
    * @param page Target content page
    * @param linkArgs Link arguments
    */
-  public LinkRequest(Resource resource, Page page, LinkArgs linkArgs) {
+  public LinkRequest(@Nullable Resource resource, @Nullable Page page, @Nullable LinkArgs linkArgs) {
     this.resource = resource;
     this.page = page;
     this.linkArgs = linkArgs != null ? linkArgs : new LinkArgs();
@@ -62,21 +64,21 @@ public final class LinkRequest {
   /**
    * @return Resource containing properties that define the link target
    */
-  public Resource getResource() {
+  public @Nullable Resource getResource() {
     return this.resource;
   }
 
   /**
    * @return Target content page
    */
-  public Page getPage() {
+  public @Nullable Page getPage() {
     return this.page;
   }
 
   /**
    * @return Link arguments
    */
-  public LinkArgs getLinkArgs() {
+  public @NotNull LinkArgs getLinkArgs() {
     return this.linkArgs;
   }
 
@@ -84,7 +86,7 @@ public final class LinkRequest {
    * @return Properties from resource containing target link. The value map is a copy
    *         of the original map so it is safe to change the property values contained in the map.
    */
-  public ValueMap getResourceProperties() {
+  public @NotNull ValueMap getResourceProperties() {
     if (this.resourceProperties == null) {
       // create a copy of the original map
       this.resourceProperties = new ValueMapDecorator(new HashMap<String, Object>());
