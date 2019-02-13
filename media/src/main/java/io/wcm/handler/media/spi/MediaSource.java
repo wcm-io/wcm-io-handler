@@ -137,6 +137,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Path or null if not present
    */
+  @SuppressWarnings("null")
   protected final @Nullable String getMediaRef(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
@@ -168,6 +169,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Property name
    */
+  @SuppressWarnings("null")
   protected final @NotNull String getMediaRefProperty(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     String refProperty = mediaRequest.getRefProperty();
@@ -234,6 +236,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Property name
    */
+  @SuppressWarnings("null")
   protected final @NotNull String getMediaCropProperty(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     String cropProperty = mediaRequest.getCropProperty();
@@ -254,6 +257,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config
    * @return Rotation value or null if not set or invalid
    */
+  @SuppressWarnings("null")
   protected final @Nullable Integer getMediaRotation(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
     if (mediaRequest.getResource() != null) {
@@ -275,6 +279,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config
    * @return Property name
    */
+  @SuppressWarnings("null")
   protected final @NotNull String getMediaRotationProperty(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
     String rotationProperty = mediaRequest.getRotationProperty();

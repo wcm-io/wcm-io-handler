@@ -182,6 +182,7 @@ public final class MediaMarkupBuilderUtil {
    * @param wcmComponentContext WCM component context
    * @return true if drag&amp;drop can be applied.
    */
+  @SuppressWarnings("null")
   public static boolean canApplyDragDropSupport(@NotNull MediaRequest mediaRequest,
       @Nullable ComponentContext wcmComponentContext) {
     switch (mediaRequest.getMediaArgs().getDragDropSupport()) {
