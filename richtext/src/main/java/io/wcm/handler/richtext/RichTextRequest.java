@@ -25,6 +25,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.MediaArgs;
@@ -52,7 +54,8 @@ public final class RichTextRequest {
    * @param textMode Text mode
    * @param mediaArgs Media arguments
    */
-  public RichTextRequest(Resource resource, String text, UrlMode urlMode, TextMode textMode, MediaArgs mediaArgs) {
+  public RichTextRequest(@Nullable Resource resource, @Nullable String text,
+      @Nullable UrlMode urlMode, @Nullable TextMode textMode, @Nullable MediaArgs mediaArgs) {
     this.resource = resource;
     this.text = text;
     this.urlMode = urlMode;
@@ -68,35 +71,35 @@ public final class RichTextRequest {
   /**
    * @return Resource containing rich text
    */
-  public Resource getResource() {
+  public @Nullable Resource getResource() {
     return this.resource;
   }
 
   /**
    * @return Raw rich text
    */
-  public String getText() {
+  public @Nullable String getText() {
     return this.text;
   }
 
   /**
    * @return URL mode
    */
-  public UrlMode getUrlMode() {
+  public @Nullable UrlMode getUrlMode() {
     return this.urlMode;
   }
 
   /**
    * @return Text mode
    */
-  public TextMode getTextMode() {
+  public @Nullable TextMode getTextMode() {
     return this.textMode;
   }
 
   /**
    * @return Media arguments
    */
-  public MediaArgs getMediaArgs() {
+  public @Nullable MediaArgs getMediaArgs() {
     return this.mediaArgs;
   }
 
@@ -104,7 +107,7 @@ public final class RichTextRequest {
    * @return Properties from resource containing rich text. The value map is a copy
    *         of the original map so it is safe to change the property values contained in the map.
    */
-  public ValueMap getResourceProperties() {
+  public @NotNull ValueMap getResourceProperties() {
     if (this.resourceProperties == null) {
       // create a copy of the original map
       this.resourceProperties = new ValueMapDecorator(new HashMap<String, Object>());
