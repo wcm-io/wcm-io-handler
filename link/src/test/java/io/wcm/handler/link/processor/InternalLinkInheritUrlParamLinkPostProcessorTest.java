@@ -35,6 +35,7 @@ import io.wcm.handler.link.Link;
 import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
+import io.wcm.handler.link.type.InternalCrossScopeLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
@@ -189,6 +190,30 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
 
     postProcessor.process(link);
     assertEquals("/sample.html", link.getUrl());
+  }
+
+  @Test
+  public void testInternalCrossCopeLinkWithDefaultParameterList() {
+    LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
+
+    Link link = new Link(new InternalCrossScopeLinkType(), null);
+    link.setUrl("/sample.html");
+    link.setAnchor(new Anchor().setHRef("/sample.html"));
+
+    // test without url parameters
+    postProcessor.process(link);
+    assertEquals("/sample.html", link.getUrl());
+
+    // test with url parameters
+    context.request().setQueryString("debugClientLibs=true&abc=123");
+
+    postProcessor.process(link);
+    if (adaptable() instanceof SlingHttpServletRequest) {
+      assertEquals("/sample.html?debugClientLibs=true", link.getUrl());
+    }
+    else {
+      assertEquals("/sample.html", link.getUrl());
+    }
   }
 
 

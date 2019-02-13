@@ -28,6 +28,9 @@
         Use "Site Root Path" Granite UI widget in link dialog templates.
       </action>
       <action type="update" dev="sseifert">
+        AbstractInternalLinkInheritUrlParamLinkPostProcessor: Support both internal and internal cross-scope link types.
+      </action>
+      <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.
       </action>
     </release>
