@@ -31,16 +31,19 @@ import org.apache.sling.models.annotations.injectorspecific.RequestAttribute;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 
+import io.wcm.handler.richtext.RichTextBuilder;
 import io.wcm.handler.richtext.RichTextHandler;
 import io.wcm.handler.richtext.RichTextNameConstants;
+import io.wcm.handler.richtext.TextMode;
 
 /**
- * Generic resource-based model for rendering formatted XHTML rich text.
+ * Generic resource-based model for rendering formatted rich text.
  * <p>
  * Optional use parameters when referencing model from Sightly template:
  * </p>
  * <ul>
  * <li><code>propertyName</code>: Property name in which the text is stored in the resource</li>
+ * <li><code>isRichText</code>: Set to false if text to format is plain text.</li>
  * </ul>
  */
 @Model(adaptables = SlingHttpServletRequest.class)
@@ -49,6 +52,9 @@ public class ResourceRichText {
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   @Default(values = RichTextNameConstants.PN_TEXT)
   private String propertyName;
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  @Default(booleanValues = true)
+  private boolean isRichText;
 
   @Self
   private RichTextHandler richTextHandler;
@@ -59,8 +65,15 @@ public class ResourceRichText {
 
   @PostConstruct
   private void activate() {
-    String xhtmlString = resource.getValueMap().get(propertyName, String.class);
-    markup = richTextHandler.get(xhtmlString).buildMarkup();
+    String text = resource.getValueMap().get(propertyName, String.class);
+
+    RichTextBuilder builder = richTextHandler.get(text);
+
+    if (!isRichText) {
+      builder.textMode(TextMode.PLAIN);
+    }
+
+    markup = builder.buildMarkup();
   }
 
   /**

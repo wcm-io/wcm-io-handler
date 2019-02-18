@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.2.0" date="not released">
+      <action type="add" dev="sseifert">
+        ResourceRichText: Add property "isRichText" to be able to handle both rich text and plain text.
+      </action>
       <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.
       </action>
