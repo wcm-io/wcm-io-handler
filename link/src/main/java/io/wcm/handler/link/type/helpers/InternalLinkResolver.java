@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.link.type.helpers;
 
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -78,9 +80,13 @@ public final class InternalLinkResolver {
   @AemObject
   private PageManager pageManager;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private Page currentPage;
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private WCMMode wcmMode;
   @OSGiService
   private SlingSettingsService slingSettings;
+
+  private static final Pattern EXPERIENCE_FRAGMENT_PATH_PATTERN = Pattern.compile("^/content/experience-fragments/.*$");
 
   /**
    * Check if a given page is valid and acceptable to link upon.
@@ -145,7 +151,7 @@ public final class InternalLinkResolver {
     UrlHandler resolvingUrlHandler = urlHandler;
 
     // use URL handler from target context for link URL building
-    if (targetPage != null && options.isUseTargetContext() && !options.isRewritePathToContext()) {
+    if (targetPage != null && useTargetContext(options)) {
       Resource resource = targetPage.getContentResource();
       resolvingUrlHandlerConfig = AdaptTo.notNull(resource, UrlHandlerConfig.class);
       resolvingUrlHandler = AdaptTo.notNull(resource, UrlHandler.class);
@@ -246,7 +252,7 @@ public final class InternalLinkResolver {
 
     // Rewrite target to current site context
     String rewrittenPath;
-    if (options.isRewritePathToContext()) {
+    if (options.isRewritePathToContext() && !useTargetContext(options)) {
       rewrittenPath = urlHandler.rewritePathToContext(SyntheticNavigatableResource.get(targetPath, resourceResolver));
     }
     else {
@@ -264,6 +270,31 @@ public final class InternalLinkResolver {
     else {
       return null;
     }
+  }
+
+  /**
+   * Checks if target context should be used.
+   * @param options Link resolver options
+   * @return true if target context should be used
+   */
+  private boolean useTargetContext(InternalLinkResolverOptions options) {
+    if (options.isUseTargetContext() && !options.isRewritePathToContext()) {
+      return true;
+    }
+    // even is use target context is not activated use it if current page is an experience fragment
+    // otherwise it will be always impossible to resolve internal links
+    else if (currentPage != null && isExperienceFragment(currentPage.getPath())) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * @param path Path
+   * @return true if the given path points to an experience fragment.
+   */
+  private boolean isExperienceFragment(String path) {
+    return EXPERIENCE_FRAGMENT_PATH_PATTERN.matcher(path).matches();
   }
 
 }
