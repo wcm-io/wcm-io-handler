@@ -17,17 +17,15 @@
   limitations under the License.
   #L%
   --%>
-<%@page import="io.wcm.wcm.commons.util.Path"%>
-<%@page import="io.wcm.handler.url.spi.UrlHandlerConfig"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="org.apache.sling.api.resource.ValueMap"%>
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
-<%@page import="com.google.common.collect.ImmutableMap"%>
+<%@page import="io.wcm.sling.commons.resource.ImmutableValueMap"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
-<%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
-<%@include file="../../global/global.jsp" %><%--###
+<%@include file="../../global/global.jsp" %>
+<%@include file="../siteRootPathField/pathDetection.jsp" %><%--###
 
 wcm.io URL Handler Site Root PathBrowser
 ========================================
@@ -47,23 +45,24 @@ are overwritten or added.
    */
   - rootPath (StringEL) = {site root}
 
+  /**
+   * The root path that is used as fallback when no root path could be detected dynamically,
+   * e.g. because outside any site or within experience fragments.
+   */
+  - fallbackRootPath (StringEL) = "/content"
+
 
 ###--%><%
 
-String rootPath = "/content";
-
-Resource contentResource = GraniteUi.getContentResourceOrParent(request);
-if (contentResource != null) {
-  UrlHandlerConfig urlHandlerConfig = contentResource.adaptTo(UrlHandlerConfig.class);
-  if (urlHandlerConfig != null) {
-    int siteRootLevel = urlHandlerConfig.getSiteRootLevel(contentResource);
-    if (siteRootLevel >= 0) {
-      rootPath = Path.getAbsoluteParent(contentResource.getPath(), siteRootLevel, resourceResolver);
-    }
-  }
+// detect root path
+Config cfg = cmp.getConfig();
+String rootPath = cfg.get("rootPath", String.class);
+String fallbackRootPath = cfg.get("fallbackRootPath", "/content");
+if (rootPath == null) {
+  rootPath = getRootPath(slingRequest, fallbackRootPath);
 }
 
-ValueMap overwriteProperties = new ValueMapDecorator(ImmutableMap.<String,Object>of("rootPath", rootPath));
+ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of("rootPath", rootPath));
 
 // simulate resource for dialog field def with new rootPath instead of configured one
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);

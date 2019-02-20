@@ -16,6 +16,7 @@ This is a customized Path Field that always sets the root path to the the "site 
 Enhancements over AEM version:
 
 * Dynamically sets the `rootPath` to the current site root
+* A fallback root path can be configured via a `fallbackRootPath` property - it is used when no site root path could be detected
 
 
 ### Site Root Path Browser
@@ -33,6 +34,7 @@ This is a customized Path Browser that always sets the root path to the the "sit
 Enhancements over AEM version:
 
 * Dynamically sets the `rootPath` to the current site root
+* A fallback root path can be configured via a `fallbackRootPath` property - it is used when no site root path could be detected
 
 
 
