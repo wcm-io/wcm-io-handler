@@ -17,8 +17,6 @@
   limitations under the License.
   #L%
 --%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
@@ -28,12 +26,11 @@
 <%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="io.wcm.handler.commons.component.ComponentPropertyResolver"%>
 <%@page import="io.wcm.handler.media.MediaNameConstants"%>
-<%@page import="io.wcm.handler.media.format.MediaFormat"%>
-<%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
-<%@include file="../../global/global.jsp" %><%--###
+<%@include file="../../global/global.jsp" %>
+<%@include file="mediaFormatSupport.jsp" %><%--###
 
 wcm.io Media Handler FileUpload
 ===============================
@@ -138,26 +135,9 @@ boolean mediaCropAuto = cfg.get("mediaCropAuto",
     componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
 
 // add info about media formats in field description
-if (mediaFormats != null && mediaFormats.length > 0) {
-  List<String> mediaFormatDescriptions = new ArrayList<>();
-  MediaFormatHandler mediaFormatHandler = contentResource.adaptTo(MediaFormatHandler.class);
-  for (String mediaFormatName : mediaFormats) {
-    MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
-    if (mediaFormat != null) {
-      mediaFormatDescriptions.add(mediaFormat.toString());
-    }
-  }
-  if (!mediaFormatDescriptions.isEmpty()) {
-    String fieldDescription;
-    if (mediaFormatDescriptions.size() == 1) {
-      fieldDescription = "Media format: ";
-    }
-    else {
-      fieldDescription = "Media formats: ";
-    }
-    fieldDescription += StringUtils.join(mediaFormatDescriptions, ", ");
-    fileUploadProps.put("fieldDescription", cfg.get("fieldDescription", fieldDescription));
-  }
+String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
+if (mediaFormatsFieldDescription != null) {
+  fileUploadProps.put("fieldDescription", cfg.get("fieldDescription", mediaFormatsFieldDescription));
 }
 
 // simulate resource for dialog field def with updated properties
