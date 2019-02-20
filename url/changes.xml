@@ -30,6 +30,9 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.2 as minimum version.
       </action>
+      <action type="fix" dev="sseifert">
+        Make rewrite-to-context and default URL mode aware of special version history and launches paths.
+      </action>
     </release>
 
     <release version="1.1.6" date="2018-10-22">
