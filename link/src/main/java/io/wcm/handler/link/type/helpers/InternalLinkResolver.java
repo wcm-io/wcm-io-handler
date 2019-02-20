@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.link.type.helpers;
 
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -51,6 +49,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.wcm.commons.util.Path;
 import io.wcm.wcm.commons.util.RunMode;
 
 /**
@@ -85,8 +84,6 @@ public final class InternalLinkResolver {
   private WCMMode wcmMode;
   @OSGiService
   private SlingSettingsService slingSettings;
-
-  private static final Pattern EXPERIENCE_FRAGMENT_PATH_PATTERN = Pattern.compile("^/content/experience-fragments/.*$");
 
   /**
    * Check if a given page is valid and acceptable to link upon.
@@ -283,18 +280,10 @@ public final class InternalLinkResolver {
     }
     // even is use target context is not activated use it if current page is an experience fragment
     // otherwise it will be always impossible to resolve internal links
-    else if (currentPage != null && isExperienceFragment(currentPage.getPath())) {
+    else if (currentPage != null && Path.isExperienceFragmentPath(currentPage.getPath())) {
       return true;
     }
     return false;
-  }
-
-  /**
-   * @param path Path
-   * @return true if the given path points to an experience fragment.
-   */
-  private boolean isExperienceFragment(String path) {
-    return EXPERIENCE_FRAGMENT_PATH_PATTERN.matcher(path).matches();
   }
 
 }
