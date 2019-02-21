@@ -59,13 +59,13 @@ public class RichTextHandlerImplTest {
 
   private static final String RICHTEXT_FRAGMENT = "<p>Der <strong>Jodelkaiser</strong> "
       + "aus<span/> dem "
-      + "<a href='#' data-link-type-id='external' data-link-external-ref='http://www.jodelkaiser.de' "
+      + "<a href='#' data-link-type='external' data-link-external-ref='http://www.jodelkaiser.de' "
       + "data-link-window-target='_blank' data-link-window-features='[&quot;resizable&quot;,&quot;toolbar&quot;]'>Ötztal</a> "
       + "ist wieder daheim.</p>";
 
   private static final String RICHTEXT_FRAGMENT_LEGACY_DATA = "<p>Der <strong>Jodelkaiser</strong> "
       + "aus<span/> dem "
-      + "<a href='#' data='{\"linkTypeId\":\"external\",\"linkExternalRef\":\"http://www.jodelkaiser.de\","
+      + "<a href='#' data='{\"linkType\":\"external\",\"linkExternalRef\":\"http://www.jodelkaiser.de\","
       + "\"linkWindowTarget\":\"_blank\",\"linkWindowFeatures\":[\"resizable\",\"toolbar\"]}'>Ötztal</a> "
       + "ist wieder daheim.</p>";
 
