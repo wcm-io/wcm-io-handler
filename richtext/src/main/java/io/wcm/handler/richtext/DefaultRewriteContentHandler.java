@@ -200,12 +200,12 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
 
   /**
    * Builds anchor element for given link metadata.
-   * @param pLink Link metadata
+   * @param link Link metadata
    * @param element Original element
    * @return Anchor element or null if link is invalid
    */
-  private Element buildAnchorElement(Link pLink, Element element) {
-    return pLink.getAnchor();
+  private Element buildAnchorElement(Link link, Element element) {
+    return link.getAnchor();
   }
 
   /**
@@ -409,13 +409,13 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
 
   /**
    * Builds image element for given media metadata.
-   * @param pMedia Media metadata
+   * @param media Media metadata
    * @param element Original element
    * @return Image element or null if media reference is invalid
    */
-  private Element buildImageElement(Media pMedia, Element element) {
-    if (pMedia.isValid()) {
-      element.setAttribute("src", pMedia.getUrl());
+  private Element buildImageElement(Media media, Element element) {
+    if (media.isValid()) {
+      element.setAttribute("src", media.getUrl());
     }
     return element;
   }
