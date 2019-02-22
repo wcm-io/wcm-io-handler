@@ -159,7 +159,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       long requestedWidth = requestedDimension.getWidth();
       long requestedHeight = requestedDimension.getHeight();
 
-      // calculate missing width/height from ration if not specified
+      // calculate missing width/height from ratio if not specified
       double imageRatio = (double)originalDimension.getWidth() / (double)originalDimension.getHeight();
       if (requestedWidth == 0 && requestedHeight > 0) {
         requestedWidth = (int)Math.round(requestedHeight * imageRatio);
@@ -364,7 +364,6 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     return StringUtils.substringAfterLast(this.fileName, ".");
   }
 
-  @SuppressWarnings("unused")
   @Override
   public long getFileSize() {
     Node node = this.resource.adaptTo(Node.class);

@@ -22,6 +22,7 @@ package io.wcm.handler.media.markup;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +33,8 @@ import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.EditConfig;
+import com.day.cq.wcm.api.components.InplaceEditingConfig;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Dimension;
@@ -177,8 +180,9 @@ public final class MediaMarkupBuilderUtil {
    * Implements check whether to apply drag&amp;drop support as described in {@link DragDropSupport}.
    * @param mediaRequest Media request
    * @param wcmComponentContext WCM component context
-   * @return true if drag&amp;droup can be applied.
+   * @return true if drag&amp;drop can be applied.
    */
+  @SuppressWarnings("null")
   public static boolean canApplyDragDropSupport(@NotNull MediaRequest mediaRequest,
       @Nullable ComponentContext wcmComponentContext) {
     switch (mediaRequest.getMediaArgs().getDragDropSupport()) {
@@ -199,6 +203,49 @@ public final class MediaMarkupBuilderUtil {
       default:
         throw new IllegalArgumentException("Unsupported drag&drop support mode: "
             + mediaRequest.getMediaArgs().getDragDropSupport());
+    }
+
+  }
+
+  /**
+   * Implements check whether to set customized IPE cropping ratios as described in {@link IPERatioCustomize}.
+   * @param mediaRequest Media request
+   * @param wcmComponentContext WCM component context
+   * @return true if customized IP cropping ratios can be set
+   */
+  public static boolean canSetCustomIPECropRatios(@NotNull MediaRequest mediaRequest,
+      @Nullable ComponentContext wcmComponentContext) {
+
+    EditConfig editConfig = null;
+    InplaceEditingConfig ipeConfig = null;
+    if (wcmComponentContext != null && wcmComponentContext.getEditContext() != null
+        && wcmComponentContext.getEditContext().getEditConfig() != null
+        && wcmComponentContext.getResource() != null) {
+      editConfig = wcmComponentContext.getEditContext().getEditConfig();
+      ipeConfig = editConfig.getInplaceEditingConfig();
+    }
+    if (editConfig == null || ipeConfig == null
+        || !StringUtils.equals(ipeConfig.getEditorType(), "image")) {
+      // no image IPE activated - never customize crop ratios
+      return false;
+    }
+
+    switch (mediaRequest.getMediaArgs().getIPERatioCustomize()) {
+      case ALWAYS:
+        return true;
+      case NEVER:
+        return false;
+      case AUTO:
+        if (StringUtils.isNotEmpty(ipeConfig.getConfigPath())) {
+          String ratiosPath = ipeConfig.getConfigPath() + "/plugins/crop/aspectRatios";
+          @SuppressWarnings("null")
+          ResourceResolver resolver = wcmComponentContext.getResource().getResourceResolver();
+          return resolver.getResource(ratiosPath) == null;
+        }
+        return true;
+      default:
+        throw new IllegalArgumentException("Unsupported IPE ratio customize mode: "
+            + mediaRequest.getMediaArgs().getIPERatioCustomize());
     }
 
   }

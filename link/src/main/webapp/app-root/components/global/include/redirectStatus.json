@@ -1,17 +1,15 @@
 {
   "jcr:primaryType": "nt:unstructured",
-  "sling:resourceType": "granite/ui/components/foundation/container",
+  "sling:resourceType": "granite/ui/components/coral/foundation/fixedcolumns",
   "jcr:title": "Redirect Status",
+  "margin": true,
   "cq:showOnCreate": false,
-  "layout": {
-    "sling:resourceType": "granite/ui/components/foundation/layouts/fixedcolumns"
-  },
   "items": {
     "column": {
-      "sling:resourceType": "granite/ui/components/foundation/container",
+      "sling:resourceType": "granite/ui/components/coral/foundation/container",
       "items": {
         "redirectStatus": {
-          "sling:resourceType": "granite/ui/components/foundation/form/select",
+          "sling:resourceType": "granite/ui/components/coral/foundation/form/select",
           "name": "./redirectStatus",
           "fieldLabel": "Redirect Status",
           "fieldDescription": "HTTP response code used for the redirect.",

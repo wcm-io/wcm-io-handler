@@ -84,8 +84,8 @@ public class MediaFormatBuilderTest {
     assertEquals(300, mf.getMinHeight());
     assertEquals(600, mf.getMaxHeight());
     assertEquals(2d, mf.getRatio(), 0.0001d);
-    assertEquals(100, mf.getRatioWidth());
-    assertEquals(50, mf.getRatioHeight());
+    assertEquals(100, mf.getRatioWidthAsDouble(), 0.0001d);
+    assertEquals(50, mf.getRatioHeightAsDouble(), 0.0001d);
     assertEquals(0L, mf.getFileSizeMax());
     assertArrayEquals(new String[0], mf.getExtensions());
     assertNull("group1", mf.getRenditionGroup());

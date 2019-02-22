@@ -22,9 +22,9 @@ package io.wcm.handler.url.impl.modes;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +34,7 @@ import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.util.Path;
 
 /**
  * Default mode: Does generate a full externalized URL only if both siteUrl and siteUrlSecure parameter
@@ -75,16 +76,16 @@ public final class DefaultUrlMode extends AbstractUrlMode {
    * @param targetResource Target resource (may be null)
    * @return true if the target resources is located in another site/context with separate url configuration
    */
-  @SuppressWarnings("null")
   private boolean linksToOtherDomain(Adaptable adaptable, Page currentPage, Resource targetResource) {
     if (currentPage == null || targetResource == null) {
       return false;
     }
 
     UrlHandlerConfig urlHandlerConfig = AdaptTo.notNull(adaptable, UrlHandlerConfig.class);
-    Resource currentResource = currentPage.adaptTo(Resource.class);
-    String currentSiteRoot = getRootPath(currentPage.getPath(), urlHandlerConfig.getSiteRootLevel(currentResource));
-    String pathSiteRoot = getRootPath(targetResource.getPath(), urlHandlerConfig.getSiteRootLevel(targetResource));
+    Resource currentResource = AdaptTo.notNull(currentPage, Resource.class);
+    ResourceResolver resourceResolver = currentResource.getResourceResolver();
+    String currentSiteRoot = getRootPath(currentPage.getPath(), urlHandlerConfig.getSiteRootLevel(currentResource), resourceResolver);
+    String pathSiteRoot = getRootPath(targetResource.getPath(), urlHandlerConfig.getSiteRootLevel(targetResource), resourceResolver);
     boolean notInCurrentSite = !StringUtils.equals(currentSiteRoot, pathSiteRoot);
 
     if (notInCurrentSite) {
@@ -100,10 +101,11 @@ public final class DefaultUrlMode extends AbstractUrlMode {
    * Gets site root level path of a site.
    * @param path Path of page within the site
    * @param rootLevel Level of root page
+   * @param resourceResolver Resource resolver
    * @return Site root path for the site. The path is not checked for validness.
    */
-  private String getRootPath(String path, int rootLevel) {
-    String rootPath = Text.getAbsoluteParent(path, rootLevel);
+  private String getRootPath(String path, int rootLevel, ResourceResolver resourceResolver) {
+    String rootPath = Path.getAbsoluteParent(path, rootLevel, resourceResolver);
 
     // strip off everything after first "." - root path may be passed with selectors/extension which is not relevant
     if (StringUtils.contains(rootPath, ".")) {

@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>1.0.4</version>
+    <version>1.1.0-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -86,6 +86,9 @@
             <Sling-Model-Packages>
               io.wcm.handler.url
             </Sling-Model-Packages>
+
+            <!-- include application path as intial content -->
+            <Sling-Initial-Content>SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/url</Sling-Initial-Content>
 
             <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
             <Import-Package>

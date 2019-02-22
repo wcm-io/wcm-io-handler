@@ -62,8 +62,8 @@ public class JcrBinaryTest {
     assertTrue(JcrBinary.isNtFileOrResource(resource));
   }
 
-
   @Test
+  @SuppressWarnings("null")
   public void testIsNtFileResource_Other() {
     when(resource.getResourceType()).thenReturn(null);
     assertFalse(JcrBinary.isNtFile(resource));

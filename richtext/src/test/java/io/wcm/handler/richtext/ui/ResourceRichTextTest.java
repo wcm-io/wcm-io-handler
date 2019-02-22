@@ -20,19 +20,19 @@
 package io.wcm.handler.richtext.ui;
 
 import static io.wcm.handler.richtext.testcontext.AppAemContext.ROOTPATH_CONTENT;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.day.cq.wcm.api.Page;
+
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 @SuppressWarnings("null")
@@ -41,37 +41,43 @@ public class ResourceRichTextTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
-  private Resource validRichtextResource;
-  private Resource invalidRichtextResource;
+  private Page page;
 
   @Before
   public void setUp() {
-    context.create().page(ROOTPATH_CONTENT + "/page1");
-
-    validRichtextResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/validRichtext",
-        ImmutableValueMap.builder()
-        .put(RichTextNameConstants.PN_TEXT, "<p>my <strong>rich</strong> text</p>")
-        .build());
-
-    invalidRichtextResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/invalidRichtext",
-        ImmutableValueMap.builder()
-        .build());
+    page = context.create().page(ROOTPATH_CONTENT + "/page1");
   }
 
   @Test
   public void testRichText() {
-    context.currentResource(validRichtextResource);
+    context.currentResource(context.create().resource(page, "richtext",
+        RichTextNameConstants.PN_TEXT, "<p>my <strong>rich</strong> text</p>"));
+
     ResourceRichText underTest = context.request().adaptTo(ResourceRichText.class);
     assertTrue(underTest.isValid());
-    assertTrue(StringUtils.isNotBlank(underTest.getMarkup()));
+    assertEquals("<p>my <strong>rich</strong> text</p>", underTest.getMarkup());
   }
 
   @Test
-  public void testInvalidRichText() {
-    context.currentResource(invalidRichtextResource);
+  public void testMissingRichText() {
+    context.currentResource(context.create().resource(page, "richtext"));
+
     ResourceRichText underTest = context.request().adaptTo(ResourceRichText.class);
     assertFalse(underTest.isValid());
     assertNull(underTest.getMarkup());
+  }
+
+  @Test
+  public void testPlainText() {
+    context.currentResource(context.create().resource(page, "richtext",
+        "customTextProp", "Line 1\nLine 2"));
+
+    context.request().setAttribute("propertyName", "customTextProp");
+    context.request().setAttribute("isRichText", false);
+
+    ResourceRichText underTest = context.request().adaptTo(ResourceRichText.class);
+    assertTrue(underTest.isValid());
+    assertEquals("Line 1<br />Line 2", underTest.getMarkup());
   }
 
 }

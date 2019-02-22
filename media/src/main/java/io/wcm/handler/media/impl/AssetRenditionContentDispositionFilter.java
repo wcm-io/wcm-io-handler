@@ -124,6 +124,7 @@ public final class AssetRenditionContentDispositionFilter implements Filter {
    * @param request
    * @return true if the filter accepts the given request
    */
+  @SuppressWarnings("null")
   private boolean accepts(SlingHttpServletRequest request) {
     return request.getMethod().equalsIgnoreCase(METHOD_GET)
         && request.getResource() != null

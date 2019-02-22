@@ -49,6 +49,7 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.wcm.commons.util.Path;
 import io.wcm.wcm.commons.util.RunMode;
 
 /**
@@ -77,6 +78,8 @@ public final class InternalLinkResolver {
   private ResourceResolver resourceResolver;
   @AemObject
   private PageManager pageManager;
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private Page currentPage;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private WCMMode wcmMode;
   @OSGiService
@@ -119,7 +122,6 @@ public final class InternalLinkResolver {
    * @param options Options to influence the link resolution process
    * @return Resolved link object
    */
-  @SuppressWarnings("null")
   public @NotNull Link resolveLink(@NotNull Link link, @NotNull InternalLinkResolverOptions options) {
     LinkRequest linkRequest = link.getLinkRequest();
     ValueMap props = linkRequest.getResourceProperties();
@@ -146,7 +148,7 @@ public final class InternalLinkResolver {
     UrlHandler resolvingUrlHandler = urlHandler;
 
     // use URL handler from target context for link URL building
-    if (targetPage != null && options.isUseTargetContext() && !options.isRewritePathToContext()) {
+    if (targetPage != null && useTargetContext(options)) {
       Resource resource = targetPage.getContentResource();
       resolvingUrlHandlerConfig = AdaptTo.notNull(resource, UrlHandlerConfig.class);
       resolvingUrlHandler = AdaptTo.notNull(resource, UrlHandler.class);
@@ -247,7 +249,7 @@ public final class InternalLinkResolver {
 
     // Rewrite target to current site context
     String rewrittenPath;
-    if (options.isRewritePathToContext()) {
+    if (options.isRewritePathToContext() && !useTargetContext(options)) {
       rewrittenPath = urlHandler.rewritePathToContext(SyntheticNavigatableResource.get(targetPath, resourceResolver));
     }
     else {
@@ -265,6 +267,23 @@ public final class InternalLinkResolver {
     else {
       return null;
     }
+  }
+
+  /**
+   * Checks if target context should be used.
+   * @param options Link resolver options
+   * @return true if target context should be used
+   */
+  private boolean useTargetContext(InternalLinkResolverOptions options) {
+    if (options.isUseTargetContext() && !options.isRewritePathToContext()) {
+      return true;
+    }
+    // even is use target context is not activated use it if current page is an experience fragment
+    // otherwise it will be always impossible to resolve internal links
+    else if (currentPage != null && Path.isExperienceFragmentPath(currentPage.getPath())) {
+      return true;
+    }
+    return false;
   }
 
 }

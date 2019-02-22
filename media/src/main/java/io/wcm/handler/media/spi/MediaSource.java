@@ -69,7 +69,6 @@ public abstract class MediaSource {
    * @param mediaRequest Media request
    * @return true if this media source can handle the given media request
    */
-  @SuppressWarnings("null")
   public boolean accepts(@NotNull MediaRequest mediaRequest) {
     // if an explicit media request is set check this first
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
@@ -77,12 +76,12 @@ public abstract class MediaSource {
     }
     // otherwise check resource which contains media request properties
     ValueMap props = mediaRequest.getResourceProperties();
-    // check for matching media source ID in link resource
+    // check for matching media source ID in media resource
     String mediaSourceId = props.get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
     if (StringUtils.isNotEmpty(mediaSourceId)) {
       return StringUtils.equals(mediaSourceId, getId());
     }
-    // if not link type is set at all check if link ref attribute contains a valid link
+    // if no media source ID is set at all check if media ref attribute contains a valid reference
     else {
       String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), getPrimaryMediaRefProperty());
       String mediaRef = props.get(refProperty, String.class);
@@ -105,12 +104,21 @@ public abstract class MediaSource {
   public abstract @NotNull Media resolveMedia(@NotNull Media media);
 
   /**
-   * Create a ExtJS drop area for given HTML element to enable drag and drop of media library items
+   * Create a drop area for given HTML element to enable drag and drop of DAM assets
    * from content finder to this element.
    * @param element Html element
    * @param mediaRequest Media request to detect media args and property names
    */
   public abstract void enableMediaDrop(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest);
+
+  /**
+   * Sets list of cropping ratios to a list matching the selected media formats.
+   * @param element Html element
+   * @param mediaRequest Media request to detect media args and property names
+   */
+  public void setCustomIPECropRatios(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
+    // can be implemented by subclasses
+  }
 
   /**
    * Get media request path to media library
@@ -129,6 +137,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Path or null if not present
    */
+  @SuppressWarnings("null")
   protected final @Nullable String getMediaRef(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
@@ -160,6 +169,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Property name
    */
+  @SuppressWarnings("null")
   protected final @NotNull String getMediaRefProperty(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     String refProperty = mediaRequest.getRefProperty();
@@ -226,6 +236,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Property name
    */
+  @SuppressWarnings("null")
   protected final @NotNull String getMediaCropProperty(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     String cropProperty = mediaRequest.getCropProperty();
@@ -268,6 +279,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config
    * @return Property name
    */
+  @SuppressWarnings("null")
   protected final @NotNull String getMediaRotationProperty(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
     String rotationProperty = mediaRequest.getRotationProperty();

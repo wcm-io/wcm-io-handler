@@ -37,16 +37,16 @@ When storing a link in a resource multiple properties are used to describe the l
 * `linkContentRef`: Path of internal content page to link to
 * `linkMediaRef`: Path of media asset (e.g. DAM asset) to link to
 * `linkExternalRef`: External URL to link to
-* `linkWindowTarget`: Target for window to open link in (e.g. "_blank")
+* `linkWindowTarget`: Target for window to open link in (e.g. "\_blank")
 
 Further properties are defined in [LinkNameConstants][link-name-constants]. It is recommended to define an edit dialog that shows only the properties supported for the selected link type after choosing one.
 
 
-### Using links in Sightly template
+### Using links in HTL/Sightly template
 
-To resolve a link inside a Sightly template you can use a generic Sling Model for calling the handler: [ResourceLink](apidocs/io/wcm/handler/link/ui/ResourceLink.html)
+To resolve a link inside a HTL template you can use a generic Sling Model for calling the handler: [ResourceLink](apidocs/io/wcm/handler/link/ui/ResourceLink.html)
 
-Sightly template example:
+HTL template example:
 
 ```html
 <sly data-sly-use.link="io.wcm.handler.link.ui.ResourceLink"/>

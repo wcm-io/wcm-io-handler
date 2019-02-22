@@ -19,9 +19,13 @@
  */
 package io.wcm.handler.mediasource.dam;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,11 +42,14 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.DropTarget;
+import com.day.cq.wcm.api.components.InplaceEditingConfig;
 import com.day.cq.wcm.commons.WCMUtils;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -52,6 +59,7 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
@@ -79,6 +87,8 @@ public final class DamMediaSource extends MediaSource {
   private ComponentContext componentContext;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
+
+  private static final Logger log = LoggerFactory.getLogger(DamMediaSource.class);
 
   /**
    * Media source ID
@@ -186,6 +196,42 @@ public final class DamMediaSource extends MediaSource {
       if (element != null) {
         element.addCssClass(dropTargetCssClass.get());
       }
+    }
+  }
+
+  @Override
+  public void setCustomIPECropRatios(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
+    if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
+      return;
+    }
+
+    if (componentContext != null
+        && MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext)
+        && mediaRequest.getMediaArgs().getMediaFormats() != null) {
+      // overlay IPE config with cropping ratios for each media format with a valid ratio
+      Set<String> mediaFormatNames = Arrays.stream(mediaRequest.getMediaArgs().getMediaFormats())
+          .filter(mediaFormat -> mediaFormat.getRatio() > 0)
+          .map(mediaFormat -> mediaFormat.getName())
+          .collect(Collectors.toSet());
+      if (!mediaFormatNames.isEmpty()) {
+        // build custom IPE config path containing both the resource context path and the
+        // configured media formats. The path is served by a custom resource provider, because
+        // there is no other interface to pass in a dynamic IPE configuration
+        String ipeConfigPath = IPEConfigResourceProvider.buildPath(componentContext.getResource().getPath(), mediaFormatNames);
+        // clone IPE config and overwrite config path via reflection (no API available for this)
+        InplaceEditingConfig customIpeConfig = new InplaceEditingConfig(componentContext
+            .getEditContext().getEditConfig().getInplaceEditingConfig());
+        try {
+          Field configPathField = InplaceEditingConfig.class.getDeclaredField("configPath");
+          configPathField.setAccessible(true);
+          configPathField.set(customIpeConfig, ipeConfigPath);
+        }
+        catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+          log.warn("Unable to set custom IPE config via reflection for " + componentContext.getResource().getPath(), ex);
+        }
+        componentContext.getEditContext().getEditConfig().setInplaceEditingConfig(customIpeConfig);
+      }
+
     }
   }
 

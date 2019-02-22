@@ -25,6 +25,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.wcm.commons.util.ToStringStyle;
@@ -48,16 +50,16 @@ public final class MediaRequest {
    * @param resource Resource containing reference to media asset
    * @param mediaArgs Additional arguments affection media resolving
    */
-  public MediaRequest(Resource resource, MediaArgs mediaArgs) {
-    this(resource, null, mediaArgs, null, null);
+  public MediaRequest(@NotNull Resource resource, @Nullable MediaArgs mediaArgs) {
+    this(resource, null, mediaArgs, null, null, null);
   }
 
   /**
    * @param mediaRef Reference to media item
    * @param mediaArgs Additional arguments affection media resolving
    */
-  public MediaRequest(String mediaRef, MediaArgs mediaArgs) {
-    this(null, mediaRef, mediaArgs, null, null);
+  public MediaRequest(@NotNull String mediaRef, @Nullable MediaArgs mediaArgs) {
+    this(null, mediaRef, mediaArgs, null, null, null);
   }
 
   /**
@@ -69,8 +71,8 @@ public final class MediaRequest {
    * @deprecated Use {@link #MediaRequest(Resource, String, MediaArgs, String, String, String)}
    */
   @Deprecated
-  public MediaRequest(Resource resource, String mediaRef, MediaArgs mediaArgs,
-      String refProperty, String cropProperty) {
+  public MediaRequest(@Nullable Resource resource, @Nullable String mediaRef, @Nullable MediaArgs mediaArgs,
+      @Nullable String refProperty, @Nullable String cropProperty) {
     this(resource, mediaRef, mediaArgs, refProperty, cropProperty, null);
   }
 
@@ -82,8 +84,8 @@ public final class MediaRequest {
    * @param cropProperty Name of the property which contains the cropping parameters
    * @param rotationProperty Name of the property which contains the rotation parameter
    */
-  public MediaRequest(Resource resource, String mediaRef, MediaArgs mediaArgs,
-      String refProperty, String cropProperty, String rotationProperty) {
+  public MediaRequest(@Nullable Resource resource, @Nullable String mediaRef, @Nullable MediaArgs mediaArgs,
+      @Nullable String refProperty, @Nullable String cropProperty, @Nullable String rotationProperty) {
     this.resource = resource;
     this.mediaRef = mediaRef;
     this.mediaArgs = mediaArgs != null ? mediaArgs : new MediaArgs();
@@ -100,42 +102,42 @@ public final class MediaRequest {
   /**
    * @return Resource containing reference to media asset
    */
-  public Resource getResource() {
+  public @Nullable Resource getResource() {
     return this.resource;
   }
 
   /**
    * @return Reference to media item
    */
-  public String getMediaRef() {
+  public @Nullable String getMediaRef() {
     return this.mediaRef;
   }
 
   /**
    * @return Additional arguments affection media resolving
    */
-  public MediaArgs getMediaArgs() {
+  public @NotNull MediaArgs getMediaArgs() {
     return this.mediaArgs;
   }
 
   /**
    * @return Name of the property from which the media request is read
    */
-  public String getRefProperty() {
+  public @Nullable String getRefProperty() {
     return this.refProperty;
   }
 
   /**
    * @return Name of the property which contains the cropping parameters
    */
-  public String getCropProperty() {
+  public @Nullable String getCropProperty() {
     return this.cropProperty;
   }
 
   /**
    * @return Name of the property which contains the rotation parameter
    */
-  public String getRotationProperty() {
+  public @Nullable String getRotationProperty() {
     return this.rotationProperty;
   }
 
@@ -143,7 +145,7 @@ public final class MediaRequest {
    * @return Properties from resource containing target link. The value map is a copy
    *         of the original map so it is safe to change the property values contained in the map.
    */
-  public ValueMap getResourceProperties() {
+  public @NotNull ValueMap getResourceProperties() {
     if (this.resourceProperties == null) {
       // create a copy of the original map
       this.resourceProperties = new ValueMapDecorator(new HashMap<String, Object>());

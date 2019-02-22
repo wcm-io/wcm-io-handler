@@ -100,7 +100,6 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     return new RichText(richTextRequest, content);
   }
 
-  @SuppressWarnings("null")
   private String getRawText(RichTextRequest richTextRequest) {
     if (richTextRequest.getResource() != null) {
       return richTextRequest.getResourceProperties().get(RichTextNameConstants.PN_TEXT, String.class);

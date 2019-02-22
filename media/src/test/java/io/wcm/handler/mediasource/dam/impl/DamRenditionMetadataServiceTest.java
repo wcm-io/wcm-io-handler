@@ -69,6 +69,7 @@ public class DamRenditionMetadataServiceTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   public void testAddRendition_Metadata_createMetadataNode() throws PersistenceException {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
 
@@ -144,6 +145,7 @@ public class DamRenditionMetadataServiceTest {
     underTest.handleEvent(DamEvent.renditionUpdated(assetResource.getPath(), null, rendition.getPath()).toEvent());
   }
 
+  @SuppressWarnings("null")
   private void updateRendition(String renditionName) throws PersistenceException {
     String existingPath = RENDITIONS_PATH + "/" + renditionName;
     context.resourceResolver().delete(context.resourceResolver().getResource(existingPath));
@@ -151,6 +153,7 @@ public class DamRenditionMetadataServiceTest {
     underTest.handleEvent(DamEvent.renditionUpdated(assetResource.getPath(), null, existingPath).toEvent());
   }
 
+  @SuppressWarnings("null")
   private void removeRendition(String renditionName) throws PersistenceException {
     String existingPath = RENDITIONS_PATH + "/" + renditionName;
     context.resourceResolver().delete(context.resourceResolver().getResource(existingPath));

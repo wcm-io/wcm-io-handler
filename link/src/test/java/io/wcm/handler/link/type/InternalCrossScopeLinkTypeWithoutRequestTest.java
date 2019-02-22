@@ -22,7 +22,7 @@ package io.wcm.handler.link.type;
 import org.apache.sling.api.adapter.Adaptable;
 
 /**
- * Test {@link InternalCrossScopeLinkType} methods.
+ * Test InternalCrossScopeLinkType methods.
  */
 public class InternalCrossScopeLinkTypeWithoutRequestTest extends InternalCrossScopeLinkTypeTest {
 

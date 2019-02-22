@@ -42,9 +42,10 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 /**
- * Test {@link InternalCrossScopeLinkType} methods.
+ * Test InternalCrossScopeLinkType methods.
  * Most of the test cases are identical to {@link InternalLinkTypeTest}, so they are not duplicated here.
  */
+@SuppressWarnings("deprecation")
 public class InternalCrossScopeLinkTypeTest {
 
   @Rule

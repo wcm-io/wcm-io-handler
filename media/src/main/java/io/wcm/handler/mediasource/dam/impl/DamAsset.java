@@ -88,7 +88,6 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  @SuppressWarnings("null")
   public String getDescription() {
     return this.properties.get(DamConstants.DC_DESCRIPTION, String.class);
   }
@@ -164,7 +163,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "null" })
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == com.day.cq.dam.api.Asset.class) {
       return (AdapterType)this.damAsset;

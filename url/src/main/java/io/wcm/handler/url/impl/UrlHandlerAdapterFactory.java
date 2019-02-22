@@ -24,12 +24,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.caconfig.ConfigurationBuilder;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -39,7 +39,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import io.wcm.handler.url.SiteConfig;
-import io.wcm.handler.url.SiteRootDetector;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
 
@@ -58,7 +57,7 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
   @Reference
   private ContextAwareServiceResolver serviceResolver;
   @Reference
-  private SiteRootDetector siteRootDetector;
+  private ConfigurationResourceResolver configurationResourceResolver;
 
   private static final Logger log = LoggerFactory.getLogger(UrlHandlerAdapterFactory.class);
 
@@ -94,24 +93,17 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
     if (contextResource == null) {
       return null;
     }
-    int siteRootLevel = siteRootDetector.getSiteRootLevel(contextResource);
-    final String siteRootPath;
-    if (siteRootLevel >= 0) {
-      siteRootPath = Text.getAbsoluteParent(contextResource.getPath(), siteRootLevel);
-    }
-    else {
-      siteRootPath = null;
-    }
+    String contextRootPath = configurationResourceResolver.getContextPath(contextResource);
 
     // site root cannot be detected? then get SiteConfig directly from resource without any caching
-    if (StringUtils.isBlank(siteRootPath)) {
+    if (StringUtils.isBlank(contextRootPath)) {
       return getSiteConfigForResource(contextResource);
     }
 
     // get site config for site root resource and cache the result (for a short time)
     try {
-      return siteConfigCache.get(siteRootPath, () -> {
-        Resource siteRootResource = contextResource.getResourceResolver().getResource(siteRootPath);
+      return siteConfigCache.get(contextRootPath, () -> {
+        Resource siteRootResource = contextResource.getResourceResolver().getResource(contextRootPath);
         return getSiteConfigForResourceCacheable(siteRootResource);
       });
     }

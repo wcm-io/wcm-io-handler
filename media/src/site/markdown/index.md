@@ -8,6 +8,7 @@ Media resolving, processing and markup generation.
 ### Documentation
 
 * [Usage][usage]
+* [Granite UI components][graniteui-components]
 * [System configuration][configuration]
 * [API documentation][apidocs]
 * [Changelog][changelog]
@@ -21,10 +22,22 @@ The Media Handler provides:
 * Pluggable media sources (with default implementations for DAM and binaries stored inside a content page)
 * Pluggable markup builders for different media types (e.g. images, DAM video)
 * Media format concept that allows to define expected output formats (with constraints for dimension, ratio, file type and others)
-* Rendering virtual renditions to match the expected output format, optionally with cropping and rotation
+* Rendering virtual renditions to match the expected output format
+* Supports manual and automatic cropping and rotation of images
 * Support for responsive images by rendering multiple renditions at once for each breakpoint
 * Pluggable media pre- and postprocessing to further tailoring the media handling process
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
+* Generic HTL Placeholder template
+* Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
+
+
+### AEM Version Support Matrix
+
+|Media Handler version |AEM version supported
+|----------------------|----------------------
+|1.2.x or higher       |AEM 6.2 or up
+|1.0.x, 1.1.x          |AEM 6.1 or up
+|0.x                   |AEM 6.0 or up
 
 
 ### Dependencies
@@ -40,6 +53,7 @@ To use this module you have to deploy also:
 
 
 [usage]: usage.html
+[graniteui-components]: graniteui-components.html
 [configuration]: configuration.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html

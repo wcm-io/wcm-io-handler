@@ -47,7 +47,9 @@ import io.wcm.handler.link.type.helpers.InternalLinkResolverOptions;
  * This link type ensures that links that are referenced from other configuration scopes (sites/languages) are resolved
  * using the URL handler configuration of the target scope, e.g. with the Site URL from the other site.
  * </p>
+ * @deprecated Please use {@link InternalCrossContextLinkType} instead.
  */
+@Deprecated
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })

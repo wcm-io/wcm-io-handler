@@ -60,7 +60,6 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
    */
   public static final String SELECTOR = "image_file";
 
-  @SuppressWarnings({ "null", "unused" })
   @Override
   protected byte[] getBinaryData(Resource resource, SlingHttpServletRequest request) throws IOException {
     // get media app config

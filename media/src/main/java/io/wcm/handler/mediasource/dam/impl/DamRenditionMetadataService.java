@@ -53,6 +53,7 @@ import com.day.cq.dam.api.DamEvent;
 import com.day.image.Layer;
 import com.google.common.collect.ImmutableMap;
 
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;
 
@@ -168,7 +169,6 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param asset Asset
    * @param renditionPath Rendition path
    */
-  @SuppressWarnings({ "unused", "null" })
   private void renditionAddedOrUpdated(Asset asset, String renditionPath, String userId, ResourceResolver resolver) {
     String renditionNodeName = Text.getName(renditionPath);
 
@@ -189,7 +189,7 @@ public final class DamRenditionMetadataService implements EventHandler {
         Resource metadataResource = ResourceUtil.getOrCreateResource(renditionsMetadata.getResourceResolver(),
             renditionsMetadata.getPath() + "/" + renditionNodeName,
             ImmutableMap.<String, Object>of(JCR_PRIMARYTYPE, NT_UNSTRUCTURED), NT_UNSTRUCTURED, false);
-        ModifiableValueMap props = metadataResource.adaptTo(ModifiableValueMap.class);
+        ModifiableValueMap props = AdaptTo.notNull(metadataResource, ModifiableValueMap.class);
         props.put(PN_IMAGE_WIDTH, renditionLayer.getWidth());
         props.put(PN_IMAGE_HEIGHT, renditionLayer.getHeight());
         updateLastModifiedAndSave(asset, userId, resolver);
@@ -250,7 +250,6 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param assetPath Asset path
    * @return Asset or null if path is invalid
    */
-  @SuppressWarnings("null")
   private Asset getAsset(String assetPath, ResourceResolver resolver) {
     Resource assetResource = resolver.getResource(assetPath);
     if (assetResource != null) {

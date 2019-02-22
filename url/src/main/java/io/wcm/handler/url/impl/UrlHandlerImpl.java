@@ -43,6 +43,7 @@ import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.sling.models.annotations.AemObject;
+import io.wcm.wcm.commons.util.Path;
 
 /**
  * Default implementation of a {@link UrlHandler}
@@ -107,8 +108,8 @@ public final class UrlHandlerImpl implements UrlHandler {
     }
 
     // split up paths
-    String[] contextPathParts = StringUtils.split(contextResource.getPath(), "/");
-    String[] pathParts = StringUtils.split(resource.getPath(), "/");
+    String[] contextPathParts = StringUtils.split(Path.getOriginalPath(contextResource.getPath(), resolver), "/");
+    String[] pathParts = StringUtils.split(Path.getOriginalPath(resource.getPath(), resolver), "/");
 
     // check if both paths are valid - return unchanged path if not
     int siteRootLevelContextPath = urlHandlerConfig.getSiteRootLevel(contextResource);

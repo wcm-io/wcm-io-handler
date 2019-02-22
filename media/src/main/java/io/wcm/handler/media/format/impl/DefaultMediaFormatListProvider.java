@@ -32,6 +32,7 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 
 import com.google.common.collect.ImmutableSet;
@@ -54,7 +55,7 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
   private static final long serialVersionUID = 1L;
 
   @Override
-  protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
     try {
 
       // get list of media formats for current medialib path
@@ -75,8 +76,10 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
             mediaFormatItem.put("widthMin", mediaFormat.getMinWidth());
             mediaFormatItem.put("heightMin", mediaFormat.getMinHeight());
             mediaFormatItem.put("isImage", mediaFormat.isImage());
-            mediaFormatItem.put("ratioWidth", mediaFormat.getRatioWidth());
-            mediaFormatItem.put("ratioHeight", mediaFormat.getRatioHeight());
+            mediaFormatItem.put("ratio", mediaFormat.getRatio());
+            mediaFormatItem.put("ratioWidth", mediaFormat.getRatioWidthAsDouble());
+            mediaFormatItem.put("ratioHeight", mediaFormat.getRatioHeightAsDouble());
+            mediaFormatItem.put("ratioDisplayString", mediaFormat.getRatioDisplayString());
             mediaFormatList.put(mediaFormatItem);
           }
         }
@@ -89,7 +92,6 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
     }
   }
 
-  @SuppressWarnings({ "null", "unused" })
   protected Set<MediaFormat> getMediaFormats(SlingHttpServletRequest request) {
     MediaFormatHandler mediaFormatHandler = request.adaptTo(MediaFormatHandler.class);
     if (mediaFormatHandler != null) {

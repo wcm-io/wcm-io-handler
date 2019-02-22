@@ -19,11 +19,12 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import static io.wcm.handler.mediasource.dam.impl.DamRendition.DEFAULT_WEB_RENDITION_PATTERN;
+
 import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.day.cq.dam.api.Asset;
@@ -40,7 +41,6 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
   private static final int ROTATE_180 = 180;
   private static final int ROTATE_270 = 270;
 
-  private static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\..*$");
   private final CropDimension cropDimension;
   private final Integer rotation;
 
@@ -119,11 +119,11 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
    * to crop the original image, so we have to scale those values to match the coordinates in the original image.
    * @return Scale factor
    */
-  private Double getCropScaleFactor(NavigableSet<RenditionMetadata> candidates) {
+  private double getCropScaleFactor(NavigableSet<RenditionMetadata> candidates) {
     RenditionMetadata original = getOriginalRendition();
     RenditionMetadata webEnabled = getWebEnabledRendition(candidates);
     if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
-      return null;
+      return 1d;
     }
     return (double)original.getWidth() / (double)webEnabled.getWidth();
   }

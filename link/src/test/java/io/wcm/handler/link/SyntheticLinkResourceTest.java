@@ -36,7 +36,6 @@ import com.day.cq.wcm.api.Page;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
 public class SyntheticLinkResourceTest {
 
   @Mock

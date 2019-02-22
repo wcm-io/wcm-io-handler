@@ -57,6 +57,7 @@ public class SyntheticNavigatableResourceTest {
   }
 
   @Test
+  @SuppressWarnings("unused")
   public void testNullPath() {
     Resource test2 = SyntheticNavigatableResource.get(null, context.resourceResolver());
     assertNotNull(test2);

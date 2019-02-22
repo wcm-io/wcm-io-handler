@@ -33,6 +33,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
+import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
@@ -45,6 +46,7 @@ public final class MediaArgs implements Cloneable {
   private MediaFormat[] mediaFormats;
   private String[] mediaFormatNames;
   private boolean mediaFormatsMandatory;
+  private boolean autoCrop;
   private String[] fileExtensions;
   private UrlMode urlMode;
   private long fixedWidth;
@@ -56,6 +58,7 @@ public final class MediaArgs implements Cloneable {
   private String dummyImageUrl;
   private boolean includeAssetThumbnails;
   private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
+  private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private ValueMap properties;
 
   /**
@@ -143,8 +146,8 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * If set to true, media handler never returns a dummy image. Otherwise this can happen
-   * in edit mode.
+   * If set to true, the media handler enforces the resolution of the whole list of given
+   * media formats. The resolution fails if any of the media formats does not match.
    * @param value Resolving of all media formats is mandatory.
    * @return this
    */
@@ -202,6 +205,24 @@ public final class MediaArgs implements Cloneable {
           value
       };
     }
+    return this;
+  }
+
+  /**
+   * @return Enables "auto-cropping" mode. If no matching rendition is found
+   *         it is tried to generate one by automatically cropping another one.
+   */
+  public boolean isAutoCrop() {
+    return this.autoCrop;
+  }
+
+  /**
+   * @param value Enables "auto-cropping" mode. If no matching rendition is found
+   *          it is tried to generate one by automatically cropping another one.
+   * @return this
+   */
+  public @NotNull MediaArgs autoCrop(boolean value) {
+    this.autoCrop = value;
     return this;
   }
 
@@ -428,6 +449,22 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return Whether to set customized list of IPE cropping ratios.
+   */
+  public IPERatioCustomize getIPERatioCustomize() {
+    return this.ipeRatioCustomize;
+  }
+
+  /**
+   * @param value Whether to set customized list of IPE cropping ratios.
+   * @return this
+   */
+  public @NotNull MediaArgs ipeRatioCustomize(IPERatioCustomize value) {
+    this.ipeRatioCustomize = value;
+    return this;
+  }
+
+  /**
    * Custom properties that my be used by application-specific markup builders or processors.
    * @param map Property map. Is merged with properties already set.
    * @return this
@@ -493,6 +530,7 @@ public final class MediaArgs implements Cloneable {
     clone.mediaFormats = ArrayUtils.clone(this.mediaFormats);
     clone.mediaFormatNames = ArrayUtils.clone(this.mediaFormatNames);
     clone.mediaFormatsMandatory = this.mediaFormatsMandatory;
+    clone.autoCrop = this.autoCrop;
     clone.fileExtensions = ArrayUtils.clone(this.fileExtensions);
     clone.urlMode = this.urlMode;
     clone.fixedWidth = this.fixedWidth;
@@ -504,6 +542,7 @@ public final class MediaArgs implements Cloneable {
     clone.dummyImageUrl = this.dummyImageUrl;
     clone.includeAssetThumbnails = this.includeAssetThumbnails;
     clone.dragDropSupport = this.dragDropSupport;
+    clone.ipeRatioCustomize = this.ipeRatioCustomize;
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
     }

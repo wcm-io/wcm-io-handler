@@ -111,16 +111,24 @@ public final class MediaHandlerImpl implements MediaHandler {
 
     // detect media source
     MediaSource mediaSource = null;
-    List<Class<? extends MediaSource>> mediaTypes = mediaHandlerConfig.getSources();
-    if (mediaTypes == null || mediaTypes.isEmpty()) {
+    List<Class<? extends MediaSource>> mediaSources = mediaHandlerConfig.getSources();
+    if (mediaSources == null || mediaSources.isEmpty()) {
       throw new RuntimeException("No media sources defined.");
     }
-    for (Class<? extends MediaSource> candidateMediaSourceClass : mediaTypes) {
+    MediaSource firstMediaSource = null;
+    for (Class<? extends MediaSource> candidateMediaSourceClass : mediaSources) {
       MediaSource candidateMediaSource = AdaptTo.notNull(adaptable, candidateMediaSourceClass);
       if (candidateMediaSource.accepts(mediaRequest)) {
         mediaSource = candidateMediaSource;
         break;
       }
+      else if (firstMediaSource == null) {
+        firstMediaSource = candidateMediaSource;
+      }
+    }
+    // if no media source was detected use first media resource defined
+    if (mediaSource == null) {
+      mediaSource = firstMediaSource;
     }
     Media media = new Media(mediaSource, mediaRequest);
 
@@ -149,14 +157,9 @@ public final class MediaHandlerImpl implements MediaHandler {
     }
 
     // resolve media request
-    if (mediaSource != null) {
-      media = mediaSource.resolveMedia(media);
-      if (media == null) {
-        throw new RuntimeException("MediaType '" + mediaSource + "' returned null, request: " + mediaRequest);
-      }
-    }
-    else {
-      media.setMediaInvalidReason(MediaInvalidReason.NO_MEDIA_SOURCE);
+    media = mediaSource.resolveMedia(media);
+    if (media == null) {
+      throw new RuntimeException("MediaType '" + mediaSource + "' returned null, request: " + mediaRequest);
     }
 
     // generate markup (if markup builder is available) - first accepting wins

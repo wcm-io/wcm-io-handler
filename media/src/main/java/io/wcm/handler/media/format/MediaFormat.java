@@ -19,8 +19,12 @@
  */
 package io.wcm.handler.media.format;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
@@ -47,8 +51,8 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private final long minHeight;
   private final long maxHeight;
   private final double ratio;
-  private final long ratioWidth;
-  private final long ratioHeight;
+  private final double ratioWidth;
+  private final double ratioHeight;
   private final long fileSizeMax;
   private final String[] extensions;
   private final String renditionGroup;
@@ -56,12 +60,13 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private final boolean internal;
   private final int ranking;
   private final ValueMap properties;
+  private String ratioDisplayString;
   private String combinedTitle;
 
   //CHECKSTYLE:OFF
   MediaFormat(String name, String label, String description,
       long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight,
-      double ratio, long ratioWidth, long ratioHeight, long fileSizeMax, String[] extensions,
+      double ratio, double ratioWidth, double ratioHeight, long fileSizeMax, String[] extensions,
       String renditionGroup, boolean download, boolean internal, int ranking, ValueMap properties) {
     this.name = name;
     this.label = label;
@@ -150,21 +155,39 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
   /**
    * @return Ration width (px)
+   * @deprecated Use {@link #getRatioWidthAsDouble()}
    */
+  @Deprecated
   public long getRatioWidth() {
+    return Math.round(this.ratioWidth);
+  }
+
+  /**
+   * @return Ration height (px)
+   * @deprecated Use {@link #getRatioHeightAsDouble()}
+   */
+  @Deprecated
+  public long getRatioHeight() {
+    return Math.round(this.ratioHeight);
+  }
+
+  /**
+   * @return Ration width (px)
+   */
+  public double getRatioWidthAsDouble() {
     return this.ratioWidth;
   }
 
   /**
    * @return Ration height (px)
    */
-  public long getRatioHeight() {
+  public double getRatioHeightAsDouble() {
     return this.ratioHeight;
   }
 
   /**
    * Returns the ratio defined in the media format definition.
-   * If no ratio is defined an the media format has a fixed with/height it is calcluated automatically.
+   * If no ratio is defined an the media format has a fixed with/height it is calculated automatically.
    * Otherwise 0 is returned.
    * @return Ratio
    */
@@ -177,7 +200,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
     // get ratio from media format definition calculated from ratio sample/display values
     if (this.ratioWidth > 0 && this.ratioHeight > 0) {
-      return (double)this.ratioWidth / (double)this.ratioHeight;
+      return this.ratioWidth / this.ratioHeight;
     }
 
     // otherwise calculate ratio
@@ -193,19 +216,86 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * @return Display string or null if media format has no ratio.
    */
   public String getRatioDisplayString() {
-    if (isFixedDimension() || !hasRatio()) {
+    if (!hasRatio()) {
       return null;
     }
 
-    if (this.ratioWidth > 0 && this.ratioHeight > 0) {
-      return ratioWidth + ":" + ratioHeight;
+    if (ratioDisplayString == null) {
+      ratioDisplayString = buildratioDisplayString(this);
+    }
+    return ratioDisplayString;
+  }
+
+  private static String buildratioDisplayString(MediaFormat mf) {
+    String ratioDisplayString = null;
+
+    NumberFormat decimal1Format = new DecimalFormat("0.#", DecimalFormatSymbols.getInstance(Locale.US));
+    if (mf.getRatioWidthAsDouble() > 0 && mf.getRatioHeightAsDouble() > 0) {
+      // 1. check for explicit ratio numbers defined for the media format
+      ratioDisplayString = decimal1Format.format(mf.getRatioWidthAsDouble())
+          + ":" + decimal1Format.format(mf.getRatioHeightAsDouble());
+    }
+    else {
+      // 2. try to guess a nice "human-readable" ratio string
+      ratioDisplayString = guessHumanReadableRatioString(mf.getRatio(), decimal1Format);
     }
 
-    return "R" + Double.toString(getRatio());
+    if (ratioDisplayString == null) {
+      if (mf.isFixedDimension()) {
+        // 3. use fixed dimension as ratio
+        ratioDisplayString = decimal1Format.format(mf.getWidth())
+            + ":" + decimal1Format.format(mf.getHeight());
+      }
+      else {
+        // 4. last resort: disable decimal ratio value
+        NumberFormat decimal3Format = new DecimalFormat("0.###", DecimalFormatSymbols.getInstance(Locale.US));
+        ratioDisplayString = "R" + decimal3Format.format(mf.getRatio());
+      }
+    }
+
+    return ratioDisplayString;
   }
 
   /**
-   * @return true if the mediaformat has ratio (calcuated for fixed dimensions or defined in media format)
+   * Try to guess a nice human readable ratio string from the given decimal ratio
+   * @param ratio Ratio
+   * @param numberFormat Number format
+   * @return Ratio display string or null if no nice string was found
+   */
+  private static String guessHumanReadableRatioString(double ratio, NumberFormat numberFormat) {
+    for (long width = 1; width <= 50; width++) {
+      double height = width / ratio;
+      if (isLong(height)) {
+        return numberFormat.format(width) + ":" + numberFormat.format(height);
+      }
+    }
+    for (long width = 1; width <= 200; width++) {
+      double height = width / 2d / ratio;
+      if (isHalfLong(height)) {
+        return numberFormat.format(width / 2d) + ":" + numberFormat.format(height);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * @param value Value
+   * @return true if the number ends with .0000 = is a nice integer
+   */
+  private static boolean isLong(double value) {
+    return Math.round(value * 10000d) == Math.round(value) * 10000L;
+  }
+
+  /**
+   * @param value Value
+   * @return true if the number ends with .0000 or .5000 = is a nice integer or a half
+   */
+  private static boolean isHalfLong(double value) {
+    return (Math.round(value * 2d * 10000d) == Math.round(value * 2d) * 10000L);
+  }
+
+  /**
+   * @return true if the media format has ratio (calculated for fixed dimensions or defined in media format)
    */
   public boolean hasRatio() {
     return getRatio() > 0;
@@ -398,8 +488,8 @@ public final class MediaFormat implements Comparable<MediaFormat> {
         extParts.add(sbRestrictions.toString());
       }
 
-      // ratio
-      if (hasRatio()) {
+      // ratio (if label contains a ":" it is assumed a ratio is already contained in the label)
+      if (hasRatio() && !StringUtils.contains(getLabel(), ":")) {
         String ratioString = getRatioDisplayString();
         if (StringUtils.isNotEmpty(ratioString)) {
           extParts.add(ratioString);
