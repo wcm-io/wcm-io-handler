@@ -164,6 +164,15 @@
         </configuration>
       </plugin>
 
+      <!-- TODO: remove once updated to parent_toplevel 1.3.2 or higher -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <configuration>
+          <escapeHTML>false</escapeHTML>
+        </configuration>
+      </plugin>
+
     </plugins>
   </reporting>
 

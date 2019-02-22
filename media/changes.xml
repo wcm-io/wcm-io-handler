@@ -24,6 +24,7 @@
   <body>
 
     <release version="1.2.0" date="2019-02-22">
+      <action type="add">See <![CDATA[<a href="https://wcm-io.atlassian.net/wiki/x/AYCHOQ">What's new in wcm.io Media Handler 1.2</a>]]> for an overview of this release.</action>
       <action type="add" dev="sseifert">
         Add support for (optional) auto-cropping of DAM assets when no matching rendition exists.
       </action>
