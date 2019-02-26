@@ -10,35 +10,19 @@
 
     notifyPluginConfig: function(config) {
 
-      // dynamically detect root paths
-      var currentPagePath = Granite.author.ContentFrame.getContentPath();
-      var siteRootPath = this._getAbsoluteParent(currentPagePath, 4);
-      var tenantRootPath = this._getAbsoluteParent(currentPagePath, 2);
-      
       config.linkDialogConfig = config.linkDialogConfig || {};
       config.linkDialogConfig.dialogProperties = config.linkDialogConfig.dialogProperties || {};
-      config.linkDialogConfig.dialogProperties.rootPath = siteRootPath;
+      var dialogProperties = config.linkDialogConfig.dialogProperties;
 
-      config.linkDialogConfig.dialogProperties.linkTypes = config.linkDialogConfig.dialogProperties.linkTypes || {
-        "internal": {
-          value: "internal",
-          text: "Internal (same site)"
-        },
-        "internalCrossContext": {
-          value: "internalCrossContext",
-          text: "Internal (other site)"
-        },
-        "external": {
-          value: "external",
-          text: "External"
-        },
-        "media": {
-          value: "media",
-          text: "Asset"
-        }
-      };
+      // get link plugin configuration for current content page
+      var currentPagePath = Granite.author.ContentFrame.getContentPath();      
+      var pluginConfigUrl = currentPagePath + ".wcmio-handler-richtext-rte-plugins-links-config.json";
+      $.get(pluginConfigUrl, function(result) {
+        dialogProperties.linkTypes = dialogProperties.linkTypes || result.linkTypes;
+        dialogProperties.rootPath = dialogProperties.rootPath || result.rootPaths.internal;
+      });
       
-      config.linkDialogConfig.dialogProperties.targetItems = config.linkDialogConfig.dialogProperties.targetItems || {
+      dialogProperties.targetItems = dialogProperties.targetItems || {
         "_self": {
           value: "_self",
           text: "Same window"
