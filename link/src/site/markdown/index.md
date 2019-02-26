@@ -8,6 +8,7 @@ Link resolving, processing and markup generation.
 ### Documentation
 
 * [Usage][usage]
+* [Granite UI components][graniteui-components]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -47,6 +48,7 @@ To use this module you have to deploy also:
 
 [usage]: usage.html
 [apidocs]: apidocs/
+[graniteui-components]: graniteui-components.html
 [changelog]: changes-report.html
 [url-handler]: ../url/
 [ui-package]: apidocs/io/wcm/handler/link/ui/package-summary.html
