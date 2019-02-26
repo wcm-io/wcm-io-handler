@@ -30,6 +30,9 @@
       <action type="add" dev="sseifert">
         Add LinkHandlerConfig.getLinkRootPath to be used by path field Granite UI components.
       </action>
+      <action type="add" dev="sseifert">
+        Add LinkType.getLabel method.
+      </action>
     </release>
 
     <release version="1.1.0" date="2019-02-22">

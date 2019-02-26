@@ -46,6 +46,13 @@ public abstract class LinkType {
   public abstract @NotNull String getId();
 
   /**
+   * @return Link type label (displayed in link dialogs)
+   */
+  public @NotNull String getLabel() {
+    return getId();
+  }
+
+  /**
    * @return Name of the property in which the primary link reference is stored
    */
   public abstract @Nullable String getPrimaryLinkRefProperty();

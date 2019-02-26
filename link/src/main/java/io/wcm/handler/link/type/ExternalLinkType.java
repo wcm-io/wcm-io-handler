@@ -60,6 +60,11 @@ public final class ExternalLinkType extends LinkType {
   }
 
   @Override
+  public @NotNull String getLabel() {
+    return "External";
+  }
+
+  @Override
   public String getPrimaryLinkRefProperty() {
     return LinkNameConstants.PN_LINK_EXTERNAL_REF;
   }
