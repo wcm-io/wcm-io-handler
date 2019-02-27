@@ -57,8 +57,7 @@
         linkType: "internal",
         fn: this.createPathField,
         placeholder: "Internal page",
-        pickerSrc: config.pickerSrc,
-        suggestionSrc: config.suggestionSrc
+        rootPath: config.rootPaths.internal || "/content"
       }));      
     },
 
@@ -71,8 +70,7 @@
         linkType: "internalCrossContext",
         fn: this.createPathField,
         placeholder: "Internal page (other site)",
-        pickerSrc: config.pickerSrc,
-        suggestionSrc: config.suggestionSrc
+        rootPath: config.rootPaths.internalCrossContext || "/content"
       }));      
     },
 
@@ -98,8 +96,7 @@
         linkType: "media",
         fn: this.createPathField,
         placeholder: "Asset reference",
-        pickerSrc: config.pickerSrc,
-        suggestionSrc: config.suggestionSrc
+        rootPath: config.rootPaths.media || "/content/dam"
       }));
       frag.appendChild(this.createColumnItem({
         name: "linkMediaDownload",
@@ -196,13 +193,17 @@
     },
     
     createPathField: function(pathfieldConfig) {
+      var rootPath = pathfieldConfig.rootPath;
+      var pickerSrc = "/mnt/overlay/granite/ui/content/coral/foundation/form/pathfield/picker.html?root=" + rootPath + "&filter=hierarchyNotFile&selectionCount=single";
+      var suggestionSrc = "/mnt/overlay/granite/ui/content/coral/foundation/form/pathfield/suggestion{.offset,limit}.html?root=" + rootPath + "&filter=hierarchyNotFile{&query}";
+      
       var pathfield = document.createElement("foundation-autocomplete");
-      pathfield.setAttribute("pickersrc", pathfieldConfig.pickerSrc);
+      pathfield.setAttribute("pickersrc", pickerSrc);
       pathfield.setAttribute("placeholder", CUI.rte.Utils.i18n(pathfieldConfig.placeholder));
       
       var overlay = document.createElement("coral-overlay");
       overlay.className = "foundation-autocomplete-value foundation-picker-buttonlist";
-      overlay.setAttribute("data-foundation-picker-buttonlist-src", pathfieldConfig.suggestionSrc);
+      overlay.setAttribute("data-foundation-picker-buttonlist-src", suggestionSrc);
       pathfield.appendChild(overlay);
       
       var tagList = document.createElement("coral-taglist");

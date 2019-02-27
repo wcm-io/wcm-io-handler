@@ -17,11 +17,26 @@
       // get link plugin configuration for current content page
       var currentPagePath = Granite.author.ContentFrame.getContentPath();      
       var pluginConfigUrl = currentPagePath + ".wcmio-handler-richtext-rte-plugins-links-config.json";
-      $.get(pluginConfigUrl, function(result) {
-        dialogProperties.linkTypes = dialogProperties.linkTypes || result.linkTypes;
-        dialogProperties.rootPath = dialogProperties.rootPath || result.rootPaths.internal;
+      $.get({
+        url: pluginConfigUrl,
+        success: function(result) {
+          dialogProperties.linkTypes = dialogProperties.linkTypes || result.linkTypes;
+          dialogProperties.rootPaths = dialogProperties.rootPaths || result.rootPaths;
+        },
+        async: false
       });
-      
+
+      // fallback if JSON call was not successful or did not return link types
+      dialogProperties.linkTypes = dialogProperties.linkTypes || {
+        "internal": {
+          value: "internal",
+          value: "Internal"
+        },
+        "external": {
+          value: "external",
+          value: "External"
+        }
+      };
       dialogProperties.targetItems = dialogProperties.targetItems || {
         "_self": {
           value: "_self",
