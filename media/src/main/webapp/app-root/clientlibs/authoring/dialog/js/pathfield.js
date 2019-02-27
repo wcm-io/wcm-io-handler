@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@
     self._pathfield = config.pathfield;
     self._$pathfield = $(config.pathfield);
     self._bindEvents();
-    
+
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
       pathfield: self._pathfield
@@ -34,7 +34,7 @@
     var assetPath = self._$pathfield.val();
     self._validate.validateMediaFormat(assetPath);
   };
-  
+
   /**
    * Bind events to pathfield widget.
    */
@@ -54,9 +54,9 @@
       self._$pathfield.val(assetPath);
       self._validate.validateMediaFormat(assetPath);
     });
-    
+
   };
-  
+
   /**
    * Initializes file upload extension when dialog is loaded
    */

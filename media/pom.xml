@@ -75,7 +75,7 @@
       <artifactId>jcr</artifactId>
       <scope>compile</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.day.commons</groupId>
       <artifactId>day-commons-gfx</artifactId>

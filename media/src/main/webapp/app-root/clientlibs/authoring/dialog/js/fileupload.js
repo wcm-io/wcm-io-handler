@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@
     self._pathfield = config.pathfield;
     self._$pathfield = $(config.pathfield);
     self._bindEvents();
-    
+
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
       pathfield: self._pathfield
@@ -36,7 +36,7 @@
     var assetPath = self._$pathfield.val();
     self._validate.validateMediaFormat(assetPath);
   };
-  
+
   /**
    * Bind events to existing fileupload widget and pathfield widget.
    */
@@ -69,14 +69,14 @@
       var assetPath = event.path;
       self._triggerAssetSelected(assetPath);
     });
-    
+
     self._element.on("coral-fileupload:load", function (event) {
       self._$pathfield.val("");
       self._validate.validateMediaFormat(null);
     });
 
   };
-  
+
   /**
    * Trigger 'assetselected' event on the fileupload widget.
    */
@@ -91,7 +91,7 @@
       thumbnail: $("<img src='" + thumbnailUrl + "'>")
     }));
   };
-  
+
   /**
    * Detect mime type from the file extension.
    */
@@ -108,7 +108,7 @@
     }
     return null;
   };
-  
+
   /**
    * Initializes file upload extension when dialog is loaded
    */

@@ -2,7 +2,7 @@
  * Custom link dialog that provides all field supported by the link handler.
  */
 ;(function($) {
-  
+
   wcmio.handler.richtext.rte.plugins.LinkDialog = new Class({
 
     extend: CUI.rte.ui.cui.AbstractDialog,
@@ -31,14 +31,14 @@
         fn: this.createSelectField,
         selectItems: config.linkTypes
       }));
-      
+
       // link properties
       this.addInternalLinkFields(frag, config);
       this.addInternalCrossContextLinkFields(frag, config);
       this.addExternalLinkFields(frag, config);
       this.addMediaLinkFields(frag, config);
       this.addAllLinkTypeFields(frag, config);
-      
+
       // button bar
       frag.appendChild(this.createColumnItem({
         fn: this.createButtonBar,
@@ -58,7 +58,7 @@
         fn: this.createPathField,
         placeholder: "Internal page",
         rootPath: config.rootPaths.internal || "/content"
-      }));      
+      }));
     },
 
     /**
@@ -71,7 +71,7 @@
         fn: this.createPathField,
         placeholder: "Internal page (other site)",
         rootPath: config.rootPaths.internalCrossContext || "/content"
-      }));      
+      }));
     },
 
     /**
@@ -124,11 +124,11 @@
       if (!itemConfig.fn) {
         return;
       }
-      
+
       // create wrapper divs - column container and container
       var columnContainer = document.createElement("div");
       columnContainer.className = "rte-dialog-columnContainer";
-      
+
       var column = document.createElement("div");
       column.className = "rte-dialog-column";
       if (itemConfig.columnClass) {
@@ -151,7 +151,7 @@
         columnContainer.dataset.linkType = itemConfig.linkType;
       }
 
-      return columnContainer; 
+      return columnContainer;
     },
 
     /**
@@ -172,10 +172,10 @@
         dataType: "apply",
         variant: "primary"
       }));
-      
+
       return frag;
     },
-    
+
     createButton: function(buttonConfig) {
       var button = document.createElement("button", "coral-button");
       button.setAttribute("is", "coral-button");
@@ -191,33 +191,33 @@
       button.setAttribute("tabindex", "-1");
       return button;
     },
-    
+
     createPathField: function(pathfieldConfig) {
       var rootPath = pathfieldConfig.rootPath;
       var pickerSrc = "/mnt/overlay/granite/ui/content/coral/foundation/form/pathfield/picker.html?root=" + rootPath + "&filter=hierarchyNotFile&selectionCount=single";
       var suggestionSrc = "/mnt/overlay/granite/ui/content/coral/foundation/form/pathfield/suggestion{.offset,limit}.html?root=" + rootPath + "&filter=hierarchyNotFile{&query}";
-      
+
       var pathfield = document.createElement("foundation-autocomplete");
       pathfield.setAttribute("pickersrc", pickerSrc);
       pathfield.setAttribute("placeholder", CUI.rte.Utils.i18n(pathfieldConfig.placeholder));
-      
+
       var overlay = document.createElement("coral-overlay");
       overlay.className = "foundation-autocomplete-value foundation-picker-buttonlist";
       overlay.setAttribute("data-foundation-picker-buttonlist-src", suggestionSrc);
       pathfield.appendChild(overlay);
-      
+
       var tagList = document.createElement("coral-taglist");
       tagList.setAttribute("foundation-autocomplete-value", "");
       tagList.setAttribute("name", "href");
       pathfield.appendChild(tagList);
-      
+
       return pathfield;
     },
 
     createSelectField: function(selectConfig) {
       var select = document.createElement("coral-select");
       select.setAttribute("handle", "select");
-      
+
       var firstValue;
       $.each(selectConfig.selectItems, function (elem, item) {
         var selectItem = document.createElement("coral-select-item");
@@ -230,7 +230,7 @@
 
       return select;
     },
-    
+
     createTextField: function(textConfig) {
       var textField = document.createElement("input", "coral-textfield");
       textField.setAttribute("placeholder", CUI.rte.Utils.i18n(textConfig.placeholder));
@@ -244,16 +244,16 @@
     },
 
    // ============ link dialog implementation =============
-       
+
     getDataType: function () {
       return "link";
     },
 
     initialize: function (config) {
       this.config = config;
-      
+
       this.popoverContent = $(this.fields.linkType).closest("coral-popover-content");
-      
+
       // initialize show/hide handler
       this.showHideLinkType();
       var self = this;
@@ -283,8 +283,8 @@
       if (!objToEdit) {
         return;
       }
-      
-      // check if link was stored with OOTB link plugin previously 
+
+      // check if link was stored with OOTB link plugin previously
       if (this._isLegacyLink(objToEdit)) {
         objToEdit = this._convertFromLegacyLink(objToEdit);
       }
@@ -313,17 +313,17 @@
           field.value = value;
         }
       });
-      
-      this.showHideLinkType();      
+
+      this.showHideLinkType();
     },
-    
+
     dlgToModel: function () {
       var self = this;
       var objToEdit = this.objToEdit;
       if (!objToEdit) {
         return;
       }
-      
+
       // link properties are stored in data attributes
       objToEdit.href = "#";
       objToEdit.target = null;
@@ -349,7 +349,7 @@
     _camelCaseToHyphen: function (camelCase) {
       return camelCase.replace(/[A-Z]/g, "-$&").toLowerCase();
     },
-    
+
     /**
      * Checks of the given link object has stored link information in "legacy format" as used
      * by the OOTB link plugin, meaning a href value and no link type associated.
@@ -357,15 +357,15 @@
     _isLegacyLink: function (objToEdit) {
       return (objToEdit.href != null) && (objToEdit.dom && objToEdit.dom.dataset.linkType == null);
     },
-    
+
     /**
      * Converting legacy link properties to a simulated DOM object.
      */
     _convertFromLegacyLink: function (objToEdit) {
       var href = objToEdit.href;
       var target = objToEdit.target;
-      
-      var props = {};      
+
+      var props = {};
       if (href.startsWith("/content/dam/")) {
         props.linkType = "media";
         props.linkMediaRef = href;
@@ -379,7 +379,7 @@
         props.linkExternalRef = href;
       }
       props.linkWindowTarget = target;
-      
+
       return {
         dom: {
           dataset: props

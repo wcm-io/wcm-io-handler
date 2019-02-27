@@ -3,7 +3,7 @@
  * with a link dialog similar to wcm.io Link Handler link dialog.
  */
 ;(function($) {
-  
+
   wcmio.handler.richtext.rte.plugins.LinkPlugin = new Class({
 
     extend: CUI.rte.plugins.CQLinkPlugin,
@@ -15,7 +15,7 @@
       var dialogProperties = config.linkDialogConfig.dialogProperties;
 
       // get link plugin configuration for current content page
-      var currentPagePath = Granite.author.ContentFrame.getContentPath();      
+      var currentPagePath = Granite.author.ContentFrame.getContentPath();
       var pluginConfigUrl = currentPagePath + ".wcmio-handler-richtext-rte-plugins-links-config.json";
       $.get({
         url: pluginConfigUrl,
@@ -47,15 +47,15 @@
           text: "New window"
         }
       };
-      
+
       // call the "super" method
       this.inherited(arguments);
     },
-    
+
     getDialogClass: function() {
       return wcmio.handler.richtext.rte.plugins.LinkDialog;
     },
-    
+
     initializeUI: function (tbGenerator) {
       // register icon for this plugins toolbar actions
       tbGenerator.registerIcon("wcmio.handler.richtext.links#modifylink", "link");

@@ -68,7 +68,7 @@ are overwritten or added.
    * Indicates whether upload from local file system is allowed.
    */
   - allowUpload (Boolean) = 'false'
-  
+
   /**
    * When the field description is not set, it is set automatically with an information about the
    * supported media formats.

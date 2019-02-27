@@ -45,7 +45,7 @@ These are the most common properties:
 | `mediaAltText`                    | `alt`                             | Alternative text for media
 | `mediaInline`                     | `file`                            | Node name for binary file uploaded to a page
 
-Further properties are defined in [MediaNameConstants][media-name-constants]. 
+Further properties are defined in [MediaNameConstants][media-name-constants].
 
 To switch to "Adobe Standard" names add this class to your project (recommended):
 
