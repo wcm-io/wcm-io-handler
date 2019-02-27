@@ -113,7 +113,7 @@
       frag.appendChild(this.createColumnItem({
         name: "linkWindowTarget",
         fn: this.createSelectField,
-        selectItems: config.targetItems
+        selectItems: config.linkWindowTargetItems
       }));
     },
 
@@ -279,16 +279,21 @@
     },
 
     dlgFromModel: function() {
-      var self = this;
-      if (!(self.objToEdit)) {
+      var objToEdit = this.objToEdit;
+      if (!objToEdit) {
         return;
+      }
+      
+      // check if link was stored with OOTB link plugin previously 
+      if (this._isLegacyLink(objToEdit)) {
+        objToEdit = this._convertFromLegacyLink(objToEdit);
       }
 
       // populate fields
       $.each(this.fields, function (name, field) {
         var value = null;
-        if (self.objToEdit.dom) {
-          value = self.objToEdit.dom.dataset[name];
+        if (objToEdit.dom) {
+          value = objToEdit.dom.dataset[name];
         }
         if (!value) {
           if (field.tagName.toLowerCase() == "coral-checkbox") {
@@ -314,12 +319,14 @@
     
     dlgToModel: function () {
       var self = this;
-      if (!self.objToEdit) {
+      var objToEdit = this.objToEdit;
+      if (!objToEdit) {
         return;
       }
       
       // link properties are stored in data attributes
-      self.objToEdit.href = "#";
+      objToEdit.href = "#";
+      objToEdit.target = null;
 
       // store fields
       $.each(this.fields, function (name, field) {
@@ -331,7 +338,7 @@
           value = null;
         }
         // we cannot use dataset here because objToEdit.dom may not exist yet
-        self.objToEdit.attributes["data-" + self._camelCaseToHyphen(name)] = value;
+        objToEdit.attributes["data-" + self._camelCaseToHyphen(name)] = value;
       });
 
     },
@@ -341,6 +348,43 @@
      */
     _camelCaseToHyphen: function (camelCase) {
       return camelCase.replace(/[A-Z]/g, "-$&").toLowerCase();
+    },
+    
+    /**
+     * Checks of the given link object has stored link information in "legacy format" as used
+     * by the OOTB link plugin, meaning a href value and no link type associated.
+     */
+    _isLegacyLink: function (objToEdit) {
+      return (objToEdit.href != null) && (objToEdit.dom && objToEdit.dom.dataset.linkType == null);
+    },
+    
+    /**
+     * Converting legacy link properties to a simulated DOM object.
+     */
+    _convertFromLegacyLink: function (objToEdit) {
+      var href = objToEdit.href;
+      var target = objToEdit.target;
+      
+      var props = {};      
+      if (href.startsWith("/content/dam/")) {
+        props.linkType = "media";
+        props.linkMediaRef = href;
+      }
+      else if (href.startsWith("/content/")) {
+        props.linkType = "internal";
+        props.linkContentRef = href;
+      }
+      else {
+        props.linkType = "external";
+        props.linkExternalRef = href;
+      }
+      props.linkWindowTarget = target;
+      
+      return {
+        dom: {
+          dataset: props
+        }
+      };
     }
 
   });

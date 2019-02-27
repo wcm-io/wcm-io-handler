@@ -37,7 +37,7 @@
           value: "External"
         }
       };
-      dialogProperties.targetItems = dialogProperties.targetItems || {
+      dialogProperties.linkWindowTargetItems = dialogProperties.linkWindowTargetItems || {
         "_self": {
           value: "_self",
           text: "Same window"
