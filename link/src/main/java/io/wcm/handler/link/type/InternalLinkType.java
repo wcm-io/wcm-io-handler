@@ -78,6 +78,11 @@ public final class InternalLinkType extends LinkType {
   }
 
   @Override
+  public @NotNull String getLabel() {
+    return "Internal (same site)";
+  }
+
+  @Override
   public String getPrimaryLinkRefProperty() {
     return LinkNameConstants.PN_LINK_CONTENT_REF;
   }
