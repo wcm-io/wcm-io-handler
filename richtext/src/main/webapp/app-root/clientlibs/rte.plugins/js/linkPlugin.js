@@ -62,19 +62,6 @@
       tbGenerator.registerIcon("wcmio.handler.richtext.links#unlink", "linkOff");
       // call the "super" method
       this.inherited(arguments);
-    },
-    
-    _getAbsoluteParent: function (path, level) {
-      var idx = 0;
-      var length = path.length;
-      while (level >= 0 && idx < length) {
-        idx = path.indexOf("/", idx + 1);
-        if (idx < 0) {
-          idx = length;
-        }
-        level--;
-      }
-      return level >= 0 ? "" : path.substring(0, idx);
     }
 
   });
