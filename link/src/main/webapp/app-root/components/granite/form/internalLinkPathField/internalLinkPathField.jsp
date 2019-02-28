@@ -76,4 +76,4 @@ options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(resourceWrapper, options);
 dispatcher.include(slingRequest, slingResponse);
 
-%>name: !<%=name%>!
+%>

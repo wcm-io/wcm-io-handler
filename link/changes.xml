@@ -25,7 +25,10 @@
 
     <release version="1.2.0" date="not released">
       <action type="add" dev="sseifert">
-        Add Path Field Granite UI widgets for internal and media link types.
+        Add Path Field Granite UI components for internal and media link types.
+      </action>
+      <action type="add" dev="sseifert">
+        Add link reference container Granite UI component.
       </action>
       <action type="add" dev="sseifert">
         Add LinkHandlerConfig.getLinkRootPath to be used by path field Granite UI components.
