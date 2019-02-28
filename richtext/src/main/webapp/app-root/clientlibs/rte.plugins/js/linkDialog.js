@@ -194,8 +194,8 @@
 
     createPathField: function(pathfieldConfig) {
       var rootPath = pathfieldConfig.rootPath;
-      var pickerSrc = "/mnt/overlay/granite/ui/content/coral/foundation/form/pathfield/picker.html?root=" + rootPath + "&filter=hierarchyNotFile&selectionCount=single";
-      var suggestionSrc = "/mnt/overlay/granite/ui/content/coral/foundation/form/pathfield/suggestion{.offset,limit}.html?root=" + rootPath + "&filter=hierarchyNotFile{&query}";
+      var pickerSrc = "/mnt/overlay/wcm-io/wcm/ui/granite/content/form/pathfield/picker.html?root=" + rootPath + "&filter=hierarchyNotFile&selectionCount=single";
+      var suggestionSrc = "/mnt/overlay/wcm-io/wcm/ui/granite/content/form/pathfield/suggestion{.offset,limit}.html?root=" + rootPath + "&filter=hierarchyNotFile{&query}";
 
       var pathfield = document.createElement("foundation-autocomplete");
       pathfield.setAttribute("pickersrc", pickerSrc);
