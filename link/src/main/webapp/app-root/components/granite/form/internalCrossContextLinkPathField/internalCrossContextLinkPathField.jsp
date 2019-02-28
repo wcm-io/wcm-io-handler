@@ -58,7 +58,7 @@ are overwritten or added.
 
 // detect root path
 Config cfg = cmp.getConfig();
-String name = cfg.get("name", LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF);
+String name = cfg.get("name", "./" + LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF);
 String rootPath = cfg.get("rootPath", String.class);
 if (rootPath == null) {
   rootPath = getRootPath(slingRequest, InternalCrossContextLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_CONTENT);

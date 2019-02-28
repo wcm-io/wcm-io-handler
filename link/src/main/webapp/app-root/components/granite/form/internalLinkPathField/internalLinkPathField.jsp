@@ -58,7 +58,7 @@ are overwritten or added.
 
 // detect root path
 Config cfg = cmp.getConfig();
-String name = cfg.get("name", LinkNameConstants.PN_LINK_CONTENT_REF);
+String name = cfg.get("name", "./" + LinkNameConstants.PN_LINK_CONTENT_REF);
 String rootPath = cfg.get("rootPath", String.class);
 if (rootPath == null) {
   rootPath = getRootPath(slingRequest, InternalLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_CONTENT);
@@ -76,4 +76,4 @@ options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(resourceWrapper, options);
 dispatcher.include(slingRequest, slingResponse);
 
-%>
+%>name: !<%=name%>!

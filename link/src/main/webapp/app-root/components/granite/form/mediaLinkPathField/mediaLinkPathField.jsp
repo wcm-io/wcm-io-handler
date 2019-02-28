@@ -69,7 +69,7 @@ are overwritten or added.
 
 // detect root path
 Config cfg = cmp.getConfig();
-String name = cfg.get("name", LinkNameConstants.PN_LINK_MEDIA_REF);
+String name = cfg.get("name", "./" + LinkNameConstants.PN_LINK_MEDIA_REF);
 String rootPath = cfg.get("rootPath", String.class);
 if (rootPath == null) {
   rootPath = getRootPath(slingRequest, MediaLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_MEDIA);
