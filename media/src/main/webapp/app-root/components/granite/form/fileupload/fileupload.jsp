@@ -155,7 +155,7 @@ pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
 pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
-    "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
+    "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
 if (mediaFormats != null && mediaFormats.length > 0) {
   Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));

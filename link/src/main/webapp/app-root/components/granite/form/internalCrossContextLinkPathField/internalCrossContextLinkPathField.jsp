@@ -35,7 +35,7 @@ wcm.io URL Handler Site Root PathField
 
 A field that allows the user to enter path.
 
-It extends `/libs/granite/ui/components/coral/foundation/form/pathfield` component.
+It extends `/apps/wcm-io/wcm/ui/granite/components/form/pathfield` component.
 
 It supports the same properties as it's super component. The following properties
 are overwritten or added.
@@ -58,7 +58,7 @@ are overwritten or added.
 
 // detect root path
 Config cfg = cmp.getConfig();
-String name = cfg.get("name", LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF);
+String name = cfg.get("name", "./" + LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF);
 String rootPath = cfg.get("rootPath", String.class);
 if (rootPath == null) {
   rootPath = getRootPath(slingRequest, InternalCrossContextLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_CONTENT);
@@ -72,7 +72,7 @@ ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of(
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
 
 RequestDispatcherOptions options = new RequestDispatcherOptions();
-options.setForceResourceType("granite/ui/components/coral/foundation/form/pathfield");
+options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(resourceWrapper, options);
 dispatcher.include(slingRequest, slingResponse);
 

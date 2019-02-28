@@ -106,6 +106,12 @@
       <version>1.2.2</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.wcm.ui.granite</artifactId>
+      <version>1.1.7-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.jdom</groupId>

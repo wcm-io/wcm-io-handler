@@ -37,7 +37,7 @@ wcm.io Media Handler PathField
 
 A field that allows the user to enter path.
 
-It extends `/libs/granite/ui/components/coral/foundation/form/pathfield` component.
+It extends `/apps/wcm-io/wcm/ui/granite/components/form/pathfield` component.
 
 It supports the same properties as it's super component. The following properties
 are overwritten or added.
@@ -123,7 +123,7 @@ if (mediaFormats != null && mediaFormats.length > 0) {
 
 // render original fileupload widget
 RequestDispatcherOptions options = new RequestDispatcherOptions();
-options.setForceResourceType("granite/ui/components/coral/foundation/form/pathfield");
+options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(pathField, options);
 dispatcher.include(slingRequest, slingResponse);
 

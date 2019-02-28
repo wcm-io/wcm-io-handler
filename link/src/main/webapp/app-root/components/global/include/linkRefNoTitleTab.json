@@ -76,21 +76,10 @@
               "fieldLabel": "Asset reference"
             },
             "linkMediaDownload": {
-              "sling:resourceType": "granite/ui/components/foundation/form/checkbox",
+              "sling:resourceType": "wcm-io/wcm/ui/granite/components/form/checkbox",
               "name": "./linkMediaDownload",
               "text": "Download",
-              "value": "true",
               "fieldDescription": "Open DAM asset item with download dialog"
-            },
-            "linkMediaDownloadDelete": {
-              "sling:resourceType": "granite/ui/components/foundation/form/hidden",
-              "name": "./linkMediaDownload@Delete",
-              "value": "true"
-            },
-            "linkMediaDownloadTypeHint": {
-              "sling:resourceType": "granite/ui/components/foundation/form/hidden",
-              "name": "./linkMediaDownload@TypeHint",
-              "value": "Boolean"
             }
           }
         },
