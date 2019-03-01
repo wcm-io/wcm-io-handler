@@ -116,6 +116,11 @@
     $(event.target).find("coral-fileupload.cq-FileUpload").each(function() {
       var pathfield = $(this).closest(".coral-Form-fieldwrapper")
           .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
+      if (!pathfield) {
+        // fallback for AEM 6.3 where the pathfield component is wrapped in an additionaly div
+        pathfield = $(this).closest(".coral-Form-fieldwrapper")
+          .next(".pathfield").find("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
+      }
       if (pathfield) {
         Coral.commons.ready(this, function (fileUpload) {
           // avoid double initialization if contentloaded event is fired twice e.g. in pageprops dialog
