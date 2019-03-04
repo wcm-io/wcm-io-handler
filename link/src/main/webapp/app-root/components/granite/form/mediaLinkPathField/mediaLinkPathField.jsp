@@ -77,7 +77,7 @@ if (rootPath == null) {
 
 // get all media formats with "download" flag
 Set<String> mediaFormatNames = new TreeSet<String>();
-Resource contentResource = GraniteUi.getContentResource(request);
+Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 MediaFormatHandler mediaFormatHandler = contentResource.adaptTo(MediaFormatHandler.class);
 for (MediaFormat mediaFormat : mediaFormatHandler.getMediaFormats()) {
   if (mediaFormat.isDownload()) {

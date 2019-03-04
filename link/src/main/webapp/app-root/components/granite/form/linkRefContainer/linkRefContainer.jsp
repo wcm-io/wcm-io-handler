@@ -96,7 +96,7 @@ String propertyPrefix = cfg.get("propertyPrefix", "link");
 // this is required to ensure that multiple link contains in the same dialog do not interfer each other
 String showhideCssClass = "option-linktype-showhide-target-" + Escape.validName(propertyPrefix);
 
-Map<String,LinkType> linkTypes = getLinkTypes(GraniteUi.getContentResource(request));
+Map<String,LinkType> linkTypes = getLinkTypes(GraniteUi.getContentResourceOrParent(request));
 
 Resource container = GraniteUiSyntheticResource.wrap(resource);
 Resource items = GraniteUiSyntheticResource.child(container, "items", JcrConstants.NT_UNSTRUCTURED);
