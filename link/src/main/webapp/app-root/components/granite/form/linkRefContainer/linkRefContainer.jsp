@@ -20,6 +20,8 @@
 <%@page import="java.util.Map"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
+<%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="org.slf4j.Logger"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="com.adobe.granite.ui.components.ComponentHelper.Options"%>
 <%@page import="com.adobe.granite.ui.components.Tag"%>
@@ -250,12 +252,19 @@ insertAdditionalComponents(items, cfg.getChild("allLinkTypeFields"));
 cmp.include(container, "granite/ui/components/coral/foundation/container", new Options().tag(tag));
 %><%!
 
+private final Logger log = LoggerFactory.getLogger(getClass());
+
 private Map<String,LinkType> getLinkTypes(Resource resource) {
-  LinkHandlerConfig linkHandlerConfig = resource.adaptTo(LinkHandlerConfig.class);
   Map<String,LinkType> linkTypes = new LinkedHashMap<>();
-  for (Class<? extends LinkType> linkTypeClass : linkHandlerConfig.getLinkTypes()) {
-    LinkType linkType = resource.adaptTo(linkTypeClass);
-    linkTypes.put(linkType.getId(), linkType);
+  if (resource != null) {
+    LinkHandlerConfig linkHandlerConfig = resource.adaptTo(LinkHandlerConfig.class);
+    for (Class<? extends LinkType> linkTypeClass : linkHandlerConfig.getLinkTypes()) {
+      LinkType linkType = resource.adaptTo(linkTypeClass);
+      linkTypes.put(linkType.getId(), linkType);
+    }
+  }
+  else {
+    log.warn("Unable to get link types for link reference container - content resource not detected.");
   }
   return linkTypes;
 }
