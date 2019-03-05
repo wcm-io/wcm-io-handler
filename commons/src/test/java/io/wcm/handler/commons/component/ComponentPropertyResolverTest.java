@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import io.wcm.testing.mock.aem.junit.AemContext;
 
+@SuppressWarnings("deprecation")
 public class ComponentPropertyResolverTest {
 
   @Rule

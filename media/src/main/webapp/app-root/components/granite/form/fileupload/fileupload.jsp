@@ -24,9 +24,10 @@
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
-<%@page import="io.wcm.handler.commons.component.ComponentPropertyResolver"%>
 <%@page import="io.wcm.handler.media.MediaNameConstants"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
+<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolver"%>
+<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolution"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %>
@@ -126,7 +127,8 @@ fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
     "image", "image/gif", "image/jpeg", "image/png" }));
 
 // media format properties for validation of associated media reference
-ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource);
+ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
+    .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
 String[] mediaFormats = cfg.get("mediaFormats",
     componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
 boolean mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
