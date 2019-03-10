@@ -77,6 +77,13 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- For build compatibility with Java 11 -->
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -102,6 +109,13 @@
             <Sling-Model-Packages>
               io.wcm.handler.richtext
             </Sling-Model-Packages>
+
+            <!-- For build compatibility with Java 11 -->
+            <Import-Package>
+              javax.annotation;version="[0.0,2)",
+              *
+            </Import-Package>
+
           </instructions>
         </configuration>
       </plugin>
