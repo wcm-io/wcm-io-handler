@@ -76,6 +76,13 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- For build compatibility with Java 11 -->
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.day.commons</groupId>
       <artifactId>day-commons-gfx</artifactId>
@@ -111,6 +118,13 @@
               io.wcm.handler.mediasource.inline
             </Sling-Model-Packages>
             <Sling-Namespaces>wcmio=http://wcm.io/ns</Sling-Namespaces>
+
+            <!-- For build compatibility with Java 11 -->
+            <Import-Package>
+              javax.annotation;version="[0.0,2)",
+              *
+            </Import-Package>
+
           </instructions>
         </configuration>
       </plugin>
