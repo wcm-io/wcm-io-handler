@@ -35,9 +35,9 @@ The Media Handler provides:
 
 |Media Handler version |AEM version supported
 |----------------------|----------------------
-|1.2.x or higher       |AEM 6.2 or up
-|1.0.x, 1.1.x          |AEM 6.1 or up
-|0.x                   |AEM 6.0 or up
+|1.2.x or higher       |AEM 6.2 and up
+|1.0.x, 1.1.x          |AEM 6.1 and up
+|0.x                   |AEM 6.0 and up
 
 
 ### Dependencies
