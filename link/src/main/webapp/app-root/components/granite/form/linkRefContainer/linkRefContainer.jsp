@@ -26,6 +26,7 @@
 <%@page import="com.adobe.granite.ui.components.ComponentHelper.Options"%>
 <%@page import="com.adobe.granite.ui.components.Tag"%>
 <%@page import="com.day.cq.commons.jcr.JcrConstants"%>
+<%@page import="io.wcm.handler.link.LinkNameConstants"%>
 <%@page import="io.wcm.handler.link.type.InternalLinkType"%>
 <%@page import="io.wcm.handler.link.type.InternalCrossContextLinkType"%>
 <%@page import="io.wcm.handler.link.type.ExternalLinkType"%>
@@ -55,10 +56,10 @@ Properties:
   - showLinkTitle (boolean) = false
 
   /**
-   * Prefix for all link reference properties. Can be set to another prefix if multiple links
-   * should be stored in a single resource.
+   * Prefix for all property names in the link reference dialog.
+   * Can be used to store the properties in another resource by setting e.g. to "./mySubNode/".
    */
-  - propertyPrefix (String) = "link"
+  - namePrefix (String) = "./"
   
   /**
    * Additional Granite UI components to be displayed for "internal" link type.
@@ -91,10 +92,10 @@ Tag tag = cmp.consumeTag();
 Config cfg = cmp.getConfig();
 
 boolean showLinkTitle = cfg.get("showLinkTitle", false);
-String propertyPrefix = cfg.get("propertyPrefix", "link");
+String namePrefix = cfg.get("namePrefix", "./");
 
-// this is required to ensure that multiple link contains in the same dialog do not interfer each other
-String showhideCssClass = "option-linktype-showhide-target-" + Escape.validName(propertyPrefix);
+// this is required to ensure that multiple link contains in the same dialog do not interfere with each other
+String showhideCssClass = "option-linktype-showhide-target-" + Escape.validName(namePrefix);
 
 Map<String,LinkType> linkTypes = getLinkTypes(GraniteUi.getContentResourceOrParent(request));
 
@@ -106,7 +107,7 @@ Resource items = GraniteUiSyntheticResource.child(container, "items", JcrConstan
 if (showLinkTitle) {
   GraniteUiSyntheticResource.child(items, "linkTitle", "granite/ui/components/coral/foundation/form/textfield",
       ImmutableValueMap.builder()
-      .put("name", "./" + propertyPrefix + "Title")
+      .put("name", namePrefix + LinkNameConstants.PN_LINK_TITLE)
       .put("fieldLabel", "Link title")
       .build());
 }
@@ -115,7 +116,7 @@ if (showLinkTitle) {
 // Link type
 Resource linkTypeSelect = GraniteUiSyntheticResource.child(items, "linkType", "granite/ui/components/coral/foundation/form/select",
     ImmutableValueMap.builder()
-    .put("name", "./" + propertyPrefix + "Type")
+    .put("name", namePrefix + LinkNameConstants.PN_LINK_TYPE)
     .put("fieldLabel", "Link type")
     .put("granite:class", "cq-dialog-dropdown-showhide")
     .build());
@@ -147,7 +148,7 @@ if (linkTypes.containsKey(InternalLinkType.ID)) {
   
   GraniteUiSyntheticResource.child(internalWellItems, "linkContentRef", "wcm-io/handler/link/components/granite/form/internalLinkPathField",
       ImmutableValueMap.builder()
-      .put("name", "./" + propertyPrefix + "ContentRef")
+      .put("name", namePrefix + LinkNameConstants.PN_LINK_CONTENT_REF)
       .put("fieldLabel", "Internal page")
       .put("fieldDescription", "Link to target page in CMS (same site)")
       .build());
@@ -169,7 +170,7 @@ if (linkTypes.containsKey(InternalCrossContextLinkType.ID)) {
   
   GraniteUiSyntheticResource.child(internalCrossContextWellItems, "linkContentRef", "wcm-io/handler/link/components/granite/form/internalCrossContextLinkPathField",
       ImmutableValueMap.builder()
-      .put("name", "./" + propertyPrefix + "CrossContextContentRef")
+      .put("name", namePrefix + LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF)
       .put("fieldLabel", "Internal page (other site)")
       .put("fieldDescription", "Link to target page in CMS (other site)")
       .build());
@@ -191,7 +192,7 @@ if (linkTypes.containsKey(ExternalLinkType.ID)) {
   
   GraniteUiSyntheticResource.child(externalWellItems, "linkExternalRef", "granite/ui/components/coral/foundation/form/textfield",
       ImmutableValueMap.builder()
-      .put("name", "./" + propertyPrefix + "ExternalRef")
+      .put("name", namePrefix + LinkNameConstants.PN_LINK_EXTERNAL_REF)
       .put("fieldLabel", "URL")
       .put("fieldDescription", "Link to external destination")
       .build());
@@ -213,13 +214,13 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
   
   GraniteUiSyntheticResource.child(mediaWellItems, "linkMediaRef", "wcm-io/handler/link/components/granite/form/mediaLinkPathField",
       ImmutableValueMap.builder()
-      .put("propertyPrefix", "./" + propertyPrefix + "Media")
+      .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_REF)
       .put("fieldLabel", "Asset reference")
       .build());
   
   GraniteUiSyntheticResource.child(mediaWellItems, "linkMediaDownload", "wcm-io/wcm/ui/granite/components/form/checkbox",
       ImmutableValueMap.builder()
-      .put("name", "./" + propertyPrefix + "MediaDownload")
+      .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD)
       .put("text", "Download")
       .put("fieldDescription", "Open DAM asset item with download dialog")
       .build());
@@ -230,7 +231,7 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
 // Link window target
 Resource linkWindowTarget = GraniteUiSyntheticResource.child(items, "linkWindowTarget", "granite/ui/components/coral/foundation/form/select",
     ImmutableValueMap.builder()
-    .put("name", "./" + propertyPrefix + "WindowTarget")
+    .put("name", namePrefix + LinkNameConstants.PN_LINK_WINDOW_TARGET)
     .put("fieldLabel", "Window target")
     .build());
 Resource linkWindowTargetItems = GraniteUiSyntheticResource.child(linkWindowTarget, "items", JcrConstants.NT_UNSTRUCTURED);
