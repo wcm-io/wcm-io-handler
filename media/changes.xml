@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Use wcm.io WCM Granite UI Extension path fields.
       </action>
+      <action type="fix" dev="sseifert">
+        Do not apply auto-cropping when manual cropping parameters are present, that lead to a mismatch with the requested media format.
+      </action>
     </release>
 
     <release version="1.2.0" date="2019-02-22">
