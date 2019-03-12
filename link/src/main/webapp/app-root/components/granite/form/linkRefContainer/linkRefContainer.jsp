@@ -19,6 +19,7 @@
   --%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.LinkedHashMap"%>
+<%@page import="java.util.Set"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="org.slf4j.LoggerFactory"%>
 <%@page import="org.slf4j.Logger"%>
@@ -26,6 +27,7 @@
 <%@page import="com.adobe.granite.ui.components.ComponentHelper.Options"%>
 <%@page import="com.adobe.granite.ui.components.Tag"%>
 <%@page import="com.day.cq.commons.jcr.JcrConstants"%>
+<%@page import="com.google.common.collect.ImmutableSet"%>
 <%@page import="io.wcm.handler.link.LinkNameConstants"%>
 <%@page import="io.wcm.handler.link.type.InternalLinkType"%>
 <%@page import="io.wcm.handler.link.type.InternalCrossContextLinkType"%>
@@ -54,6 +56,14 @@ Properties:
    * Show text field with link title.
    */
   - showLinkTitle (boolean) = false
+
+  /**
+   * Filter link types allowed in the dialog.
+   * Only link types allowed in the link handler configuration are possible.
+   * When setting this property not all configured link types are displayed, but only those also
+   * contained in this list.
+   */
+  - linkTypes (String[])
 
   /**
    * Prefix for all property names in the link reference dialog.
@@ -97,7 +107,8 @@ String namePrefix = cfg.get("namePrefix", "./");
 // this is required to ensure that multiple link contains in the same dialog do not interfere with each other
 String showhideCssClass = "option-linktype-showhide-target-" + Escape.validName(namePrefix);
 
-Map<String,LinkType> linkTypes = getLinkTypes(GraniteUi.getContentResourceOrParent(request));
+String[] allowedLinkTypes = cfg.get("linkTypes", new String[0]);
+Map<String,LinkType> linkTypes = getLinkTypes(GraniteUi.getContentResourceOrParent(request), allowedLinkTypes);
 
 Resource container = GraniteUiSyntheticResource.wrap(resource);
 Resource items = GraniteUiSyntheticResource.child(container, "items", JcrConstants.NT_UNSTRUCTURED);
@@ -255,13 +266,16 @@ cmp.include(container, "granite/ui/components/coral/foundation/container", new O
 
 private final Logger log = LoggerFactory.getLogger(getClass());
 
-private Map<String,LinkType> getLinkTypes(Resource resource) {
+private Map<String,LinkType> getLinkTypes(Resource resource, String[] allowedLinkTypes) {
+  Set<String> allowedLinkTypeSet = ImmutableSet.copyOf(allowedLinkTypes);
   Map<String,LinkType> linkTypes = new LinkedHashMap<>();
   if (resource != null) {
     LinkHandlerConfig linkHandlerConfig = resource.adaptTo(LinkHandlerConfig.class);
     for (Class<? extends LinkType> linkTypeClass : linkHandlerConfig.getLinkTypes()) {
       LinkType linkType = resource.adaptTo(linkTypeClass);
-      linkTypes.put(linkType.getId(), linkType);
+      if (allowedLinkTypeSet.isEmpty() || allowedLinkTypeSet.contains(linkType.getId())) {
+        linkTypes.put(linkType.getId(), linkType);
+      }
     }
   }
   else {
