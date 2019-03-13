@@ -19,12 +19,17 @@
  */
 package io.wcm.handler.media.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.ImageSizes;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
@@ -48,6 +53,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private String refProperty;
   private String cropProperty;
   private String rotationProperty;
+  private List<PictureSource> pictureSourceSets = new ArrayList<>();
 
   MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
     this.resource = resource;
@@ -221,6 +227,26 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder imageSizes(@NotNull String sizes, long @NotNull... widths) {
+    this.mediaArgs.imageSizes(new ImageSizes(sizes, widths));
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths) {
+    ensureMediaFormatHasRatio(mediaFormat);
+    this.pictureSourceSets.add(new PictureSource(mediaFormat, media, widths));
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths) {
+    ensureMediaFormatHasRatio(mediaFormat);
+    this.pictureSourceSets.add(new PictureSource(mediaFormat, null, widths));
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder refProperty(String value) {
     this.refProperty = value;
     return this;
@@ -240,6 +266,12 @@ final class MediaBuilderImpl implements MediaBuilder {
 
   @Override
   public @NotNull Media build() {
+    if (!pictureSourceSets.isEmpty()) {
+      this.mediaArgs.pictureSources(pictureSourceSets.toArray(new PictureSource[pictureSourceSets.size()]));
+    }
+    if (this.mediaArgs.getImageSizes() != null && this.mediaArgs.getPictureSources() != null) {
+      throw new IllegalArgumentException("Image sizes must not be used together with pictures source sets.");
+    }
     MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
         this.refProperty, this.cropProperty, this.rotationProperty);
     return mediaHandler.processRequest(request);
@@ -258,6 +290,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   @Override
   public String buildUrl() {
     return build().getUrl();
+  }
+
+  private void ensureMediaFormatHasRatio(MediaFormat mediaFormat) {
+    if (!mediaFormat.hasRatio()) {
+      throw new IllegalArgumentException("Media format '" + mediaFormat.getName() + "' does not has a ratio set.");
+    }
   }
 
 }

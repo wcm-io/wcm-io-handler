@@ -54,10 +54,10 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 
 /**
- * Test {@link DummyResponsiveImageMediaMarkupBuilder}
+ * Test DummyResponsiveImageMediaMarkupBuilder
  */
 @RunWith(MockitoJUnitRunner.class)
-@SuppressWarnings("null")
+@SuppressWarnings({ "deprecation", "null" })
 public class DummyResponsiveImageMediaMarkupBuilderTest {
 
   @Rule

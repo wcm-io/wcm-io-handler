@@ -62,7 +62,6 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
@@ -651,12 +650,13 @@ public class InlineMediaSourceTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new ResponsiveMediaFormatsBuilder(RATIO)
-    .breakpoint("B1", 160, 100)
-    .breakpoint("B2", 320, 200)
-    .build());
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO)
+        .breakpoint("B1", 160, 100)
+        .breakpoint("B2", 320, 200)
+        .build());
 
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10, mediaArgs).build();
     assertTrue("valid?", media.isValid());
@@ -691,6 +691,57 @@ public class InlineMediaSourceTest {
     assertEquals(320, mediaFormat1.getWidth());
     assertEquals(200, mediaFormat1.getHeight());
     assertEquals("B2", mediaFormat1.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
+  }
+
+  @Test
+  public void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10)
+        .mediaFormat(RATIO)
+        .pictureSource(RATIO, "media1", 160)
+        .pictureSource(RATIO, "media2", 320)
+        .build();
+
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 3, media.getRenditions().size());
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    Rendition rendition0 = renditions.get(0);
+    assertEquals("rendition.mediaUrl.1",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
+        rendition0.getUrl());
+    assertEquals(400, rendition0.getWidth());
+    assertEquals(250, rendition0.getHeight());
+    assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
+
+    MediaFormat mediaFormat0 = rendition0.getMediaFormat();
+    assertEquals(RATIO.getName(), mediaFormat0.getName());
+
+    Rendition rendition1 = renditions.get(1);
+    assertEquals("rendition.mediaUrl.2",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.160.100.file/sample_image_400x250.jpg",
+        rendition1.getUrl());
+    assertEquals(160, rendition1.getWidth());
+    assertEquals(100, rendition1.getHeight());
+    assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
+
+    MediaFormat mediaFormat1 = rendition1.getMediaFormat();
+    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(160, mediaFormat1.getWidth());
+
+    Rendition rendition2 = renditions.get(2);
+    assertEquals("rendition.mediaUrl.3",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.320.200.file/sample_image_400x250.jpg",
+        rendition2.getUrl());
+    assertEquals(320, rendition2.getWidth());
+    assertEquals(200, rendition2.getHeight());
+
+    MediaFormat mediaFormat2 = rendition2.getMediaFormat();
+    assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
+    assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(320, mediaFormat2.getWidth());
   }
 
 }

@@ -506,12 +506,14 @@ public final class DummyMediaFormats {
       .build();
 
   /* formats for testing responsive images */
+  @SuppressWarnings("deprecation")
   public static final MediaFormat RESPONSIVE_32_9_M1 = create("responsive_32_9_m1")
       .label("Responsive 32:9")
       .fixedDimension(1281, 360)
       .extensions("gif", "jpg", "jpeg", "png")
       .property(MediaNameConstants.PROP_BREAKPOINT, "M1")
       .build();
+  @SuppressWarnings("deprecation")
   public static final MediaFormat RESPONSIVE_32_9_L1 = create("responsive_32_9_l1")
       .label("Responsive 32:9")
       .fixedDimension(1920, 540)

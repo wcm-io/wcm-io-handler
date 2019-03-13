@@ -211,6 +211,48 @@ public interface MediaBuilder {
   MediaBuilder property(String key, Object value);
 
   /**
+   * Apply responsive image handling for the <code>img</code> element based on the primary media format given.
+   * If multiple media formats are given the primary media format is the first media format with a ratio.
+   * <p>
+   * It will add a <code>srcset</code> attribute to the <code>img</code> element with renditions for each width given,
+   * and set the <code>sizes</code> attribute to the sizes string given.
+   * </p>
+   * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
+   *          source size list</a>
+   * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+   *          All renditions will use the ratio of the primary media format.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder imageSizes(@NotNull String sizes, long @NotNull... widths);
+
+  /**
+   * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.
+   * This will add one <code>source</code> element with an <code>media</code> attribute set to the given media
+   * string, and a <code>srcset</code> attribute with renditions for each width given based on the given media format.
+   * @param mediaFormat Media format with ratio for the renditions of the <code>source</code> element
+   * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+   *          list</a>
+   * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+   *          All renditions will use the ratio of the given media format.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths);
+
+  /**
+   * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.
+   * This will add one <code>source</code> element without an <code>media</code> attribute, and a <code>srcset</code>
+   * attribute with renditions for each width given based on the given media format.
+   * @param mediaFormat Media format with ratio for the renditions of the <code>source</code> element
+   * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+   *          All renditions will use the ratio of the given media format.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths);
+
+  /**
    * Sets the name of the property from which the media reference path is read, or node name for inline media.
    * @param refProperty Property or node name
    * @return Media builder

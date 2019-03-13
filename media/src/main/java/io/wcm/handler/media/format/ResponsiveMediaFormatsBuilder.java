@@ -36,8 +36,11 @@ import io.wcm.handler.media.MediaNameConstants;
  * {@link MediaNameConstants#PROP_BREAKPOINT} breakpoint is set that is used by the
  * {@link io.wcm.handler.media.markup.ResponsiveImageMediaMarkupBuilder}.
  * </p>
+ * @deprecated Use responsive image handling methods for image sizes and picture sources from MediaBuilder
+ *             together with {@link io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder}.
  */
 @ProviderType
+@Deprecated
 public final class ResponsiveMediaFormatsBuilder {
 
   private final MediaFormat mainMediaFormat;

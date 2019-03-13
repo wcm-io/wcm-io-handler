@@ -35,8 +35,11 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
+import io.wcm.handler.media.MediaArgs.ImageSizes;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
+import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
@@ -163,6 +166,12 @@ public class MediaArgsTest {
     };
     Map<String,Object> props = ImmutableValueMap.of("prop1", "value1", "prop2", "value2");
 
+    ImageSizes imageSizes = new ImageSizes("sizes1", new long[] { 1, 2, 3 });
+    PictureSource[] pictureSourceSets = new PictureSource[] {
+        new PictureSource(EDITORIAL_1COL, "media1", new long[] { 1,2,3}),
+        new PictureSource(EDITORIAL_2COL, null, new long[] { 4})
+    };
+
     MediaArgs mediaArgs = new MediaArgs();
     mediaArgs.mediaFormats(mediaFormats);
     mediaArgs.mediaFormatNames(mediaFormatNames);
@@ -177,7 +186,10 @@ public class MediaArgsTest {
     mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
     mediaArgs.includeAssetThumbnails(true);
+    mediaArgs.imageSizes(imageSizes);
+    mediaArgs.pictureSources(pictureSourceSets);
     mediaArgs.dragDropSupport(DragDropSupport.NEVER);
+    mediaArgs.ipeRatioCustomize(IPERatioCustomize.NEVER);
     mediaArgs.properties(props);
 
     MediaArgs clone = mediaArgs.clone();
@@ -185,6 +197,7 @@ public class MediaArgsTest {
     assertNotSame(mediaArgs.getMediaFormats(), clone.getMediaFormats());
     assertNotSame(mediaArgs.getMediaFormatNames(), clone.getMediaFormatNames());
     assertNotSame(mediaArgs.getFileExtensions(), clone.getFileExtensions());
+    assertNotSame(mediaArgs.getPictureSources(), clone.getPictureSources());
     assertNotSame(mediaArgs.getProperties(), clone.getProperties());
 
     assertArrayEquals(mediaArgs.getMediaFormats(), clone.getMediaFormats());
@@ -200,7 +213,10 @@ public class MediaArgsTest {
     assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
     assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());
+    assertEquals(mediaArgs.getImageSizes(), clone.getImageSizes());
+    assertArrayEquals(mediaArgs.getPictureSources(), clone.getPictureSources());
     assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());
+    assertEquals(IPERatioCustomize.NEVER, clone.getIPERatioCustomize());
     assertEquals(ImmutableValueMap.copyOf(mediaArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
 

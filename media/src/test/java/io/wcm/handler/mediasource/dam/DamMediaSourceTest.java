@@ -67,7 +67,6 @@ import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
-import io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
@@ -670,11 +669,12 @@ public class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new ResponsiveMediaFormatsBuilder(RATIO)
-    .breakpoint("B1", 160, 100)
-    .breakpoint("B2", 320, 200)
-    .build());
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO)
+        .breakpoint("B1", 160, 100)
+        .breakpoint("B2", 320, 200)
+        .build());
 
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10, mediaArgs).build();
     assertTrue("valid?", media.isValid());
@@ -710,6 +710,56 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(320, mediaFormat1.getWidth());
     assertEquals(200, mediaFormat1.getHeight());
     assertEquals("B2", mediaFormat1.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
+  }
+
+  @Test
+  public void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
+    Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
+        .mediaFormat(RATIO)
+        .pictureSource(RATIO, "media1", 160)
+        .pictureSource(RATIO, "media2", 320)
+        .build();
+
+    assertTrue("valid?", media.isValid());
+    assertNotNull("asset?", media.getAsset());
+    assertEquals("renditions", 3, media.getRenditions().size());
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    Rendition rendition0 = renditions.get(0);
+    assertEquals("rendition.mediaUrl.1",
+        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
+        rendition0.getUrl());
+    assertEquals(1600, rendition0.getWidth());
+    assertEquals(1000, rendition0.getHeight());
+    assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
+
+    MediaFormat mediaFormat0 = rendition0.getMediaFormat();
+    assertEquals(RATIO.getName(), mediaFormat0.getName());
+
+    Rendition rendition1 = renditions.get(1);
+    assertEquals("rendition.mediaUrl.2",
+        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
+        rendition1.getUrl());
+    assertEquals(160, rendition1.getWidth());
+    assertEquals(100, rendition1.getHeight());
+    assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
+
+    MediaFormat mediaFormat1 = rendition1.getMediaFormat();
+    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(160, mediaFormat1.getWidth());
+
+    Rendition rendition2 = renditions.get(2);
+    assertEquals("rendition.mediaUrl.3",
+        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
+        rendition2.getUrl());
+    assertEquals(320, rendition2.getWidth());
+    assertEquals(200, rendition2.getHeight());
+
+    MediaFormat mediaFormat2 = rendition2.getMediaFormat();
+    assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
+    assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(320, mediaFormat2.getWidth());
   }
 
 }

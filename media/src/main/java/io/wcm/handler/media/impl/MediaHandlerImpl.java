@@ -28,8 +28,6 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 
@@ -62,8 +60,6 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
-
-  private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
   public @NotNull MediaBuilder get(Resource resource) {
@@ -133,7 +129,8 @@ public final class MediaHandlerImpl implements MediaHandler {
     Media media = new Media(mediaSource, mediaRequest);
 
     // resolve media format names to media formats
-    if (!resolveMediaFormats(mediaRequest.getMediaArgs())) {
+    MediaFormatResolver mediaFormatResolver = new MediaFormatResolver(mediaFormatHandler);
+    if (!mediaFormatResolver.resolve(mediaRequest.getMediaArgs())) {
       media.setMediaInvalidReason(MediaInvalidReason.INVALID_MEDIA_FORMAT);
       return media;
     }
@@ -210,36 +207,6 @@ public final class MediaHandlerImpl implements MediaHandler {
     }
 
     return false;
-  }
-
-  /**
-   * Resolve media format names to media formats so all downstream logic has only to handle the resolved media formats.
-   * If resolving fails an exception is thrown.
-   * @param mediaArgs Media args
-   * @return true if resolving was successful.
-   */
-  private boolean resolveMediaFormats(MediaArgs mediaArgs) {
-    // resolved media formats already set? done.
-    if (mediaArgs.getMediaFormats() != null) {
-      return true;
-    }
-    // no media format names present? done.
-    if (mediaArgs.getMediaFormatNames() == null) {
-      return true;
-    }
-    String[] mediaFormatNames = mediaArgs.getMediaFormatNames();
-    MediaFormat[] mediaFormats = new MediaFormat[mediaFormatNames.length];
-    boolean resolutionSuccessful = true;
-    for (int i = 0; i < mediaFormatNames.length; i++) {
-      mediaFormats[i] = mediaFormatHandler.getMediaFormat(mediaFormatNames[i]);
-      if (mediaFormats[i] == null) {
-        log.warn("Media format name '" + mediaFormatNames[i] + "' is invalid.");
-        resolutionSuccessful = false;
-      }
-    }
-    mediaArgs.mediaFormats(mediaFormats);
-    mediaArgs.mediaFormatNames((String[])null);
-    return resolutionSuccessful;
   }
 
   /**

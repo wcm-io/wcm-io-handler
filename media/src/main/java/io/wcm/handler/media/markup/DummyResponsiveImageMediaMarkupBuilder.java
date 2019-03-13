@@ -49,11 +49,13 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 /**
  * Generates a rendered dummy image as edit placeholder in WCM edit mode with information about image sizes
  * and media format name.
+ * @deprecated Use responsive image handling methods for image sizes and picture sources from MediaBuilder.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
 @ConsumerType
+@Deprecated
 public class DummyResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuilder {
 
   @Self

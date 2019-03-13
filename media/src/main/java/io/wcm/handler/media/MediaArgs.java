@@ -29,6 +29,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
@@ -57,6 +58,8 @@ public final class MediaArgs implements Cloneable {
   private boolean dummyImage = true;
   private String dummyImageUrl;
   private boolean includeAssetThumbnails;
+  private ImageSizes imageSizes;
+  private PictureSource[] pictureSourceSets;
   private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
   private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private ValueMap properties;
@@ -428,6 +431,38 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return Image sizes for responsive image handling
+   */
+  public ImageSizes getImageSizes() {
+    return this.imageSizes;
+  }
+
+  /**
+   * @param value Image sizes for responsive image handling
+   * @return this
+   */
+  public @NotNull MediaArgs imageSizes(ImageSizes value) {
+    this.imageSizes = value;
+    return this;
+  }
+
+  /**
+   * @return Picture sources for responsive image handling
+   */
+  public PictureSource[] getPictureSources() {
+    return this.pictureSourceSets;
+  }
+
+  /**
+   * @param value Picture sources for responsive image handling
+   * @return this
+   */
+  public @NotNull MediaArgs pictureSources(PictureSource[] value) {
+    this.pictureSourceSets = value;
+    return this;
+  }
+
+  /**
    * Drag&amp;Drop support for media builder.
    * @return Drag&amp;Drop support
    */
@@ -541,6 +576,8 @@ public final class MediaArgs implements Cloneable {
     clone.dummyImage = this.dummyImage;
     clone.dummyImageUrl = this.dummyImageUrl;
     clone.includeAssetThumbnails = this.includeAssetThumbnails;
+    clone.imageSizes = this.imageSizes;
+    clone.pictureSourceSets = ArrayUtils.clone(this.pictureSourceSets);
     clone.dragDropSupport = this.dragDropSupport;
     clone.ipeRatioCustomize = this.ipeRatioCustomize;
     if (this.properties != null) {
@@ -548,6 +585,109 @@ public final class MediaArgs implements Cloneable {
     }
 
     return clone;
+  }
+
+
+  /**
+   * Image sizes for responsive image handling.
+   */
+  @ProviderType
+  public static final class ImageSizes {
+
+    private final @NotNull String sizes;
+    private final long @NotNull [] widths;
+
+    /**
+     * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
+     *          source size list</a>
+     * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public ImageSizes(@NotNull String sizes, long @NotNull... widths) {
+      this.sizes = sizes;
+      this.widths = widths;
+    }
+
+    /**
+     * @return A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
+     *         source size list</a>
+     */
+    public @NotNull String getSizes() {
+      return this.sizes;
+    }
+
+    /**
+     * @return Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public long @NotNull [] getWidths() {
+      return this.widths;
+    }
+
+    @Override
+    public int hashCode() {
+      return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+  }
+
+  /**
+   * Picture source for responsive image handling.
+   */
+  @ProviderType
+  public static final class PictureSource {
+
+    private final @NotNull MediaFormat mediaFormat;
+    private final @Nullable String media;
+    private final long @NotNull [] widths;
+
+    /**
+     * @param mediaFormat Media format
+     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+     *          list</a>
+     * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media, long @NotNull... widths) {
+      this.mediaFormat = mediaFormat;
+      this.media = media;
+      this.widths = widths;
+    }
+
+    /**
+     * @return Media format
+     */
+    public @NotNull MediaFormat getMediaFormat() {
+      return this.mediaFormat;
+    }
+
+    /**
+     * @return A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+     *         list</a>
+     */
+    public @Nullable String getMedia() {
+      return this.media;
+    }
+
+    /**
+     * @return Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public long @NotNull [] getWidths() {
+      return this.widths;
+    }
+
+    @Override
+    public int hashCode() {
+      return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
   }
 
 }
