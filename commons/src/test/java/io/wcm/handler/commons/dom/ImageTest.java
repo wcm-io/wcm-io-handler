@@ -49,28 +49,27 @@ public class ImageTest {
   @Test
   public void testSimpleAttributes() throws Exception {
     Image img = new Image();
-    assertEquals("img", img.getName());
-
     img.setSrc("src1");
-    assertEquals("src1", img.getSrc());
-
     img.setAlt("alt1");
-    assertEquals("alt1", img.getAlt());
-
     img.setWidth(20);
-    assertEquals(20, img.getWidth());
-
     img.setHeight(30);
-    assertEquals(30, img.getHeight());
-
     img.setBorder(2);
-    assertEquals(2, img.getBorder());
-
     img.setHSpace(3);
-    assertEquals(3, img.getHSpace());
-
     img.setVSpace(4);
+    img.setSrcSet("srcset1");
+    img.setSizes("sizes1");
+
+    assertEquals("img", img.getName());
+    assertEquals("src1", img.getSrc());
+    assertEquals("alt1", img.getAlt());
+    assertEquals(20, img.getWidth());
+    assertEquals(30, img.getHeight());
+    assertEquals(2, img.getBorder());
+    assertEquals(3, img.getHSpace());
     assertEquals(4, img.getVSpace());
+    assertEquals("srcset1", img.getSrcSet());
+    assertEquals("sizes1", img.getSizes());
+
   }
 
 }

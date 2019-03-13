@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,22 @@
  */
 package io.wcm.handler.commons.dom;
 
-import static org.junit.Assert.assertEquals;
+import org.osgi.annotation.versioning.ProviderType;
 
-import org.junit.Test;
+/**
+ * Html picture element.
+ */
+@ProviderType
+public final class Picture extends HtmlElement<Picture> {
+  private static final long serialVersionUID = 1L;
 
-public class SourceTest {
+  private static final String ELEMENT_NAME = "picture";
 
-  @Test
-  public void testSimpleAttributes() throws Exception {
-    Source source = new Source();
-    assertEquals("source", source.getName());
-
-    source.setMedia("media1");
-    source.setSrc("ref1");
-    source.setType("type1");
-    source.setSrcSet("srcset1");
-
-    assertEquals("media1", source.getMedia());
-    assertEquals("ref1", source.getSrc());
-    assertEquals("type1", source.getType());
-    assertEquals("srcset1", source.getSrcSet());
+  /**
+   * Initializes html element.
+   */
+  public Picture() {
+    super(ELEMENT_NAME);
   }
 
 }
