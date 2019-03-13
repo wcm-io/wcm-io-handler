@@ -43,7 +43,7 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.JcrBinary;
 import io.wcm.handler.media.impl.MediaFileServlet;
@@ -172,8 +172,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       double requestedRatio = (double)requestedWidth / (double)requestedHeight;
 
       // if ratio does not match, or requested width/height is larger than the original image scaling is not possible
-      if ((imageRatio > requestedRatio + MediaFormatHandler.RATIO_TOLERANCE)
-          || (imageRatio < requestedRatio - MediaFormatHandler.RATIO_TOLERANCE)
+      if (!Ratio.matches(imageRatio, requestedRatio)
           || (originalDimension.getWidth() < requestedWidth)
           || (originalDimension.getHeight() < requestedHeight)) {
         return SCALING_NOT_POSSIBLE_DIMENSION;

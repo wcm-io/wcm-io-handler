@@ -497,6 +497,12 @@ public final class DummyMediaFormats {
       .label("Ratio (16:10)")
       .ratio(16, 10)
       .extensions("gif","jpg","png")
+      .extensions("gif", "jpg", "png")
+      .build();
+  public static final MediaFormat RATIO2 = create("ratio2")
+      .label("Ratio (4:3)")
+      .ratio(4, 3)
+      .extensions("gif", "jpg", "png")
       .build();
 
   /* formats for testing responsive images */
