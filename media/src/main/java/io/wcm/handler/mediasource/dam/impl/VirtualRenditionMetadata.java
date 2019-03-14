@@ -111,4 +111,9 @@ class VirtualRenditionMetadata extends RenditionMetadata {
         .build();
   }
 
+  @Override
+  public String toString() {
+    return super.toString() + " -> " + this.width + "x" + this.height;
+  }
+
 }

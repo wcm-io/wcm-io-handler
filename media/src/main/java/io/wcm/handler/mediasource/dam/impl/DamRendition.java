@@ -229,4 +229,12 @@ class DamRendition extends SlingAdaptable implements Rendition {
     return super.adaptTo(type);
   }
 
+  @Override
+  public String toString() {
+    if (rendition != null) {
+      return rendition.toString();
+    }
+    return super.toString();
+  }
+
 }
