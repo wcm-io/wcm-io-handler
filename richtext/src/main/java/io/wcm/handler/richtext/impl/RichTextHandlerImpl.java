@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.richtext.RichText;
 import io.wcm.handler.richtext.RichTextBuilder;
 import io.wcm.handler.richtext.RichTextHandler;
@@ -51,7 +50,6 @@ import io.wcm.handler.richtext.TextMode;
 import io.wcm.handler.richtext.spi.RichTextHandlerConfig;
 import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.handler.richtext.util.RichTextUtil;
-import io.wcm.handler.url.UrlMode;
 import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.sling.models.annotations.AemObject;
 
@@ -91,7 +89,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
 
     List<Content> content;
     if (textMode == TextMode.XHTML) {
-      content = processRichText(text, richTextRequest.getUrlMode(), richTextRequest.getMediaArgs());
+      content = processRichText(text);
     }
     else {
       content = processPlainText(text);
@@ -122,7 +120,7 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     }
   }
 
-  private List<Content> processRichText(String text, UrlMode urlMode, MediaArgs mediaArgs) {
+  private List<Content> processRichText(String text) {
     if (isEmpty(text)) {
       return ImmutableList.of();
     }
