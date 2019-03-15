@@ -113,7 +113,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Binary data or null if not binary data found
    * @throws IOException
    */
-  protected byte[] getBinaryData(Resource resource, SlingHttpServletRequest request) throws IOException {
+  protected byte[] getBinaryData(Resource resource, @SuppressWarnings("unused") SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {
       return null;
@@ -131,7 +131,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param resource Resource
    * @return Content type (never null)
    */
-  protected String getContentType(Resource resource, SlingHttpServletRequest request) {
+  protected String getContentType(Resource resource, @SuppressWarnings("unused") SlingHttpServletRequest request) {
     String mimeType = JcrBinary.getMimeType(resource);
     if (StringUtils.isEmpty(mimeType)) {
       mimeType = ContentType.OCTET_STREAM;

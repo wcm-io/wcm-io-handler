@@ -186,6 +186,12 @@ public class MediaFormatTest {
 
     MediaFormat mf7 = create("mf7").extensions("e1", "e2", "e3", "e4", "e5", "e6", "e7").build();
     assertEquals("mf7 (e1,e2,e3,e4,e5,e6...)", mf7.getCombinedTitle());
+
+    MediaFormat mf8 = create("mf8").label("MF8").ratio(16, 9).width(100).build();
+    assertEquals("MF8 (100x?px; 16:9)", mf8.getCombinedTitle());
+
+    MediaFormat mf9 = create("mf9").label("MF9").ratio(16, 9).height(50).build();
+    assertEquals("MF9 (?x50px; 16:9)", mf9.getCombinedTitle());
   }
 
   @Test

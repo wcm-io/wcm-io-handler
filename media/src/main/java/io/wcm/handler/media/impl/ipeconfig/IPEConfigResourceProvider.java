@@ -51,7 +51,7 @@ import io.wcm.sling.commons.adapter.AdaptTo;
  * Resource provider that overlays a IPE config resource with a dynamically generated
  * set of cropping aspect ratios derived from given set of media formats.
  * <p>
- * URL pattern for resource access:<br/>
+ * URL pattern for resource access:<br>
  * <code>/wcmio:mediaHandler/ipeConfig/{componentContentPath}/wcmio:mediaFormat/{mf1}/{mf2}/.../wcmio:config/{relativeConfigPath}</code>
  * </p>
  */

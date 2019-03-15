@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,12 +38,12 @@
     if (!assetPath) {
       return;
     }
-    
+
     var resourcePath = self._getResourcePath();
     if (!resourcePath) {
       return;
     }
-    
+
     var mediaFormats = self._$pathfield.data("wcmio-mediaformats");
     var mediaFormatsMandatory = self._$pathfield.data("wcmio-mediaformats-mandatory");
     var mediaCropAuto = self._$pathfield.data("wcmio-media-cropauto");
@@ -71,27 +71,27 @@
    */
   MediaFormatValidate.prototype._showAlert = function (variant, header, content) {
     var self = this;
-    
+
     var alert = new Coral.Alert();
     alert.header.innerHTML = header;
     alert.content.innerHTML = content;
     alert.variant = variant;
-    
+
     self._alert = alert;
     self._$pathfield.after(self._alert);
   }
-  
+
   /**
    * Remove any validation alerts.
    */
   MediaFormatValidate.prototype._clearAlert = function ()  {
     var self = this;
-    if (self._alert) { 
+    if (self._alert) {
       $(self._alert).remove();
       delete self._alert;
     }
   }
-  
+
   /**
    * Get resource path that is currently edited in the dialog.
    */
@@ -105,10 +105,10 @@
     if (!contentPath || contentPath.length < 1) {
       return null;
     }
-    
+
     return contentPath;
   };
-  
+
   ns.MediaFormatValidate = MediaFormatValidate;
-  
+
 }(Granite.$, wcmio.handler.media, jQuery(document), document, this));

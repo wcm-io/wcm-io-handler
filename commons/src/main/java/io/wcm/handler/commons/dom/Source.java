@@ -32,6 +32,7 @@ public class Source extends AbstractNonSelfClosingHtmlElement<Source> {
 
   private static final String ATTRIBUTE_MEDIA = "media";
   private static final String ATTRIBUTE_SRC = "src";
+  private static final String ATTRIBUTE_SRCSET = "srcset";
   private static final String ATTRIBUTE_TYPE = "type";
 
   /**
@@ -74,6 +75,24 @@ public class Source extends AbstractNonSelfClosingHtmlElement<Source> {
    */
   public Source setSrc(String value) {
     setAttribute(ATTRIBUTE_SRC, value);
+    return this;
+  }
+
+  /**
+   * Html "srcset" attribute.
+   * @return Value of attribute
+   */
+  public String getSrcSet() {
+    return getAttributeValue(ATTRIBUTE_SRCSET);
+  }
+
+  /**
+   * Html "srcset" attribute.
+   * @param value Value of attribute
+   * @return Self reference
+   */
+  public Source setSrcSet(String value) {
+    setAttribute(ATTRIBUTE_SRCSET, value);
     return this;
   }
 

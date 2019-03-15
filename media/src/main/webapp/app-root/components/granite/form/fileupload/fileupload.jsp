@@ -24,9 +24,10 @@
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
-<%@page import="io.wcm.handler.commons.component.ComponentPropertyResolver"%>
 <%@page import="io.wcm.handler.media.MediaNameConstants"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
+<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolver"%>
+<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolution"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %>
@@ -68,7 +69,7 @@ are overwritten or added.
    * Indicates whether upload from local file system is allowed.
    */
   - allowUpload (Boolean) = 'false'
-  
+
   /**
    * When the field description is not set, it is set automatically with an information about the
    * supported media formats.
@@ -126,7 +127,8 @@ fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
     "image", "image/gif", "image/jpeg", "image/png" }));
 
 // media format properties for validation of associated media reference
-ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource);
+ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
+    .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
 String[] mediaFormats = cfg.get("mediaFormats",
     componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
 boolean mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
@@ -155,7 +157,7 @@ pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
 pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
-    "granite/ui/components/coral/foundation/form/pathfield", new ValueMapDecorator(pathFieldProps));
+    "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
 if (mediaFormats != null && mediaFormats.length > 0) {
   Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));

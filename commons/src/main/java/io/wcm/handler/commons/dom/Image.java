@@ -31,6 +31,8 @@ public final class Image extends HtmlElement<Image> {
   private static final String ELEMENT_NAME = "img";
 
   private static final String ATTRIBUTE_SRC = "src";
+  private static final String ATTRIBUTE_SRCSET = "srcset";
+  private static final String ATTRIBUTE_SIZES = "sizes";
   private static final String ATTRIBUTE_ALT = "alt";
   private static final String ATTRIBUTE_WIDTH = "width";
   private static final String ATTRIBUTE_HEIGHT = "height";
@@ -108,6 +110,42 @@ public final class Image extends HtmlElement<Image> {
    */
   public Image setSrc(String value) {
     setAttribute(ATTRIBUTE_SRC, value);
+    return this;
+  }
+
+  /**
+   * Html "srcset" attribute.
+   * @return Value of attribute
+   */
+  public String getSrcSet() {
+    return getAttributeValue(ATTRIBUTE_SRCSET);
+  }
+
+  /**
+   * Html "srcset" attribute.
+   * @param value Value of attribute
+   * @return Self reference
+   */
+  public Image setSrcSet(String value) {
+    setAttribute(ATTRIBUTE_SRCSET, value);
+    return this;
+  }
+
+  /**
+   * Html "sizes" attribute.
+   * @return Value of attribute
+   */
+  public String getSizes() {
+    return getAttributeValue(ATTRIBUTE_SIZES);
+  }
+
+  /**
+   * Html "sizes" attribute.
+   * @param value Value of attribute
+   * @return Self reference
+   */
+  public Image setSizes(String value) {
+    setAttribute(ATTRIBUTE_SIZES, value);
     return this;
   }
 

@@ -132,7 +132,9 @@ public final class MediaNameConstants {
 
   /**
    * Property name for responsive breakpoint (mq)
+   * @deprecated This is used only for the "legacy mode" of responsive image handling.
    */
+  @Deprecated
   public static final @NotNull String PROP_BREAKPOINT = "mq";
 
   /**

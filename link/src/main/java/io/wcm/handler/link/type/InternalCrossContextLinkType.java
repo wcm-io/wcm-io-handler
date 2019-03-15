@@ -76,6 +76,11 @@ public final class InternalCrossContextLinkType extends LinkType {
   }
 
   @Override
+  public @NotNull String getLabel() {
+    return "Internal (other site)";
+  }
+
+  @Override
   public String getPrimaryLinkRefProperty() {
     return LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF;
   }

@@ -32,7 +32,9 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 /**
  * Resolves properties set on component associated with the given resource.
  * Super components of the component are taken into account as well.
+ * @deprecated Use <code>io.wcm.wcm.commons.component.ComponentPropertyResolver</code> instead.
  */
+@Deprecated
 @ProviderType
 public final class ComponentPropertyResolver {
 

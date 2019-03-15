@@ -21,7 +21,9 @@ package io.wcm.handler.link.spi;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
@@ -31,10 +33,14 @@ import io.wcm.handler.link.markup.DummyLinkMarkupBuilder;
 import io.wcm.handler.link.markup.SimpleLinkMarkupBuilder;
 import io.wcm.handler.link.processor.DefaultInternalLinkInheritUrlParamLinkPostProcessor;
 import io.wcm.handler.link.type.ExternalLinkType;
+import io.wcm.handler.link.type.InternalCrossContextLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
+import io.wcm.handler.url.ui.SiteRoot;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.caservice.ContextAwareService;
 import io.wcm.sling.commons.resource.ResourceType;
+import io.wcm.wcm.commons.util.Path;
 
 /**
  * {@link LinkHandlerConfig} OSGi services provide application-specific configuration for link handling.
@@ -57,6 +63,16 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
       DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
   private static final String REDIRECT_RESOURCE_TYPE = "wcm-io/handler/link/components/page/redirect";
+
+  /**
+   * Default content root path.
+   */
+  public static final String DEFAULT_ROOT_PATH_CONTENT = "/content";
+
+  /**
+   * Default media/asset root path.
+   */
+  public static final String DEFAULT_ROOT_PATH_MEDIA = "/content/dam";
 
   /**
    * @return Supported link types
@@ -106,6 +122,29 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
    */
   public boolean isRedirect(@NotNull Page page) {
     return ResourceType.is(page.getContentResource(), REDIRECT_RESOURCE_TYPE);
+  }
+
+  /**
+   * Get root path for picking links using path field widgets.
+   * @param page Context page
+   * @param linkTypeId Link type ID
+   * @return Root path or null
+   */
+  public @Nullable String getLinkRootPath(@NotNull Page page, @NotNull String linkTypeId) {
+    if (StringUtils.equals(linkTypeId, InternalLinkType.ID)) {
+      // inside an experience fragment it does not make sense to use a site root path
+      if (Path.isExperienceFragmentPath(page.getPath())) {
+        return DEFAULT_ROOT_PATH_CONTENT;
+      }
+      return AdaptTo.notNull(page.getContentResource(), SiteRoot.class).getRootPath(page);
+    }
+    else if (StringUtils.equals(linkTypeId, InternalCrossContextLinkType.ID)) {
+      return DEFAULT_ROOT_PATH_CONTENT;
+    }
+    else if (StringUtils.equals(linkTypeId, MediaLinkType.ID)) {
+      return DEFAULT_ROOT_PATH_MEDIA;
+    }
+    return null;
   }
 
 }

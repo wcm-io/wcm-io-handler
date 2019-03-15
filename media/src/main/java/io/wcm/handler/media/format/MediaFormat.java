@@ -468,7 +468,12 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       if (widthMin > 0 || widthMax > 0 || heightMin > 0 || heightMax > 0) {
         StringBuilder sbRestrictions = new StringBuilder();
         if (widthMin == widthMax) {
-          sbRestrictions.append(widthMin);
+          if (widthMin == 0) {
+            sbRestrictions.append("?");
+          }
+          else {
+            sbRestrictions.append(widthMin);
+          }
         }
         else {
           sbRestrictions.append(widthMin);
@@ -477,7 +482,12 @@ public final class MediaFormat implements Comparable<MediaFormat> {
         }
         sbRestrictions.append('x');
         if (heightMin == heightMax) {
-          sbRestrictions.append(heightMin);
+          if (heightMin == 0) {
+            sbRestrictions.append("?");
+          }
+          else {
+            sbRestrictions.append(heightMin);
+          }
         }
         else {
           sbRestrictions.append(heightMin);

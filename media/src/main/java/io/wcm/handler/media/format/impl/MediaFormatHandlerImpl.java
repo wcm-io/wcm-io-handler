@@ -40,6 +40,7 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.MediaFormatRankingComparator;
 import io.wcm.handler.media.format.MediaFormatSizeRankingComparator;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -135,7 +136,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
             // if media formats have ratios, check ratio (with tolerance)
             // otherwise add to list anyway, it *can* contain matching media items
-            if (isRenditionMatchRatio(mediaFormat, mediaFormatRequested) //NOPMD
+            if (Ratio.matches(mediaFormat, mediaFormatRequested) //NOPMD
                 || !mediaFormat.hasRatio() || !mediaFormatRequested.hasRatio()) {
 
               // check for supported file extension
@@ -182,7 +183,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
             // if media formats have ratios, check ratio (with tolerance)
             // otherwise add to list anyway, it *can* contain matching media items
-            if (isRenditionMatchRatio(mediaFormat, mediaFormatRequested) //NOPMD
+            if (Ratio.matches(mediaFormat, mediaFormatRequested) //NOPMD
                 || !mediaFormat.hasRatio() || !mediaFormatRequested.hasRatio()) {
 
               // check for supported file extension
@@ -199,21 +200,6 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
     }
 
     return matchingFormats;
-  }
-
-  /**
-   * Checks if the ratio of the given media format matches with the ratio of the requested one (with tolerance).
-   * @param mediaFormat Media format
-   * @param mediaFormatRequested Requested media format
-   * @return true if ratio matches
-   */
-  private boolean isRenditionMatchRatio(MediaFormat mediaFormat, MediaFormat mediaFormatRequested) {
-    if (!mediaFormat.hasRatio() || !mediaFormatRequested.hasRatio()) {
-      return false;
-    }
-    double ratioRequested = mediaFormatRequested.getRatio();
-    double ratio = mediaFormat.getRatio();
-    return (ratio > ratioRequested - RATIO_TOLERANCE) && (ratio < ratioRequested + RATIO_TOLERANCE);
   }
 
   /**
@@ -337,7 +323,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
       if (mediaFormat.hasRatio() && width > 0 && height > 0) {
         double formatRatio = mediaFormat.getRatio();
         double ratio = (double)width / height;
-        ratioMatch = (ratio > formatRatio - RATIO_TOLERANCE) && (ratio < formatRatio + RATIO_TOLERANCE);
+        ratioMatch = Ratio.matches(ratio, formatRatio);
       }
       else {
         ratioMatch = true;

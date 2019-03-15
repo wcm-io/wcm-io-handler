@@ -142,6 +142,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder(super.toString());
+    sb.append(" -> ").append(Long.toString(this.width)).append("x").append(Long.toString(this.height));
     if (cropDimension != null) {
       sb.append(", ").append(cropDimension.toString());
     }

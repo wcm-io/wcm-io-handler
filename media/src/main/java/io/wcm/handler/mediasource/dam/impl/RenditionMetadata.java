@@ -43,7 +43,7 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
@@ -255,8 +255,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
     if (ratio > 0) {
       double renditionRatio = (double)getWidth() / (double)getHeight();
-      if (renditionRatio > ratio + MediaFormatHandler.RATIO_TOLERANCE
-          || renditionRatio < ratio - MediaFormatHandler.RATIO_TOLERANCE) {
+      if (!Ratio.matches(renditionRatio, ratio)) {
         return false;
       }
     }

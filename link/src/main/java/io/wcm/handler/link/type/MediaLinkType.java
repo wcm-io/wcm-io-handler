@@ -74,6 +74,11 @@ public final class MediaLinkType extends LinkType {
   }
 
   @Override
+  public @NotNull String getLabel() {
+    return "Asset";
+  }
+
+  @Override
   public String getPrimaryLinkRefProperty() {
     return LinkNameConstants.PN_LINK_MEDIA_REF;
   }

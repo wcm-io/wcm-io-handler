@@ -24,9 +24,10 @@
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
-<%@page import="io.wcm.handler.commons.component.ComponentPropertyResolver"%>
 <%@page import="io.wcm.handler.media.MediaNameConstants"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
+<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolver"%>
+<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolution"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %>
@@ -37,7 +38,7 @@ wcm.io Media Handler PathField
 
 A field that allows the user to enter path.
 
-It extends `/libs/granite/ui/components/coral/foundation/form/pathfield` component.
+It extends `/apps/wcm-io/wcm/ui/granite/components/form/pathfield` component.
 
 It supports the same properties as it's super component. The following properties
 are overwritten or added.
@@ -97,7 +98,8 @@ pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-pathfield");
 
 // media format properties for validation of associated media reference
-ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource);
+ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
+    .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
 String[] mediaFormats = cfg.get("mediaFormats",
     componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
 boolean mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
@@ -123,7 +125,7 @@ if (mediaFormats != null && mediaFormats.length > 0) {
 
 // render original fileupload widget
 RequestDispatcherOptions options = new RequestDispatcherOptions();
-options.setForceResourceType("granite/ui/components/coral/foundation/form/pathfield");
+options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(pathField, options);
 dispatcher.include(slingRequest, slingResponse);
 

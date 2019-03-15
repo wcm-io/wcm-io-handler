@@ -31,13 +31,14 @@ public class SourceTest {
     assertEquals("source", source.getName());
 
     source.setMedia("media1");
-    assertEquals("media1", source.getMedia());
-
     source.setSrc("ref1");
-    assertEquals("ref1", source.getSrc());
-
     source.setType("type1");
+    source.setSrcSet("srcset1");
+
+    assertEquals("media1", source.getMedia());
+    assertEquals("ref1", source.getSrc());
     assertEquals("type1", source.getType());
+    assertEquals("srcset1", source.getSrcSet());
   }
 
 }

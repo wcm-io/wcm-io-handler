@@ -299,8 +299,9 @@ public abstract class MediaSource {
    *         {@link MediaArgs#isMediaFormatsMandatory()} was set to true)
    */
   protected final boolean resolveRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
-    if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1 && mediaArgs.isMediaFormatsMandatory()) {
-      return resolveAllMandatoryRenditions(media, asset, mediaArgs);
+    if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1
+        && (mediaArgs.isMediaFormatsMandatory() || mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null)) {
+      return resolveAllRenditions(media, asset, mediaArgs);
     }
     else {
       return resolveFirstMatchRenditions(media, asset, mediaArgs);
@@ -331,10 +332,12 @@ public abstract class MediaSource {
    * @param media Media
    * @param asset Asset
    * @param mediaArgs Media args
-   * @return true if for *all* media formats a rendition could be found.
+   * @return true if for all mandatory or for at least one media formats a rendition could be found.
    */
-  private boolean resolveAllMandatoryRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
+  private boolean resolveAllRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
+    boolean allMandatory = mediaArgs.isMediaFormatsMandatory();
     boolean allResolved = true;
+    boolean anyResolved = false;
     List<Rendition> resolvedRenditions = new ArrayList<>();
     for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
       MediaArgs renditionMediaArgs = mediaArgs.clone();
@@ -343,6 +346,7 @@ public abstract class MediaSource {
       Rendition rendition = asset.getRendition(renditionMediaArgs);
       if (rendition != null) {
         resolvedRenditions.add(rendition);
+        anyResolved = true;
       }
       else {
         allResolved = false;
@@ -352,7 +356,12 @@ public abstract class MediaSource {
     if (!resolvedRenditions.isEmpty()) {
       media.setUrl(resolvedRenditions.get(0).getUrl());
     }
-    return allResolved;
+    if (allMandatory) {
+      return allResolved;
+    }
+    else {
+      return anyResolved;
+    }
   }
 
 }

@@ -7,9 +7,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ wcm.io URL Handler Site Root PathField
 
 A field that allows the user to enter path.
 
-It extends `/libs/granite/ui/components/coral/foundation/form/pathfield` component.
+It extends `/apps/wcm-io/wcm/ui/granite/components/form/pathfield` component.
 
 It supports the same properties as it's super component. The following properties
 are overwritten or added.
@@ -68,7 +68,7 @@ ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of("rootP
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
 
 RequestDispatcherOptions options = new RequestDispatcherOptions();
-options.setForceResourceType("granite/ui/components/coral/foundation/form/pathfield");
+options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(resourceWrapper, options);
 dispatcher.include(slingRequest, slingResponse);
 

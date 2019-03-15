@@ -35,6 +35,7 @@ import org.osgi.service.event.EventHandler;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamEvent;
 
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
@@ -50,6 +51,7 @@ public class AutoCroppingMediaHandlerTest {
   public final AemContext context = AppAemContext.newAemContext();
 
   private MediaHandler mediaHandler;
+  private Asset asset;
   private Resource resource;
 
   @Before
@@ -59,7 +61,7 @@ public class AutoCroppingMediaHandlerTest {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     // prepare asset with web rendition
-    Asset asset = context.create().asset("/content/dam/test.jpg", 400, 200, ContentType.JPEG);
+    asset = context.create().asset("/content/dam/test.jpg", 400, 200, ContentType.JPEG);
     com.day.cq.dam.api.Rendition rendition = context.create().assetRendition(asset,
         "cq5dam.web.300.150.jpg", 300, 150, ContentType.JPEG);
     eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", rendition.getPath()).toEvent());
@@ -114,6 +116,26 @@ public class AutoCroppingMediaHandlerTest {
   public void testMediaFormatFixedDimension_NoMatch() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(EDITORIAL_2COL)
+        .build();
+    assertFalse(media.isValid());
+  }
+
+  /**
+   * Make sure the existing of manual cropping parameters (including those leading to a mismatch with the
+   * media format) disables auto-cropping.
+   */
+  @Test
+  public void testManualCroppingParametersDisableAutoCropping() {
+
+    // prepare resource with asset reference and manual cropping parameters
+    // this manual cropping results in a 1:1 image not matching the media format
+    Resource resource2 = context.create().resource("/content/test2",
+        "sling:resourceType", "app1/components/comp1",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath(),
+        MediaNameConstants.PN_MEDIA_CROP, new CropDimension(20, 20, 50, 50).getCropString());
+
+    Media media = mediaHandler.get(resource2)
+        .mediaFormat(RATIO)
         .build();
     assertFalse(media.isValid());
   }

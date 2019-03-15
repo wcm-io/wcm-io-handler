@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -54,7 +54,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.commons</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -75,7 +75,14 @@
       <artifactId>jcr</artifactId>
       <scope>compile</scope>
     </dependency>
-    
+
+    <!-- For build compatibility with Java 11 -->
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.day.commons</groupId>
       <artifactId>day-commons-gfx</artifactId>
@@ -102,21 +109,19 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-
+            <Sling-Initial-Content>
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media
+            </Sling-Initial-Content>
             <Sling-Model-Packages>
               io.wcm.handler.media,
               io.wcm.handler.mediasource.dam,
               io.wcm.handler.mediasource.inline
             </Sling-Model-Packages>
-
             <Sling-Namespaces>wcmio=http://wcm.io/ns</Sling-Namespaces>
 
-            <!-- include application path as intial content -->
-            <Sling-Initial-Content>SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media</Sling-Initial-Content>
-
-            <!-- Exported package versions differ in major version between AEM61 and AEM62 -->
+            <!-- For build compatibility with Java 11 -->
             <Import-Package>
-              com.day.cq.commons;version="[5.7,7)",
+              javax.annotation;version="[0.0,2)",
               *
             </Import-Package>
 
@@ -137,6 +142,20 @@
       </plugin>
 
     </plugins>
+    <pluginManagement>
+      <plugins>
+
+        <!-- Disable checkstyle for this project due to https://github.com/checkstyle/checkstyle/issues/4589, https://github.com/checkstyle/checkstyle/issues/3236 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
   </build>
 
   <reporting>

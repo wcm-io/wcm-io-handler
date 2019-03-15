@@ -41,11 +41,15 @@ import io.wcm.handler.media.format.MediaFormat;
 
 /**
  * Builds image element with data attribute containing sources for responsive image.
+ * This builder uses non-HTML5 standard markup and is therefore deprecated.
+ * @deprecated Use responsive image handling methods for image sizes and picture sources from MediaBuilder
+ *             together with {@link SimpleImageMediaMarkupBuilder}.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 })
 @ConsumerType
+@Deprecated
 public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuilder {
 
   /**

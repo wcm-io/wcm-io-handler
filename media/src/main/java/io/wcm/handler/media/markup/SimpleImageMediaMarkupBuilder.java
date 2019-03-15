@@ -19,22 +19,39 @@
  */
 package io.wcm.handler.media.markup;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.jdom2.Element;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
+import com.drew.lang.annotations.Nullable;
+
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
+import io.wcm.handler.commons.dom.Picture;
+import io.wcm.handler.commons.dom.Source;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.ImageSizes;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.Ratio;
 
 /**
  * Basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
+ * <p>
+ * If image sizes or picture sources are set on the media handler this markup builder also
+ * generates markup for responsive images using <code>img</code> with <code>sizes</code> and <code>srcset</code>
+ * attributes or <code>picture</code> with <code>source</code> elements.
+ * </p>
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -54,10 +71,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   public final HtmlElement<?> build(@NotNull Media media) {
 
     // render media element for rendition
-    HtmlElement<?> mediaElement = getImageElement(media);
-
-    // set additional attributes
-    setAdditionalAttributes(mediaElement, media);
+    HtmlElement<?> mediaElement = getMediaElement(media);
 
     // further processing in edit or preview mode
     applyWcmMarkup(mediaElement, media);
@@ -66,13 +80,69 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   }
 
   /**
-   * Create an IMG tag that displays the given rendition image.
+   * Create <code>img</code> or <code>picture</code> media element.
    * @param media Media metadata
-   * @return IMG tag with properties or null if media metadata is invalid
+   * @return Media element with properties or null if media metadata is invalid
    */
-  protected HtmlElement<?> getImageElement(Media media) {
+  protected @Nullable HtmlElement<?> getMediaElement(@NotNull Media media) {
+    PictureSource[] pictureSources = media.getMediaRequest().getMediaArgs().getPictureSources();
+    if (pictureSources != null && pictureSources.length > 0) {
+      return getPictureElement(media);
+    }
+    else {
+      return getImageElement(media);
+    }
+  }
+
+  /**
+   * Create an <code>img</code> element that displays the given rendition image.
+   * @param media Media metadata
+   * @return <code>img</code> element with properties or null if media metadata is invalid
+   */
+  protected @Nullable HtmlElement<?> getPictureElement(@NotNull Media media) {
+    PictureSource[] pictureSources = media.getMediaRequest().getMediaArgs().getPictureSources();
+
+    Picture picture = new Picture();
+
+    // add source elements (only if matching renditions found)
+    boolean foundAnySource = false;
+    for (PictureSource pictureSource : pictureSources) {
+      Source source = new Source();
+      if (pictureSource.getMedia() != null) {
+        source.setMedia(pictureSource.getMedia());
+      }
+      String srcSet = getSrcSetRenditions(media, pictureSource.getMediaFormat(), pictureSource.getWidths());
+      if (srcSet != null) {
+        source.setSrcSet(srcSet);
+        picture.add(source);
+        foundAnySource = true;
+      }
+    }
+
+    // add image element
+    HtmlElement<?> image = getImageElement(media);
+    if (image == null) {
+      return null;
+    }
+
+    if (foundAnySource) {
+      picture.add(image);
+      return picture;
+    }
+    else {
+      return image;
+    }
+  }
+
+  /**
+   * Create an <code>img</code> element that displays the given rendition image.
+   * @param media Media metadata
+   * @return <code>img</code> element with properties or null if media metadata is invalid
+   */
+  protected @Nullable HtmlElement<?> getImageElement(@NotNull Media media) {
     Image img = null;
 
+    MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     Asset asset = media.getAsset();
     Rendition rendition = media.getRendition();
 
@@ -93,8 +163,8 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
         img.setAlt(altText);
       }
 
-      // set width/height,
-      if (rendition != null) {
+      // set width/height
+      if (rendition != null && mediaArgs.getImageSizes() == null && mediaArgs.getPictureSources() == null) {
         long height = rendition.getHeight();
         if (height > 0) {
           img.setHeight(height);
@@ -104,9 +174,76 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
           img.setWidth(width);
         }
       }
+
+      // set image sizes/srcset
+      ImageSizes imageSizes = mediaArgs.getImageSizes();
+      if (imageSizes != null) {
+        MediaFormat primaryMediaFormat = getFirstMediaFormatWithRatio(media);
+        if (primaryMediaFormat != null) {
+          String srcSet = getSrcSetRenditions(media, primaryMediaFormat, imageSizes.getWidths());
+          if (srcSet != null) {
+            img.setSrcSet(srcSet);
+            img.setSizes(imageSizes.getSizes());
+          }
+        }
+      }
+
     }
 
+    // set additional attributes
+    setAdditionalAttributes(img, media);
+
     return img;
+  }
+
+  /**
+   * Generate srcset list from the resolved renditions for the ratio of the given media formats and the given widths.
+   * Widths that have no match are ignored.
+   * @param media Media
+   * @param mediaFormat Media format
+   * @param widths widths
+   * @return srcset String or null if no matching renditions found
+   */
+  protected @Nullable String getSrcSetRenditions(@NotNull Media media, @NotNull MediaFormat mediaFormat, long @NotNull... widths) {
+    StringBuilder srcset = new StringBuilder();
+
+    for (long width : widths) {
+      Optional<String> url = media.getRenditions().stream()
+          .filter(rendition -> Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+              && rendition.getWidth() == width)
+          .map(rendition -> rendition.getUrl())
+          .findFirst();
+      if (url.isPresent()) {
+        if (srcset.length() > 0) {
+          srcset.append(", ");
+        }
+        srcset.append(url.get()).append(" ").append(Long.toString(width)).append("w");
+      }
+    }
+
+    if (srcset.length() > 0) {
+      return srcset.toString();
+    }
+    else {
+      return null;
+    }
+  }
+
+  /**
+   * Get first media format from the media formats of the media args that has a ratio set.
+   * @param media Media
+   * @return Media format or null if none found
+   */
+  protected final @Nullable MediaFormat getFirstMediaFormatWithRatio(@NotNull Media media) {
+    MediaFormat[] mediaFormats = media.getMediaRequest().getMediaArgs().getMediaFormats();
+    if (mediaFormats != null) {
+      for (MediaFormat mediaFormat : mediaFormats) {
+        if (mediaFormat.hasRatio()) {
+          return mediaFormat;
+        }
+      }
+    }
+    return null;
   }
 
   @Override
@@ -115,6 +252,14 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       Image img = (Image)element;
       return StringUtils.isNotEmpty(img.getSrc())
           && !StringUtils.contains(img.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
+    }
+    if (element instanceof Picture) {
+      Element imgChild = element.getChild("img");
+      if (imgChild instanceof Image) {
+        Image img = (Image)imgChild;
+        return StringUtils.isNotEmpty(img.getSrc())
+            && !StringUtils.contains(element.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
+      }
     }
     return false;
   }

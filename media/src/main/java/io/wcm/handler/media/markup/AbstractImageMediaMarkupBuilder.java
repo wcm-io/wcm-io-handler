@@ -27,6 +27,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.WCMMode;
@@ -59,7 +61,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
    * @param mediaElement Media element
    * @param media Media
    */
-  protected void applyWcmMarkup(HtmlElement<?> mediaElement, Media media) {
+  protected void applyWcmMarkup(@Nullable HtmlElement<?> mediaElement, @NotNull Media media) {
     // further processing in edit or preview mode
     Resource resource = media.getMediaRequest().getResource();
     if (mediaElement != null && resource != null && wcmMode != null) {
@@ -97,7 +99,10 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
    * @param mediaElement Media element
    * @param media Media
    */
-  protected void setAdditionalAttributes(HtmlElement<?> mediaElement, Media media) {
+  protected void setAdditionalAttributes(@Nullable HtmlElement<?> mediaElement, @NotNull Media media) {
+    if (mediaElement == null) {
+      return;
+    }
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     for (Entry<String, Object> entry : mediaArgs.getProperties().entrySet()) {
       if (StringUtils.equals(entry.getKey(), MediaNameConstants.PROP_CSS_CLASS)) {
@@ -113,14 +118,14 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
   /**
    * @return Current WCM Mode (may be null)
    */
-  protected final WCMMode getWcmMode() {
+  protected final @Nullable WCMMode getWcmMode() {
     return this.wcmMode;
   }
 
   /**
    * @return Current request
    */
-  protected final SlingHttpServletRequest getRequest() {
+  protected final @Nullable SlingHttpServletRequest getRequest() {
     return this.request;
   }
 
