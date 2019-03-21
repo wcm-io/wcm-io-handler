@@ -114,10 +114,18 @@ public class ExternalizerTest {
   @Test
   public void testIsExternalized() {
     assertFalse(Externalizer.isExternalized("/absolute/path"));
+    assertFalse(Externalizer.isExternalized("/ns:absolute/path"));
     assertFalse(Externalizer.isExternalized("relative/path"));
+    assertFalse(Externalizer.isExternalized("relative/ns:path"));
+
+    // ideally this one should be false - but then it's not possible to detect other special protocols in a generic way
+    assertTrue(Externalizer.isExternalized("ns:relative/ns:path"));
+
     assertTrue(Externalizer.isExternalized("http://www.heise.de/path1"));
     assertTrue(Externalizer.isExternalized("https://www.heise.de/path1"));
     assertTrue(Externalizer.isExternalized("mailto:info@jodelkaiser.de"));
+    assertTrue(Externalizer.isExternalized("tel:+123456"));
+    assertTrue(Externalizer.isExternalized("javascript:print()"));
     assertTrue(Externalizer.isExternalized("//www.heise.de"));
     assertTrue(Externalizer.isExternalized("ftp://ftp.heise.de"));
     assertTrue(Externalizer.isExternalized(IntegratorPlaceholder.URL_CONTENT + "/path1"));

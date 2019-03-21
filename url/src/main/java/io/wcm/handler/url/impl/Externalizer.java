@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.sling.commons.util.Escape;
 
@@ -49,7 +51,7 @@ final class Externalizer {
    * @return Exernalized URL without scheme or hostname, but with short URLs (if configured in Sling Mapping is
    *         configured), and the path is URL-encoded if it contains special chars.
    */
-  public static String externalizeUrl(String url, ResourceResolver resolver, SlingHttpServletRequest request) {
+  public static @Nullable String externalizeUrl(@NotNull String url, @NotNull ResourceResolver resolver, @Nullable SlingHttpServletRequest request) {
 
     // apply externalization only path part
     String path = url;
@@ -89,7 +91,12 @@ final class Externalizer {
     }
 
     // build full URL again
-    return path + (urlRemainder != null ? urlRemainder : "");
+    if (path == null) {
+      return null;
+    }
+    else {
+      return path + (urlRemainder != null ? urlRemainder : "");
+    }
   }
 
   /**
@@ -101,7 +108,7 @@ final class Externalizer {
    * @param request Request
    * @return Exernalized URL without scheme or hostname, the path is URL-encoded if it contains special chars.
    */
-  public static String externalizeUrlWithoutMapping(String url, SlingHttpServletRequest request) {
+  public static @NotNull String externalizeUrlWithoutMapping(@NotNull String url, @Nullable SlingHttpServletRequest request) {
 
     // apply externalization only path part
     String path = url;
@@ -132,17 +139,22 @@ final class Externalizer {
     return path + (urlRemainder != null ? urlRemainder : "");
   }
 
+  /*
+   * Detect as externalized:
+   * - everything staring with protocol and a colon is handled as externalized (http:, tel:, mailto:, javascript: etc.)
+   * - everything starting with // or # is handles as exteranlized
+   * - all other strings handles as not externalized
+   */
+  private static final Pattern EXTERNALIZED_PATTERN = Pattern.compile("^([^/]+:|//|#).*$");
+
   /**
    * Checks if the given URL is already externalized.
    * For this check some heuristics are applied.
    * @param url URL
    * @return true if path is already externalized.
    */
-  public static boolean isExternalized(String url) {
-    return StringUtils.contains(url, "://") // protocol detected
-        || StringUtils.startsWith(url, "//") // protocol-relative mode detected
-        || StringUtils.startsWith(url, "mailto:") // mailto link detected
-        || StringUtils.startsWith(url, "#"); // anchor or integrator placeholder detected
+  public static boolean isExternalized(@NotNull String url) {
+    return EXTERNALIZED_PATTERN.matcher(url).matches();
   }
 
   private static final String MANGLED_NAMESPACE_PREFIX = "/_";
@@ -158,7 +170,7 @@ final class Externalizer {
    * @param path Path to mangle
    * @return Mangled path
    */
-  public static String mangleNamespaces(String path) {
+  public static @NotNull String mangleNamespaces(@NotNull String path) {
     if (!StringUtils.contains(path, NAMESPACE_SEPARATOR)) {
       return path;
     }
