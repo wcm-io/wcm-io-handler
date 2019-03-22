@@ -30,10 +30,8 @@ import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.osgi.service.event.EventHandler;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamEvent;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
@@ -44,6 +42,7 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.util.RunMode;
 
 public class AutoCroppingMediaHandlerTest {
 
@@ -56,15 +55,15 @@ public class AutoCroppingMediaHandlerTest {
 
   @Before
   public void setUp() {
-    context.runMode("author");
-    EventHandler eventHandler = context.registerInjectActivateService(new DamRenditionMetadataService());
+    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
+    context.runMode(RunMode.AUTHOR);
+    context.registerInjectActivateService(new DamRenditionMetadataService());
+
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     // prepare asset with web rendition
     asset = context.create().asset("/content/dam/test.jpg", 400, 200, ContentType.JPEG);
-    com.day.cq.dam.api.Rendition rendition = context.create().assetRendition(asset,
-        "cq5dam.web.300.150.jpg", 300, 150, ContentType.JPEG);
-    eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", rendition.getPath()).toEvent());
+    context.create().assetRendition(asset, "cq5dam.web.300.150.jpg", 300, 150, ContentType.JPEG);
 
     // prepare component with auto-cropping
     context.create().resource("/apps/app1/components/comp1",

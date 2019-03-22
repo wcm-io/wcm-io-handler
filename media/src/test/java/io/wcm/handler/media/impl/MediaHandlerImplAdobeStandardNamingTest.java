@@ -29,11 +29,8 @@ import org.apache.sling.api.resource.Resource;
 import org.junit.Rule;
 import org.junit.Test;
 import org.osgi.framework.Constants;
-import org.osgi.service.event.EventHandler;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamEvent;
-import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
@@ -45,6 +42,7 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.testing.mock.aem.junit.AemContextCallback;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Test {@link MediaHandlerImpl} methods with adobe standard naming.
@@ -64,16 +62,14 @@ public class MediaHandlerImplAdobeStandardNamingTest {
   @Test
   public void testMediaResolve() {
 
-    // register DamRenditionMetadataService which is only active on author run mode
-    context.runMode("author");
-    EventHandler eventHandler = context.registerInjectActivateService(new DamRenditionMetadataService());
+    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
+    context.runMode(RunMode.AUTHOR);
+    context.registerInjectActivateService(new DamRenditionMetadataService());
 
     Asset asset = context.create().asset("/content/dam/test.jpg", 20, 20, ContentType.JPEG);
 
     // create crop rendition as expected by CropRenditionHandler
-    Rendition rendition = context.create().assetRendition(asset, "cq5dam.web.10.10.jpg", 10, 10, ContentType.JPEG);
-    // generate rendition metadata
-    eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", rendition.getPath()).toEvent());
+    context.create().assetRendition(asset, "cq5dam.web.10.10.jpg", 10, 10, ContentType.JPEG);
 
     Resource resource = context.create().resource(ROOTPATH_CONTENT + "/media",
         PN_MEDIA_REF_STANDARD, asset.getPath(),

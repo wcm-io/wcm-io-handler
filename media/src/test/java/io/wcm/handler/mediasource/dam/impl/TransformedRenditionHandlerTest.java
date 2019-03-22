@@ -26,10 +26,8 @@ import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.osgi.service.event.EventHandler;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamEvent;
 import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
@@ -37,6 +35,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Tests for {@link TransformedRenditionHandler}
@@ -53,15 +52,14 @@ public class TransformedRenditionHandlerTest {
   @Before
   public void setUp() throws Exception {
 
-    // register DamRenditionMetadataService which is only active on author run mode
-    context.runMode("author");
-    EventHandler eventHandler = context.registerInjectActivateService(new DamRenditionMetadataService());
+    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
+    context.runMode(RunMode.AUTHOR);
+    context.registerInjectActivateService(new DamRenditionMetadataService());
 
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 
     // generate web-enabled rendition
     webRendition = context.create().assetRendition(asset, "cq5dam.web.200.150.jpg", 200, 150, ContentType.JPEG);
-    eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", webRendition.getPath()).toEvent());
 
     cropDimension = new CropDimension(20, 10, 100, 30);
   }

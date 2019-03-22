@@ -54,6 +54,7 @@ import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.wcm.commons.util.RunMode;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IPEConfigResourceProviderTest {
@@ -69,7 +70,7 @@ public class IPEConfigResourceProviderTest {
 
   @Before
   public void setUp() {
-    context.runMode("author");
+    context.runMode(RunMode.AUTHOR);
 
     context.registerAdapter(ResourceResolver.class, ComponentManager.class, componentManager);
     context.registerAdapter(Resource.class, MediaFormatHandler.class, mediaFormatHandler);
