@@ -27,9 +27,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.jdom2.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
-
-import com.drew.lang.annotations.Nullable;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
