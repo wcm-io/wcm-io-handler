@@ -21,9 +21,9 @@ package io.wcm.handler.media.impl.ipeconfig;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_STANDARD;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,7 +36,6 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.hamcrest.ResourceMatchers;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,22 +53,23 @@ import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.util.RunMode;
 
+@ExtendWith(AemContextExtension.class)
 @ExtendWith(MockitoExtension.class)
-public class IPEConfigResourceProviderTest {
+class IPEConfigResourceProviderTest {
 
-  @Rule
-  public AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
+  private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
   @Mock
-  public ComponentManager componentManager;
+  ComponentManager componentManager;
   @Mock
-  public MediaFormatHandler mediaFormatHandler;
+  MediaFormatHandler mediaFormatHandler;
 
   private Resource componentContentResource;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     context.runMode(RunMode.AUTHOR);
 
     context.registerAdapter(ResourceResolver.class, ComponentManager.class, componentManager);
@@ -114,7 +114,8 @@ public class IPEConfigResourceProviderTest {
   }
 
   @Test
-  public void testCustomIPEConfig() {
+  @SuppressWarnings("null")
+  void testCustomIPEConfig() {
     String path = IPEConfigResourceProvider.buildPath(componentContentResource.getPath(),
         ImmutableSet.of(EDITORIAL_1COL.getName(), SHOWROOM_STANDARD.getName()));
 

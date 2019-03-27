@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,25 +31,25 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 @SuppressWarnings("null")
-public class DefaultRenditionHandlerTest extends AbstractDamTest {
+class DefaultRenditionHandlerTest extends AbstractDamTest {
 
   private DefaultRenditionHandler underTest;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     Asset asset = context.resourceResolver().getResource(MEDIAITEM_PATH_16_10).adaptTo(Asset.class);
     underTest = new DefaultRenditionHandler(asset);
   }
 
   @Test
-  public void testOriginal() throws Exception {
+  void testOriginal() throws Exception {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs());
     assertEquals(1600, rendition.getWidth());
     assertEquals(1000, rendition.getHeight());
   }
 
   @Test
-  public void testInvalidRatio() throws Exception {
+  void testInvalidRatio() throws Exception {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
         .fixedWidth(100)
         .fixedHeight(100));
@@ -57,7 +57,7 @@ public class DefaultRenditionHandlerTest extends AbstractDamTest {
   }
 
   @Test
-  public void testFixedWith() throws Exception {
+  void testFixedWith() throws Exception {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
         .fixedWidth(160));
     assertEquals(160, rendition.getWidth());
@@ -65,7 +65,7 @@ public class DefaultRenditionHandlerTest extends AbstractDamTest {
   }
 
   @Test
-  public void testFixedHeight() throws Exception {
+  void testFixedHeight() throws Exception {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
         .fixedHeight(100));
     assertEquals(160, rendition.getWidth());

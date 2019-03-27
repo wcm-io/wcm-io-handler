@@ -22,12 +22,12 @@ package io.wcm.handler.media.impl;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_CROP_STANDARD;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_REF_STANDARD;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.Asset;
@@ -41,17 +41,18 @@ import io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Test {@link MediaHandlerImpl} methods with adobe standard naming.
  */
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class MediaHandlerImplAdobeStandardNamingTest {
+class MediaHandlerImplAdobeStandardNamingTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
+  private final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(MediaHandlerConfig.class, new TestMediaHandlerConfig(),
@@ -60,7 +61,7 @@ public class MediaHandlerImplAdobeStandardNamingTest {
   });
 
   @Test
-  public void testMediaResolve() {
+  void testMediaResolve() {
 
     // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
     context.runMode(RunMode.AUTHOR);
@@ -85,14 +86,12 @@ public class MediaHandlerImplAdobeStandardNamingTest {
   }
 
 
-  public static class TestMediaHandlerConfig extends MediaHandlerConfig {
-
+  static class TestMediaHandlerConfig extends MediaHandlerConfig {
     @Override
     public boolean useAdobeStandardNames() {
       // switch to adobe standard naming
       return true;
     }
-
   };
 
 }

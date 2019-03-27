@@ -19,31 +19,32 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public class DefaultMediaFormatListProviderTest {
+@ExtendWith(AemContextExtension.class)
+class DefaultMediaFormatListProviderTest {
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private DefaultMediaFormatListProvider underTest;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     underTest = new DefaultMediaFormatListProvider();
   }
 
   @Test
-  public void testGet() throws Exception {
+  void testGet() throws Exception {
     underTest.service(context.request(), context.response());
 
     String response = context.response().getOutputAsString();

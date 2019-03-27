@@ -25,10 +25,10 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_UNCONSTRAINED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +36,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
@@ -44,7 +46,8 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 
 @ExtendWith(MockitoExtension.class)
-public class MediaFormatResolverTest {
+@MockitoSettings(strictness = Strictness.LENIENT)
+class MediaFormatResolverTest {
 
   @Mock
   private MediaFormatHandler mediaFormatHandler;
@@ -52,7 +55,7 @@ public class MediaFormatResolverTest {
   private MediaFormatResolver underTest;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     when(mediaFormatHandler.getMediaFormat(EDITORIAL_1COL.getName())).thenReturn(EDITORIAL_1COL);
     when(mediaFormatHandler.getMediaFormat(EDITORIAL_2COL.getName())).thenReturn(EDITORIAL_2COL);
 
@@ -60,7 +63,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testMediaFormats() {
+  void testMediaFormats() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
 
@@ -70,7 +73,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testMediaFormatNamesAllValid() {
+  void testMediaFormatNamesAllValid() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormatNames(EDITORIAL_1COL.getName(), EDITORIAL_2COL.getName());
 
@@ -80,7 +83,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testMediaFormatNamesSomeInvalid() {
+  void testMediaFormatNamesSomeInvalid() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormatNames(EDITORIAL_1COL.getName(), "invalid", EDITORIAL_2COL.getName());
 
@@ -90,7 +93,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testMediaFormatNamesAllInvalid() {
+  void testMediaFormatNamesAllInvalid() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormatNames("invalid1", "invalid2");
 
@@ -100,7 +103,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testImageSizes() {
+  void testImageSizes() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
         .imageSizes(new ImageSizes("size1", 10, 20));
@@ -115,7 +118,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testImageSizes_NoRatioMediaFormat() {
+  void testImageSizes_NoRatioMediaFormat() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(FIXEDWIDTH_UNCONSTRAINED)
         .imageSizes(new ImageSizes("size1", 10, 20));
@@ -126,7 +129,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testPictureSources_DifferentRatio() {
+  void testPictureSources_DifferentRatio() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
         .pictureSources(new PictureSource[] {
@@ -146,7 +149,7 @@ public class MediaFormatResolverTest {
   }
 
   @Test
-  public void testPictureSources_SameRatio() {
+  void testPictureSources_SameRatio() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
         .pictureSources(new PictureSource[] {

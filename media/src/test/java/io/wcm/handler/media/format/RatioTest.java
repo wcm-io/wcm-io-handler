@@ -19,24 +19,24 @@
  */
 package io.wcm.handler.media.format;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 
-public class RatioTest {
+class RatioTest {
 
   @Test
-  public void testMatchesDouble() {
+  void testMatchesDouble() {
     assertTrue(Ratio.matches(16d / 9d, 16d / 9d));
     assertTrue(Ratio.matches(1.99d, 2.01d));
     assertFalse(Ratio.matches(16d / 9d, 16d / 10d));
   }
 
   @Test
-  public void testMatchesMediaFormat() {
+  void testMatchesMediaFormat() {
     assertTrue(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.RATIO));
     assertFalse(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.RATIO2));
     assertFalse(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.DOWNLOAD));

@@ -22,38 +22,39 @@ package io.wcm.handler.mediasource.dam.impl;
 import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.NN_RENDITIONS_METADATA;
 import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_HEIGHT;
 import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_WIDTH;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.DamEvent;
 
 import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.util.RunMode;
 
-public class DamRenditionMetadataServiceTest {
+@ExtendWith(AemContextExtension.class)
+class DamRenditionMetadataServiceTest {
 
   private static final String ASSET_PATH = MediaSourceDamAppAemContext.DAM_PATH + "/standard.jpg";
   private static final String RENDITIONS_PATH = ASSET_PATH + "/jcr:content/renditions";
   private static final String RENDITIONS_METADATA_PATH = ASSET_PATH + "/jcr:content/" + NN_RENDITIONS_METADATA;
 
-  @Rule
-  public AemContext context = MediaSourceDamAppAemContext.newAemContext(ResourceResolverType.JCR_MOCK);
+  private final AemContext context = MediaSourceDamAppAemContext.newAemContext(ResourceResolverType.JCR_MOCK);
 
   private DamRenditionMetadataService underTest;
   private Resource assetResource;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     context.load().json("/mediasource/dam/damcontent-sample.json", MediaSourceDamAppAemContext.DAM_PATH);
     assetResource = context.resourceResolver().getResource(ASSET_PATH);
     assertNotNull(assetResource);
@@ -62,7 +63,7 @@ public class DamRenditionMetadataServiceTest {
   }
 
   @Test
-  public void testAddRendition_Metadata() {
+  void testAddRendition_Metadata() {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
     addRendition("test.jpg");
     assertRenditionMetadata("test.jpg", 215, 102);
@@ -70,7 +71,7 @@ public class DamRenditionMetadataServiceTest {
 
   @Test
   @SuppressWarnings("null")
-  public void testAddRendition_Metadata_createMetadataNode() throws PersistenceException {
+  void testAddRendition_Metadata_createMetadataNode() throws PersistenceException {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
 
     // remove all existing renditions metadata incl. renditionsMetadata node
@@ -83,7 +84,7 @@ public class DamRenditionMetadataServiceTest {
   }
 
   @Test
-  public void testAddRendition_PublishInstance_NoMetadata() {
+  void testAddRendition_PublishInstance_NoMetadata() {
     context.runMode(RunMode.PUBLISH);
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
     addRendition("test.jpg");
@@ -91,14 +92,14 @@ public class DamRenditionMetadataServiceTest {
   }
 
   @Test
-  public void testAddRendition_Disabled_NoMetadata() {
+  void testAddRendition_Disabled_NoMetadata() {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService(), "enabled", false);
     addRendition("test.jpg");
     assertNoRenditionMetadata("test.jpg");
   }
 
   @Test
-  public void testUpdateRendition() throws PersistenceException {
+  void testUpdateRendition() throws PersistenceException {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
 
     // check existing metadata
@@ -112,7 +113,7 @@ public class DamRenditionMetadataServiceTest {
   }
 
   @Test
-  public void testUpdateRendition_Video_NoMetadata() {
+  void testUpdateRendition_Video_NoMetadata() {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
 
     // simulate rendition update on video rendition
@@ -127,7 +128,7 @@ public class DamRenditionMetadataServiceTest {
   }
 
   @Test
-  public void testRemoveRendition() throws PersistenceException {
+  void testRemoveRendition() throws PersistenceException {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
 
     // check existing metadata
@@ -160,6 +161,7 @@ public class DamRenditionMetadataServiceTest {
     underTest.handleEvent(DamEvent.renditionRemoved(assetResource.getPath(), null, existingPath).toEvent());
   }
 
+  @SuppressWarnings("null")
   private void assertRenditionMetadata(String renditionName, int width, int height) {
     underTest = context.registerInjectActivateService(new DamRenditionMetadataService());
 

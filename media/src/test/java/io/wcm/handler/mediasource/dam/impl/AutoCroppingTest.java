@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.media.CropDimension;
 
-public class AutoCroppingTest {
+class AutoCroppingTest {
 
   @Test
-  public void testCalculateAutoCropDimension_AdaptWidth() {
+  void testCalculateAutoCropDimension_AdaptWidth() {
     CropDimension result = AutoCropping.calculateAutoCropDimension(180, 90, 16d / 9d);
     assertEquals(10, result.getLeft());
     assertEquals(0, result.getTop());
@@ -37,7 +37,7 @@ public class AutoCroppingTest {
   }
 
   @Test
-  public void testCalculateAutoCropDimension_AdaptHeight() {
+  void testCalculateAutoCropDimension_AdaptHeight() {
     CropDimension result = AutoCropping.calculateAutoCropDimension(160, 100, 16d / 9d);
     assertEquals(0, result.getLeft());
     assertEquals(5, result.getTop());

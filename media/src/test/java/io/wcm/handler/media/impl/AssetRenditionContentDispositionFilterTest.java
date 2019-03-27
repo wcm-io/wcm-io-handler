@@ -22,13 +22,12 @@ package io.wcm.handler.media.impl;
 import static io.wcm.handler.media.impl.AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION;
 import static io.wcm.handler.media.impl.AssetRenditionContentDispositionFilter.ALLOW_EMPTY_MIME;
 import static io.wcm.handler.media.impl.AssetRenditionContentDispositionFilter.BLACK_LIST_MIME_TYPE_CONFIG;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,13 +38,14 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
+@ExtendWith(AemContextExtension.class)
 @ExtendWith(MockitoExtension.class)
-public class AssetRenditionContentDispositionFilterTest {
+class AssetRenditionContentDispositionFilterTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   private Filter underTest;
 
@@ -56,7 +56,7 @@ public class AssetRenditionContentDispositionFilterTest {
   private FilterChain filterChain;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     // setup filter with JPEG on the blacklist
     underTest = context.registerInjectActivateService(new AssetRenditionContentDispositionFilter(),
         BLACK_LIST_MIME_TYPE_CONFIG, new String[] { ContentType.JPEG },
@@ -68,21 +68,21 @@ public class AssetRenditionContentDispositionFilterTest {
   }
 
   @Test
-  public void testAsset_NoHeader() throws Exception {
+  void testAsset_NoHeader() throws Exception {
     context.currentResource(asset.getPath());
     underTest.doFilter(context.request(), context.response(), filterChain);
     assertNull(context.response().getHeader(HEADER_CONTENT_DISPOSITION));
   }
 
   @Test
-  public void testSafeRendition() throws Exception {
+  void testSafeRendition() throws Exception {
     context.currentResource(asset.getOriginal().getPath());
     underTest.doFilter(context.request(), context.response(), filterChain);
     assertEquals("inline", context.response().getHeader(HEADER_CONTENT_DISPOSITION));
   }
 
   @Test
-  public void testUnsafeRendition() throws Exception {
+  void testUnsafeRendition() throws Exception {
     context.currentResource(rendition.getPath());
     underTest.doFilter(context.request(), context.response(), filterChain);
     assertNull(context.response().getHeader(HEADER_CONTENT_DISPOSITION));

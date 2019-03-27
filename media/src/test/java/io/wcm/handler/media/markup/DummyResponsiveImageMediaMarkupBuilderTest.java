@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.media.markup;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -52,16 +52,17 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test DummyResponsiveImageMediaMarkupBuilder
  */
+@ExtendWith(AemContextExtension.class)
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings({ "deprecation", "null" })
-public class DummyResponsiveImageMediaMarkupBuilderTest {
+class DummyResponsiveImageMediaMarkupBuilderTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Mock
   private MediaSource mediaSource;
@@ -75,7 +76,7 @@ public class DummyResponsiveImageMediaMarkupBuilderTest {
   private Resource resource;
 
   @Test
-  public void testAccepts_DISABLED() {
+  void testAccepts_DISABLED() {
     WCMMode.DISABLED.toRequest(context.request());
     MediaMarkupBuilder underTest = AdaptTo.notNull(context.request(), DummyResponsiveImageMediaMarkupBuilder.class);
 
@@ -97,7 +98,7 @@ public class DummyResponsiveImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testAccepts_EDIT() {
+  void testAccepts_EDIT() {
     WCMMode.EDIT.toRequest(context.request());
     MediaMarkupBuilder underTest = AdaptTo.notNull(context.request(), DummyResponsiveImageMediaMarkupBuilder.class);
 
@@ -122,7 +123,7 @@ public class DummyResponsiveImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testAccepts_PREVIEW() {
+  void testAccepts_PREVIEW() {
     WCMMode.PREVIEW.toRequest(context.request());
     MediaMarkupBuilder underTest = AdaptTo.notNull(context.request(), DummyResponsiveImageMediaMarkupBuilder.class);
 
@@ -146,7 +147,7 @@ public class DummyResponsiveImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testBuild() throws JSONException {
+  void testBuild() throws JSONException {
 
     WCMMode.PREVIEW.toRequest(context.request());
     MediaMarkupBuilder underTest = AdaptTo.notNull(context.request(), DummyResponsiveImageMediaMarkupBuilder.class);
@@ -168,12 +169,12 @@ public class DummyResponsiveImageMediaMarkupBuilderTest {
     assertEquals("M1", sources.getJSONObject(1).get(MediaNameConstants.PROP_BREAKPOINT));
     assertEquals(DummyImageServlet.PATH + ".suffix.png/height=360/mf=Responsive~2032~3A9/width=1281.png",
         sources.getJSONObject(1).get("src"));
-    assertEquals("alt", null, image.getAttributeValue("alt"));
+    assertNull(image.getAttributeValue("alt"), "alt");
 
   }
 
   @Test
-  public void testIsValidMedia() {
+  void testIsValidMedia() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     assertFalse(builder.isValidMedia(null));

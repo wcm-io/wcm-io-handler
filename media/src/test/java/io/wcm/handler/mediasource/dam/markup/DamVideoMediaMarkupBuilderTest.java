@@ -20,10 +20,10 @@
 package io.wcm.handler.mediasource.dam.markup;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -42,14 +42,14 @@ import io.wcm.handler.mediasource.dam.AbstractDamTest;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @SuppressWarnings("null")
-public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
+class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
 
   private Media video;
 
   private DamVideoMediaMarkupBuilder underTest;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     // prepare video profiles
     context.load().json("/mediasource/dam/dam-video-profiles.json", "/etc/dam/video");
 
@@ -59,7 +59,7 @@ public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
   }
 
   @Test
-  public void testAccepts() throws Exception {
+  void testAccepts() throws Exception {
     // accepts video
     assertTrue(underTest.accepts(video));
     // does not accept image
@@ -70,7 +70,7 @@ public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
   }
 
   @Test
-  public void testBuild() throws Exception {
+  void testBuild() throws Exception {
     HtmlElement<?> element = underTest.build(video);
     assertTrue(element instanceof Video);
 
@@ -95,7 +95,7 @@ public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
   }
 
   @Test
-  public void testIsValidMedia() {
+  void testIsValidMedia() {
     assertTrue(underTest.isValidMedia(new Video()));
     assertFalse(underTest.isValidMedia(new Div()));
   }

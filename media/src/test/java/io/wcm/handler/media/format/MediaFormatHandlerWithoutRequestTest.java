@@ -27,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * Test {@link MediaFormatHandler}
  */
 @ExtendWith(MockitoExtension.class)
-public class MediaFormatHandlerWithoutRequestTest extends MediaFormatHandlerTest {
+class MediaFormatHandlerWithoutRequestTest extends MediaFormatHandlerTest {
 
   @Override
   protected Adaptable adaptable() {

@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.media;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class DimensionTest {
+class DimensionTest {
 
   @Test
-  public void testSimple() {
+  void testSimple() {
     Dimension dimension = new Dimension(20, 10);
 
     assertEquals(20, dimension.getWidth());
@@ -37,7 +37,7 @@ public class DimensionTest {
   }
 
   @Test
-  public void testEquals() {
+  void testEquals() {
     Dimension dimension1 = new Dimension(20, 10);
     Dimension dimension2 = new Dimension(20, 10);
     Dimension dimension3 = new Dimension(21, 10);

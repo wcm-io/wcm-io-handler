@@ -20,9 +20,9 @@
 package io.wcm.handler.media.markup;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -33,6 +33,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
@@ -50,7 +52,8 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 
 @ExtendWith(MockitoExtension.class)
-public class MediaMarkupBuilderUtilTest {
+@MockitoSettings(strictness = Strictness.LENIENT)
+class MediaMarkupBuilderUtilTest {
 
   private static final String VERSION_LABEL = "v1";
 
@@ -71,7 +74,7 @@ public class MediaMarkupBuilderUtilTest {
 
   @BeforeEach
   @SuppressWarnings("null")
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     when(request.getResourceResolver()).thenReturn(resolver);
     when(resolver.adaptTo(PageManager.class)).thenReturn(pageManager);
     when(request.getResource()).thenReturn(resource);
@@ -80,7 +83,7 @@ public class MediaMarkupBuilderUtilTest {
   }
 
   @Test
-  public void testAddDiffDecoration() {
+  void testAddDiffDecoration() {
     Image img = new Image("/dummy/image.gif");
     MediaMarkupBuilderUtil.addDiffDecoration(img, resource, MediaNameConstants.PN_MEDIA_REF, request,
         new DummyMediaHandlerConfig());
@@ -88,7 +91,7 @@ public class MediaMarkupBuilderUtilTest {
   }
 
   @Test
-  public void testGetMediaformatDimension_fixedDimension() {
+  void testGetMediaformatDimension_fixedDimension() {
     MediaRequest mediaRequest = new MediaRequest("/dummy/image", new MediaArgs().fixedDimension(100, 50));
     Media media = new Media(mediaSource, mediaRequest);
 
@@ -98,7 +101,7 @@ public class MediaMarkupBuilderUtilTest {
   }
 
   @Test
-  public void testGetMediaformatDimension_mediaFormat() {
+  void testGetMediaformatDimension_mediaFormat() {
     MediaRequest mediaRequest = new MediaRequest("/dummy/image", new MediaArgs(EDITORIAL_1COL));
     Media media = new Media(mediaSource, mediaRequest);
 
@@ -108,7 +111,7 @@ public class MediaMarkupBuilderUtilTest {
   }
 
   @Test
-  public void testGetMediaformatDimension_noMatch() {
+  void testGetMediaformatDimension_noMatch() {
     MediaRequest mediaRequest = new MediaRequest("/dummy/image", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
 
@@ -118,19 +121,19 @@ public class MediaMarkupBuilderUtilTest {
   }
 
   @Test
-  public void testCanApplyDragDropSupport_DragDropSupport_Never() {
+  void testCanApplyDragDropSupport_DragDropSupport_Never() {
     MediaRequest mediaRequest = new MediaRequest(resource, new MediaArgs().dragDropSupport(DragDropSupport.NEVER));
     assertFalse(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
   }
 
   @Test
-  public void testCanApplyDragDropSupport_DragDropSupport_Always() {
+  void testCanApplyDragDropSupport_DragDropSupport_Always() {
     MediaRequest mediaRequest = new MediaRequest(resource, new MediaArgs().dragDropSupport(DragDropSupport.ALWAYS));
     assertTrue(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
   }
 
   @Test
-  public void testCanApplyDragDropSupport_DragDropSupport_Auto() {
+  void testCanApplyDragDropSupport_DragDropSupport_Auto() {
     // not allowed if not resource is specified
     MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().dragDropSupport(DragDropSupport.AUTO));
     assertFalse(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));

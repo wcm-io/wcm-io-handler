@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.media;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
@@ -42,7 +42,7 @@ import io.wcm.handler.media.spi.MediaSource;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
-public class MediaTest {
+class MediaTest {
 
   @Mock
   private MediaSource mediaSource;
@@ -51,14 +51,14 @@ public class MediaTest {
   private Media underTest;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     mediaRequest = new MediaRequest("/media/ref", new MediaArgs());
     underTest = new Media(mediaSource, mediaRequest);
   }
 
 
   @Test
-  public void testMediaSourceRequest() {
+  void testMediaSourceRequest() {
     assertSame(mediaSource, underTest.getMediaSource());
     assertSame(mediaRequest, underTest.getMediaRequest());
 
@@ -68,7 +68,7 @@ public class MediaTest {
   }
 
   @Test
-  public void testElement() {
+  void testElement() {
     Div div = new Div();
     div.setText("test");
 
@@ -78,14 +78,14 @@ public class MediaTest {
   }
 
   @Test
-  public void testUrlAndValid() {
+  void testUrlAndValid() {
     underTest.setUrl("/my/url");
 
     assertEquals("/my/url", underTest.getUrl());
   }
 
   @Test
-  public void testAsset() {
+  void testAsset() {
     Asset asset = mock(Asset.class);
     underTest.setAsset(asset);
     assertSame(asset, underTest.getAsset());
@@ -93,7 +93,7 @@ public class MediaTest {
 
 
   @Test
-  public void testRenditions() {
+  void testRenditions() {
     assertNull(underTest.getRendition());
     assertTrue(underTest.getRenditions().isEmpty());
 
@@ -107,14 +107,14 @@ public class MediaTest {
   }
 
   @Test
-  public void testCropDimension() {
+  void testCropDimension() {
     CropDimension dimension = new CropDimension(1, 2, 3, 4);
     underTest.setCropDimension(dimension);
     assertSame(dimension, underTest.getCropDimension());
   }
 
   @Test
-  public void testMediaInvalidReason() {
+  void testMediaInvalidReason() {
     assertTrue(underTest.isValid());
     underTest.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
     assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, underTest.getMediaInvalidReason());
@@ -122,7 +122,7 @@ public class MediaTest {
   }
 
   @Test
-  public void testToString() {
+  void testToString() {
     assertTrue(StringUtils.contains(underTest.toString(), "/media/ref"));
   }
 

@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.media.spi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,33 +28,33 @@ import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 
-public class MediaHandlerConfigTest {
+class MediaHandlerConfigTest {
 
   private MediaHandlerConfig underTest = new MediaHandlerConfig() {
     // inherit default
   };
 
   @Test
-  public void testGetSources() {
+  void testGetSources() {
     assertEquals(1, underTest.getSources().size());
     assertEquals(DamMediaSource.class, underTest.getSources().get(0));
   }
 
   @Test
-  public void testGetMarkupBuilders() {
+  void testGetMarkupBuilders() {
     assertEquals(2, underTest.getMarkupBuilders().size());
     assertEquals(SimpleImageMediaMarkupBuilder.class, underTest.getMarkupBuilders().get(0));
     assertEquals(DummyImageMediaMarkupBuilder.class, underTest.getMarkupBuilders().get(1));
   }
 
   @Test
-  public void testGetProcessors() {
+  void testGetProcessors() {
     assertTrue(underTest.getPreProcessors().isEmpty());
     assertTrue(underTest.getPostProcessors().isEmpty());
   }
 
   @Test
-  public void testGetDefaultImageQuality() {
+  void testGetDefaultImageQuality() {
     assertEquals(1d, underTest.getDefaultImageQuality("image/png"), 0.001d);
     assertEquals(256d, underTest.getDefaultImageQuality("image/gif"), 0.001d);
     assertEquals(MediaHandlerConfig.DEFAULT_JPEG_QUALITY, underTest.getDefaultImageQuality("image/jpg"), 0.001d);

@@ -69,7 +69,9 @@ public final class MediaSourceInlineAppAemContext {
         .plugin(CACONFIG)
         .plugin(WCMIO_SLING, WCMIO_CACONFIG)
         .afterSetUp(SETUP_CALLBACK)
-        .resourceResolverType(ResourceResolverType.RESOURCERESOLVER_MOCK, ResourceResolverType.JCR_MOCK)
+        // TODO: add support for multiple resource resolver types?
+        //.resourceResolverType(ResourceResolverType.RESOURCERESOLVER_MOCK, ResourceResolverType.JCR_MOCK)
+        .resourceResolverType(ResourceResolverType.JCR_MOCK)
         .build();
   }
 

@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.media.format;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,10 +28,10 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 
 @SuppressWarnings("deprecation")
-public class ResponsiveMediaFormatsBuilderTest {
+class ResponsiveMediaFormatsBuilderTest {
 
   @Test
-  public void testBuild() {
+  void testBuild() {
     MediaFormat[] mediaFormats = new ResponsiveMediaFormatsBuilder(DummyMediaFormats.RATIO)
     .breakpoint("B1", 160, 100)
     .breakpoint("B2", 320, 200)

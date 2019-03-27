@@ -20,10 +20,10 @@
 package io.wcm.handler.media.format;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -33,38 +33,38 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
-public class MediaFormatTest {
+class MediaFormatTest {
 
   @Test
-  public void testRatioNone() {
+  void testRatioNone() {
     MediaFormat mf = create("mf1").build();
     assertEquals(0d, mf.getRatio(), 0.001d);
     assertNull(mf.getRatioDisplayString());
   }
 
   @Test
-  public void testRatio() {
+  void testRatio() {
     MediaFormat mf = create("mf1").ratio(1.25d).build();
     assertEquals(1.25d, mf.getRatio(), 0.001d);
     assertEquals("5:4", mf.getRatioDisplayString());
   }
 
   @Test
-  public void testRatioWidthHeight() {
+  void testRatioWidthHeight() {
     MediaFormat mf = create("mf1").ratio(16, 9).build();
     assertEquals(1.777d, mf.getRatio(), 0.001d);
     assertEquals("16:9", mf.getRatioDisplayString());
   }
 
   @Test
-  public void testRatioWidthHeightDouble() {
+  void testRatioWidthHeightDouble() {
     MediaFormat mf = create("mf1").ratio(26.5, 5).build();
     assertEquals(5.3d, mf.getRatio(), 0.001d);
     assertEquals("26.5:5", mf.getRatioDisplayString());
   }
 
   @Test
-  public void testRatioFixedDimension() {
+  void testRatioFixedDimension() {
     MediaFormat mf = create("mf1").fixedDimension(100, 75).build();
     assertEquals(1.333d, mf.getRatio(), 0.001d);
     assertEquals("4:3", mf.getRatioDisplayString());
@@ -72,7 +72,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testIsImage() {
+  void testIsImage() {
     MediaFormat mf1 = create("mf1").extensions("gif").build();
     MediaFormat mf2 = create("mf2").extensions("zip", "gif").build();
     MediaFormat mf3 = create("mf3").extensions("zip").build();
@@ -83,7 +83,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testFixedDimension() {
+  void testFixedDimension() {
     MediaFormat mf1 = create("mf1").fixedDimension(100, 50).build();
     assertTrue(mf1.isFixedWidth());
     assertTrue(mf1.isFixedHeight());
@@ -106,7 +106,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testGetEffectiveMinWidth() {
+  void testGetEffectiveMinWidth() {
     MediaFormat mf1 = create("mf1").width(75).build();
     assertEquals(75, mf1.getEffectiveMinWidth());
 
@@ -115,7 +115,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testGetEffectiveMaxWidth() {
+  void testGetEffectiveMaxWidth() {
     MediaFormat mf1 = create("mf1").width(75).build();
     assertEquals(75, mf1.getEffectiveMaxWidth());
 
@@ -124,7 +124,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testGetEffectiveMinHeight() {
+  void testGetEffectiveMinHeight() {
     MediaFormat mf1 = create("mf1").height(75).build();
     assertEquals(75, mf1.getEffectiveMinHeight());
 
@@ -133,7 +133,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testGetEffectiveMaxHeight() {
+  void testGetEffectiveMaxHeight() {
     MediaFormat mf1 = create("mf1").height(75).build();
     assertEquals(75, mf1.getEffectiveMaxHeight());
 
@@ -142,7 +142,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testGetMinDimension() {
+  void testGetMinDimension() {
     MediaFormat mf1 = create("mf1").build();
     assertNull(mf1.getMinDimension());
 
@@ -164,7 +164,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testGetCombinedTitle() {
+  void testGetCombinedTitle() {
     MediaFormat mf1 = create("mf1").build();
     assertEquals("mf1", mf1.getCombinedTitle());
 
@@ -195,7 +195,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testSort() {
+  void testSort() {
     SortedSet<MediaFormat> set = new TreeSet<>();
     set.add(create("mf1").build());
     set.add(create("mf3").build());
@@ -208,7 +208,7 @@ public class MediaFormatTest {
   }
 
   @Test
-  public void testGuessHumanReadableRatioString() {
+  void testGuessHumanReadableRatioString() {
     assertEquals("16:9", create("mf").ratio(16d / 9d).build().getRatioDisplayString());
     assertEquals("4:3", create("mf").ratio(4d / 3d).build().getRatioDisplayString());
     assertEquals("3:4", create("mf").ratio(3d / 4d).build().getRatioDisplayString());

@@ -19,10 +19,10 @@
  */
 package io.wcm.handler.media.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
@@ -37,7 +37,7 @@ import com.day.cq.commons.jcr.JcrConstants;
 import com.google.common.collect.ImmutableMap;
 
 @ExtendWith(MockitoExtension.class)
-public class JcrBinaryTest {
+class JcrBinaryTest {
 
   private static final String MIMETYPE_GIF = "image/gif";
 
@@ -47,7 +47,7 @@ public class JcrBinaryTest {
   private Resource subResource;
 
   @Test
-  public void testIsNtFileResource_Resource() {
+  void testIsNtFileResource_Resource() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_RESOURCE);
     assertFalse(JcrBinary.isNtFile(resource));
     assertTrue(JcrBinary.isNtResource(resource));
@@ -55,7 +55,7 @@ public class JcrBinaryTest {
   }
 
   @Test
-  public void testIsNtFileResource_File() {
+  void testIsNtFileResource_File() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_FILE);
     assertTrue(JcrBinary.isNtFile(resource));
     assertFalse(JcrBinary.isNtResource(resource));
@@ -64,7 +64,7 @@ public class JcrBinaryTest {
 
   @Test
   @SuppressWarnings("null")
-  public void testIsNtFileResource_Other() {
+  void testIsNtFileResource_Other() {
     when(resource.getResourceType()).thenReturn(null);
     assertFalse(JcrBinary.isNtFile(resource));
     assertFalse(JcrBinary.isNtResource(resource));
@@ -72,7 +72,7 @@ public class JcrBinaryTest {
   }
 
   @Test
-  public void testGetMimeType_Resource() {
+  void testGetMimeType_Resource() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_RESOURCE);
     when(resource.getValueMap()).thenReturn(new ValueMapDecorator(ImmutableMap.<String, Object>builder()
         .put(JcrConstants.JCR_MIMETYPE, MIMETYPE_GIF).build()));
@@ -81,7 +81,7 @@ public class JcrBinaryTest {
   }
 
   @Test
-  public void testGetMimeType_Resource_NoMimeType() {
+  void testGetMimeType_Resource_NoMimeType() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_RESOURCE);
     when(resource.getValueMap()).thenReturn(ValueMap.EMPTY);
 
@@ -89,7 +89,7 @@ public class JcrBinaryTest {
   }
 
   @Test
-  public void testGetMimeType_File() {
+  void testGetMimeType_File() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_FILE);
     when(resource.getChild(JcrConstants.JCR_CONTENT)).thenReturn(subResource);
     when(subResource.getResourceType()).thenReturn(JcrConstants.NT_RESOURCE);
@@ -100,7 +100,7 @@ public class JcrBinaryTest {
   }
 
   @Test
-  public void testGetMimeType_File_NoContent() {
+  void testGetMimeType_File_NoContent() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_FILE);
     when(resource.getChild(JcrConstants.JCR_CONTENT)).thenReturn(null);
 
@@ -108,7 +108,7 @@ public class JcrBinaryTest {
   }
 
   @Test
-  public void testGetMimeType_Other() {
+  void testGetMimeType_Other() {
     when(resource.getResourceType()).thenReturn("otherType");
 
     assertNull(JcrBinary.getMimeType(resource));

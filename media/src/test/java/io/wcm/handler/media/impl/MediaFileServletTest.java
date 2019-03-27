@@ -19,36 +19,37 @@
  */
 package io.wcm.handler.media.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
-public class MediaFileServletTest {
+@ExtendWith(AemContextExtension.class)
+class MediaFileServletTest {
 
   private static final long EXPECTED_CONTENT_LENGTH = 15471;
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private MediaFileServlet underTest;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     underTest = new MediaFileServlet();
     context.currentResource(context.load().binaryFile("/sample_image_215x102.jpg", "/content/sample_image.jpg"));
   }
 
   @Test
-  public void testGet() throws Exception {
+  void testGet() throws Exception {
     underTest.service(context.request(), context.response());
 
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
@@ -58,7 +59,7 @@ public class MediaFileServletTest {
   }
 
   @Test
-  public void testGet_Download() throws Exception {
+  void testGet_Download() throws Exception {
     context.requestPathInfo().setSelectorString(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);
 
     underTest.service(context.request(), context.response());
@@ -71,7 +72,7 @@ public class MediaFileServletTest {
   }
 
   @Test
-  public void testGet_Download_Suffix() throws Exception {
+  void testGet_Download_Suffix() throws Exception {
     context.requestPathInfo().setSelectorString(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);
     context.requestPathInfo().setSuffix("sample_image.jpg");
 
@@ -85,7 +86,7 @@ public class MediaFileServletTest {
   }
 
   @Test
-  public void testGet_NoResource() throws Exception {
+  void testGet_NoResource() throws Exception {
     context.currentResource((Resource)null);
 
     underTest.service(context.request(), context.response());
@@ -94,7 +95,7 @@ public class MediaFileServletTest {
   }
 
   @Test
-  public void testGet_NoBinaryDataResource() throws Exception {
+  void testGet_NoBinaryDataResource() throws Exception {
     context.currentResource(context.create().resource("/content/nobinarydata"));
 
     underTest.service(context.request(), context.response());

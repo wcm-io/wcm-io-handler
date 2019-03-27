@@ -19,11 +19,12 @@
  */
 package io.wcm.handler.media.format;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
@@ -32,10 +33,10 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableMap;
 
 @SuppressWarnings("null")
-public class MediaFormatBuilderTest {
+class MediaFormatBuilderTest {
 
   @Test
-  public void testBuilder_variant1() {
+  void testBuilder_variant1() {
     MediaFormat mf = MediaFormatBuilder.create("name1")
         .label("label1")
         .description("description1")
@@ -67,7 +68,7 @@ public class MediaFormatBuilderTest {
   }
 
   @Test
-  public void testBuilder_variant2() {
+  void testBuilder_variant2() {
     MediaFormat mf = MediaFormatBuilder.create("name2")
         .width(400, 800)
         .height(300, 600)
@@ -88,14 +89,14 @@ public class MediaFormatBuilderTest {
     assertEquals(50, mf.getRatioHeightAsDouble(), 0.0001d);
     assertEquals(0L, mf.getFileSizeMax());
     assertArrayEquals(new String[0], mf.getExtensions());
-    assertNull("group1", mf.getRenditionGroup());
+    assertNull(mf.getRenditionGroup());
     assertFalse(mf.isDownload());
     assertFalse(mf.isInternal());
     assertEquals(0, mf.getRanking());
   }
 
   @Test
-  public void testBuilder_variant3() {
+  void testBuilder_variant3() {
     MediaFormat mf = MediaFormatBuilder.create("name2")
         .minWidth(400)
         .maxWidth(800)
@@ -112,7 +113,7 @@ public class MediaFormatBuilderTest {
   }
 
   @Test
-  public void testBuilder_variant4() {
+  void testBuilder_variant4() {
     MediaFormat mf = MediaFormatBuilder.create("name3")
         .fixedDimension(1000, 500)
         .build();
@@ -122,18 +123,22 @@ public class MediaFormatBuilderTest {
     assertEquals(500, mf.getHeight());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullName() {
-    MediaFormatBuilder.create(null).build();
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testIllegalName() {
-    MediaFormatBuilder.create("name with spaces").build();
+  @Test
+  void testNullName() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      MediaFormatBuilder.create(null).build();
+    });
   }
 
   @Test
-  public void testProperties() {
+  void testIllegalName() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      MediaFormatBuilder.create("name with spaces").build();
+    });
+  }
+
+  @Test
+  void testProperties() {
     Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
 
     MediaFormat mf = MediaFormatBuilder.create("name1")
@@ -152,7 +157,7 @@ public class MediaFormatBuilderTest {
    * test unmodifiable extensions
    */
   @Test
-  public void testExtensions() {
+  void testExtensions() {
     final String unmodifiableExtension = "png";
     String[] extensionsSource = {
         unmodifiableExtension

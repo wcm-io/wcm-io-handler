@@ -19,12 +19,12 @@
  */
 package io.wcm.handler.mediasource.dam;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
@@ -32,15 +32,16 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Unit tests with DAM sample content
  */
+@ExtendWith(AemContextExtension.class)
 public abstract class AbstractDamTest {
 
-  @Rule
-  public final AemContext context = MediaSourceDamAppAemContext.newAemContext();
+  protected final AemContext context = MediaSourceDamAppAemContext.newAemContext();
 
   protected static final String ROOTPATH_DAM = MediaSourceDamAppAemContext.DAM_PATH;
   protected static final String ROOTPATH_CONTENT = MediaSourceDamAppAemContext.ROOTPATH_CONTENT + "/test";
@@ -106,7 +107,7 @@ public abstract class AbstractDamTest {
   private MediaHandler mediaHandler;
 
   @BeforeEach
-  public final void setUpDamEnvironment() throws Exception {
+  final void setUpDamEnvironment() throws Exception {
 
     // simulate HTML requests for integrator mode
     context.requestPathInfo().setExtension(FileExtension.HTML);
@@ -120,40 +121,40 @@ public abstract class AbstractDamTest {
 
     // get paragraphs from test page and ensure they all actually exist
     parStandardMediaRef = testPage.getContentResource("content/par_standard_mediaRef");
-    assertNotNull("par_standard_mediaRef exists?", parStandardMediaRef);
+    assertNotNull(parStandardMediaRef, "par_standard_mediaRef exists?");
 
     parStandardMediaRefCrop = testPage.getContentResource("content/par_standard_mediaRef_crop");
-    assertNotNull("par_standard_mediaRef_crop exists?", parStandardMediaRefCrop);
+    assertNotNull(parStandardMediaRefCrop, "par_standard_mediaRef_crop exists?");
 
     parResponsiveMediaRefCrop = testPage.getContentResource("content/par_responsive_mediaRef_crop");
-    assertNotNull("par_responsive_mediaRef_crop exists?", parResponsiveMediaRefCrop);
+    assertNotNull(parResponsiveMediaRefCrop, "par_responsive_mediaRef_crop exists?");
 
     parStandardMediaRefAltText = testPage.getContentResource("content/par_standard_mediaRef_altText");
-    assertNotNull("par_standard_mediaRef_altText exists?", parStandardMediaRefAltText);
+    assertNotNull(parStandardMediaRefAltText, "par_standard_mediaRef_altText exists?");
 
     parInvalidMediaRef = testPage.getContentResource("content/par_invalid_mediaRef");
-    assertNotNull("par_invalid_mediaRef exists?", parInvalidMediaRef);
+    assertNotNull(parInvalidMediaRef, "par_invalid_mediaRef exists?");
 
     parNullMediaRef = testPage.getContentResource("content/par_null_mediaRef");
-    assertNotNull("par_null_mediaRef exists?", parNullMediaRef);
+    assertNotNull(parNullMediaRef, "par_null_mediaRef exists?");
 
     parEmptyMediaRef = testPage.getContentResource("content/par_empty_mediaRef");
-    assertNotNull("par_empty_mediaRef exists?", parEmptyMediaRef);
+    assertNotNull(parEmptyMediaRef, "par_empty_mediaRef exists?");
 
     parStandardMediaRef2 = testPage.getContentResource("content/par_standard_mediaRef2");
-    assertNotNull("par_empty_mediaRef2 exists?", parStandardMediaRef2);
+    assertNotNull(parStandardMediaRef2, "par_empty_mediaRef2 exists?");
 
     parImgNoAltNoDimension = testPage.getContentResource("content/par_imageNoAltNoDimensions_mediaRef");
-    assertNotNull("par_imageNoAltNoDimensions_mediaRef", parImgNoAltNoDimension);
+    assertNotNull(parImgNoAltNoDimension, "par_imageNoAltNoDimensions_mediaRef");
 
     parFlashWithFallbackMediaRef = testPage.getContentResource("content/par_flashWithFallback_mediaRef");
-    assertNotNull("par_flashWithFallback_mediaRef exists?", parFlashWithFallbackMediaRef);
+    assertNotNull(parFlashWithFallbackMediaRef, "par_flashWithFallback_mediaRef exists?");
 
     parFlashWithoutFallbackMediaRef = testPage.getContentResource("content/par_flashWithoutFallback_mediaRef");
-    assertNotNull("par_flashWithoutFallback_mediaRef exists?", parFlashWithoutFallbackMediaRef);
+    assertNotNull(parFlashWithoutFallbackMediaRef, "par_flashWithoutFallback_mediaRef exists?");
 
     parInlineImage = testPage.getContentResource("content/par_inlineImage");
-    assertNotNull("par_inlineImage exists?", parInlineImage);
+    assertNotNull(parInlineImage, "par_inlineImage exists?");
   }
 
   protected Adaptable adaptable() {

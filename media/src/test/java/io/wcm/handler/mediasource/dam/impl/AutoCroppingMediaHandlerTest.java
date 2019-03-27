@@ -22,14 +22,14 @@ package io.wcm.handler.mediasource.dam.impl;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 
@@ -41,20 +41,21 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.util.RunMode;
 
-public class AutoCroppingMediaHandlerTest {
+@ExtendWith(AemContextExtension.class)
+class AutoCroppingMediaHandlerTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private MediaHandler mediaHandler;
   private Asset asset;
   private Resource resource;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
     context.runMode(RunMode.AUTHOR);
     context.registerInjectActivateService(new DamRenditionMetadataService());
@@ -76,7 +77,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMediaFormatWithRatio() {
+  void testMediaFormatWithRatio() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(RATIO)
         .build();
@@ -88,7 +89,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMediaFormatFixedDimension() {
+  void testMediaFormatFixedDimension() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(EDITORIAL_1COL)
         .build();
@@ -100,7 +101,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMultipleMediaFormatsFixedDimension() {
+  void testMultipleMediaFormatsFixedDimension() {
     Media media = mediaHandler.get(resource)
         .mediaFormats(EDITORIAL_2COL, EDITORIAL_1COL)
         .build();
@@ -112,7 +113,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMediaFormatFixedDimension_NoMatch() {
+  void testMediaFormatFixedDimension_NoMatch() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(EDITORIAL_2COL)
         .build();
@@ -124,7 +125,7 @@ public class AutoCroppingMediaHandlerTest {
    * media format) disables auto-cropping.
    */
   @Test
-  public void testManualCroppingParametersDisableAutoCropping() {
+  void testManualCroppingParametersDisableAutoCropping() {
 
     // prepare resource with asset reference and manual cropping parameters
     // this manual cropping results in a 1:1 image not matching the media format
