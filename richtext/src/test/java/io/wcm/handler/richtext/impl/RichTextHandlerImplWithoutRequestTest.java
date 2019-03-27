@@ -26,7 +26,7 @@ import io.wcm.handler.richtext.RichTextHandler;
 /**
  * Test {@link RichTextHandler}
  */
-public class RichTextHandlerImplWithoutRequestTest extends RichTextHandlerImplTest {
+class RichTextHandlerImplWithoutRequestTest extends RichTextHandlerImplTest {
 
   @Override
   protected Adaptable adaptable() {

@@ -19,10 +19,10 @@
  */
 package io.wcm.handler.richtext.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +33,13 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.output.XMLOutputter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("null")
-public class RichTextUtilTest {
+class RichTextUtilTest {
 
   @Test
-  public void testIsEmpty() {
+  void testIsEmpty() {
 
     assertTrue(RichTextUtil.isEmpty(null));
     assertTrue(RichTextUtil.isEmpty(""));
@@ -66,30 +66,30 @@ public class RichTextUtilTest {
   }
 
   @Test
-  public void testParseText() throws Exception {
+  void testParseText() throws Exception {
 
     // parse valid xhtml
     Element element = RichTextUtil.parseText("<p>Der <strong>Jodelkaiser</strong></p>"
         + "<p align=\"center\">aus dem Ötztal</p>");
 
     assertNotNull(element);
-    assertEquals("child-count", 2, element.getContentSize());
+    assertEquals(2, element.getContentSize(), "child-count");
 
     Element p1 = (Element)element.getContent().get(0);
-    assertEquals("p1-name", "p", p1.getName());
-    assertEquals("p1-child-count", 2, p1.getContentSize());
-    assertEquals("p1-text", "Der ", ((Text)p1.getContent().get(0)).getText());
+    assertEquals("p", p1.getName(), "p1-name");
+    assertEquals(2, p1.getContentSize(), "p1-child-count");
+    assertEquals("Der ", ((Text)p1.getContent().get(0)).getText(), "p1-text");
     Element strong = (Element)p1.getContent().get(1);
-    assertEquals("strong-name", "strong", strong.getName());
-    assertEquals("strong-text", "Jodelkaiser", strong.getText());
-    assertEquals("p1-attrs", 0, p1.getAttributes().size());
+    assertEquals("strong", strong.getName(), "strong-name");
+    assertEquals("Jodelkaiser", strong.getText(), "strong-text");
+    assertEquals(0, p1.getAttributes().size(), "p1-attrs");
 
     Element p2 = (Element)element.getContent().get(1);
-    assertEquals("p2-name", "p", p2.getName());
-    assertEquals("p2-child-count", 1, p2.getContentSize());
-    assertEquals("p2-text", "aus dem Ötztal", ((Text)p2.getContent().get(0)).getText());
-    assertEquals("p2-attrs", 1, p2.getAttributes().size());
-    assertEquals("p2-align", "center", p2.getAttributeValue("align"));
+    assertEquals("p", p2.getName(), "p2-name");
+    assertEquals(1, p2.getContentSize(), "p2-child-count");
+    assertEquals("aus dem Ötztal", ((Text)p2.getContent().get(0)).getText(), "p2-text");
+    assertEquals(1, p2.getAttributes().size(), "p2-attrs");
+    assertEquals("center", p2.getAttributeValue("align"), "p2-align");
 
     // parse invalid xhtml
     boolean exception = false;
@@ -99,71 +99,70 @@ public class RichTextUtilTest {
     catch (JDOMException ex) {
       exception = true;
     }
-    assertTrue("invalid-xhtml", exception);
+    assertTrue(exception, "invalid-xhtml");
 
   }
 
   @Test
-  public void testRewriteContent() throws Exception {
+  void testRewriteContent() throws Exception {
 
-    assertEquals("empty", "", rewriteContent(""));
+    assertEquals("", rewriteContent(""),
+        "empty");
 
-    assertEquals("nop",
-        "<test1 /><test2 />",
-        rewriteContent("<test1 /><test2 />"));
+    assertEquals("<test1 /><test2 />",
+        rewriteContent("<test1 /><test2 />"),
+        "nop");
 
-    assertEquals("to-remove",
-        "<test1 /><test2 />",
-        rewriteContent("<test1 /><to-remove /><test2 />"));
+    assertEquals("<test1 /><test2 />",
+        rewriteContent("<test1 /><to-remove /><test2 />"),
+        "to-remove");
 
-    assertEquals("to-keep",
-        "<test1 /><to-keep /><test2 />",
-        rewriteContent("<test1 /><to-keep /><test2 />"));
+    assertEquals("<test1 /><to-keep /><test2 />",
+        rewriteContent("<test1 /><to-keep /><test2 />"),
+        "to-keep");
 
-    assertEquals("to-keep-attribute",
-        "<test1 /><to-keep-attribute attr=\"testx\" /><test2 />",
-        rewriteContent("<test1 /><to-keep-attribute /><test2 />"));
+    assertEquals("<test1 /><to-keep-attribute attr=\"testx\" /><test2 />",
+        rewriteContent("<test1 /><to-keep-attribute /><test2 />"),
+        "to-keep-attribute");
 
-    assertEquals("to-replace-single",
-        "<test1 /><replaced-element /><test2 />",
-        rewriteContent("<test1 /><to-replace-single /><test2 />"));
+    assertEquals("<test1 /><replaced-element /><test2 />",
+        rewriteContent("<test1 /><to-replace-single /><test2 />"),
+        "to-replace-single");
 
-    assertEquals("to-replace-multiple",
-        "<test1 /><replaced-element-1 /><replaced-element-2 /><test2 />",
-        rewriteContent("<test1 /><to-replace-multiple /><test2 />"));
+    assertEquals("<test1 /><replaced-element-1 /><replaced-element-2 /><test2 />",
+        rewriteContent("<test1 /><to-replace-multiple /><test2 />"),
+        "to-replace-multiple");
 
-    assertEquals("to-replace-single-children-1",
-        "<test1 /><replaced-element><test-3 /></replaced-element><test2 />",
-        rewriteContent("<test1 /><to-replace-single><test-3 /></to-replace-single><test2 />"));
+    assertEquals("<test1 /><replaced-element><test-3 /></replaced-element><test2 />",
+        rewriteContent("<test1 /><to-replace-single><test-3 /></to-replace-single><test2 />"),
+        "to-replace-single-children-1");
 
-    assertEquals("to-replace-single-children-2",
-        "<test1 /><replaced-element><test-3 /><test-4 /></replaced-element><test2 />",
-        rewriteContent("<test1 /><to-replace-single><test-3 /><to-remove /><test-4 /></to-replace-single><test2 />"));
+    assertEquals("<test1 /><replaced-element><test-3 /><test-4 /></replaced-element><test2 />",
+        rewriteContent("<test1 /><to-replace-single><test-3 /><to-remove /><test-4 /></to-replace-single><test2 />"),
+        "to-replace-single-children-2");
 
-    assertEquals("to-replace-single-commeont",
-        "<test1 /><replaced-element /><!-- comment --><test2 />",
-        rewriteContent("<test1 /><to-replace-single /><!-- comment --><test2 />"));
+    assertEquals("<test1 /><replaced-element /><!-- comment --><test2 />",
+        rewriteContent("<test1 /><to-replace-single /><!-- comment --><test2 />"),
+        "to-replace-single-commeont");
 
   }
 
   @Test
-  public void testRewriteContentOnce() throws Exception {
+  void testRewriteContentOnce() throws Exception {
 
-    assertEquals("to-replace-single",
-        "<test1 /><replaced-element-once /><test2 />",
+    assertEquals("<test1 /><replaced-element-once /><test2 />",
         rewriteContent("<test1 /><to-replace-once /><test2 />"));
 
-    assertEquals("to-replace-single",
-        "<test1 /><replaced-element-once /><to-replace-once /><test2 />",
+    assertEquals("<test1 /><replaced-element-once /><to-replace-once /><test2 />",
         rewriteContent("<test1 /><to-replace-once /><to-replace-once /><test2 />"));
 
   }
 
   @Test
-  public void testXhtmlEntities() throws Exception {
+  void testXhtmlEntities() throws Exception {
 
     Element element = RichTextUtil.parseText("Der Jodelkaiser aus dem &Ouml;tztal.", true);
-    assertEquals("text", "Der Jodelkaiser aus dem Ötztal.", element.getText());
+    assertEquals("Der Jodelkaiser aus dem Ötztal.", element.getText());
 
   }
 

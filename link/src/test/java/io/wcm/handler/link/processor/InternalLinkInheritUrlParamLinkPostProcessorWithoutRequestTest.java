@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link AbstractInternalLinkInheritUrlParamLinkPostProcessor}.
  */
-public class InternalLinkInheritUrlParamLinkPostProcessorWithoutRequestTest extends InternalLinkInheritUrlParamLinkPostProcessorTest {
+class InternalLinkInheritUrlParamLinkPostProcessorWithoutRequestTest extends InternalLinkInheritUrlParamLinkPostProcessorTest {
 
   @Override
   protected Adaptable adaptable() {

@@ -24,39 +24,40 @@ import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_FORM
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.commons.json.JSONObject;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
-public class MediaFormatValidateServletTest {
+@ExtendWith(AemContextExtension.class)
+class MediaFormatValidateServletTest {
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private MediaFormatValidateServlet underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = context.registerInjectActivateService(new MediaFormatValidateServlet());
     context.currentPage(context.create().page(ROOTPATH_CONTENT));
   }
 
   @Test
-  public void testValid() throws Exception {
+  void testValid() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
         (int)EDITORIAL_1COL.getWidth(),
         (int)EDITORIAL_1COL.getHeight(),
@@ -74,7 +75,7 @@ public class MediaFormatValidateServletTest {
   }
 
   @Test
-  public void testInvalid() throws Exception {
+  void testInvalid() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
         10,
         10,

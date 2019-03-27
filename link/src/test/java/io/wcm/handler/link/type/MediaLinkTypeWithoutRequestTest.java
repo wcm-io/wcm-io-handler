@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link MediaLinkType}
  */
-public class MediaLinkTypeWithoutRequestTest extends MediaLinkTypeTest {
+class MediaLinkTypeWithoutRequestTest extends MediaLinkTypeTest {
 
   @Override
   protected Adaptable adaptable() {

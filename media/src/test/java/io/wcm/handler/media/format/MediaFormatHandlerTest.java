@@ -45,34 +45,34 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER_1024_768;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER_1440_900;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER_1680_1050;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
 import org.apache.sling.api.adapter.Adaptable;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link MediaFormatHandler}
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
-public class MediaFormatHandlerTest {
+class MediaFormatHandlerTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   protected Adaptable adaptable() {
     return context.request();
@@ -80,13 +80,13 @@ public class MediaFormatHandlerTest {
 
   private MediaFormatHandler underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = adaptable().adaptTo(MediaFormatHandler.class);
   }
 
   @Test
-  public void testGetMediaFormat() {
+  void testGetMediaFormat() {
     MediaFormat mediaFormat = underTest.getMediaFormat("editorial_2col");
     assertEquals(EDITORIAL_2COL, mediaFormat);
 
@@ -95,272 +95,272 @@ public class MediaFormatHandlerTest {
   }
 
   @Test
-  public void testGetSameBiggerMediaFormats_Editorial() {
+  void testGetSameBiggerMediaFormats_Editorial() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(EDITORIAL_2COL, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 4, matchingFormats.size());
+    assertEquals(4, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", EDITORIAL_STANDARD, format1);
+    assertEquals(EDITORIAL_STANDARD, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", SPECIAL_4COL, format2);
+    assertEquals(SPECIAL_4COL, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", EDITORIAL_3COL, format3);
+    assertEquals(EDITORIAL_3COL, format3);
 
     MediaFormat format4 = iterator.next();
-    assertEquals("format4", EDITORIAL_2COL, format4);
+    assertEquals(EDITORIAL_2COL, format4);
 
   }
 
   @Test
-  public void testGetSameBiggerMediaFormats_Wallpaper_1024_768() {
+  void testGetSameBiggerMediaFormats_Wallpaper_1024_768() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(WALLPAPER_1024_768, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 2, matchingFormats.size());
+    assertEquals(2, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", WALLPAPER, format1);
+    assertEquals(WALLPAPER, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", WALLPAPER_1024_768, format2);
+    assertEquals(WALLPAPER_1024_768, format2);
 
   }
 
   @Test
-  public void testGetSameBiggerMediaFormats_Wallpaper_1440_900() {
+  void testGetSameBiggerMediaFormats_Wallpaper_1440_900() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(WALLPAPER_1440_900, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 3, matchingFormats.size());
+    assertEquals(3, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", WALLPAPER, format1);
+    assertEquals(WALLPAPER, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", WALLPAPER_1680_1050, format2);
+    assertEquals(WALLPAPER_1680_1050, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", WALLPAPER_1440_900, format3);
+    assertEquals(WALLPAPER_1440_900, format3);
 
   }
 
   @Test
-  public void testGetSameBiggerMediaFormats_NoRenditionGroup() {
+  void testGetSameBiggerMediaFormats_NoRenditionGroup() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(EDITORIAL_STAGE_LARGE, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 1, matchingFormats.size());
+    assertEquals(1, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", EDITORIAL_STAGE_LARGE, format1);
+    assertEquals(EDITORIAL_STAGE_LARGE, format1);
 
   }
 
   @Test
-  public void testGetSameBiggerMediaFormats_NonFixed() {
+  void testGetSameBiggerMediaFormats_NonFixed() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(NONFIXED_BIG, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 5, matchingFormats.size());
+    assertEquals(5, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", NONFIXED_RAW, format1);
+    assertEquals(NONFIXED_RAW, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", NONFIXED_FULLSIZE_OVERLAY, format2);
+    assertEquals(NONFIXED_FULLSIZE_OVERLAY, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", NONFIXED_FULLSIZE, format3);
+    assertEquals(NONFIXED_FULLSIZE, format3);
 
     MediaFormat format4 = iterator.next();
-    assertEquals("format4", NONFIXED_TAB_FULLSIZE, format4);
+    assertEquals(NONFIXED_TAB_FULLSIZE, format4);
 
     MediaFormat format5 = iterator.next();
-    assertEquals("format5", NONFIXED_BIG, format5);
+    assertEquals(NONFIXED_BIG, format5);
 
   }
 
   @Test
-  public void testGetSameBiggerMediaFormats_FixedWidth() {
+  void testGetSameBiggerMediaFormats_FixedWidth() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(FIXEDWIDTH_288, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 3, matchingFormats.size());
+    assertEquals(3, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", FIXEDWIDTH_288, format1);
+    assertEquals(FIXEDWIDTH_288, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", FIXEDWIDTH_MAXWIDTH, format2);
+    assertEquals(FIXEDWIDTH_MAXWIDTH, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", FIXEDWIDTH_UNCONSTRAINED, format3);
+    assertEquals(FIXEDWIDTH_UNCONSTRAINED, format3);
 
   }
 
   @Test
-  public void testGetSameBiggerMediaFormats_FixedHeight() {
+  void testGetSameBiggerMediaFormats_FixedHeight() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(FIXEDHEIGHT_288, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 3, matchingFormats.size());
+    assertEquals(3, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", FIXEDHEIGHT_288, format1);
+    assertEquals(FIXEDHEIGHT_288, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", FIXEDHEIGHT_MAXHEIGHT, format2);
+    assertEquals(FIXEDHEIGHT_MAXHEIGHT, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", FIXEDHEIGHT_UNCONSTRAINED, format3);
+    assertEquals(FIXEDHEIGHT_UNCONSTRAINED, format3);
 
   }
 
   @Test
-  public void testGetSameSmallerMediaFormats_Editorial() {
+  void testGetSameSmallerMediaFormats_Editorial() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameSmallerMediaFormats(EDITORIAL_2COL, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 2, matchingFormats.size());
+    assertEquals(2, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", EDITORIAL_2COL, format1);
+    assertEquals(EDITORIAL_2COL, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", EDITORIAL_1COL, format2);
+    assertEquals(EDITORIAL_1COL, format2);
 
   }
 
   @Test
-  public void testGetSameSmallerMediaFormats_Wallpaper_1024_768() {
+  void testGetSameSmallerMediaFormats_Wallpaper_1024_768() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameSmallerMediaFormats(WALLPAPER_1024_768, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 2, matchingFormats.size());
+    assertEquals(2, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", WALLPAPER, format1);
+    assertEquals(WALLPAPER, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", WALLPAPER_1024_768, format2);
+    assertEquals(WALLPAPER_1024_768, format2);
 
   }
 
   @Test
-  public void testGetSameSmallerMediaFormats_Wallpaper_1680_1050() {
+  void testGetSameSmallerMediaFormats_Wallpaper_1680_1050() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameSmallerMediaFormats(WALLPAPER_1680_1050, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 3, matchingFormats.size());
+    assertEquals(3, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", WALLPAPER, format1);
+    assertEquals(WALLPAPER, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", WALLPAPER_1680_1050, format2);
+    assertEquals(WALLPAPER_1680_1050, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", WALLPAPER_1440_900, format3);
+    assertEquals(WALLPAPER_1440_900, format3);
 
   }
 
   @Test
-  public void testGetSameSmallerMediaFormats_NoRenditionGroup() {
+  void testGetSameSmallerMediaFormats_NoRenditionGroup() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameSmallerMediaFormats(EDITORIAL_STAGE_LARGE, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 1, matchingFormats.size());
+    assertEquals(1, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", EDITORIAL_STAGE_LARGE, format1);
+    assertEquals(EDITORIAL_STAGE_LARGE, format1);
 
   }
 
   @Test
-  public void testGetSameSmallerMediaFormats_NonFixed() {
+  void testGetSameSmallerMediaFormats_NonFixed() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameSmallerMediaFormats(NONFIXED_BIG, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 4, matchingFormats.size());
+    assertEquals(4, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", NONFIXED_RAW, format1);
+    assertEquals(NONFIXED_RAW, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", NONFIXED_BIG, format2);
+    assertEquals(NONFIXED_BIG, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", NONFIXED_SMALL, format3);
+    assertEquals(NONFIXED_SMALL, format3);
 
     MediaFormat format4 = iterator.next();
-    assertEquals("format4", NONFIXED_TAB_SMALL, format4);
+    assertEquals(NONFIXED_TAB_SMALL, format4);
 
   }
 
   @Test
-  public void testGetSameSmallerMediaFormats_FixedWidth() {
+  void testGetSameSmallerMediaFormats_FixedWidth() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(FIXEDWIDTH_MAXWIDTH, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 4, matchingFormats.size());
+    assertEquals(4, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", FIXEDWIDTH_188, format1);
+    assertEquals(FIXEDWIDTH_188, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", FIXEDWIDTH_288, format2);
+    assertEquals(FIXEDWIDTH_288, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", FIXEDWIDTH_MAXWIDTH, format3);
+    assertEquals(FIXEDWIDTH_MAXWIDTH, format3);
 
     MediaFormat format4 = iterator.next();
-    assertEquals("format4", FIXEDWIDTH_UNCONSTRAINED, format4);
+    assertEquals(FIXEDWIDTH_UNCONSTRAINED, format4);
 
   }
 
   @Test
-  public void testGetSameSmallerMediaFormats_FixedHeight() {
+  void testGetSameSmallerMediaFormats_FixedHeight() {
 
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(FIXEDHEIGHT_MAXHEIGHT, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals("count", 4, matchingFormats.size());
+    assertEquals(4, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
-    assertEquals("format1", FIXEDHEIGHT_188, format1);
+    assertEquals(FIXEDHEIGHT_188, format1);
 
     MediaFormat format2 = iterator.next();
-    assertEquals("format2", FIXEDHEIGHT_288, format2);
+    assertEquals(FIXEDHEIGHT_288, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals("format3", FIXEDHEIGHT_MAXHEIGHT, format3);
+    assertEquals(FIXEDHEIGHT_MAXHEIGHT, format3);
 
     MediaFormat format4 = iterator.next();
-    assertEquals("format4", FIXEDHEIGHT_UNCONSTRAINED, format4);
+    assertEquals(FIXEDHEIGHT_UNCONSTRAINED, format4);
 
   }
 
   @Test
-  public void testDetectMediaFormat() {
+  void testDetectMediaFormat() {
 
-    assertEquals("invalid", null, underTest.detectMediaFormat("txt", 100, 570, 270));
+    assertNull(underTest.detectMediaFormat("txt", 100, 570, 270));
 
     // test extension match
     assertEquals("download", "download", underTest.detectMediaFormat("zip", 0, 0, 0).getName());
@@ -374,29 +374,29 @@ public class MediaFormatHandlerTest {
   }
 
   @Test
-  public void testDetectMediaFormats() {
+  void testDetectMediaFormats() {
 
-    assertTrue("invalid", underTest.detectMediaFormats("txt", 100, 570, 270).isEmpty());
+    assertTrue(underTest.detectMediaFormats("txt", 100, 570, 270).isEmpty(), "invalid");
 
     // test extension match
-    assertEquals("swf", 11, underTest.detectMediaFormats("swf", 0, 0, 0).size());
+    assertEquals(11, underTest.detectMediaFormats("swf", 0, 0, 0).size(), "swf");
 
     // test direct match
-    assertEquals("editorial_2col", 6, underTest.detectMediaFormats("jpg", 100, 450, 213).size());
+    assertEquals(6, underTest.detectMediaFormats("jpg", 100, 450, 213).size(), "editorial_2col");
 
     // test ranking match
     SortedSet<MediaFormat> mediaFormats = underTest.detectMediaFormats("jpg", 100, 960, 455);
-    assertEquals("showroom", 8, mediaFormats.size());
-    assertEquals("showroom_campaign", "showroom_campaign", mediaFormats.first().getName());
+    assertEquals(8, mediaFormats.size(), "showroom");
+    assertEquals("showroom_campaign", mediaFormats.first().getName(), "showroom_campaign");
 
     // test ratio match
     MediaFormat ratioFormat = RATIO;
     // ratio mismatch
     mediaFormats = underTest.detectMediaFormats("png", 100, 50, 50);
-    assertFalse("nonfixed_raw ratio mismatch", mediaFormats.contains(ratioFormat));
+    assertFalse(mediaFormats.contains(ratioFormat), "nonfixed_raw ratio mismatch");
     // ratio match
     mediaFormats = underTest.detectMediaFormats("png", 100, 160, 100);
-    assertTrue("nonfixed_raw ratio match", mediaFormats.contains(ratioFormat));
+    assertTrue(mediaFormats.contains(ratioFormat), "nonfixed_raw ratio match");
 
   }
 

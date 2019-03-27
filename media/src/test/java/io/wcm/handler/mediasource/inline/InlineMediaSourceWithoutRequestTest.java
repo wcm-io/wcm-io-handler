@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link InlineMediaSource}
  */
-public class InlineMediaSourceWithoutRequestTest extends InlineMediaSourceTest {
+class InlineMediaSourceWithoutRequestTest extends InlineMediaSourceTest {
 
   @Override
   protected Adaptable adaptable() {

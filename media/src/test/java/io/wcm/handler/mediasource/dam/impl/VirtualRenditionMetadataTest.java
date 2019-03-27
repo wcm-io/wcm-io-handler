@@ -19,15 +19,15 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -37,13 +37,13 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 @SuppressWarnings("null")
-public class VirtualRenditionMetadataTest extends AbstractDamTest {
+class VirtualRenditionMetadataTest extends AbstractDamTest {
 
   private VirtualRenditionMetadata underTest;
   private Rendition rendition;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.thumbnail.215.102.jpg";
     context.resourceResolver().delete(context.resourceResolver().getResource(path));
     context.load().binaryFile("/sample_image_215x102.jpg", path);
@@ -55,20 +55,20 @@ public class VirtualRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetLayer() throws Exception {
+  void testGetLayer() throws Exception {
     Layer layer = underTest.getLayer();
     assertEquals(108, layer.getWidth());
     assertEquals(51, layer.getHeight());
   }
 
   @Test
-  public void testGetInputStream() throws Exception {
+  void testGetInputStream() throws Exception {
     InputStream is = underTest.getInputStream();
     assertNull(is);
   }
 
   @Test
-  public void testEquals() {
+  void testEquals() {
     VirtualRenditionMetadata m1 = new VirtualRenditionMetadata(rendition, 108, 51);
     VirtualRenditionMetadata m2 = new VirtualRenditionMetadata(rendition, 108, 51);
     VirtualRenditionMetadata m3 = new VirtualRenditionMetadata(rendition, 10, 20);

@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link LinkHandlerImpl} methods.
  */
-public class LinkHandlerImplWithoutRequestTest extends LinkHandlerImplTest {
+class LinkHandlerImplWithoutRequestTest extends LinkHandlerImplTest {
 
   @Override
   protected Adaptable adaptable() {

@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.commons.dom;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class AnchorTest {
+class AnchorTest {
 
   @Test
-  public void testAnchor() {
+  void testAnchor() {
     Anchor anchor1 = new Anchor("href1");
     assertEquals("href1", anchor1.getHRef());
 
@@ -36,7 +36,7 @@ public class AnchorTest {
   }
 
   @Test
-  public void testSimpleAttributes() throws Exception {
+  void testSimpleAttributes() throws Exception {
     Anchor anchor = new Anchor("href");
     assertEquals("a", anchor.getName());
 

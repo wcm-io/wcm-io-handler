@@ -24,11 +24,12 @@ import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.SUFFIX_PART_DELIMITER
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeKeyValuePart;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.encodeResourcePathPart;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.hexCode;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -41,21 +42,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.jcr.resource.JcrResourceConstants;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class SuffixBuilderTest {
+class SuffixBuilderTest {
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private static final String NASTY_NODE_NAME = "_$_%_%25_=_#_&_";
   private static final String ENCODED_NASTY_NODE_NAME = encodeResourcePathPart(NASTY_NODE_NAME);
@@ -122,7 +124,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageEmptySuffix() {
+  void testPageEmptySuffix() {
     // construct a "resetting" suffix that does not add any elements to the suffix
     String suffix = getBuilder().build();
     // should return empty string, cause there is no suffix in the simulated request
@@ -131,7 +133,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageStringString() {
+  void testPageStringString() {
     // construct suffix with key/value-pair
     String key = "abc";
     String value = "def";
@@ -158,7 +160,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageStringInt() {
+  void testPageStringInt() {
     // construct suffix with numerical key/value-pair
     String key = "abc";
     int value = 123;
@@ -168,7 +170,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageStringLong() {
+  void testPageStringLong() {
     // construct suffix with numerical key/value-pair
     String key = "abc";
     long value = 123456789012345L;
@@ -178,7 +180,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageStringBoolean() {
+  void testPageStringBoolean() {
     // construct suffix with boolean key/value-pair
     String key = "abc";
     boolean value = true;
@@ -192,30 +194,34 @@ public class SuffixBuilderTest {
     assertEquals("abc=false", suffix);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testValueInvalidType() {
-    String key = "abc";
-    Object value = new Object();
-    getBuilder().put(key, value).build();
+  @Test
+  void testValueInvalidType() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      String key = "abc";
+      Object value = new Object();
+      getBuilder().put(key, value).build();
+    });
   }
 
   @Test
-  public void testNullValue() {
+  void testNullValue() {
     String key = "abc";
     String value = null;
     String suffix = getBuilder().put(key, value).build();
     assertEquals("", suffix);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullKey() {
-    String key = null;
-    String value = "abc";
-    getBuilder().put(key, value).build();
+  @Test
+  void testNullKey() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      String key = null;
+      String value = "abc";
+      getBuilder().put(key, value).build();
+    });
   }
 
   @Test
-  public void testPageResourceResource() {
+  void testPageResourceResource() {
     // construct suffix pointing to a resource
     Page page = context.create().page("/content/a", "template", "title");
     Resource baseResource = page.getContentResource();
@@ -262,7 +268,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageResourceResourceStringString() {
+  void testPageResourceResourceStringString() {
     // construct suffix pointing to a resource with key/value-pair
     Resource targetResource = createResource("/content/a/b/c");
     Resource baseResource = createResource("/content/a");
@@ -275,7 +281,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageResourceResourceStringInt() {
+  void testPageResourceResourceStringInt() {
     // construct suffix pointing to a resource with a numeric key/value-pair
     Resource targetResource = createResource("/content/a/b/c");
     Resource baseResource = createResource("/content/a");
@@ -287,7 +293,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageResourceResourceStringBoolean() {
+  void testPageResourceResourceStringBoolean() {
     // construct suffix pointing to a resource with a boolean key/value-pair
     Resource targetResource = createResource("/content/a/b/c");
     Resource baseResource = createResource("/content/a");
@@ -299,7 +305,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPage() {
+  void testPage() {
     // construct suffix pointing to a page
     Page basePage = context.create().page("/content/a");
     Page targetPage = context.create().page("/content/a/b/c");
@@ -310,7 +316,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testPageBasePage() {
+  void testPageBasePage() {
     // construct suffix for base page
     Page basePage = context.create().page("/content/a");
     String suffix = getBuilder().page(basePage, basePage).build();
@@ -318,18 +324,20 @@ public class SuffixBuilderTest {
     assertEquals(ESCAPED_DOT, suffix);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testPageWithInvalidBasePage() {
-    context.create().page("/content/a", "template", "title");
-    Page targetPage = context.create().page("/content/a/b/c");
+  @Test
+  void testPageWithInvalidBasePage() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      context.create().page("/content/a", "template", "title");
+      Page targetPage = context.create().page("/content/a/b/c");
 
-    // construct suffix with an invalid base page
-    Page invalidBasePage = context.create().page("/content/b");
-    getBuilder().page(targetPage, invalidBasePage).build();
+      // construct suffix with an invalid base page
+      Page invalidBasePage = context.create().page("/content/b");
+      getBuilder().page(targetPage, invalidBasePage).build();
+    });
   }
 
   @Test
-  public void testPages() {
+  void testPages() {
     // construct suffix pointing to a page
     Page basePage = context.create().page("/content/a");
     Page targetPage1 = context.create().page("/content/a/b/c");
@@ -346,7 +354,7 @@ public class SuffixBuilderTest {
 
 
   @Test
-  public void testPageSortedMapOfStringString() {
+  void testPageSortedMapOfStringString() {
     // construct suffix to a resource with multiple key/value-pairs
     ValueMap map = ImmutableValueMap.builder()
         .put("abc", 123)
@@ -365,7 +373,7 @@ public class SuffixBuilderTest {
    * @throws UnsupportedEncodingException
    */
   @Test
-  public void testEscapingNastyCharacters() throws UnsupportedEncodingException {
+  void testEscapingNastyCharacters() throws UnsupportedEncodingException {
     // both key and value may contain url-unsafe characters, and / = which are used as delimiters
     String nastyKey1 = NASTY_STRING_VALUE + "1";
     String nastyValue1 = NASTY_STRING_VALUE + "1";
@@ -398,9 +406,9 @@ public class SuffixBuilderTest {
     assertEquals(nastyValue1, parser.get(nastyKey1, String.class));
     assertEquals(nastyValue2, parser.get(nastyKey2, String.class));
     // both nasty resources should be found and decoded
-    assertNotNull("resource 1 invalid", parser.getResource(filterType1));
+    assertNotNull(parser.getResource(filterType1), "resource 1 invalid");
     assertEquals(nastyResource1.getPath(), parser.getResource(filterType1).getPath());
-    assertNotNull("resource 2 invalid", parser.getResource(filterType2));
+    assertNotNull(parser.getResource(filterType2), "resource 2 invalid");
     assertEquals(nastyResource2.getPath(), parser.getResource(filterType2).getPath());
 
 
@@ -422,7 +430,7 @@ public class SuffixBuilderTest {
    * @throws UnsupportedEncodingException
    */
   @Test
-  public void testEscapingWithSlashes() throws UnsupportedEncodingException {
+  void testEscapingWithSlashes() throws UnsupportedEncodingException {
     // both key and value may contain url-unsafe characters, and / = which are used as delimiters
     String slashKey1 = "my/key1";
     String slashValue1 = "my/value1";
@@ -446,12 +454,12 @@ public class SuffixBuilderTest {
 
     // construct suffix with all keys, values and paths properly escaped
     String suffix = getBuilder().resources(Arrays.asList(slashResource1, slashResource2), baseResource).putAll(keyValueMap).build();
-    assertNotNull("suffix empty", suffix);
+    assertNotNull(suffix, "suffix empty");
 
     // ensure that no slash, not single nor double-escaped found in suffix
-    assertTrue("un-escaped slash found", StringUtils.contains(suffix, SUFFIX_PART_DELIMITER)); // "/" is suffix part delimiter
-    assertFalse("single-escaped slash found", StringUtils.contains(suffix, URL_ENCODED_SLASH));
-    assertFalse("double-escaped slash found", StringUtils.contains(suffix, DOUBLE_URL_ENCODED_SLASH));
+    assertTrue(StringUtils.contains(suffix, SUFFIX_PART_DELIMITER), "un-escaped slash found"); // "/" is suffix part delimiter
+    assertFalse(StringUtils.contains(suffix, URL_ENCODED_SLASH), "single-escaped slash found");
+    assertFalse(StringUtils.contains(suffix, DOUBLE_URL_ENCODED_SLASH), "double-escaped slash found");
 
     // create SuffixHelper with that suffix, decode it and simulate request to the base page
     String suffixWithExtension = "/" + suffix + ".html";
@@ -460,9 +468,9 @@ public class SuffixBuilderTest {
     assertEquals(slashValue1, parser.get(slashKey1, String.class));
     assertEquals(slashValue2, parser.get(slashKey2, String.class));
     // both nasty resources should be found and decoded
-    assertNotNull("resource 1 invalid", parser.getResource(filterType1));
+    assertNotNull(parser.getResource(filterType1), "resource 1 invalid");
     assertEquals(slashResource1.getPath(), parser.getResource(filterType1).getPath());
-    assertNotNull("resource 2 invalid", parser.getResource(filterType2));
+    assertNotNull(parser.getResource(filterType2), "resource 2 invalid");
     assertEquals(slashResource2.getPath(), parser.getResource(filterType2).getPath());
 
 
@@ -479,7 +487,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testUrlSuffixHelperContext() {
+  void testUrlSuffixHelperContext() {
 
     // create a context with suffix
     String incomingSuffix = "/b" + SUFFIX_PART_DELIMITER + "abc=def";
@@ -494,7 +502,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testUrlSuffixHelperContextSuffixStateKeepingStrategy() {
+  void testUrlSuffixHelperContextSuffixStateKeepingStrategy() {
 
     // create a context with incoming suffix
     final String incomingSuffix = "/suffix";
@@ -511,7 +519,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testUrlSuffixHelperContextFilterOfString() {
+  void testUrlSuffixHelperContextFilterOfString() {
 
     // create a context with incoming suffix
     final String incomingSuffix = "/abc" + SUFFIX_PART_DELIMITER + "def=ghi" + SUFFIX_PART_DELIMITER + "jkl=123" + SUFFIX_PART_DELIMITER + "mno=true";
@@ -570,7 +578,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatDiscardsAllSuffixState() {
+  void testThatDiscardsAllSuffixState() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -580,7 +588,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatKeepsResourceParts() {
+  void testThatKeepsResourceParts() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -590,7 +598,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatKeepsNamedParts() {
+  void testThatKeepsNamedParts() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -600,7 +608,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatKeepsNamedPartsAndResources() {
+  void testThatKeepsNamedPartsAndResources() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -611,7 +619,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatKeepsAllParts() {
+  void testThatKeepsAllParts() {
     // prepare complexing incoming suffix with resource and key/value parts
     String incomingSuffix = prepareStateKeepingSuffix();
     setContextAttributes(incomingSuffix, null);
@@ -622,7 +630,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatDiscardsResourceParts() {
+  void testThatDiscardsResourceParts() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -633,7 +641,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatDiscardsNamedParts() {
+  void testThatDiscardsNamedParts() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -644,7 +652,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void testThatDiscardsResourceAndNamedParts() {
+  void testThatDiscardsResourceAndNamedParts() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -654,7 +662,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void thatDiscardsSpecificResourceAndNamedParts() {
+  void thatDiscardsSpecificResourceAndNamedParts() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 
@@ -665,7 +673,7 @@ public class SuffixBuilderTest {
   }
 
   @Test
-  public void thatDiscardsSpecificResourceAndNamedPartsNasty() {
+  void thatDiscardsSpecificResourceAndNamedPartsNasty() {
     // prepare complexing incoming suffix with resource and key/value parts
     setContextAttributes(prepareStateKeepingSuffix(), null);
 

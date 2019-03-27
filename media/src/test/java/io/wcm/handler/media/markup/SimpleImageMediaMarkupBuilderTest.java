@@ -23,10 +23,10 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_RAW;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,11 +35,12 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 import org.jdom2.Element;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.google.common.collect.ImmutableList;
@@ -62,17 +63,19 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link SimpleImageMediaMarkupBuilder}
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @SuppressWarnings("null")
-public class SimpleImageMediaMarkupBuilderTest {
+class SimpleImageMediaMarkupBuilderTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Mock
   private MediaSource mediaSource;
@@ -84,48 +87,48 @@ public class SimpleImageMediaMarkupBuilderTest {
   private Resource resource;
 
   @Test
-  public void testAccepts() {
+  void testAccepts() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
     when(rendition.isImage()).thenReturn(false);
 
-    assertFalse("no rendition", builder.accepts(media));
+    assertFalse(builder.accepts(media), "no rendition");
 
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
 
-    assertFalse("invalid rendition", builder.accepts(media));
+    assertFalse(builder.accepts(media), "invalid rendition");
 
     when(rendition.getFileName()).thenReturn("movie.swf");
     when(rendition.isImage()).thenReturn(false);
 
-    assertFalse("non-image rendition", builder.accepts(media));
+    assertFalse(builder.accepts(media), "non-image rendition");
 
     when(rendition.getFileName()).thenReturn("image.gif");
     when(rendition.isImage()).thenReturn(true);
 
-    assertTrue("image rendition", builder.accepts(media));
+    assertTrue(builder.accepts(media), "image rendition");
 
     media.setMediaInvalidReason(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS);
 
-    assertFalse("media is invalid", builder.accepts(media));
+    assertFalse(builder.accepts(media), "media is invalid");
   }
 
   @Test
-  public void testBuild_NoRendition() {
+  void testBuild_NoRendition() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
 
-    assertNull("no rendition", builder.build(media));
+    assertNull(builder.build(media), "no rendition");
   }
 
   @Test
-  public void testBuild_InvalidRendition() {
+  void testBuild_InvalidRendition() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
@@ -134,11 +137,11 @@ public class SimpleImageMediaMarkupBuilderTest {
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
 
-    assertNull("invalid rendition", builder.build(media));
+    assertNull(builder.build(media), "invalid rendition");
   }
 
   @Test
-  public void testBuild_ValidRendition() {
+  void testBuild_ValidRendition() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
@@ -150,14 +153,14 @@ public class SimpleImageMediaMarkupBuilderTest {
 
     HtmlElement<?> element = builder.build(media);
     assertTrue(element instanceof Image);
-    assertEquals("src", "/media/dummy.gif", element.getAttributeValue("src"));
-    assertNull("width", element.getAttributeValue("width"));
-    assertNull("height", element.getAttributeValue("height"));
-    assertNull("alt", element.getAttributeValue("alt"));
+    assertEquals("/media/dummy.gif", element.getAttributeValue("src"));
+    assertNull(element.getAttributeValue("width"));
+    assertNull(element.getAttributeValue("height"));
+    assertNull(element.getAttributeValue("alt"));
   }
 
   @Test
-  public void testBuild_ValidRendition_WidthHeightAlt() {
+  void testBuild_ValidRendition_WidthHeightAlt() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
@@ -174,15 +177,15 @@ public class SimpleImageMediaMarkupBuilderTest {
 
     HtmlElement<?> element = builder.build(media);
     assertTrue(element instanceof Image);
-    assertEquals("src", "/media/dummy.gif", element.getAttributeValue("src"));
-    assertEquals("width", 100, element.getAttributeValueAsInteger("width"));
-    assertEquals("height", 50, element.getAttributeValueAsInteger("height"));
-    assertEquals("alt", "Der Jodelkaiser", element.getAttributeValue("alt"));
-    assertEquals("custom-property", "value1", element.getAttributeValue("custom-property"));
+    assertEquals("/media/dummy.gif", element.getAttributeValue("src"));
+    assertEquals(100, element.getAttributeValueAsInteger("width"));
+    assertEquals(50, element.getAttributeValueAsInteger("height"));
+    assertEquals("Der Jodelkaiser", element.getAttributeValue("alt"));
+    assertEquals("value1", element.getAttributeValue("custom-property"));
   }
 
   @Test
-  public void testBuild_ImageSizes() {
+  void testBuild_ImageSizes() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
@@ -195,16 +198,16 @@ public class SimpleImageMediaMarkupBuilderTest {
 
     HtmlElement<?> element = builder.build(media);
     assertTrue(element instanceof Image);
-    assertEquals("src", "/media/dummy.128.png", element.getAttributeValue("src"));
-    assertNull("width", element.getAttributeValue("width"));
-    assertNull("height", element.getAttributeValue("height"));
-    assertEquals("sizes", "sizes1", element.getAttributeValue("sizes"));
-    assertEquals("srcset", "/media/dummy.64.png 64w, /media/dummy.16.png 16w", element.getAttributeValue("srcset"));
-    assertEquals("custom-property", "value1", element.getAttributeValue("custom-property"));
+    assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
+    assertNull(element.getAttributeValue("width"));
+    assertNull(element.getAttributeValue("height"));
+    assertEquals("sizes1", element.getAttributeValue("sizes"));
+    assertEquals("/media/dummy.64.png 64w, /media/dummy.16.png 16w", element.getAttributeValue("srcset"));
+    assertEquals("value1", element.getAttributeValue("custom-property"));
   }
 
   @Test
-  public void testBuild_ImageSizes_NoRatio() {
+  void testBuild_ImageSizes_NoRatio() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
@@ -216,15 +219,15 @@ public class SimpleImageMediaMarkupBuilderTest {
 
     HtmlElement<?> element = builder.build(media);
     assertTrue(element instanceof Image);
-    assertEquals("src", "/media/dummy.128.png", element.getAttributeValue("src"));
-    assertNull("width", element.getAttributeValue("width"));
-    assertNull("height", element.getAttributeValue("height"));
-    assertNull("sizes", element.getAttributeValue("sizes"));
-    assertNull("srcset", element.getAttributeValue("srcset"));
+    assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
+    assertNull(element.getAttributeValue("width"));
+    assertNull(element.getAttributeValue("height"));
+    assertNull(element.getAttributeValue("sizes"));
+    assertNull(element.getAttributeValue("srcset"));
   }
 
   @Test
-  public void testBuild_Picture() {
+  void testBuild_Picture() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
@@ -255,16 +258,16 @@ public class SimpleImageMediaMarkupBuilderTest {
     HtmlElement<?> img = (HtmlElement<?>)picture.getChild("img");
     assertTrue(img instanceof Image);
 
-    assertEquals("src", "/media/dummy.128.png", img.getAttributeValue("src"));
-    assertNull("width", img.getAttributeValue("width"));
-    assertNull("height", img.getAttributeValue("height"));
-    assertNull("sizes", picture.getAttributeValue("sizes"));
-    assertNull("srcset", picture.getAttributeValue("srcset"));
-    assertEquals("custom-property", "value1", img.getAttributeValue("custom-property"));
+    assertEquals("/media/dummy.128.png", img.getAttributeValue("src"));
+    assertNull(img.getAttributeValue("width"));
+    assertNull(img.getAttributeValue("height"));
+    assertNull(picture.getAttributeValue("sizes"));
+    assertNull(picture.getAttributeValue("srcset"));
+    assertEquals("value1", img.getAttributeValue("custom-property"));
   }
 
   @Test
-  public void testBuild_EditMode() {
+  void testBuild_EditMode() {
     WCMMode.EDIT.toRequest(context.request());
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
@@ -282,7 +285,7 @@ public class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testBuild_PreviewMode_DiffDecoration() {
+  void testBuild_PreviewMode_DiffDecoration() {
     WCMMode.PREVIEW.toRequest(context.request());
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
@@ -299,7 +302,7 @@ public class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testIsValidMedia_Image() {
+  void testIsValidMedia_Image() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     assertFalse(builder.isValidMedia(null));
@@ -309,7 +312,7 @@ public class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testIsValidMedia_Picture() {
+  void testIsValidMedia_Picture() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     assertFalse(builder.isValidMedia(null));

@@ -19,17 +19,17 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -42,15 +42,15 @@ import io.wcm.handler.mediasource.dam.AbstractDamTest;
  * Tests the {@link RenditionMetadata}, especially the compareTo method
  */
 @SuppressWarnings("null")
-public class RenditionMetadataTest extends AbstractDamTest {
+class RenditionMetadataTest extends AbstractDamTest {
 
   private RenditionMetadata originalRendition;
   private RenditionMetadata originalRenditionCopy;
   private RenditionMetadata smallestRendition;
   private RenditionMetadata biggestRendition;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     Asset asset = media.getAsset().adaptTo(Asset.class);
 
@@ -71,45 +71,45 @@ public class RenditionMetadataTest extends AbstractDamTest {
    * Two original renditions
    */
   @Test
-  public void testCompareOriginalRenditionToItself() {
-    assertTrue("original rendition is not eqaul to itself", originalRendition.compareTo(originalRendition) == 0);
+  void testCompareOriginalRenditionToItself() {
+    assertTrue(originalRendition.compareTo(originalRendition) == 0, "original rendition is not eqaul to itself");
   }
 
   /**
    * Small and big rendition
    */
   @Test
-  public void testCompareSmallToBigRendition() {
-    assertTrue("smaller rendition is not smaller", smallestRendition.compareTo(biggestRendition) == -1);
+  void testCompareSmallToBigRendition() {
+    assertTrue(smallestRendition.compareTo(biggestRendition) == -1, "smaller rendition is not smaller");
   }
 
   /**
    * Big and small rendition
    */
   @Test
-  public void testCompareBigToSmallRendition() {
-    assertTrue("bigger rendition is not bigger", biggestRendition.compareTo(smallestRendition) == 1);
+  void testCompareBigToSmallRendition() {
+    assertTrue(biggestRendition.compareTo(smallestRendition) == 1, "bigger rendition is not bigger");
   }
 
   /**
    * Two equal renditions
    */
   @Test
-  public void testCompareTwoEqualRenditions() {
-    assertTrue("two equal renditions are not equal", biggestRendition.compareTo(biggestRendition) == 0);
+  void testCompareTwoEqualRenditions() {
+    assertTrue(biggestRendition.compareTo(biggestRendition) == 0, "two equal renditions are not equal");
   }
 
   /**
    * Original rendition and a rendition, with the same dimension as original rendition
    */
   @Test
-  public void testCompareOriginalRenditionToEqualRendition() {
-    assertTrue("original rendition is not preferred over the equal rendition", originalRendition.compareTo(originalRenditionCopy) == -1);
-    assertTrue("original rendition is not preferred over the equal rendition", originalRenditionCopy.compareTo(originalRendition) == 1);
+  void testCompareOriginalRenditionToEqualRendition() {
+    assertTrue(originalRendition.compareTo(originalRenditionCopy) == -1, "original rendition is not preferred over the equal rendition");
+    assertTrue(originalRenditionCopy.compareTo(originalRendition) == 1, "original rendition is not preferred over the equal rendition");
   }
 
   @Test
-  public void testMatchesExact() {
+  void testMatchesExact() {
     assertTrue(smallestRendition.matches(450, 213));
     assertFalse(smallestRendition.matches(500, 500));
     assertFalse(smallestRendition.matches(450, 500));
@@ -120,7 +120,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testMatchesSpec() {
+  void testMatchesSpec() {
     assertTrue(smallestRendition.matches(450, 213, 450, 213, 0d));
     assertTrue(smallestRendition.matches(200, 100, 500, 300, 0d));
     assertTrue(smallestRendition.matches(0, 213, 0, 213, 0d));
@@ -138,7 +138,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetLayer() throws PersistenceException {
+  void testGetLayer() throws PersistenceException {
     loadImageBinary_originalRenditionCopy();
     Layer layer = originalRenditionCopy.getLayer();
     assertEquals(215, layer.getWidth());
@@ -146,7 +146,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetInputStream() throws Exception {
+  void testGetInputStream() throws Exception {
     loadImageBinary_originalRenditionCopy();
     InputStream is = originalRenditionCopy.getInputStream();
     assertNotNull(is);
@@ -154,7 +154,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testAdaptTo() throws Exception {
+  void testAdaptTo() throws Exception {
     loadImageBinary_originalRenditionCopy();
     String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.thumbnail.215.102.jpg";
 
@@ -174,7 +174,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testEquals() {
+  void testEquals() {
     assertTrue(smallestRendition.equals(smallestRendition));
     assertFalse(smallestRendition.equals(biggestRendition));
   }

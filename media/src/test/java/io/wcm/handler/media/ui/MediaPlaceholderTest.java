@@ -20,18 +20,19 @@
 package io.wcm.handler.media.ui;
 
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -44,20 +45,22 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MediaPlaceholderTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class MediaPlaceholderTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Mock
   private ComponentContext wcmComponentContext;
   private Resource resource;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     resource = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media",
         ImmutableValueMap.of(MediaNameConstants.PN_MEDIA_REF, "/content/dam/invalid"));
 
@@ -71,7 +74,7 @@ public class MediaPlaceholderTest {
   }
 
   @Test
-  public void testInvalidMedia() {
+  void testInvalidMedia() {
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
     Media media = mediaHandler.get(resource).build();
     context.request().setAttribute("media", media);
@@ -82,14 +85,14 @@ public class MediaPlaceholderTest {
   }
 
   @Test
-  public void testWithMissingMediaParam() {
+  void testWithMissingMediaParam() {
     MediaPlaceholder underTest = AdaptTo.notNull(context.request(), MediaPlaceholder.class);
     assertNull(underTest.getClassAppend());
     assertNull(underTest.getMediaInvalidReason());
   }
 
   @Test
-  public void testWithInvalidMediaParam() {
+  void testWithInvalidMediaParam() {
     context.request().setAttribute("media", new Object());
     MediaPlaceholder underTest = AdaptTo.notNull(context.request(), MediaPlaceholder.class);
     assertNull(underTest.getClassAppend());

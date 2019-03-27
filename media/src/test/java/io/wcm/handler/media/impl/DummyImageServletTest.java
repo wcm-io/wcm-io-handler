@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,39 +27,40 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.image.Layer;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.suffix.SuffixBuilder;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
-public class DummyImageServletTest {
+@ExtendWith(AemContextExtension.class)
+class DummyImageServletTest {
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private DummyImageServlet underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = new DummyImageServlet();
     context.requestPathInfo().setExtension(FileExtension.PNG);
   }
 
   @Test
-  public void testGet_NoSuffix() throws Exception {
+  void testGet_NoSuffix() throws Exception {
     underTest.service(context.request(), context.response());
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
     assertResponseLayerDimension(1, 1);
   }
 
   @Test
-  public void testGet_WidthHeight() throws Exception {
+  void testGet_WidthHeight() throws Exception {
     context.requestPathInfo().setSuffix(new SuffixBuilder()
     .put(DummyImageServlet.SUFFIX_WIDTH, 100)
     .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
@@ -71,7 +72,7 @@ public class DummyImageServletTest {
   }
 
   @Test
-  public void testGet_WidthHeightName() throws Exception {
+  void testGet_WidthHeightName() throws Exception {
     context.requestPathInfo().setSuffix(new SuffixBuilder()
     .put(DummyImageServlet.SUFFIX_WIDTH, 100)
     .put(DummyImageServlet.SUFFIX_HEIGHT, 50)

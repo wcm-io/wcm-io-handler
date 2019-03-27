@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.url.impl.modes;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.util.RunMode;
 
-public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
+class NoHostnameUrlModeTest extends AbstractUrlModeTest {
 
   @Override
   protected UrlMode urlMode() {
@@ -39,7 +39,7 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
    * Test with site urls
    */
   @Test
-  public void testSiteUrls() {
+  void testSiteUrls() {
 
     context.runMode(RunMode.PUBLISH);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
@@ -57,7 +57,7 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
    * Test without site urls
    */
   @Test
-  public void testNoSiteUrls() {
+  void testNoSiteUrls() {
 
     setSiteConfigNoUrl();
 
@@ -77,7 +77,7 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
    * Test in simple integrator template mode
    */
   @Test
-  public void testIntegratorModeSimple() {
+  void testIntegratorModeSimple() {
 
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     context.currentPage(integratorPageSimple);
@@ -98,7 +98,7 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
    * Test in secure simple integrator templates mode
    */
   @Test
-  public void testIntegratorModeSimpleSecure() {
+  void testIntegratorModeSimpleSecure() {
 
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE_SECURE);
     context.currentPage(integratorPageSimpleSecure);
@@ -119,7 +119,7 @@ public class NoHostnameUrlModeTest extends AbstractUrlModeTest {
    * Test in extended integrator template mode
    */
   @Test
-  public void testIntegratorModeExtended() {
+  void testIntegratorModeExtended() {
 
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     context.currentPage(integratorPageExtended);

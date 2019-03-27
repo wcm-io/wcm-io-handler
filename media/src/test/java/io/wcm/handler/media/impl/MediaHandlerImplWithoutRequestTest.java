@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link MediaHandlerImpl} methods.
  */
-public class MediaHandlerImplWithoutRequestTest extends MediaHandlerImplTest {
+class MediaHandlerImplWithoutRequestTest extends MediaHandlerImplTest {
 
   @Override
   protected Adaptable adaptable() {
