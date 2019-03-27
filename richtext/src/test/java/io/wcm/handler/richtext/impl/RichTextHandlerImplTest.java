@@ -32,7 +32,7 @@ import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
@@ -46,7 +46,7 @@ import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 /**
  * Test {@link RichTextHandler}

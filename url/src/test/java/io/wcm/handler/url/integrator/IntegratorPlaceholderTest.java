@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.url.integrator;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class IntegratorPlaceholderTest {
+class IntegratorPlaceholderTest {
 
   @Test
-  public void testGetTagWithComments() {
+  void testGetTagWithComments() {
     assertEquals("\n" +
         "<!-- APP_INCLUDE_CONTENT START -->\n" +
         "###APP_INCLUDE_CONTENT###\n" +

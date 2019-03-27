@@ -29,9 +29,9 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.WCMMode;
@@ -48,7 +48,7 @@ import io.wcm.handler.url.integrator.IntegratorNameConstants;
 import io.wcm.handler.url.integrator.IntegratorProtocol;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -65,7 +65,7 @@ public class InternalLinkTypeTest {
     return context.request();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
 
     // create current page in site context

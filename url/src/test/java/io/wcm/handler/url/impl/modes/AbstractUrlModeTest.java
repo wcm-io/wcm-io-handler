@@ -24,8 +24,8 @@ import java.util.Set;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.settings.SlingSettingsService;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
@@ -37,12 +37,13 @@ import io.wcm.handler.url.integrator.IntegratorProtocol;
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public abstract class AbstractUrlModeTest {
+@ExtendWith(AemContextExtension.class)
+abstract class AbstractUrlModeTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   protected Page currentPage;
   protected Page targetPage;
@@ -52,8 +53,8 @@ public abstract class AbstractUrlModeTest {
   protected Page integratorPageExtended;
   protected SlingSettingsService slingSettings;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
 
     // create current page in site context
     currentPage = context.create().page("/content/unittest/de_test/brand/de/section/page",

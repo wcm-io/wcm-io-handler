@@ -22,13 +22,13 @@ package io.wcm.handler.media.format.impl;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 public class DefaultMediaFormatListProviderTest {
 
@@ -37,7 +37,7 @@ public class DefaultMediaFormatListProviderTest {
 
   private DefaultMediaFormatListProvider underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = new DefaultMediaFormatListProvider();
   }

@@ -25,12 +25,12 @@ import static org.mockito.Mockito.when;
 import java.util.SortedSet;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableSortedSet;
@@ -39,9 +39,9 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.sling.commons.caservice.impl.ContextAwareServiceResolverImpl;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(MockitoExtension.class)
 public class MediaFormatProviderManagerImplTest {
 
   private static final MediaFormat MF11 = MediaFormatBuilder.create("mf11").description("desc-from-1").build();
@@ -63,7 +63,7 @@ public class MediaFormatProviderManagerImplTest {
   private Resource resource;
   private MediaFormatProviderManager underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     resource = context.create().resource("/content/test");
 

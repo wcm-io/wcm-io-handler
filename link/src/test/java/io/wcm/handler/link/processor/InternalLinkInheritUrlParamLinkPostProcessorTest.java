@@ -26,7 +26,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -38,7 +38,7 @@ import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalCrossContextLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 /**
  * Test {@link AbstractInternalLinkInheritUrlParamLinkPostProcessor}.

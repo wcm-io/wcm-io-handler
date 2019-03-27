@@ -36,13 +36,13 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.hamcrest.ResourceMatchers;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import com.day.cq.wcm.api.components.Component;
@@ -53,10 +53,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.util.RunMode;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class IPEConfigResourceProviderTest {
 
   @Rule
@@ -68,7 +68,7 @@ public class IPEConfigResourceProviderTest {
 
   private Resource componentContentResource;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     context.runMode(RunMode.AUTHOR);
 

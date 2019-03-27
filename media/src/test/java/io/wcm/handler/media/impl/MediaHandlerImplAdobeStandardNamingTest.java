@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.Asset;
@@ -39,8 +39,8 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.util.RunMode;
 

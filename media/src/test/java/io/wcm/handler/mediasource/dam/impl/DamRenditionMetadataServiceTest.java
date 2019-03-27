@@ -30,14 +30,14 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.DamEvent;
 
 import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.util.RunMode;
 
 public class DamRenditionMetadataServiceTest {
@@ -52,7 +52,7 @@ public class DamRenditionMetadataServiceTest {
   private DamRenditionMetadataService underTest;
   private Resource assetResource;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     context.load().json("/mediasource/dam/damcontent-sample.json", MediaSourceDamAppAemContext.DAM_PATH);
     assetResource = context.resourceResolver().getResource(ASSET_PATH);

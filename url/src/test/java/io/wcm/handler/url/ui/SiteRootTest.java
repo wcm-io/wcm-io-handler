@@ -19,32 +19,33 @@
  */
 package io.wcm.handler.url.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.url.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class SiteRootTest {
+class SiteRootTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     context.create().page("/content/unittest/de_test/brand/de/conference");
     context.create().page("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference");
   }
 
   @Test
-  public void testGetRootPath() {
+  void testGetRootPath() {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertEquals("/content/unittest/de_test/brand/de", underTest.getRootPath());
 
@@ -54,14 +55,14 @@ public class SiteRootTest {
   }
 
   @Test
-  public void testGetRootPath_NoCurrentPage() {
+  void testGetRootPath_NoCurrentPage() {
     context.currentPage((String)null);
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertNull(underTest.getRootPath());
   }
 
   @Test
-  public void testGetRootPage() {
+  void testGetRootPage() {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertEquals("/content/unittest/de_test/brand/de", underTest.getRootPage().getPath());
 
@@ -71,34 +72,34 @@ public class SiteRootTest {
   }
 
   @Test
-  public void testGetRootPage_NoCurrentPage() {
+  void testGetRootPage_NoCurrentPage() {
     context.currentPage((String)null);
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertNull(underTest.getRootPage());
   }
 
   @Test
-  public void testGetRelativePage() {
+  void testGetRelativePage() {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertEquals("/content/unittest/de_test/brand/de/conference", underTest.getRelativePage("/conference").getPath());
   }
 
   @Test
-  public void testGetRelativePage_NoCurrentPage() {
+  void testGetRelativePage_NoCurrentPage() {
     context.currentPage((String)null);
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertNull(underTest.getRelativePage("/conference"));
   }
 
   @Test
-  public void testIsSiteRootPage() {
+  void testIsSiteRootPage() {
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertTrue(underTest.isRootPage(context.pageManager().getPage("/content/unittest/de_test/brand/de")));
     assertFalse(underTest.isRootPage(context.pageManager().getPage("/content/unittest/de_test/brand/de/conference")));
   }
 
   @Test
-  public void testIsSiteRootPage_NoCurrentPage() {
+  void testIsSiteRootPage_NoCurrentPage() {
     context.currentPage((String)null);
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertFalse(underTest.isRootPage(context.pageManager().getPage("/content/unittest/de_test/brand/de")));
@@ -106,7 +107,7 @@ public class SiteRootTest {
   }
 
   @Test
-  public void testGetRootPathForLaunch() {
+  void testGetRootPathForLaunch() {
     context.currentPage("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference");
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertEquals("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de", underTest.getRootPath());
@@ -117,7 +118,7 @@ public class SiteRootTest {
   }
 
   @Test
-  public void testGetRelativePageForLaunch() {
+  void testGetRelativePageForLaunch() {
     context.currentPage("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference");
     SiteRoot underTest = context.request().adaptTo(SiteRoot.class);
     assertEquals("/content/launches/2018/01/01/my-launch/content/unittest/de_test/brand/de/conference", underTest.getRelativePage("/conference").getPath());

@@ -19,24 +19,24 @@
  */
 package io.wcm.handler.commons.editcontext;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringWriter;
 import java.util.Map;
 
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.io.JSONWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.wcm.api.components.DropTarget;
 import com.google.common.collect.ImmutableMap;
 
-public class DropTargetImplTest {
+class DropTargetImplTest {
 
   @Test
-  public void testDefaultProperties() {
+  void testDefaultProperties() {
     DropTargetImpl underTest = new DropTargetImpl("testName", "prop1");
     assertEquals("testName", underTest.getName());
     assertEquals(DropTarget.CSS_CLASS_PREFIX + "testName", underTest.getId());
@@ -49,7 +49,7 @@ public class DropTargetImplTest {
   }
 
   @Test
-  public void testProperties() throws JSONException {
+  void testProperties() throws JSONException {
     String[] groups = new String[] {
         "group1",
         "group2"

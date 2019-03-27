@@ -22,7 +22,7 @@ package io.wcm.handler.media;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MediaRequestTest {
 

@@ -29,8 +29,8 @@ import java.util.List;
 
 import org.jdom2.Content;
 import org.jdom2.Text;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 
@@ -41,7 +41,7 @@ public class RichTextTest {
 
   private RichTextRequest richTextRequest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     richTextRequest = new RichTextRequest(null, null, null, null, null);
   }

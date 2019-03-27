@@ -35,7 +35,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
@@ -58,8 +58,8 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
 
 /**
  * Test {@link MediaHandlerImpl} methods.

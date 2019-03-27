@@ -19,17 +19,17 @@
  */
 package io.wcm.handler.url.spi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.url.UrlModes;
 
 @SuppressWarnings("null")
-public class UrlHandlerConfigTest {
+class UrlHandlerConfigTest {
 
   private UrlHandlerConfig underTest = new UrlHandlerConfig() {
     @Override
@@ -39,7 +39,7 @@ public class UrlHandlerConfigTest {
   };
 
   @Test
-  public void testDefaultValues() {
+  void testDefaultValues() {
     assertEquals(0, underTest.getSiteRootLevel(null));
     assertFalse(underTest.isSecure(null));
     assertFalse(underTest.isIntegrator(null));

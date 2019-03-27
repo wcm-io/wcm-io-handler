@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.url.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.spy;
@@ -39,8 +39,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.servlethelpers.MockSlingHttpServletRequest;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -55,13 +55,14 @@ import io.wcm.handler.url.integrator.IntegratorPlaceholder;
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class UrlHandlerImplTest {
+class UrlHandlerImplTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   protected Adaptable adaptable() {
     return context.request();
@@ -71,7 +72,7 @@ public class UrlHandlerImplTest {
    * Test {@link UrlHandler#rewritePathToContext(Resource)} with current site context
    */
   @Test
-  public void testRewritePathToContext_SiteContext() {
+  void testRewritePathToContext_SiteContext() {
 
     // create current page in site context
     context.currentPage(context.create().page("/content/unittest/de_test/brand/de/section/page",
@@ -80,48 +81,48 @@ public class UrlHandlerImplTest {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // paths from current site
-    assertEquals("site-current-1", "/content/unittest/de_test/brand/de",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de"));
-    assertEquals("site-current-2", "/content/unittest/de_test/brand/de/section/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-current-3", "/content/unittest/de_test/brand/de/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/somewhat/other/page"));
+    assertEquals("/content/unittest/de_test/brand/de",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de"), "site-current-1");
+    assertEquals("/content/unittest/de_test/brand/de/section/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/section/page"), "site-current-2");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/somewhat/other/page"), "site-current-3");
 
     // paths from other language
-    assertEquals("site-otherlang-1", "/content/unittest/de_test/brand/de",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/fr"));
-    assertEquals("site-otherlang-2", "/content/unittest/de_test/brand/de/section/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/en/section/page"));
-    assertEquals("site-otherlang-3", "/content/unittest/de_test/brand/de/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/it/somewhat/other/page"));
+    assertEquals("/content/unittest/de_test/brand/de",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/fr"), "site-otherlang-1");
+    assertEquals("/content/unittest/de_test/brand/de/section/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/en/section/page"), "site-otherlang-2");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/it/somewhat/other/page"), "site-otherlang-3");
 
     // paths from other sites (for example a dealersite)
-    assertEquals("site-othersite-1", "/content/unittest/de_test/brand/de",
-        rewritePathToContext(urlHandler, "/content/unittest/de_sample_master/brand/de"));
+    assertEquals("/content/unittest/de_test/brand/de",
+        rewritePathToContext(urlHandler, "/content/unittest/de_sample_master/brand/de"), "site-othersite-1");
 
     // paths from other markets/languages
-    assertEquals("site-othermarket-1", "/content/unittest/de_test/brand/de",
-        rewritePathToContext(urlHandler, "/content/unittest/fr_xxx/brand/fr"));
-    assertEquals("site-othermarket-2", "/content/unittest/de_test/brand/de/section/page",
-        rewritePathToContext(urlHandler, "/content/unittest/en_yyy/brand/en/section/page"));
-    assertEquals("site-othermarket-3", "/content/unittest/de_test/brand/de/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/it/brand/it_123/somewhat/other/page"));
-    assertEquals("site-othermarket-4", "/content/unittest/de_test/brand/de/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/otherunittest/it/brand/it_123/somewhat/other/page"));
+    assertEquals("/content/unittest/de_test/brand/de",
+        rewritePathToContext(urlHandler, "/content/unittest/fr_xxx/brand/fr"), "site-othermarket-1");
+    assertEquals("/content/unittest/de_test/brand/de/section/page",
+        rewritePathToContext(urlHandler, "/content/unittest/en_yyy/brand/en/section/page"), "site-othermarket-2");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/it/brand/it_123/somewhat/other/page"), "site-othermarket-3");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/otherunittest/it/brand/it_123/somewhat/other/page"), "site-othermarket-4");
 
     // invalid paths
-    assertEquals("invalid-1", "/content/unittest/xxx",
-        rewritePathToContext(urlHandler, "/content/unittest/xxx"));
-    assertEquals("invalid-2", "/content/xxx",
-        rewritePathToContext(urlHandler, "/content/xxx"));
-    assertEquals("invalid-3", "/etc/aa/bb/cc/dd/ee/ff",
-        rewritePathToContext(urlHandler, "/etc/aa/bb/cc/dd/ee/ff"));
-    assertEquals("invalid-4", "/content/unittest",
-        rewritePathToContext(urlHandler, "/content/unittest"));
-    assertEquals("invalid-5", "/content",
-        rewritePathToContext(urlHandler, "/content"));
-    assertNull("invalid-6", rewritePathToContext(urlHandler, ""));
-    assertNull("invalid-7", rewritePathToContext(urlHandler, null));
+    assertEquals("/content/unittest/xxx",
+        rewritePathToContext(urlHandler, "/content/unittest/xxx"), "invalid-1");
+    assertEquals("/content/xxx",
+        rewritePathToContext(urlHandler, "/content/xxx"), "invalid-2");
+    assertEquals("/etc/aa/bb/cc/dd/ee/ff",
+        rewritePathToContext(urlHandler, "/etc/aa/bb/cc/dd/ee/ff"), "invalid-3");
+    assertEquals("/content/unittest",
+        rewritePathToContext(urlHandler, "/content/unittest"), "invalid-4");
+    assertEquals("/content",
+        rewritePathToContext(urlHandler, "/content"), "invalid-5");
+    assertNull(rewritePathToContext(urlHandler, ""), "invalid-6");
+    assertNull(rewritePathToContext(urlHandler, null), "invalid-7");
 
   }
 
@@ -129,7 +130,7 @@ public class UrlHandlerImplTest {
    * Test {@link UrlHandler#rewritePathToContext(Resource)} with current invalid context
    */
   @Test
-  public void testRewritePathToContext_InvalidContext() {
+  void testRewritePathToContext_InvalidContext() {
 
     // create current page with invalid context
     context.currentPage(context.create().page("/etc/xxx/yyy/zzz",
@@ -138,44 +139,44 @@ public class UrlHandlerImplTest {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // paths from current site
-    assertEquals("site-current-1", "/content/unittest/de_test/brand/de",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de"));
-    assertEquals("site-current-2", "/content/unittest/de_test/brand/de/section/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-current-3", "/content/unittest/de_test/brand/de/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/somewhat/other/page"));
+    assertEquals("/content/unittest/de_test/brand/de",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de"), "site-current-1");
+    assertEquals("/content/unittest/de_test/brand/de/section/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/section/page"), "site-current-2");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/somewhat/other/page"), "site-current-3");
 
     // paths from other language
-    assertEquals("site-otherlang-1", "/content/unittest/de_test/brand/fr",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/fr"));
-    assertEquals("site-otherlang-2", "/content/unittest/de_test/brand/en/section/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/en/section/page"));
-    assertEquals("site-otherlang-3", "/content/unittest/de_test/brand/it/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/it/somewhat/other/page"));
+    assertEquals("/content/unittest/de_test/brand/fr",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/fr"), "site-otherlang-1");
+    assertEquals("/content/unittest/de_test/brand/en/section/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/en/section/page"), "site-otherlang-2");
+    assertEquals("/content/unittest/de_test/brand/it/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/it/somewhat/other/page"), "site-otherlang-3");
 
     // paths from other markets/languages
-    assertEquals("site-othermarket-1", "/content/unittest/fr_xxx/brand/fr",
-        rewritePathToContext(urlHandler, "/content/unittest/fr_xxx/brand/fr"));
-    assertEquals("site-othermarket-2", "/content/unittest/en_yyy/brand/en/section/page",
-        rewritePathToContext(urlHandler, "/content/unittest/en_yyy/brand/en/section/page"));
-    assertEquals("site-othermarket-3", "/content/unittest/it/brand/it_123/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/it/brand/it_123/somewhat/other/page"));
-    assertEquals("site-othermarket-3", "/content/otherunittest/it/brand/it_123/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/otherunittest/it/brand/it_123/somewhat/other/page"));
+    assertEquals("/content/unittest/fr_xxx/brand/fr",
+        rewritePathToContext(urlHandler, "/content/unittest/fr_xxx/brand/fr"), "site-othermarket-1");
+    assertEquals("/content/unittest/en_yyy/brand/en/section/page",
+        rewritePathToContext(urlHandler, "/content/unittest/en_yyy/brand/en/section/page"), "site-othermarket-2");
+    assertEquals("/content/unittest/it/brand/it_123/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/it/brand/it_123/somewhat/other/page"), "site-othermarket-3");
+    assertEquals("/content/otherunittest/it/brand/it_123/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/otherunittest/it/brand/it_123/somewhat/other/page"), "site-othermarket-3");
 
     // invalid paths
-    assertEquals("invalid-1", "/content/unittest/xxx",
-        rewritePathToContext(urlHandler, "/content/unittest/xxx"));
-    assertEquals("invalid-2", "/content/xxx",
-        rewritePathToContext(urlHandler, "/content/xxx"));
-    assertEquals("invalid-3", "/etc/aa/bb/cc/dd/ee/ff",
-        rewritePathToContext(urlHandler, "/etc/aa/bb/cc/dd/ee/ff"));
-    assertEquals("invalid-4", "/content/unittest",
-        rewritePathToContext(urlHandler, "/content/unittest"));
-    assertEquals("invalid-5", "/content",
-        rewritePathToContext(urlHandler, "/content"));
-    assertNull("invalid-6", rewritePathToContext(urlHandler, ""));
-    assertNull("invalid-7", rewritePathToContext(urlHandler, null));
+    assertEquals("/content/unittest/xxx",
+        rewritePathToContext(urlHandler, "/content/unittest/xxx"), "invalid-1");
+    assertEquals("/content/xxx",
+        rewritePathToContext(urlHandler, "/content/xxx"), "invalid-2");
+    assertEquals("/etc/aa/bb/cc/dd/ee/ff",
+        rewritePathToContext(urlHandler, "/etc/aa/bb/cc/dd/ee/ff"), "invalid-3");
+    assertEquals("/content/unittest",
+        rewritePathToContext(urlHandler, "/content/unittest"), "invalid-4");
+    assertEquals("/content",
+        rewritePathToContext(urlHandler, "/content"), "invalid-5");
+    assertNull(rewritePathToContext(urlHandler, ""), "invalid-6");
+    assertNull(rewritePathToContext(urlHandler, null), "invalid-7");
 
   }
 
@@ -183,84 +184,100 @@ public class UrlHandlerImplTest {
    * Test {@link UrlHandler#rewritePathToContext(Resource)} without current context, given context
    */
   @Test
-  public void testRewritePathToContext_SpecContext() {
+  void testRewritePathToContext_SpecContext() {
 
     context.currentPage(context.pageManager().getPage("/content"));
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // paths from current site
-    assertEquals("site-current-1", "/content/unittest/de_test/brand/de",
+    assertEquals("/content/unittest/de_test/brand/de",
         rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-current-2", "/content/unittest/de_test/brand/de/section/page",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-current-1");
+    assertEquals("/content/unittest/de_test/brand/de/section/page",
         rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/section/page",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-current-3", "/content/unittest/de_test/brand/de/somewhat/other/page",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-current-2");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
         rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/somewhat/other/page",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-current-4", "/content/unittest/de_test/brand/de/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/somewhat/other/page", null));
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-current-3");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/de/somewhat/other/page", null), "site-current-4");
 
     // paths from other language
-    assertEquals("site-otherlang-1", "/content/unittest/de_test/brand/de",
+    assertEquals("/content/unittest/de_test/brand/de",
         rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/fr",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-otherlang-2", "/content/unittest/de_test/brand/de/section/page",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-otherlang-1");
+    assertEquals("/content/unittest/de_test/brand/de/section/page",
         rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/en/section/page",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-otherlang-3", "/content/unittest/de_test/brand/de/somewhat/other/page",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-otherlang-2");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
         rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/it/somewhat/other/page",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-otherlang-4", "/content/unittest/de_test/brand/it/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/it/somewhat/other/page", null));
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-otherlang-3");
+    assertEquals("/content/unittest/de_test/brand/it/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/unittest/de_test/brand/it/somewhat/other/page", null), "site-otherlang-4");
 
     // paths from other sites (for example a dealersite)
-    assertEquals("site-othersite-1", "/content/unittest/de_test/brand/de",
+    assertEquals("/content/unittest/de_test/brand/de",
         rewritePathToContext(urlHandler, "/content/unittest/de_sample_master/brand/de",
-            "/content/unittest/de_test/brand/de/section/page"));
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-othersite-1");
 
     // paths from other markets/languages
-    assertEquals("site-othermarket-1", "/content/unittest/de_test/brand/de",
+    assertEquals("/content/unittest/de_test/brand/de",
         rewritePathToContext(urlHandler, "/content/unittest/fr_xxx/brand/fr",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-othermarket-2", "/content/unittest/de_test/brand/de/section/page",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-othermarket-1");
+    assertEquals("/content/unittest/de_test/brand/de/section/page",
         rewritePathToContext(urlHandler, "/content/unittest/en_yyy/brand/en/section/page",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-othermarket-3", "/content/unittest/de_test/brand/de/somewhat/other/page",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-othermarket-2");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
         rewritePathToContext(urlHandler, "/content/unittest/it/brand/it_123/somewhat/other/page",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-othermarket-4", "/content/unittest/de_test/brand/de/somewhat/other/page",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-othermarket-3");
+    assertEquals("/content/unittest/de_test/brand/de/somewhat/other/page",
         rewritePathToContext(urlHandler, "/content/otherunittest/it/brand/it_123/somewhat/other/page",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("site-othermarket-5", "/content/otherunittest/it/brand/it_123/somewhat/other/page",
-        rewritePathToContext(urlHandler, "/content/otherunittest/it/brand/it_123/somewhat/other/page", null));
+            "/content/unittest/de_test/brand/de/section/page"),
+        "site-othermarket-4");
+    assertEquals("/content/otherunittest/it/brand/it_123/somewhat/other/page",
+        rewritePathToContext(urlHandler, "/content/otherunittest/it/brand/it_123/somewhat/other/page", null), "site-othermarket-5");
 
     // invalid paths
-    assertEquals("invalid-1", "/content/unittest/xxx",
+    assertEquals("/content/unittest/xxx",
         rewritePathToContext(urlHandler, "/content/unittest/xxx",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("invalid-2", "/content/xxx",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "invalid-1");
+    assertEquals("/content/xxx",
         rewritePathToContext(urlHandler, "/content/xxx",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("invalid-3", "/etc/aa/bb/cc/dd/ee/ff",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "invalid-2");
+    assertEquals("/etc/aa/bb/cc/dd/ee/ff",
         rewritePathToContext(urlHandler, "/etc/aa/bb/cc/dd/ee/ff",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("invalid-4", "/content/unittest",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "invalid-3");
+    assertEquals("/content/unittest",
         rewritePathToContext(urlHandler, "/content/unittest",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertEquals("invalid-5", "/content",
+            "/content/unittest/de_test/brand/de/section/page"),
+        "invalid-4");
+    assertEquals("/content",
         rewritePathToContext(urlHandler, "/content",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertNull("invalid-6", rewritePathToContext(urlHandler, "",
-            "/content/unittest/de_test/brand/de/section/page"));
-    assertNull("invalid-7", rewritePathToContext(urlHandler, null,
-        "/content/unittest/de_test/brand/de/section/page"));
-    assertNull("invalid-8", rewritePathToContext(urlHandler, null, null));
+            "/content/unittest/de_test/brand/de/section/page"),
+        "invalid-5");
+    assertNull(rewritePathToContext(urlHandler, "",
+        "/content/unittest/de_test/brand/de/section/page"), "invalid-6");
+    assertNull(rewritePathToContext(urlHandler, null,
+        "/content/unittest/de_test/brand/de/section/page"), "invalid-7");
+    assertNull(rewritePathToContext(urlHandler, null, null), "invalid-8");
 
   }
 
   @Test
-  public void testExternalizeLinkUrl() {
+  void testExternalizeLinkUrl() {
     // create current page in site context
     context.currentPage(context.create().page("/content/unittest/de_test/brand/de/section/page",
         DummyAppTemplate.CONTENT.getTemplatePath()));
@@ -368,7 +385,7 @@ public class UrlHandlerImplTest {
   }
 
   @Test
-  public void testExternalizeResourceUrl() {
+  void testExternalizeResourceUrl() {
     // create current page in site context
     context.currentPage(context.create().page("/content/unittest/de_test/brand/de/section/page",
         DummyAppTemplate.CONTENT.getTemplatePath()));
@@ -455,7 +472,7 @@ public class UrlHandlerImplTest {
   }
 
   @Test
-  public void testBuildUrl() {
+  void testBuildUrl() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // permuations
@@ -497,7 +514,7 @@ public class UrlHandlerImplTest {
   }
 
   @Test
-  public void testUrlWithSpaces() {
+  void testUrlWithSpaces() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/path%20with/spaces.gif",
@@ -506,7 +523,7 @@ public class UrlHandlerImplTest {
   }
 
   @Test
-  public void testUrlWithSpecialChars() {
+  void testUrlWithSpecialChars() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/path%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC.gif",
@@ -515,7 +532,7 @@ public class UrlHandlerImplTest {
   }
 
   @Test
-  public void testAppendQueryString() {
+  void testAppendQueryString() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     assertEquals("/the/path", appendQueryString(urlHandler, "/the/path", null));
@@ -540,7 +557,7 @@ public class UrlHandlerImplTest {
   }
 
   @Test
-  public void testAppendQueryStringWithInheritance() {
+  void testAppendQueryStringWithInheritance() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     Set<String> params = ImmutableSet.of("i1", "i2");
@@ -586,7 +603,7 @@ public class UrlHandlerImplTest {
   }
 
   @Test
-  public void testSetAnchor() {
+  void testSetAnchor() {
     UrlHandler urlHandler = AdaptTo.notNull(adaptable(), UrlHandler.class);
 
     // test invalid parameters

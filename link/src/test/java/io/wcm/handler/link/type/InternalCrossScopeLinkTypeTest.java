@@ -25,9 +25,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.sling.api.adapter.Adaptable;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.wcm.api.Page;
 
@@ -39,7 +39,7 @@ import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 /**
  * Test InternalCrossScopeLinkType methods.
@@ -57,7 +57,7 @@ public class InternalCrossScopeLinkTypeTest {
     return context.request();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
 
     // create current page in site context

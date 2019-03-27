@@ -22,8 +22,8 @@ package io.wcm.handler.mediasource.dam.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 
@@ -35,7 +35,7 @@ public class DefaultRenditionHandlerTest extends AbstractDamTest {
 
   private DefaultRenditionHandler underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     Asset asset = context.resourceResolver().getResource(MEDIAITEM_PATH_16_10).adaptTo(Asset.class);
     underTest = new DefaultRenditionHandler(asset);

@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.commons.dom;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DivTest {
+class DivTest {
 
   @Test
-  public void testSimpleAttributes() throws Exception {
+  void testSimpleAttributes() throws Exception {
     Div div = new Div();
     assertEquals("div", div.getName());
   }

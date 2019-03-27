@@ -24,9 +24,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.wcm.api.Page;
 
@@ -39,7 +39,7 @@ import io.wcm.handler.link.testcontext.DummyAppTemplate;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 /**
  * Most of the logic of {@link InternalLinkResolver} is tested in the InternalLinkTypeTest.
@@ -50,7 +50,7 @@ public class InternalLinkResolverTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
 
     // create current page in site context

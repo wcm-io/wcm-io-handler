@@ -29,18 +29,18 @@ import static org.mockito.Mockito.mock;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.media.spi.MediaSource;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
 public class MediaTest {
 
@@ -50,7 +50,7 @@ public class MediaTest {
 
   private Media underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     mediaRequest = new MediaRequest("/media/ref", new MediaArgs());
     underTest = new Media(mediaSource, mediaRequest);

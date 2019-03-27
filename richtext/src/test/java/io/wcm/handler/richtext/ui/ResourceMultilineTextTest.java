@@ -26,14 +26,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 @SuppressWarnings("null")
 public class ResourceMultilineTextTest {
@@ -46,7 +46,7 @@ public class ResourceMultilineTextTest {
   private Resource textWithMarkupResource;
   private Resource invalidTextResource;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     context.create().page(ROOTPATH_CONTENT + "/page1");
 

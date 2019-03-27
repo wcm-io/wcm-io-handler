@@ -28,8 +28,8 @@ import java.io.InputStream;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -49,7 +49,7 @@ public class RenditionMetadataTest extends AbstractDamTest {
   private RenditionMetadata smallestRendition;
   private RenditionMetadata biggestRendition;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     Asset asset = media.getAsset().adaptTo(Asset.class);

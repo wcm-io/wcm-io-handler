@@ -27,12 +27,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.google.common.collect.ImmutableList;
@@ -52,12 +52,12 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 /**
  * Test {@link DummyImageMediaMarkupBuilder}
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
 public class DummyImageMediaMarkupBuilderTest {
 
@@ -73,7 +73,7 @@ public class DummyImageMediaMarkupBuilderTest {
   @Mock
   private Rendition rendition;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     when(rendition.isImage()).thenReturn(true);
   }

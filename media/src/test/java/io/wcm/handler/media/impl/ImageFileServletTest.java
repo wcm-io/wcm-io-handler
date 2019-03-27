@@ -27,14 +27,14 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.image.Layer;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 public class ImageFileServletTest {
@@ -44,7 +44,7 @@ public class ImageFileServletTest {
 
   private ImageFileServlet underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = new ImageFileServlet();
     context.currentResource(context.load().binaryFile("/sample_image_215x102.jpg", "/content/sample_image.jpg"));

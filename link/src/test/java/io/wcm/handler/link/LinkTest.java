@@ -26,11 +26,11 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.wcm.api.Page;
 
@@ -39,7 +39,7 @@ import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Rendition;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
 public class LinkTest {
 
@@ -49,7 +49,7 @@ public class LinkTest {
 
   private Link underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = new Link(linkType, linkRequest);
   }

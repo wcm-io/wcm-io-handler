@@ -30,16 +30,16 @@ import static org.junit.Assert.assertNull;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.commons.json.JSONObject;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 public class MediaFormatValidateServletTest {
@@ -49,7 +49,7 @@ public class MediaFormatValidateServletTest {
 
   private MediaFormatValidateServlet underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = context.registerInjectActivateService(new MediaFormatValidateServlet());
     context.currentPage(context.create().page(ROOTPATH_CONTENT));

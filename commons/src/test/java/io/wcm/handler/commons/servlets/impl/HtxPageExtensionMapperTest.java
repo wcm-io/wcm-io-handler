@@ -30,19 +30,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.request.RequestPathInfo;
-import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class HtxPageExtensionMapperTest {
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-  @Rule
-  public OsgiContext context = new OsgiContext();
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class HtxPageExtensionMapperTest {
+
+  private final AemContext context = new AemContext();
 
   @Mock
   private SlingHttpServletRequest request;
@@ -53,14 +57,14 @@ public class HtxPageExtensionMapperTest {
   @Mock
   private RequestDispatcher requestDispatcher;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     when(request.getRequestPathInfo()).thenReturn(requestPathInfo);
     when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
   }
 
   @Test
-  public void testDisabled() throws Exception {
+  void testDisabled() throws Exception {
     HtxPageExtensionMapper underTest = context.registerInjectActivateService(new HtxPageExtensionMapper(), "enabled", false);
 
     underTest.doGet(request, response);
@@ -69,7 +73,7 @@ public class HtxPageExtensionMapperTest {
   }
 
   @Test
-  public void testSimpleUrl() throws Exception {
+  void testSimpleUrl() throws Exception {
     HtxPageExtensionMapper underTest = context.registerInjectActivateService(new HtxPageExtensionMapper(), "enabled", true);
 
     when(requestPathInfo.getResourcePath()).thenReturn("/my/path");
@@ -83,7 +87,7 @@ public class HtxPageExtensionMapperTest {
   }
 
   @Test
-  public void testComplexUrl() throws Exception {
+  void testComplexUrl() throws Exception {
     HtxPageExtensionMapper underTest = context.registerInjectActivateService(new HtxPageExtensionMapper(), "enabled", true);
 
     when(requestPathInfo.getResourcePath()).thenReturn("/my/path");

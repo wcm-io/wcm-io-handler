@@ -28,16 +28,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @SuppressWarnings("null")
@@ -48,7 +48,7 @@ public class ResourceMediaTest {
 
   private Asset asset;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     asset = context.create().asset("/content/dam/asset1.jpg",
         (int)EDITORIAL_2COL.getWidth(), (int)EDITORIAL_2COL.getHeight(), ContentType.JPEG);

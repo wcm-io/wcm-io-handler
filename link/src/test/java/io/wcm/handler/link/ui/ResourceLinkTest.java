@@ -24,15 +24,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 @SuppressWarnings("null")
 public class ResourceLinkTest {
@@ -40,7 +40,7 @@ public class ResourceLinkTest {
   @Rule
   public final AemContext context = AppAemContext.newAemContext();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     context.create().page(ROOTPATH_CONTENT + "/page1");
   }

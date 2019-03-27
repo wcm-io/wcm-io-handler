@@ -26,8 +26,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -42,7 +42,7 @@ public class VirtualRenditionMetadataTest extends AbstractDamTest {
   private VirtualRenditionMetadata underTest;
   private Rendition rendition;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.thumbnail.215.102.jpg";
     context.resourceResolver().delete(context.resourceResolver().getResource(path));

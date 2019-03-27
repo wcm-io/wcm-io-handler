@@ -23,15 +23,15 @@ import static org.junit.Assert.assertNotNull;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.day.cq.wcm.api.Page;
 
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -105,7 +105,7 @@ public abstract class AbstractDamTest {
 
   private MediaHandler mediaHandler;
 
-  @Before
+  @BeforeEach
   public final void setUpDamEnvironment() throws Exception {
 
     // simulate HTML requests for integrator mode

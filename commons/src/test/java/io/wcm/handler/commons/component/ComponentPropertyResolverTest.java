@@ -19,23 +19,24 @@
  */
 package io.wcm.handler.commons.component;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("deprecation")
-public class ComponentPropertyResolverTest {
+class ComponentPropertyResolverTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Test
-  public void testResourceWithoutResourceType() {
+  void testResourceWithoutResourceType() {
     Resource resource = context.create().resource("/content/r1");
 
     ComponentPropertyResolver underTest = new ComponentPropertyResolver(resource);
@@ -44,7 +45,7 @@ public class ComponentPropertyResolverTest {
   }
 
   @Test
-  public void testResourceWithComponent() {
+  void testResourceWithComponent() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
         "prop1", "value1");
     Resource resource = context.create().resource("/content/r1",
@@ -56,7 +57,7 @@ public class ComponentPropertyResolverTest {
   }
 
   @Test
-  public void testResourceWithSuperComponent() {
+  void testResourceWithSuperComponent() {
     Resource superComponent = context.create().resource("/apps/app1/components/comp2",
         "prop1", "value1");
     Resource component = context.create().resource("/apps/app1/components/comp1",

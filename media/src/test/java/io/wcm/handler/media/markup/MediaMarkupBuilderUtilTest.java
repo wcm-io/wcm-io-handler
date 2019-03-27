@@ -28,11 +28,11 @@ import static org.mockito.Mockito.when;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
@@ -49,7 +49,7 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MediaMarkupBuilderUtilTest {
 
   private static final String VERSION_LABEL = "v1";
@@ -69,7 +69,7 @@ public class MediaMarkupBuilderUtilTest {
   @Mock
   private ComponentContext componentContext;
 
-  @Before
+  @BeforeEach
   @SuppressWarnings("null")
   public void setUp() throws Exception {
     when(request.getResourceResolver()).thenReturn(resolver);

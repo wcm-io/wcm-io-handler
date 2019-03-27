@@ -19,33 +19,33 @@
  */
 package io.wcm.handler.commons.dom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 
 import org.jdom2.Content;
 import org.jdom2.Namespace;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-public class HtmlElementTest {
+class HtmlElementTest {
 
   private static final Namespace NS_TEST = Namespace.getNamespace("test", "http://test");
 
   private HtmlElement<?> underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = new HtmlElement("test");
   }
 
   @SuppressWarnings("deprecation")
   @Test
-  public void testName() {
+  void testName() {
     assertEquals("test", underTest.getName());
 
     underTest.setName("test2");
@@ -53,13 +53,13 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testAttributeValueAsInteger() {
+  void testAttributeValueAsInteger() {
     underTest.setAttributeValueAsInteger("attr1", 25);
     assertEquals(25, underTest.getAttributeValueAsInteger("attr1"));
   }
 
   @Test
-  public void testAddContent() {
+  void testAddContent() {
     underTest.addContent(ImmutableSet.of(new Image(), new Div()));
     underTest.addContent((Collection)null);
 
@@ -79,7 +79,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testText() {
+  void testText() {
     underTest.setText("abc");
     assertEquals("abc", underTest.getText());
 
@@ -88,7 +88,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testSetAttribute() {
+  void testSetAttribute() {
     underTest.setAttribute("attr1", "value1");
     underTest.setAttribute("attr1", null);
 
@@ -97,7 +97,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testCommonAttributes() {
+  void testCommonAttributes() {
     underTest.setId("id1");
     assertEquals("id1", underTest.getId());
 
@@ -106,7 +106,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testCssClass() {
+  void testCssClass() {
     assertNull(underTest.getCssClass());
 
     underTest.addCssClass("class1");
@@ -123,7 +123,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testStyle() {
+  void testStyle() {
     assertNull(underTest.getStyleString());
 
     underTest.setStyleString("test1:value1;test2:value2;");
@@ -135,7 +135,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testData() {
+  void testData() {
     underTest.setData("attr1", "value1");
     assertEquals("value1", underTest.getData("attr1"));
 
@@ -144,7 +144,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testToString() {
+  void testToString() {
     underTest.setId("id1");
     underTest.setData("attr1", "value1");
     underTest.addContent(new Span("abc"));
@@ -153,7 +153,7 @@ public class HtmlElementTest {
   }
 
   @Test
-  public void testFactory() {
+  void testFactory() {
     underTest.create("sub1");
     underTest.createComment("text");
     underTest.createDiv();

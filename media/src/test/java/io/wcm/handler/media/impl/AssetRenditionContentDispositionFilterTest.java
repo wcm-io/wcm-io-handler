@@ -28,20 +28,20 @@ import static org.junit.Assert.assertNull;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AssetRenditionContentDispositionFilterTest {
 
   @Rule
@@ -55,7 +55,7 @@ public class AssetRenditionContentDispositionFilterTest {
   @Mock
   private FilterChain filterChain;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     // setup filter with JPEG on the blacklist
     underTest = context.registerInjectActivateService(new AssetRenditionContentDispositionFilter(),

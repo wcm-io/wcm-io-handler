@@ -26,9 +26,9 @@ import static io.wcm.handler.link.testcontext.AppAemContext.ROOTPATH_CONTENT_OTH
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.wcm.api.Page;
 
@@ -37,7 +37,7 @@ import io.wcm.handler.link.type.InternalCrossContextLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 public class LinkHandlerConfigTest {
 
@@ -49,7 +49,7 @@ public class LinkHandlerConfigTest {
   private Page contentPageOtherSite;
   private Page xfPage;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = AdaptTo.notNull(context.request(), LinkHandlerConfig.class);
     contentPage = context.create().page(ROOTPATH_CONTENT + "/page1");

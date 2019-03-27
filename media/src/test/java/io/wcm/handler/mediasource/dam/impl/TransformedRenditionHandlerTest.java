@@ -23,9 +23,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -33,7 +33,7 @@ import com.day.cq.dam.api.Rendition;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.util.RunMode;
 
@@ -49,7 +49,7 @@ public class TransformedRenditionHandlerTest {
   private Rendition webRendition;
   private CropDimension cropDimension;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
 
     // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata

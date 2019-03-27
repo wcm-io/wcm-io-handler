@@ -24,12 +24,12 @@ import static org.junit.Assert.assertEquals;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 public class MediaFileServletTest {
@@ -41,7 +41,7 @@ public class MediaFileServletTest {
 
   private MediaFileServlet underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = new MediaFileServlet();
     context.currentResource(context.load().binaryFile("/sample_image_215x102.jpg", "/content/sample_image.jpg"));

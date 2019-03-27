@@ -27,9 +27,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 public class SyntheticNavigatableResourceTest {
 

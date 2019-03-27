@@ -25,15 +25,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.wcm.api.Page;
 
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 @SuppressWarnings("null")
 public class ResourceRichTextTest {
@@ -43,7 +43,7 @@ public class ResourceRichTextTest {
 
   private Page page;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     page = context.create().page(ROOTPATH_CONTENT + "/page1");
   }

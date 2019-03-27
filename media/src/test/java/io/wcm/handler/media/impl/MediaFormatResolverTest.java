@@ -31,11 +31,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
@@ -43,7 +43,7 @@ import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MediaFormatResolverTest {
 
   @Mock
@@ -51,7 +51,7 @@ public class MediaFormatResolverTest {
 
   private MediaFormatResolver underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     when(mediaFormatHandler.getMediaFormat(EDITORIAL_1COL.getName())).thenReturn(EDITORIAL_1COL);
     when(mediaFormatHandler.getMediaFormat(EDITORIAL_2COL.getName())).thenReturn(EDITORIAL_2COL);

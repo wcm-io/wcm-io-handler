@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link UrlHandlerImpl} methods with current request and current page null.
  */
-public class UrlHandlerImplWithoutRequestTest extends UrlHandlerImplTest {
+class UrlHandlerImplWithoutRequestTest extends UrlHandlerImplTest {
 
   @Override
   protected Adaptable adaptable() {

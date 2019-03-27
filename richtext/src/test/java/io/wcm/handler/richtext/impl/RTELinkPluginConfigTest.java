@@ -19,13 +19,13 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import io.wcm.handler.richtext.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 
 public class RTELinkPluginConfigTest {
@@ -35,7 +35,7 @@ public class RTELinkPluginConfigTest {
 
   private RTELinkPluginConfig underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = context.registerInjectActivateService(new RTELinkPluginConfig());
   }

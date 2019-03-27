@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.wcm.api.WCMMode;
 
@@ -35,7 +35,7 @@ import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.testcontext.DummyAppTemplate;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 @SuppressWarnings("null")
 public class RedirectTest {

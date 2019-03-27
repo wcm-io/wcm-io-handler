@@ -27,15 +27,15 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.image.Layer;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.suffix.SuffixBuilder;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 public class DummyImageServletTest {
@@ -45,7 +45,7 @@ public class DummyImageServletTest {
 
   private DummyImageServlet underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = new DummyImageServlet();
     context.requestPathInfo().setExtension(FileExtension.PNG);

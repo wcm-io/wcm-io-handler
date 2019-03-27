@@ -29,13 +29,12 @@ import java.util.Map;
 import org.apache.sling.rewriter.ProcessingComponentConfiguration;
 import org.apache.sling.rewriter.ProcessingContext;
 import org.apache.sling.rewriter.Transformer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -43,13 +42,14 @@ import org.xml.sax.SAXException;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UrlExternalizerTransformerTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class UrlExternalizerTransformerTest {
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Mock
   private ContentHandler contentHandler;
@@ -60,8 +60,8 @@ public class UrlExternalizerTransformerTest {
 
   private Transformer underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     when(processingContext.getRequest()).thenReturn(context.request());
     when(processingComponentConfiguration.getConfiguration()).thenReturn(ImmutableValueMap.builder()
         .put(UrlExternalizerTransformerConfig.PN_REWRITE_ELEMENTS, new String[] {
@@ -76,65 +76,65 @@ public class UrlExternalizerTransformerTest {
     underTest.setContentHandler(contentHandler);
   }
 
-  @After
-  public void tearDown() {
+  @AfterEach
+  void tearDown() {
     underTest.dispose();
   }
 
   @Test
-  public void testRewriteUnknownElement() {
+  void testRewriteUnknownElement() {
     callTransformer("unknownElement", "attr1", "/my/url");
     verifyTransformer("unknownElement", "attr1", "/my/url");
   }
 
   @Test
-  public void testRewriteUnknownElement_IntegratorTemplateMode() {
+  void testRewriteUnknownElement_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     callTransformer("unknownElement", "attr1", "/my/url");
     verifyTransformer("unknownElement", "attr1", "/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement() {
+  void testRewriteKnownElement() {
     callTransformer("element1", "attr1", "/my/url");
     verifyTransformer("element1", "attr1", "/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement_IntegratorTemplateMode() {
+  void testRewriteKnownElement_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     callTransformer("element1", "attr1", "/my/url");
     verifyTransformer("element1", "attr1", "http://de.dummysite.org/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement_MissingAttr_IntegratorTemplateMode() {
+  void testRewriteKnownElement_MissingAttr_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     callTransformer("element1", "attr5", "/my/url");
     verifyTransformer("element1", "attr5", "/my/url");
   }
 
   @Test
-  public void testRewriteKnownElement_EmptyAttr_IntegratorTemplateMode() {
+  void testRewriteKnownElement_EmptyAttr_IntegratorTemplateMode() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     callTransformer("element1", "attr1", "");
     verifyTransformer("element1", "attr1", "");
   }
 
   @Test
-  public void testRewriteWithSpecialChars() {
+  void testRewriteWithSpecialChars() {
     callTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&param2=with%26amp");
     verifyTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&param2=with%26amp");
   }
 
   @Test
-  public void testRewriteWithSpecialCharsAndHtmlEscaping() {
+  void testRewriteWithSpecialCharsAndHtmlEscaping() {
     callTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&amp;param2=with%26amp");
     verifyTransformer("element1", "attr1", "/my/url%20with%20space?param1=value%20with%20space&amp;param2=with%26amp");
   }
 
   @Test
-  public void testRewriteAnchorOnly() {
+  void testRewriteAnchorOnly() {
     callTransformer("element1", "attr1", "#my-anchor");
     verifyTransformer("element1", "attr1", "#my-anchor");
   }

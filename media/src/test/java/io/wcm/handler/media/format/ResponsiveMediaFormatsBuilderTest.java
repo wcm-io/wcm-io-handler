@@ -22,7 +22,7 @@ package io.wcm.handler.media.format;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;

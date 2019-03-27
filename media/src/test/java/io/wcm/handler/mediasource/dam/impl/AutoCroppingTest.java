@@ -21,7 +21,7 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.media.CropDimension;
 

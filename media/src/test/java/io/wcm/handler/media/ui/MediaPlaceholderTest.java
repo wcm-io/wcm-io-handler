@@ -26,12 +26,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -44,9 +44,9 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MediaPlaceholderTest {
 
   @Rule
@@ -56,7 +56,7 @@ public class MediaPlaceholderTest {
   private ComponentContext wcmComponentContext;
   private Resource resource;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     resource = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media",
         ImmutableValueMap.of(MediaNameConstants.PN_MEDIA_REF, "/content/dam/invalid"));

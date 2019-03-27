@@ -29,8 +29,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Element;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -48,7 +48,7 @@ public class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
 
   private DamVideoMediaMarkupBuilder underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     // prepare video profiles
     context.load().json("/mediasource/dam/dam-video-profiles.json", "/etc/dam/video");

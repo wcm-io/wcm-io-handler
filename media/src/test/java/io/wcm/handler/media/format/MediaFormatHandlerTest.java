@@ -55,19 +55,19 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.apache.sling.api.adapter.Adaptable;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
 
 /**
  * Test {@link MediaFormatHandler}
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
 public class MediaFormatHandlerTest {
 
@@ -80,7 +80,7 @@ public class MediaFormatHandlerTest {
 
   private MediaFormatHandler underTest;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     underTest = adaptable().adaptTo(MediaFormatHandler.class);
   }
