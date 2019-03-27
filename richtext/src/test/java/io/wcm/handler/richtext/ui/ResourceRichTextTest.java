@@ -20,36 +20,37 @@
 package io.wcm.handler.richtext.ui;
 
 import static io.wcm.handler.richtext.testcontext.AppAemContext.ROOTPATH_CONTENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class ResourceRichTextTest {
+class ResourceRichTextTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private Page page;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     page = context.create().page(ROOTPATH_CONTENT + "/page1");
   }
 
   @Test
-  public void testRichText() {
+  void testRichText() {
     context.currentResource(context.create().resource(page, "richtext",
         RichTextNameConstants.PN_TEXT, "<p>my <strong>rich</strong> text</p>"));
 
@@ -59,7 +60,7 @@ public class ResourceRichTextTest {
   }
 
   @Test
-  public void testMissingRichText() {
+  void testMissingRichText() {
     context.currentResource(context.create().resource(page, "richtext"));
 
     ResourceRichText underTest = context.request().adaptTo(ResourceRichText.class);
@@ -68,7 +69,7 @@ public class ResourceRichTextTest {
   }
 
   @Test
-  public void testPlainText() {
+  void testPlainText() {
     context.currentResource(context.create().resource(page, "richtext",
         "customTextProp", "Line 1\nLine 2"));
 

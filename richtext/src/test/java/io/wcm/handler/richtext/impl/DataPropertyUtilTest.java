@@ -19,54 +19,67 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class DataPropertyUtilTest {
+class DataPropertyUtilTest {
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testToHtml5DataNameNull() {
-    DataPropertyUtil.toHtml5DataName(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testToHtml5DataNameEmptyString() {
-    DataPropertyUtil.toHtml5DataName("");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testToHtml5DataNameEmptyStringNonHeadlessCamelCaseName() {
-    DataPropertyUtil.toHtml5DataName("Abc");
+  @Test
+  void testToHtml5DataNameNull() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      DataPropertyUtil.toHtml5DataName(null);
+    });
   }
 
   @Test
-  public void testToHtml5DataName() {
+  void testToHtml5DataNameEmptyString() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      DataPropertyUtil.toHtml5DataName("");
+    });
+  }
+
+  @Test
+  void testToHtml5DataNameEmptyStringNonHeadlessCamelCaseName() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      DataPropertyUtil.toHtml5DataName("Abc");
+    });
+  }
+
+  @Test
+  void testToHtml5DataName() {
     assertEquals("data-xyz", DataPropertyUtil.toHtml5DataName("xyz"));
     assertEquals("data-xyz-abc", DataPropertyUtil.toHtml5DataName("xyzAbc"));
     assertEquals("data-xyz2-abc-def", DataPropertyUtil.toHtml5DataName("xyz2AbcDef"));
     assertEquals("data-x-a-bz", DataPropertyUtil.toHtml5DataName("xABz"));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testToHeadlessCamelCaseNameNull() {
-    DataPropertyUtil.toHeadlessCamelCaseName(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testToHeadlessCamelCaseNameEmptyString() {
-    DataPropertyUtil.toHeadlessCamelCaseName("");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testToHeadlessCamelCaseNameNonHtml5DataName() {
-    DataPropertyUtil.toHeadlessCamelCaseName("xyz");
+  @Test
+  void testToHeadlessCamelCaseNameNull() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      DataPropertyUtil.toHeadlessCamelCaseName(null);
+    });
   }
 
   @Test
-  public void testToHeadlessCamelCaseName() {
+  void testToHeadlessCamelCaseNameEmptyString() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      DataPropertyUtil.toHeadlessCamelCaseName("");
+    });
+  }
+
+  @Test
+  void testToHeadlessCamelCaseNameNonHtml5DataName() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      DataPropertyUtil.toHeadlessCamelCaseName("xyz");
+    });
+  }
+
+  @Test
+  void testToHeadlessCamelCaseName() {
     assertEquals("xyz", DataPropertyUtil.toHeadlessCamelCaseName("data-xyz"));
     assertEquals("xyzAbc", DataPropertyUtil.toHeadlessCamelCaseName("data-xyz-abc"));
     assertEquals("xyz2AbcDef", DataPropertyUtil.toHeadlessCamelCaseName("data-xyz2-abc-def"));
@@ -74,7 +87,7 @@ public class DataPropertyUtilTest {
   }
 
   @Test
-  public void testIsHeadlessCamelCaseName() {
+  void testIsHeadlessCamelCaseName() {
     assertFalse(DataPropertyUtil.isHeadlessCamelCaseName(null));
     assertFalse(DataPropertyUtil.isHeadlessCamelCaseName(""));
     assertFalse(DataPropertyUtil.isHeadlessCamelCaseName("Xyz"));
@@ -88,7 +101,7 @@ public class DataPropertyUtilTest {
   }
 
   @Test
-  public void testIsHtml5DataName() {
+  void testIsHtml5DataName() {
     assertFalse(DataPropertyUtil.isHtml5DataName(null));
     assertFalse(DataPropertyUtil.isHtml5DataName(""));
     assertFalse(DataPropertyUtil.isHtml5DataName("xyz"));

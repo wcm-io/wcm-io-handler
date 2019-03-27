@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.richtext.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
@@ -31,8 +31,8 @@ import org.apache.sling.models.annotations.Model;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.common.collect.ImmutableList;
 
@@ -47,15 +47,16 @@ import io.wcm.handler.richtext.util.RewriteContentHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link RichTextHandler}
  */
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class RichTextHandlerImplTest {
+class RichTextHandlerImplTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   private static final String RICHTEXT_FRAGMENT = "<p>Der <strong>Jodelkaiser</strong> "
       + "aus<span/> dem "
@@ -92,49 +93,49 @@ public class RichTextHandlerImplTest {
   }
 
   @Test
-  public void testNull() {
+  void testNull() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
     RichText richText = richTextHandler.get((String)null).build();
     assertNull(richText.getMarkup());
   }
 
   @Test
-  public void testContentIllegal() {
+  void testContentIllegal() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
     RichText richText = richTextHandler.get("<wurst").build();
     assertNull(richText.getMarkup());
   }
 
   @Test
-  public void testContent() {
+  void testContent() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
     RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT).build();
     assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
   }
 
   @Test
-  public void testContent_LegacyData() {
+  void testContent_LegacyData() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
     RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT_LEGACY_DATA).build();
     assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
   }
 
   @Test
-  public void testContent_LegacyRel() {
+  void testContent_LegacyRel() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
     RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT_LEGACY_REL).build();
     assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
   }
 
   @Test
-  public void testPlainTextContent() {
+  void testPlainTextContent() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
     RichText richText = richTextHandler.get(PLAINTEXT_FRAGMENT).textMode(TextMode.PLAIN).build();
     assertEquals(PLAINTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
   }
 
   @Test
-  public void testContentFromResource() {
+  void testContentFromResource() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
 
     Resource resource = context.create().resource("/text/resource",
@@ -144,7 +145,7 @@ public class RichTextHandlerImplTest {
   }
 
   @Test
-  public void testPlainTextContentFromResource() {
+  void testPlainTextContentFromResource() {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
 
     Resource resource = context.create().resource("/text/resource",
@@ -155,7 +156,7 @@ public class RichTextHandlerImplTest {
   }
 
   @Test
-  public void testContentWithCustomRewriterContentHandler() {
+  void testContentWithCustomRewriterContentHandler() {
     context.registerService(RichTextHandlerConfig.class, new RichTextHandlerConfig() {
       @Override
       public List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {

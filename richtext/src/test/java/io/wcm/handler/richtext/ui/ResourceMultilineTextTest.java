@@ -20,26 +20,27 @@
 package io.wcm.handler.richtext.ui;
 
 import static io.wcm.handler.richtext.testcontext.AppAemContext.ROOTPATH_CONTENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class ResourceMultilineTextTest {
+class ResourceMultilineTextTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private Resource simpleTextResource;
   private Resource textWithLineBreaksResource;
@@ -47,7 +48,7 @@ public class ResourceMultilineTextTest {
   private Resource invalidTextResource;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     context.create().page(ROOTPATH_CONTENT + "/page1");
 
     simpleTextResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/simpleText",
@@ -71,7 +72,7 @@ public class ResourceMultilineTextTest {
   }
 
   @Test
-  public void testSimpleText() {
+  void testSimpleText() {
     context.currentResource(simpleTextResource);
     ResourceMultilineText underTest = context.request().adaptTo(ResourceMultilineText.class);
     assertTrue(underTest.isValid());
@@ -79,7 +80,7 @@ public class ResourceMultilineTextTest {
   }
 
   @Test
-  public void testTextWithLineBreaks() {
+  void testTextWithLineBreaks() {
     context.currentResource(textWithLineBreaksResource);
     ResourceMultilineText underTest = context.request().adaptTo(ResourceMultilineText.class);
     assertTrue(underTest.isValid());
@@ -87,7 +88,7 @@ public class ResourceMultilineTextTest {
   }
 
   @Test
-  public void testTextWithMarkupResource() {
+  void testTextWithMarkupResource() {
     context.currentResource(textWithMarkupResource);
     ResourceMultilineText underTest = context.request().adaptTo(ResourceMultilineText.class);
     assertTrue(underTest.isValid());
@@ -95,7 +96,7 @@ public class ResourceMultilineTextTest {
   }
 
   @Test
-  public void testInvalidText() {
+  void testInvalidText() {
     context.currentResource(invalidTextResource);
     ResourceMultilineText underTest = context.request().adaptTo(ResourceMultilineText.class);
     assertFalse(underTest.isValid());

@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.richtext;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -37,17 +37,17 @@ import com.google.common.collect.ImmutableList;
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.Span;
 
-public class RichTextTest {
+class RichTextTest {
 
   private RichTextRequest richTextRequest;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     richTextRequest = new RichTextRequest(null, null, null, null, null);
   }
 
   @Test
-  public void testWithContent() {
+  void testWithContent() {
     List<Content> content = ImmutableList.<Content>of(new Span("wurst"), new Text("  "), new Div().setCssClass("abc"));
     RichText underTest = new RichText(richTextRequest, content);
 
@@ -58,7 +58,7 @@ public class RichTextTest {
   }
 
   @Test
-  public void testWithoutContent() {
+  void testWithoutContent() {
     RichText underTest = new RichText(richTextRequest, ImmutableList.<Content>of());
 
     assertFalse(underTest.isValid());
@@ -67,7 +67,7 @@ public class RichTextTest {
   }
 
   @Test
-  public void testWithNullContent() {
+  void testWithNullContent() {
     RichText underTest = new RichText(richTextRequest, null);
 
     assertFalse(underTest.isValid());
@@ -76,7 +76,7 @@ public class RichTextTest {
   }
 
   @Test
-  public void testToString() throws Exception {
+  void testToString() throws Exception {
     RichText underTest = new RichText(richTextRequest, null);
     assertEquals("RichText[richTextRequest=RichTextRequest[]]", underTest.toString());
   }
