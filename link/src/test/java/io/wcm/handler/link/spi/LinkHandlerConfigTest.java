@@ -23,12 +23,12 @@ import static io.wcm.handler.link.spi.LinkHandlerConfig.DEFAULT_ROOT_PATH_CONTEN
 import static io.wcm.handler.link.spi.LinkHandlerConfig.DEFAULT_ROOT_PATH_MEDIA;
 import static io.wcm.handler.link.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.link.testcontext.AppAemContext.ROOTPATH_CONTENT_OTHER_SITE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
@@ -38,11 +38,12 @@ import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.handler.link.type.MediaLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public class LinkHandlerConfigTest {
+@ExtendWith(AemContextExtension.class)
+class LinkHandlerConfigTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private LinkHandlerConfig underTest;
   private Page contentPage;
@@ -50,7 +51,7 @@ public class LinkHandlerConfigTest {
   private Page xfPage;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     underTest = AdaptTo.notNull(context.request(), LinkHandlerConfig.class);
     contentPage = context.create().page(ROOTPATH_CONTENT + "/page1");
     contentPageOtherSite = context.create().page(ROOTPATH_CONTENT_OTHER_SITE + "/page2");
@@ -58,28 +59,28 @@ public class LinkHandlerConfigTest {
   }
 
   @Test
-  public void testGetLinkRootPath_Internal() {
+  void testGetLinkRootPath_Internal() {
     assertEquals(ROOTPATH_CONTENT, underTest.getLinkRootPath(contentPage, InternalLinkType.ID));
     assertEquals(ROOTPATH_CONTENT_OTHER_SITE, underTest.getLinkRootPath(contentPageOtherSite, InternalLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(xfPage, InternalLinkType.ID));
   }
 
   @Test
-  public void testGetLinkRootPath_InternalCrossContext() {
+  void testGetLinkRootPath_InternalCrossContext() {
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(contentPage, InternalCrossContextLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(contentPageOtherSite, InternalCrossContextLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(xfPage, InternalCrossContextLinkType.ID));
   }
 
   @Test
-  public void testGetLinkRootPath_Media() {
+  void testGetLinkRootPath_Media() {
     assertEquals(DEFAULT_ROOT_PATH_MEDIA, underTest.getLinkRootPath(contentPage, MediaLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_MEDIA, underTest.getLinkRootPath(contentPageOtherSite, MediaLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_MEDIA, underTest.getLinkRootPath(xfPage, MediaLinkType.ID));
   }
 
   @Test
-  public void testGetLinkRootPath_Invalid() {
+  void testGetLinkRootPath_Invalid() {
     assertNull(underTest.getLinkRootPath(contentPage, "invalid"));
   }
 

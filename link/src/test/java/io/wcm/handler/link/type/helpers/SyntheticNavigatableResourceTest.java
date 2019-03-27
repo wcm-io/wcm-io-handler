@@ -19,25 +19,27 @@
  */
 package io.wcm.handler.link.type.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public class SyntheticNavigatableResourceTest {
+@ExtendWith(AemContextExtension.class)
+class SyntheticNavigatableResourceTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Test
-  public void testGet() {
+  @SuppressWarnings("null")
+  void testGet() {
     context.create().resource("/content");
 
     Resource test2 = SyntheticNavigatableResource.get("/content/test1/test2", context.resourceResolver());
@@ -57,8 +59,7 @@ public class SyntheticNavigatableResourceTest {
   }
 
   @Test
-  @SuppressWarnings("unused")
-  public void testNullPath() {
+  void testNullPath() {
     Resource test2 = SyntheticNavigatableResource.get(null, context.resourceResolver());
     assertNotNull(test2);
     assertNull(test2.getPath());

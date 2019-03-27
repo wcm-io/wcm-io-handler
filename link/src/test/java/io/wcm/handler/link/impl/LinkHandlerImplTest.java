@@ -19,8 +19,8 @@
  */
 package io.wcm.handler.link.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
@@ -29,8 +29,8 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
@@ -50,17 +50,18 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link LinkHandlerImpl} methods.
  */
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class LinkHandlerImplTest {
+class LinkHandlerImplTest {
 
   static final String APP_ID = "linkHandlerImplTestApp";
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
+  final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(LinkHandlerConfig.class, new TestLinkHandlerConfig(),
@@ -76,7 +77,7 @@ public class LinkHandlerImplTest {
    * Test LinkHandler.processLinkRequest pipelining implementation
    */
   @Test
-  public void testPipelining() {
+  void testPipelining() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     // test pipelining and resolve link

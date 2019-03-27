@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.link;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.url.UrlModes;
 
-public class LinkRequestTest {
+class LinkRequestTest {
 
   @Test
-  public void testToString() throws Exception {
+  void testToString() throws Exception {
     LinkRequest request = new LinkRequest(null, null, new LinkArgs().urlMode(UrlModes.DEFAULT));
     assertEquals("LinkRequest[linkArgs=LinkArgs[urlMode=DEFAULT,dummyLink=false]]", request.toString());
   }

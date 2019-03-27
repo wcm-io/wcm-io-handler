@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.link.processor;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -39,22 +39,23 @@ import io.wcm.handler.link.type.InternalCrossContextLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link AbstractInternalLinkInheritUrlParamLinkPostProcessor}.
  */
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class InternalLinkInheritUrlParamLinkPostProcessorTest {
+class InternalLinkInheritUrlParamLinkPostProcessorTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   protected Adaptable adaptable() {
     return context.request();
   }
 
   @Test
-  public void testInternalLinkWithDefaultParameterList() {
+  void testInternalLinkWithDefaultParameterList() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalLinkType(), null);
@@ -78,7 +79,7 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
-  public void testInternalLinkFragment() {
+  void testInternalLinkFragment() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalLinkType(), null);
@@ -102,7 +103,7 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
-  public void testInternalLinkFullUrl() {
+  void testInternalLinkFullUrl() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalLinkType(), null);
@@ -126,7 +127,7 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
-  public void testInternalLinkFullUrlWithPort() {
+  void testInternalLinkFullUrlWithPort() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalLinkType(), null);
@@ -150,7 +151,7 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
-  public void testInternalLinkWithCustomParameterList() {
+  void testInternalLinkWithCustomParameterList() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), AbcInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalLinkType(), null);
@@ -174,7 +175,7 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
-  public void testExternalLinkWithDefaultParameterList() {
+  void testExternalLinkWithDefaultParameterList() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new ExternalLinkType(), null);
@@ -193,7 +194,7 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
   }
 
   @Test
-  public void testInternalCrossContextLinkWithDefaultParameterList() {
+  void testInternalCrossContextLinkWithDefaultParameterList() {
     LinkProcessor postProcessor = AdaptTo.notNull(adaptable(), DefaultInternalLinkInheritUrlParamLinkPostProcessor.class);
 
     Link link = new Link(new InternalCrossContextLinkType(), null);
@@ -221,7 +222,9 @@ public class InternalLinkInheritUrlParamLinkPostProcessorTest {
       SlingHttpServletRequest.class, Resource.class
   })
   public static class AbcInternalLinkInheritUrlParamLinkPostProcessor extends AbstractInternalLinkInheritUrlParamLinkPostProcessor {
+    //CHECKSTYLE:OFF
     public AbcInternalLinkInheritUrlParamLinkPostProcessor() {
+      //CHECKSTYLE_ON
       super(ImmutableSet.of("abc"));
     }
   }

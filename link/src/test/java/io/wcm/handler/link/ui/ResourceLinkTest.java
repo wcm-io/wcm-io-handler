@@ -20,33 +20,34 @@
 package io.wcm.handler.link.ui;
 
 import static io.wcm.handler.link.testcontext.AppAemContext.ROOTPATH_CONTENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class ResourceLinkTest {
+class ResourceLinkTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     context.create().page(ROOTPATH_CONTENT + "/page1");
   }
 
   @Test
-  public void testValidLink() {
+  void testValidLink() {
     context.currentResource(context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/validLink",
         LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID,
         LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://www.dummysite.org"));
@@ -58,7 +59,7 @@ public class ResourceLinkTest {
   }
 
   @Test
-  public void testInvalidLink() {
+  void testInvalidLink() {
     context.currentResource(context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/invalidLink",
         LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
         LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/link"));

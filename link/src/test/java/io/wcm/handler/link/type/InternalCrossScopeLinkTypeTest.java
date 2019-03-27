@@ -19,15 +19,15 @@
  */
 package io.wcm.handler.link.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.adapter.Adaptable;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
@@ -40,16 +40,17 @@ import io.wcm.handler.link.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test InternalCrossScopeLinkType methods.
  * Most of the test cases are identical to {@link InternalLinkTypeTest}, so they are not duplicated here.
  */
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("deprecation")
-public class InternalCrossScopeLinkTypeTest {
+class InternalCrossScopeLinkTypeTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   private Page targetPage;
 
@@ -58,7 +59,7 @@ public class InternalCrossScopeLinkTypeTest {
   }
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
 
     // create current page in site context
     context.currentPage(context.create().page("/content/unittest/de_test/brand/de/section/page",
@@ -73,7 +74,7 @@ public class InternalCrossScopeLinkTypeTest {
   }
 
   @Test
-  public void testTargetPage() {
+  void testTargetPage() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -84,14 +85,14 @@ public class InternalCrossScopeLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testTargetPageOtherSite() {
+  void testTargetPageOtherSite() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -102,10 +103,10 @@ public class InternalCrossScopeLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html",
-        link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html",
+        link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
 }

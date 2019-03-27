@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.link.type.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
@@ -40,18 +40,19 @@ import io.wcm.handler.link.type.InternalLinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Most of the logic of {@link InternalLinkResolver} is tested in the InternalLinkTypeTest.
  * This tests only some special feature not used by InternalLinkType.
  */
-public class InternalLinkResolverTest {
+@ExtendWith(AemContextExtension.class)
+class InternalLinkResolverTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
 
     // create current page in site context
     context.currentPage(context.create().page("/content/unittest/de_test/brand/de/section/page",
@@ -67,7 +68,7 @@ public class InternalLinkResolverTest {
 
 
   @Test
-  public void testTargetPage_RewritePathToContext() {
+  void testTargetPage_RewritePathToContext() {
     InternalLinkResolver resolver = AdaptTo.notNull(context.request(), InternalLinkResolver.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(), ImmutableValueMap.builder()
@@ -81,13 +82,13 @@ public class InternalLinkResolverTest {
     link = resolver.resolveLink(link, new InternalLinkResolverOptions()
         .rewritePathToContext(true));
 
-    assertTrue("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
+    assertTrue(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
   }
 
   @Test
-  public void testTargetPageOtherSite_NoRewritePathToContext() {
+  void testTargetPageOtherSite_NoRewritePathToContext() {
     InternalLinkResolver resolver = AdaptTo.notNull(context.request(), InternalLinkResolver.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(), ImmutableValueMap.builder()
@@ -101,13 +102,13 @@ public class InternalLinkResolverTest {
     link = resolver.resolveLink(link, new InternalLinkResolverOptions()
         .rewritePathToContext(false));
 
-    assertTrue("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertEquals("link url", "http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html", link.getUrl());
+    assertTrue(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertEquals("http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html", link.getUrl(), "link url");
   }
 
   @Test
-  public void testTargetPage_RewritePathToContext_ExperienceFragment() {
+  void testTargetPage_RewritePathToContext_ExperienceFragment() {
     Page xfPage = context.create().page("/content/experience-fragments/level1/level2/level3/level4/xf1");
     Resource linkResource = context.create().resource(xfPage, "link",
         LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
@@ -124,9 +125,9 @@ public class InternalLinkResolverTest {
     link = resolver.resolveLink(link, new InternalLinkResolverOptions()
         .rewritePathToContext(true));
 
-    assertTrue("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertEquals("link url", "http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html", link.getUrl());
+    assertTrue(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertEquals("http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html", link.getUrl(), "link url");
   }
 
 }

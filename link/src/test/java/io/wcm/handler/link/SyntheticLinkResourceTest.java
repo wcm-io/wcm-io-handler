@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.link;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -36,20 +36,20 @@ import com.day.cq.wcm.api.Page;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 @ExtendWith(MockitoExtension.class)
-public class SyntheticLinkResourceTest {
+class SyntheticLinkResourceTest {
 
   @Mock
   private ResourceResolver resourceResolver;
 
   @Test
-  public void testSimpleConstructor() {
+  void testSimpleConstructor() {
     Resource underTest = new SyntheticLinkResource(resourceResolver);
     ValueMap props = underTest.getValueMap();
     assertTrue(props.isEmpty());
   }
 
   @Test
-  public void testWithMap() {
+  void testWithMap() {
     ValueMap givenProps = ImmutableValueMap.of("prop1", "value1");
     Resource underTest = new SyntheticLinkResource(resourceResolver, givenProps);
     ValueMap props = underTest.getValueMap();
@@ -57,7 +57,7 @@ public class SyntheticLinkResourceTest {
   }
 
   @Test
-  public void testAdaptTo() {
+  void testAdaptTo() {
     Resource underTest = new SyntheticLinkResource(resourceResolver);
     Page page = underTest.adaptTo(Page.class);
     assertNull(page);

@@ -19,19 +19,19 @@
  */
 package io.wcm.handler.link.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.WCMMode;
@@ -49,15 +49,16 @@ import io.wcm.handler.url.integrator.IntegratorProtocol;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Test {@link InternalLinkType} methods.
  */
-public class InternalLinkTypeTest {
+@ExtendWith(AemContextExtension.class)
+class InternalLinkTypeTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   private Page targetPage;
 
@@ -66,7 +67,7 @@ public class InternalLinkTypeTest {
   }
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
 
     // create current page in site context
     context.currentPage(context.create().page("/content/unittest/de_test/brand/de/section/page",
@@ -79,7 +80,7 @@ public class InternalLinkTypeTest {
   }
 
   @Test
-  public void testEmptyLink() {
+  void testEmptyLink() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -89,14 +90,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testEmptyLink_EditMode() {
+  void testEmptyLink_EditMode() {
     WCMMode.EDIT.toRequest(context.request());
 
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
@@ -108,14 +109,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testInvalidLink() {
+  void testInvalidLink() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -126,14 +127,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", link.isValid());
-    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertTrue(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testInvalidLink_EditMode() {
+  void testInvalidLink_EditMode() {
     if (!(adaptable() instanceof SlingHttpServletRequest)) {
       return;
     }
@@ -150,15 +151,15 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).dummyLink(true).build();
 
-    assertFalse("link valid", link.isValid());
-    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
-    assertNull("link url", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
-    assertEquals("anchor.href", LinkHandler.INVALID_LINK, link.getAnchor().getHRef());
+    assertFalse(link.isValid(), "link valid");
+    assertTrue(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertNull(link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
+    assertEquals(LinkHandler.INVALID_LINK, link.getAnchor().getHRef(), "anchor.href");
   }
 
   @Test
-  public void testTargetPage() {
+  void testTargetPage() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -169,14 +170,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testStructureElement() {
+  void testStructureElement() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page structureElementPage = context.create().page("/content/unittest/de_test/brand/de/section/structureElement",
@@ -184,13 +185,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(structureElementPage).build();
 
-    assertFalse("link valid", link.isValid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testSecureTargetPage() {
+  void testSecureTargetPage() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page secureTargetPage = context.create().page("/content/unittest/de_test/brand/de/section/contentSecure",
@@ -198,13 +199,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(secureTargetPage).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "https://www.dummysite.org/content/unittest/de_test/brand/de/section/contentSecure.html", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("https://www.dummysite.org/content/unittest/de_test/brand/de/section/contentSecure.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testRedirectInternal() throws Exception {
+  void testRedirectInternal() throws Exception {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
@@ -215,13 +216,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(redirectInternalPage).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testRedirectInternal_EditMode() throws Exception {
+  void testRedirectInternal_EditMode() throws Exception {
     if (!(adaptable() instanceof SlingHttpServletRequest)) {
       return;
     }
@@ -237,13 +238,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(redirectInternalPage).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/redirectInternal.html", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/redirectInternal.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testRedirectRedirectInternal() throws Exception {
+  void testRedirectRedirectInternal() throws Exception {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
@@ -260,13 +261,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(redirectRedirectInternalPage).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testRedirectExternal() throws Exception {
+  void testRedirectExternal() throws Exception {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page redirectExternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectExternal",
@@ -277,13 +278,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(redirectExternalPage).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://xyz/abc", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://xyz/abc", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testRedirectCyclic() throws Exception {
+  void testRedirectCyclic() throws Exception {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     String redirectInternalCyclic1Path = "/content/unittest/de_test/brand/de/section/redirectInternalCyclic1";
@@ -302,19 +303,19 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(redirectInternalCyclic1Page).build();
 
-    assertFalse("link valid", link.isValid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
 
     link = linkHandler.get(redirectInternalCyclic2Page).build();
 
-    assertFalse("link valid", link.isValid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testIntegrator() throws Exception {
+  void testIntegrator() throws Exception {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     Page integratorPage = context.create().page("/content/unittest/de_test/brand/de/section/integrator",
@@ -327,13 +328,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(integratorPage).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://xyz/app", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://xyz/app", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testIntegrator_EditMode() throws Exception {
+  void testIntegrator_EditMode() throws Exception {
     if (!(adaptable() instanceof SlingHttpServletRequest)) {
       return;
     }
@@ -351,13 +352,13 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(integratorPage).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/integrator.html", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/integrator.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testTargetPageOtherSite() {
+  void testTargetPageOtherSite() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -368,14 +369,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html",
-        link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html",
+        link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testTargetPageLinkUrlVariants() {
+  void testTargetPageLinkUrlVariants() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html",
@@ -398,7 +399,7 @@ public class InternalLinkTypeTest {
   }
 
   @Test
-  public void testTargetPageWithQueryParams_Resource() {
+  void testTargetPageWithQueryParams_Resource() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -410,14 +411,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def",
-        link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def",
+        link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testTargetPageWithFragment_Resource() {
+  void testTargetPageWithFragment_Resource() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -429,14 +430,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html#anchor1",
-        link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html#anchor1",
+        link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testTargetPageWithQueryParamsFragment_Resource() {
+  void testTargetPageWithQueryParamsFragment_Resource() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -449,14 +450,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def#anchor1",
-        link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def#anchor1",
+        link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testTargetPageWithQueryParamsFragment_LinkArgs() {
+  void testTargetPageWithQueryParamsFragment_LinkArgs() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -467,14 +468,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).queryString("p5=abc&p6=xyz").fragment("anchor2").build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p5=abc&p6=xyz#anchor2",
-        link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p5=abc&p6=xyz#anchor2",
+        link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testTargetPageWithQueryParamsFragment_LinkArgs_Resource() {
+  void testTargetPageWithQueryParamsFragment_LinkArgs_Resource() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -487,14 +488,14 @@ public class InternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).queryString("p5=abc&p6=xyz").fragment("anchor2").build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def#anchor1",
-        link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html?p1=abc&p2=def#anchor1",
+        link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testGetSyntheticLinkResource() {
+  void testGetSyntheticLinkResource() {
     Resource resource = InternalLinkType.getSyntheticLinkResource(context.resourceResolver(), "/page/ref");
     ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
         LinkNameConstants.PN_LINK_CONTENT_REF, "/page/ref");

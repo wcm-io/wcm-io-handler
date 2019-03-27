@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.link;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
@@ -32,10 +32,10 @@ import com.google.common.collect.ImmutableMap;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
-public class LinkArgsTest {
+class LinkArgsTest {
 
   @Test
-  public void testProperties() {
+  void testProperties() {
     LinkArgs linkArgs = new LinkArgs()
     .urlMode(UrlModes.FULL_URL)
     .dummyLink(true)
@@ -57,7 +57,7 @@ public class LinkArgsTest {
   }
 
   @Test
-  public void testGetProperties() {
+  void testGetProperties() {
     Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
 
     LinkArgs linkArgs = new LinkArgs()
@@ -72,7 +72,7 @@ public class LinkArgsTest {
   }
 
   @Test
-  public void testClone() {
+  void testClone() {
     Map<String, Object> props = ImmutableValueMap.of("prop1", "value1", "prop2", "value2");
 
     LinkArgs linkArgs = new LinkArgs()

@@ -19,18 +19,18 @@
  */
 package io.wcm.handler.link.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.WCMMode;
 
@@ -42,21 +42,22 @@ import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link MediaLinkType}
  */
-public class MediaLinkTypeTest {
+@ExtendWith(AemContextExtension.class)
+class MediaLinkTypeTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   protected Adaptable adaptable() {
     return context.request();
   }
 
   @Test
-  public void testEmptyLink() {
+  void testEmptyLink() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -66,14 +67,14 @@ public class MediaLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", link.isValid());
-    assertFalse("link ref invalid", link.isLinkReferenceInvalid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testInvalidLink() {
+  void testInvalidLink() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -84,14 +85,14 @@ public class MediaLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", link.isValid());
-    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertTrue(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testInvalidLink_EditMode() {
+  void testInvalidLink_EditMode() {
     if (!(adaptable() instanceof SlingHttpServletRequest)) {
       return;
     }
@@ -108,16 +109,16 @@ public class MediaLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).dummyLink(true).dummyLinkUrl("/my/dummy/url").build();
 
-    assertFalse("link valid", link.isValid());
-    assertTrue("link ref invalid", link.isLinkReferenceInvalid());
-    assertNull("link url", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
-    assertEquals("anchor.href", "/my/dummy/url", link.getAnchor().getHRef());
+    assertFalse(link.isValid(), "link valid");
+    assertTrue(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertNull(link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
+    assertEquals("/my/dummy/url", link.getAnchor().getHRef(), "anchor.href");
   }
 
   // --> does not work because dummy implementation does not support download media format detection
   //@Test
-  //public void testInvalidImageLink() {
+  //void testInvalidImageLink() {
   //  LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
   //
   //  SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -134,7 +135,7 @@ public class MediaLinkTypeTest {
   //}
 
   @Test
-  public void testValidPdfLink() {
+  void testValidPdfLink() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -145,13 +146,13 @@ public class MediaLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "/content/dummymedia/pdf1.pdf", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("/content/dummymedia/pdf1.pdf", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
   @Test
-  public void testGetSyntheticLinkResource() {
+  void testGetSyntheticLinkResource() {
     Resource resource = MediaLinkType.getSyntheticLinkResource(context.resourceResolver(), "/media/ref");
     ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID,
         LinkNameConstants.PN_LINK_MEDIA_REF, "/media/ref");

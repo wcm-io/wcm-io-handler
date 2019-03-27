@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link InternalCrossContextLinkType} methods.
  */
-public class InternalCrossContextLinkTypeWithoutRequestTest extends InternalCrossContextLinkTypeTest {
+class InternalCrossContextLinkTypeWithoutRequestTest extends InternalCrossContextLinkTypeTest {
 
   @Override
   protected Adaptable adaptable() {

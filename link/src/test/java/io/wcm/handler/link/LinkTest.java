@@ -19,11 +19,11 @@
  */
 package io.wcm.handler.link;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ import io.wcm.handler.media.Rendition;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
-public class LinkTest {
+class LinkTest {
 
   @Mock
   private LinkType linkType;
@@ -50,24 +50,24 @@ public class LinkTest {
   private Link underTest;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     underTest = new Link(linkType, linkRequest);
   }
 
   @Test
-  public void testLinkTypeRequest() {
+  void testLinkTypeRequest() {
     assertSame(linkType, underTest.getLinkType());
     assertSame(linkRequest, underTest.getLinkRequest());
   }
 
   @Test
-  public void testLinkReferenceInvalid() {
+  void testLinkReferenceInvalid() {
     underTest.setLinkReferenceInvalid(true);
     assertTrue(underTest.isLinkReferenceInvalid());
   }
 
   @Test
-  public void testAnchor() {
+  void testAnchor() {
     assertNull(underTest.getAnchorAttributes());
     assertNull(underTest.getMarkup());
 
@@ -79,7 +79,7 @@ public class LinkTest {
   }
 
   @Test
-  public void testUrlAndValid() {
+  void testUrlAndValid() {
     assertFalse(underTest.isValid());
     underTest.setUrl("http://dummy");
     assertEquals("http://dummy", underTest.getUrl());
@@ -87,28 +87,28 @@ public class LinkTest {
   }
 
   @Test
-  public void testTargetPage() {
+  void testTargetPage() {
     Page page = mock(Page.class);
     underTest.setTargetPage(page);
     assertSame(page, underTest.getTargetPage());
   }
 
   @Test
-  public void testTargetAsset() {
+  void testTargetAsset() {
     Asset asset = mock(Asset.class);
     underTest.setTargetAsset(asset);
     assertSame(asset, underTest.getTargetAsset());
   }
 
   @Test
-  public void testTargetRendition() {
+  void testTargetRendition() {
     Rendition rendition = mock(Rendition.class);
     underTest.setTargetRendition(rendition);
     assertSame(rendition, underTest.getTargetRendition());
   }
 
   @Test
-  public void testToString() {
+  void testToString() {
     assertEquals("Link[linkType=linkType,linkRequest=LinkRequest[linkArgs=LinkArgs[dummyLink=false]],linkReferenceInvalid=false]",
         underTest.toString());
   }
