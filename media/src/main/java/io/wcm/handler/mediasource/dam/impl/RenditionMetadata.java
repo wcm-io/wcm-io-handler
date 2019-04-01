@@ -19,32 +19,25 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static com.day.cq.dam.api.DamConstants.EXIF_PIXELXDIMENSION;
-import static com.day.cq.dam.api.DamConstants.EXIF_PIXELYDIMENSION;
 import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
-import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
-import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.NN_RENDITIONS_METADATA;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_HEIGHT;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_WIDTH;
 
 import java.io.InputStream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 
-import com.day.cq.commons.jcr.JcrConstants;
-import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -62,68 +55,23 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   /**
    * @param rendition DAM rendition
    */
-  @SuppressWarnings("null")
   RenditionMetadata(Rendition rendition) {
     this.rendition = rendition;
 
-    // check if rendition is original image
-    boolean isOriginal = isOriginalRendition(rendition);
-    Asset asset = rendition.getAsset();
-
     // get filename and extension
-    String renditionName = rendition.getName();
-    if (isOriginal) {
-      renditionName = asset.getName();
-    }
-    this.fileName = renditionName;
-    this.fileExtension = StringUtils.substringAfterLast(renditionName, ".");
+    this.fileName = AssetRendition.getFilename(rendition);
+    this.fileExtension = FilenameUtils.getExtension(this.fileName);
 
     // get image width/height
-    int imageWidth = 0;
-    int imageHeight = 0;
-    if (isOriginal) {
-      // get width/height from metadata for original renditions
-      try {
-        imageWidth = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(TIFF_IMAGEWIDTH), "0"));
-      }
-      catch (NumberFormatException ex) {
-        // ignore
-      }
-      if (imageWidth == 0) {
-        try {
-          imageWidth = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(EXIF_PIXELXDIMENSION), "0"));
-        }
-        catch (NumberFormatException ex) {
-          // ignore
-        }
-      }
-      try {
-        imageHeight = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(TIFF_IMAGELENGTH), "0"));
-      }
-      catch (NumberFormatException ex) {
-        // ignore
-      }
-      if (imageHeight == 0) {
-        try {
-          imageHeight = Integer.parseInt(StringUtils.defaultString(asset.getMetadataValue(EXIF_PIXELYDIMENSION), "0"));
-        }
-        catch (NumberFormatException ex) {
-          // ignore
-        }
-      }
+    Dimension dimension = AssetRendition.getDimension(rendition);
+    if (dimension != null) {
+      this.width = dimension.getWidth();
+      this.height = dimension.getHeight();
     }
-    else if (FileExtension.isImage(this.fileExtension)) {
-      // otherwise get from rendition metadata written by {@link DamRenditionMetadataService}
-      String metadataPath = JcrConstants.JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/" + rendition.getName();
-      Resource metadataResource = asset.adaptTo(Resource.class).getChild(metadataPath);
-      if (metadataResource != null) {
-        ValueMap props = metadataResource.getValueMap();
-        imageWidth = props.get(PN_IMAGE_WIDTH, 0);
-        imageHeight = props.get(PN_IMAGE_HEIGHT, 0);
-      }
+    else {
+      this.width = 0;
+      this.height = 0;
     }
-    this.width = imageWidth;
-    this.height = imageHeight;
   }
 
   /**
