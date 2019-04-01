@@ -1,5 +1,6 @@
 ## Granite UI components
 
+*Please note:* These Granite UI components are only supported in AEM 6.3 and higher.
 
 ### Media Handler-aware File Upload
 
