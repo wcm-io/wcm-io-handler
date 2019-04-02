@@ -92,8 +92,15 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param rendition
    */
   private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
-    // ignore CQ thumbnail renditions (unless explicitly enabled in mediaargs)
-    if (AssetRendition.isThumbnailRendition(rendition) && !mediaArgs.isIncludeAssetThumbnails()) {
+    // ignore AEM-generated thumbnail renditions unless allowed via mediaargs
+    if (!mediaArgs.isIncludeAssetThumbnails() && AssetRendition.isThumbnailRendition(rendition)) {
+      return;
+    }
+    // ignore AEM-generated web renditions unless allowed via mediaargs
+    boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() != null
+        ? mediaArgs.isIncludeAssetWebRenditions()
+        : true;
+    if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
       return;
     }
     RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
