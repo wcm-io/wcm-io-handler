@@ -89,8 +89,8 @@ class AssetRenditionTest {
       context.resourceResolver().delete(renditionsMetadata);
     }
 
-    assertEquals(new Dimension(16, 9), AssetRendition.getDimension(original));
-    assertEquals(new Dimension(10, 5), AssetRendition.getDimension(rendition));
+    assertEquals(new Dimension(16, 9), AssetRendition.getDimension(original, true));
+    assertEquals(new Dimension(10, 5), AssetRendition.getDimension(rendition, true));
   }
 
   @Test
