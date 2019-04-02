@@ -21,6 +21,7 @@ package io.wcm.handler.link.type;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -52,6 +53,11 @@ public final class ExternalLinkType extends LinkType {
   public static final @NotNull String ID = "external";
 
   /**
+   * Matches all strings that seem to have a proper URL scheme - e.g. starting with http://, https://, mailto:, tel:
+   */
+  private static final Pattern EXTERNALIZED_PATTERN = Pattern.compile("^([^/]+:|//).*$");
+
+  /**
    * @return Link type ID (is stored as identifier in repository)
    */
   @Override
@@ -70,10 +76,14 @@ public final class ExternalLinkType extends LinkType {
   }
 
   @Override
+  @SuppressWarnings({ "unused", "null" })
   public boolean accepts(@NotNull String linkRef) {
+    // test for null because earlier versions of this method did not have the @NotNull annotation
+    if (linkRef == null) {
+      return false;
+    }
     // accept as external link if the ref contains "://" and mailto links
-    return StringUtils.contains(linkRef, "://")
-        || StringUtils.startsWith(linkRef, "mailto:");
+    return EXTERNALIZED_PATTERN.matcher(linkRef).matches();
   }
 
   @Override

@@ -105,7 +105,9 @@ class ExternalLinkTypeTest {
     assertTrue(underTest.accepts("http://hostname"));
     assertTrue(underTest.accepts("https://hostname"));
     assertTrue(underTest.accepts("mailto:abc@xx.yy"));
+    assertTrue(underTest.accepts("tel:+49 123 45678"));
     assertFalse(underTest.accepts("/relative/path"));
+    assertFalse(underTest.accepts("anystring"));
   }
 
 }
