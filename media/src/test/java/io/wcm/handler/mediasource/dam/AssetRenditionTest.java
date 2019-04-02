@@ -24,6 +24,8 @@ import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.NN
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
@@ -89,6 +91,27 @@ class AssetRenditionTest {
 
     assertEquals(new Dimension(16, 9), AssetRendition.getDimension(original));
     assertEquals(new Dimension(10, 5), AssetRendition.getDimension(rendition));
+  }
+
+  @Test
+  void testIsThumbnailRendition() {
+    assertTrue(AssetRendition.isThumbnailRendition(renditionByName("cq5dam.thumbnail.10.10.png")));
+    assertFalse(AssetRendition.isThumbnailRendition(renditionByName("cq5dam.web.100.100.jpg")));
+    assertFalse(AssetRendition.isThumbnailRendition(renditionByName("othername.gif")));
+  }
+
+  @Test
+  void testIsWebRendition() {
+    assertFalse(AssetRendition.isWebRendition(renditionByName("cq5dam.thumbnail.10.10.png")));
+    assertTrue(AssetRendition.isWebRendition(renditionByName("cq5dam.web.100.100.jpg")));
+    assertFalse(AssetRendition.isWebRendition(renditionByName("othername.gif")));
+  }
+
+  @SuppressWarnings("null")
+  private static Rendition renditionByName(String name) {
+    Rendition rendition = mock(Rendition.class);
+    when(rendition.getName()).thenReturn(name);
+    return rendition;
   }
 
 }

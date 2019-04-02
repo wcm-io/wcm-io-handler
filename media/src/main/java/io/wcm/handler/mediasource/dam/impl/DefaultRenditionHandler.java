@@ -27,7 +27,6 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -36,6 +35,7 @@ import com.google.common.collect.Sets;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -93,11 +93,11 @@ class DefaultRenditionHandler implements RenditionHandler {
    */
   private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
     // ignore CQ thumbnail renditions (unless explicitly enabled in mediaargs)
-    if (mediaArgs.isIncludeAssetThumbnails()
-        || !StringUtils.startsWith(rendition.getName(), DamConstants.PREFIX_ASSET_THUMBNAIL + ".")) {
-      RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
-      candidates.add(renditionMetadata);
+    if (AssetRendition.isThumbnailRendition(rendition) && !mediaArgs.isIncludeAssetThumbnails()) {
+      return;
     }
+    RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
+    candidates.add(renditionMetadata);
   }
 
   /**
