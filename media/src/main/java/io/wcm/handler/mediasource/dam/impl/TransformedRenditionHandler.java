@@ -19,9 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static io.wcm.handler.mediasource.dam.impl.DamRendition.DEFAULT_WEB_RENDITION_PATTERN;
-
-import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -102,7 +99,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
     if (original == null) {
       return null;
     }
-    Double scaleFactor = getCropScaleFactor(candidates);
+    Double scaleFactor = getCropScaleFactor();
     CropDimension scaledCropDimension = new CropDimension(
         Math.round(cropDimension.getLeft() * scaleFactor),
         Math.round(cropDimension.getTop() * scaleFactor),
@@ -119,24 +116,13 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
    * to crop the original image, so we have to scale those values to match the coordinates in the original image.
    * @return Scale factor
    */
-  private double getCropScaleFactor(NavigableSet<RenditionMetadata> candidates) {
+  private double getCropScaleFactor() {
     RenditionMetadata original = getOriginalRendition();
-    RenditionMetadata webEnabled = getWebEnabledRendition(candidates);
+    RenditionMetadata webEnabled = AutoCropping.getWebRenditionForCropping(getAsset());
     if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
       return 1d;
     }
     return (double)original.getWidth() / (double)webEnabled.getWidth();
-  }
-
-  private RenditionMetadata getWebEnabledRendition(NavigableSet<RenditionMetadata> candidates) {
-    Iterator<RenditionMetadata> descendingIterator = candidates.descendingIterator();
-    while (descendingIterator.hasNext()) {
-      RenditionMetadata rendition = descendingIterator.next();
-      if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getRendition().getName()).matches()) {
-        return rendition;
-      }
-    }
-    return null;
   }
 
   /**

@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static io.wcm.handler.mediasource.dam.impl.DamRendition.DEFAULT_WEB_RENDITION_PATTERN;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,13 +26,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 
 /**
  * Helper class for calculating crop dimensions for auto-cropping.
@@ -61,7 +61,7 @@ class AutoCropping {
   private CropDimension calculateAutoCropDimension(MediaFormat mediaFormat) {
     double ratio = mediaFormat.getRatio();
     if (ratio > 0) {
-      RenditionMetadata rendition = getWebEnabledRendition();
+      RenditionMetadata rendition = AutoCropping.getWebRenditionForCropping(asset);
       if (rendition != null && rendition.getWidth() > 0 && rendition.getHeight() > 0) {
         return calculateAutoCropDimension(rendition.getWidth(), rendition.getHeight(), ratio);
       }
@@ -90,13 +90,19 @@ class AutoCropping {
     return new CropDimension(left, top, width, height);
   }
 
-  private RenditionMetadata getWebEnabledRendition() {
-    for (Rendition rendition : asset.getRenditions()) {
-      if (DEFAULT_WEB_RENDITION_PATTERN.matcher(rendition.getName()).matches()) {
-        return new RenditionMetadata(rendition);
-      }
-    }
-    return null;
+  /**
+   * Get web first rendition for asset.
+   * This is the same logic as implemented in
+   * <code>/libs/cq/gui/components/authoring/editors/clientlibs/core/inlineediting/js/ImageEditor.js</code>.
+   * @param asset Asset
+   * @return Web rendition or null if none found
+   */
+  public static @Nullable RenditionMetadata getWebRenditionForCropping(@NotNull Asset asset) {
+    return asset.getRenditions().stream()
+        .filter(AssetRendition::isWebRendition)
+        .findFirst()
+        .map(rendition -> new RenditionMetadata(rendition))
+        .orElse(null);
   }
 
 }

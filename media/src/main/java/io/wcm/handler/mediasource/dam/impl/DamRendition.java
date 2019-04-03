@@ -21,7 +21,6 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
@@ -44,8 +43,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * {@link Rendition} implementation for DAM asset renditions.
  */
 class DamRendition extends SlingAdaptable implements Rendition {
-
-  static final Pattern DEFAULT_WEB_RENDITION_PATTERN = Pattern.compile("^cq5dam\\.web\\..*$");
 
   private final Adaptable adaptable;
   private final MediaArgs mediaArgs;

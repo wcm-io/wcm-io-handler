@@ -475,4 +475,8 @@ class DefaultRenditionHandler implements RenditionHandler {
     return null;
   }
 
+  protected Asset getAsset() {
+    return asset;
+  }
+
 }
