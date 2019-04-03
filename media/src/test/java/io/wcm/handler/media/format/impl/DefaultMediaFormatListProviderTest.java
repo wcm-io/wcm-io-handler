@@ -40,7 +40,7 @@ class DefaultMediaFormatListProviderTest {
 
   @BeforeEach
   void setUp() {
-    underTest = new DefaultMediaFormatListProvider();
+    underTest = context.registerInjectActivateService(new DefaultMediaFormatListProvider());
   }
 
   @Test
