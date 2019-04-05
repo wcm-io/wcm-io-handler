@@ -19,32 +19,33 @@
  */
 package io.wcm.handler.richtext;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("null")
-public class RichTextRequestTest {
+class RichTextRequestTest {
 
-  @Rule
-  public AemContext context = new AemContext();
+  private AemContext context = new AemContext();
 
   @Test
-  public void testWithResource() {
+  void testWithResource() {
     ValueMap props = ImmutableValueMap.of("prop1", "value1");
     Resource resource = context.create().resource("/test/resource", props);
 
@@ -58,7 +59,7 @@ public class RichTextRequestTest {
   }
 
   @Test
-  public void testWithText() {
+  void testWithText() {
     RichTextRequest underTest = new RichTextRequest(null, "text", null, null, null);
     assertEquals("text", underTest.getText());
     assertNull(underTest.getUrlMode());
@@ -67,14 +68,16 @@ public class RichTextRequestTest {
     assertTrue(underTest.getResourceProperties().isEmpty());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testWithBoth() {
-    Resource resource = context.create().resource("/test/resource");
-    new RichTextRequest(resource, "text", null, null, null);
+  @Test
+  void testWithBoth() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      Resource resource = context.create().resource("/test/resource");
+      new RichTextRequest(resource, "text", null, null, null);
+    });
   }
 
   @Test
-  public void testToString() {
+  void testToString() {
     RichTextRequest underTest = new RichTextRequest(null, "text", null, null, null);
     assertEquals("RichTextRequest[text=text]", underTest.toString());
   }

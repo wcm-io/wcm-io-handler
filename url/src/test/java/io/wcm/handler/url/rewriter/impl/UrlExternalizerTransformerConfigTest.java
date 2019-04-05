@@ -19,23 +19,23 @@
  */
 package io.wcm.handler.url.rewriter.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
-public class UrlExternalizerTransformerConfigTest {
+class UrlExternalizerTransformerConfigTest {
 
   private UrlExternalizerTransformerConfig underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = new UrlExternalizerTransformerConfig(ImmutableValueMap.builder()
         .put(UrlExternalizerTransformerConfig.PN_REWRITE_ELEMENTS, new String[] {
             "element1:attr1",
@@ -48,7 +48,7 @@ public class UrlExternalizerTransformerConfigTest {
   }
 
   @Test
-  public void testGetElementAttributeNames() {
+  void testGetElementAttributeNames() {
     Map<String, String> expected = ImmutableMap.<String, String>builder()
         .put("element1", "attr1")
         .put("element2", "attr2")

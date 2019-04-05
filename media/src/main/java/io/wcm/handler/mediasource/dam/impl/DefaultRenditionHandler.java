@@ -27,7 +27,6 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -36,6 +35,7 @@ import com.google.common.collect.Sets;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -92,12 +92,19 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param rendition
    */
   private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
-    // ignore CQ thumbnail renditions (unless explicitly enabled in mediaargs)
-    if (mediaArgs.isIncludeAssetThumbnails()
-        || !StringUtils.startsWith(rendition.getName(), DamConstants.PREFIX_ASSET_THUMBNAIL + ".")) {
-      RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
-      candidates.add(renditionMetadata);
+    // ignore AEM-generated thumbnail renditions unless allowed via mediaargs
+    if (!mediaArgs.isIncludeAssetThumbnails() && AssetRendition.isThumbnailRendition(rendition)) {
+      return;
     }
+    // ignore AEM-generated web renditions unless allowed via mediaargs
+    boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() != null
+        ? mediaArgs.isIncludeAssetWebRenditions()
+        : true;
+    if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
+      return;
+    }
+    RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
+    candidates.add(renditionMetadata);
   }
 
   /**
@@ -466,6 +473,10 @@ class DefaultRenditionHandler implements RenditionHandler {
       }
     }
     return null;
+  }
+
+  protected Asset getAsset() {
+    return asset;
   }
 
 }

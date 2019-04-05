@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.commons.dom;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SpanTest {
+class SpanTest {
 
   @Test
-  public void testSimpleAttributes() throws Exception {
+  void testSimpleAttributes() throws Exception {
     Span span1 = new Span();
     assertEquals("span", span1.getName());
 

@@ -215,6 +215,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder includeAssetWebRenditions(boolean value) {
+    this.mediaArgs.includeAssetWebRenditions(value);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder dragDropSupport(DragDropSupport value) {
     this.mediaArgs.dragDropSupport(value);
     return this;

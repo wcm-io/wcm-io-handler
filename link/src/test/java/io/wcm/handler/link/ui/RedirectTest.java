@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.link.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.WCMMode;
 
@@ -35,16 +35,17 @@ import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.testcontext.DummyAppTemplate;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class RedirectTest {
+class RedirectTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Test
-  public void testRedirectDefault() {
+  void testRedirectDefault() {
     context.currentPage(context.create().page("/content/redirect", DummyAppTemplate.REDIRECT.getTemplatePath(),
         ImmutableValueMap.builder()
         .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
@@ -59,7 +60,7 @@ public class RedirectTest {
   }
 
   @Test
-  public void testRedirect302() {
+  void testRedirect302() {
     context.currentPage(context.create().page("/content/redirect", DummyAppTemplate.REDIRECT.getTemplatePath(),
         ImmutableValueMap.builder()
         .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
@@ -75,7 +76,7 @@ public class RedirectTest {
   }
 
   @Test
-  public void testRedirectInvalid() {
+  void testRedirectInvalid() {
     context.currentPage(context.create().page("/content/redirect", DummyAppTemplate.REDIRECT.getTemplatePath()));
 
     Redirect redirect = context.request().adaptTo(Redirect.class);
@@ -85,7 +86,7 @@ public class RedirectTest {
   }
 
   @Test
-  public void testRedirectEditMode() {
+  void testRedirectEditMode() {
     WCMMode.EDIT.toRequest(context.request());
     context.currentPage(context.create().page("/content/redirect", DummyAppTemplate.REDIRECT.getTemplatePath()));
 
@@ -96,7 +97,7 @@ public class RedirectTest {
   }
 
   @Test
-  public void testRedirectPreviewMode() {
+  void testRedirectPreviewMode() {
     WCMMode.PREVIEW.toRequest(context.request());
     context.currentPage(context.create().page("/content/redirect", DummyAppTemplate.REDIRECT.getTemplatePath()));
 

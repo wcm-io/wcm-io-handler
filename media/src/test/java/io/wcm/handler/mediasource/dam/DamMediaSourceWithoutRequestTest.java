@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link DamMediaSource}
  */
-public class DamMediaSourceWithoutRequestTest extends DamMediaSourceTest {
+class DamMediaSourceWithoutRequestTest extends DamMediaSourceTest {
 
   @Override
   protected Adaptable adaptable() {

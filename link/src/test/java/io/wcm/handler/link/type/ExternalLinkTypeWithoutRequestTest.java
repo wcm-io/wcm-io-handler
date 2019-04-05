@@ -24,7 +24,7 @@ import org.apache.sling.api.adapter.Adaptable;
 /**
  * Test {@link ExternalLinkType} methods.
  */
-public class ExternalLinkTypeWithoutRequestTest extends ExternalLinkTypeTest {
+class ExternalLinkTypeWithoutRequestTest extends ExternalLinkTypeTest {
 
   @Override
   protected Adaptable adaptable() {

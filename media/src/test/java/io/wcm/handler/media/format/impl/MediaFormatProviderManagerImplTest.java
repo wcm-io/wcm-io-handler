@@ -19,18 +19,19 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.SortedSet;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableSortedSet;
@@ -39,10 +40,13 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.sling.commons.caservice.impl.ContextAwareServiceResolverImpl;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class MediaFormatProviderManagerImplTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class MediaFormatProviderManagerImplTest {
 
   private static final MediaFormat MF11 = MediaFormatBuilder.create("mf11").description("desc-from-1").build();
   private static final MediaFormat MF12 = MediaFormatBuilder.create("mf12").description("desc-from-1").build();
@@ -52,8 +56,7 @@ public class MediaFormatProviderManagerImplTest {
   private static final MediaFormat MF21 = MediaFormatBuilder.create("mf21").description("desc-from-2").build();
   private static final SortedSet<MediaFormat> MEDIAFORMATS_2 = ImmutableSortedSet.of(MF11_FROM2, MF21);
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private MediaFormatProvider provider1;
@@ -63,8 +66,8 @@ public class MediaFormatProviderManagerImplTest {
   private Resource resource;
   private MediaFormatProviderManager underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     resource = context.create().resource("/content/test");
 
     context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
@@ -81,7 +84,7 @@ public class MediaFormatProviderManagerImplTest {
   }
 
   @Test
-  public void testWithResource() {
+  void testWithResource() {
     SortedSet<MediaFormat> result = underTest.getMediaFormats(resource);
     assertEquals(ImmutableSortedSet.of(MF11, MF12, MF21), result);
 
@@ -92,7 +95,7 @@ public class MediaFormatProviderManagerImplTest {
   }
 
   @Test
-  public void testNullResource() {
+  void testNullResource() {
     assertEquals(ImmutableSortedSet.of(), underTest.getMediaFormats(null));
   }
 

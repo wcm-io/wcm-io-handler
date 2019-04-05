@@ -21,18 +21,19 @@ package io.wcm.handler.media.markup;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.google.common.collect.ImmutableList;
@@ -52,19 +53,21 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link DummyImageMediaMarkupBuilder}
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @SuppressWarnings("null")
-public class DummyImageMediaMarkupBuilderTest {
+class DummyImageMediaMarkupBuilderTest {
 
   private static final MediaFormat DUMMY_FORMAT = create("dummyformat").build();
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Mock
   private MediaSource mediaSource;
@@ -73,13 +76,13 @@ public class DummyImageMediaMarkupBuilderTest {
   @Mock
   private Rendition rendition;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     when(rendition.isImage()).thenReturn(true);
   }
 
   @Test
-  public void testAccepts_DISABLED() {
+  void testAccepts_DISABLED() {
     WCMMode.DISABLED.toRequest(context.request());
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
@@ -113,7 +116,7 @@ public class DummyImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testAccepts_PREVIEW() {
+  void testAccepts_PREVIEW() {
     WCMMode.PREVIEW.toRequest(context.request());
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
@@ -147,7 +150,7 @@ public class DummyImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testAccepts_EDIT() {
+  void testAccepts_EDIT() {
     WCMMode.EDIT.toRequest(context.request());
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
@@ -181,7 +184,7 @@ public class DummyImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testBuild() {
+  void testBuild() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs());
@@ -199,7 +202,7 @@ public class DummyImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testBuildWithUrlMode() {
+  void testBuildWithUrlMode() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/invalid/media", new MediaArgs().urlMode(UrlModes.FULL_URL));
@@ -217,7 +220,7 @@ public class DummyImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testIsValidMedia() {
+  void testIsValidMedia() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 
     assertFalse(builder.isValidMedia(null));
@@ -228,7 +231,7 @@ public class DummyImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testWithMediaFormat() {
+  void testWithMediaFormat() {
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), DummyImageMediaMarkupBuilder.class);
 

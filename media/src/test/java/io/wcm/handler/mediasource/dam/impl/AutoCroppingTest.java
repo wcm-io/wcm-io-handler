@@ -19,16 +19,28 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static org.junit.Assert.assertEquals;
+import static com.day.cq.dam.api.DamConstants.PREFIX_ASSET_WEB;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-public class AutoCroppingTest {
+@ExtendWith(AemContextExtension.class)
+class AutoCroppingTest {
+
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Test
-  public void testCalculateAutoCropDimension_AdaptWidth() {
+  void testCalculateAutoCropDimension_AdaptWidth() {
     CropDimension result = AutoCropping.calculateAutoCropDimension(180, 90, 16d / 9d);
     assertEquals(10, result.getLeft());
     assertEquals(0, result.getTop());
@@ -37,12 +49,29 @@ public class AutoCroppingTest {
   }
 
   @Test
-  public void testCalculateAutoCropDimension_AdaptHeight() {
+  void testCalculateAutoCropDimension_AdaptHeight() {
     CropDimension result = AutoCropping.calculateAutoCropDimension(160, 100, 16d / 9d);
     assertEquals(0, result.getLeft());
     assertEquals(5, result.getTop());
     assertEquals(160, result.getWidth());
     assertEquals(90, result.getHeight());
   }
+
+  @Test
+  @SuppressWarnings("null")
+  void testGetWebRenditionForCropping() {
+    Asset asset = context.create().asset("/content/dam/asset1.jpg", 160, 90, "image/jpeg");
+    Rendition webRendition = context.create().assetRendition(asset, PREFIX_ASSET_WEB + ".80.45.jpg", 80, 45, "image/jpeg");
+
+    RenditionMetadata result = AutoCropping.getWebRenditionForCropping(asset);
+    assertEquals(webRendition.getPath(), result.getRendition().getPath());
+  }
+
+  @Test
+  void testGetWebRenditionNotExisting() {
+    Asset assetWithoutRenditions = context.create().asset("/content/dam/asset2.jpg", 160, 90, "image/jpeg");
+    assertNull(AutoCropping.getWebRenditionForCropping(assetWithoutRenditions));
+  }
+
 
 }

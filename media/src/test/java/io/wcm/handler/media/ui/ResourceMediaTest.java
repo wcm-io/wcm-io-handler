@@ -23,33 +23,34 @@ import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CAMPAIGN;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class ResourceMediaTest {
+class ResourceMediaTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private Asset asset;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     asset = context.create().asset("/content/dam/asset1.jpg",
         (int)EDITORIAL_2COL.getWidth(), (int)EDITORIAL_2COL.getHeight(), ContentType.JPEG);
 
@@ -60,7 +61,7 @@ public class ResourceMediaTest {
   }
 
   @Test
-  public void testWithValidMediaFormat() {
+  void testWithValidMediaFormat() {
     context.request().setAttribute("mediaFormat", EDITORIAL_1COL.getName());
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
@@ -70,7 +71,7 @@ public class ResourceMediaTest {
   }
 
   @Test
-  public void testWithInvalidMediaFormat() {
+  void testWithInvalidMediaFormat() {
     context.request().setAttribute("mediaFormat", SHOWROOM_CAMPAIGN.getName());
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
@@ -78,7 +79,7 @@ public class ResourceMediaTest {
   }
 
   @Test
-  public void testWithoutMediaFormat() {
+  void testWithoutMediaFormat() {
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
     assertTrue(underTest.isValid());
     assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg",
@@ -86,7 +87,7 @@ public class ResourceMediaTest {
   }
 
   @Test
-  public void testWithCss() {
+  void testWithCss() {
     context.request().setAttribute("cssClass", "mycss");
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
@@ -95,7 +96,7 @@ public class ResourceMediaTest {
   }
 
   @Test
-  public void testWithRefCropProperty() {
+  void testWithRefCropProperty() {
     context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
     context.request().setAttribute("refProperty", "myRefProp");
     context.request().setAttribute("cropProperty", "myCropProp");

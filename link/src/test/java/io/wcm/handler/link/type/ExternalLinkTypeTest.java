@@ -19,17 +19,17 @@
  */
 package io.wcm.handler.link.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
@@ -39,22 +39,23 @@ import io.wcm.handler.link.spi.LinkType;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link ExternalLinkType} methods.
  */
-public class ExternalLinkTypeTest {
+@ExtendWith(AemContextExtension.class)
+class ExternalLinkTypeTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   protected Adaptable adaptable() {
     return context.request();
   }
 
   @Test
-  public void testInvalidLink() {
+  void testInvalidLink() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -65,14 +66,14 @@ public class ExternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertFalse("link valid", link.isValid());
-    assertNull("link url", link.getUrl());
-    assertNull("anchor", link.getAnchor());
+    assertFalse(link.isValid(), "link valid");
+    assertNull(link.getUrl(), "link url");
+    assertNull(link.getAnchor(), "anchor");
 
   }
 
   @Test
-  public void testValidLink() {
+  void testValidLink() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
@@ -83,14 +84,14 @@ public class ExternalLinkTypeTest {
 
     Link link = linkHandler.get(linkResource).build();
 
-    assertTrue("link valid", link.isValid());
-    assertEquals("link url", "http://xyz/abc", link.getUrl());
-    assertNotNull("anchor", link.getAnchor());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("http://xyz/abc", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
 
   }
 
   @Test
-  public void testGetSyntheticLinkResource() {
+  void testGetSyntheticLinkResource() {
     Resource resource = ExternalLinkType.getSyntheticLinkResource(context.resourceResolver(), "http://dummy");
     ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID,
         LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://dummy");
@@ -98,13 +99,15 @@ public class ExternalLinkTypeTest {
   }
 
   @Test
-  public void testAccepts() throws Exception {
+  void testAccepts() throws Exception {
     LinkType underTest = AdaptTo.notNull(adaptable(), ExternalLinkType.class);
 
     assertTrue(underTest.accepts("http://hostname"));
     assertTrue(underTest.accepts("https://hostname"));
     assertTrue(underTest.accepts("mailto:abc@xx.yy"));
+    assertTrue(underTest.accepts("tel:+49 123 45678"));
     assertFalse(underTest.accepts("/relative/path"));
+    assertFalse(underTest.accepts("anystring"));
   }
 
 }

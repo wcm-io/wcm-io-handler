@@ -20,19 +20,19 @@
 package io.wcm.handler.media.impl.ipeconfig;
 
 import static io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider.buildPath;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-public class PathParserTest {
+class PathParserTest {
 
   @Test
-  public void testInvalidPath() {
+  void testInvalidPath() {
     assertFalse(new PathParser("/invalid/path").isValid());
     assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig").isValid());
     assertFalse(new PathParser("/wcmio:mediaHandler/ipeConfig/my/path").isValid());
@@ -41,7 +41,7 @@ public class PathParserTest {
   }
 
   @Test
-  public void testValidPath() {
+  void testValidPath() {
     PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1", "mf2")));
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());
@@ -55,7 +55,7 @@ public class PathParserTest {
   }
 
   @Test
-  public void testPluginsCropNode() {
+  void testPluginsCropNode() {
     PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop");
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());
@@ -69,7 +69,7 @@ public class PathParserTest {
   }
 
   @Test
-  public void testAspectRatiosNode() {
+  void testAspectRatiosNode() {
     PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop/aspectRatios");
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());
@@ -83,7 +83,7 @@ public class PathParserTest {
   }
 
   @Test
-  public void testAspectRatioItem() {
+  void testAspectRatioItem() {
     PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop/aspectRatios/mf2");
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());

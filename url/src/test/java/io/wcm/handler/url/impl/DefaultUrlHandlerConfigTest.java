@@ -19,42 +19,42 @@
  */
 package io.wcm.handler.url.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.wcm.handler.url.SiteRootDetector;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DefaultUrlHandlerConfigTest {
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
+class DefaultUrlHandlerConfigTest {
 
   private static final int ROOT_LEVEL = 2;
 
-  @Rule
-  public AemContext context = new AemContext();
+  private final AemContext context = new AemContext();
 
   @Mock
   private SiteRootDetector siteRootDetector;
 
   private UrlHandlerConfig underTest;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     context.registerService(SiteRootDetector.class, siteRootDetector);
     underTest = context.registerInjectActivateService(new DefaultUrlHandlerConfig());
   }
 
   @Test
-  public void testGetSiteRootLevel() {
+  void testGetSiteRootLevel() {
     Resource resource = context.create().resource("/content/test1");
     when(siteRootDetector.getSiteRootLevel(resource)).thenReturn(ROOT_LEVEL);
     assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(resource));

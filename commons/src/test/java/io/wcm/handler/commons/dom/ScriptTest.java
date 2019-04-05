@@ -19,15 +19,15 @@
  */
 package io.wcm.handler.commons.dom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ScriptTest {
+class ScriptTest {
 
   @Test
-  public void testSimpleAttributes() throws Exception {
+  void testSimpleAttributes() throws Exception {
     Script script = new Script();
     assertEquals("script", script.getName());
 

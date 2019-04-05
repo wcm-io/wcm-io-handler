@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.url.suffix;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -141,6 +141,11 @@ public final class MediaHandlerImpl implements MediaHandler {
       return media;
     }
 
+    // apply defaults to media args
+    if (mediaRequest.getMediaArgs().isIncludeAssetWebRenditions() == null) {
+      mediaRequest.getMediaArgs().includeAssetWebRenditions(mediaHandlerConfig.includeAssetWebRenditionsByDefault());
+    }
+
     // preprocess media request before resolving
     List<Class<? extends MediaProcessor>> mediaPreProcessors = mediaHandlerConfig.getPreProcessors();
     if (mediaPreProcessors != null) {

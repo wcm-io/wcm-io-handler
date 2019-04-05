@@ -22,37 +22,38 @@ package io.wcm.handler.url.impl;
 import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.url.SiteRootDetector;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
-public class SiteRootDetectorImplTest {
+@ExtendWith(AemContextExtension.class)
+class SiteRootDetectorImplTest {
 
   private static final int ROOT_LEVEL = 2;
 
-  @Rule
-  public AemContext context = new AemContextBuilder()
+  private final AemContext context = new AemContextBuilder()
       .plugin(CACONFIG)
       .plugin(WCMIO_SLING, WCMIO_CACONFIG)
       .build();
 
   private SiteRootDetector underTest;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     MockCAConfig.contextPathStrategyAbsoluteParent(context, ROOT_LEVEL);
     underTest = context.registerInjectActivateService(new SiteRootDetectorImpl());
   }
 
   @Test
-  public void testGetSiteRootLevel() {
+  void testGetSiteRootLevel() {
     assertEquals(-1, underTest.getSiteRootLevel(context.create().resource("/content")));
     assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2")));
     assertEquals(ROOT_LEVEL, underTest.getSiteRootLevel(context.create().resource("/content/test1/test2/test3")));

@@ -19,15 +19,15 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -38,13 +38,13 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 
 @SuppressWarnings("null")
-public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
+class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
 
   private Rendition rendition;
   private RenditionMetadata originalRendition;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     String path = MEDIAITEM_PATH_STANDARD + "/jcr:content/renditions/cq5dam.thumbnail.215.102.jpg";
     context.resourceResolver().delete(context.resourceResolver().getResource(path));
     context.load().binaryFile("/sample_image_215x102.jpg", path);
@@ -56,7 +56,7 @@ public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetLayer_cropping() throws Exception {
+  void testGetLayer_cropping() throws Exception {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 30, 25,
         new CropDimension(5, 5, 30, 25), null);
 
@@ -66,7 +66,7 @@ public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetLayer_cropping_resize() throws Exception {
+  void testGetLayer_cropping_resize() throws Exception {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 30, 25,
         new CropDimension(5, 5, 60, 50), null);
 
@@ -76,7 +76,7 @@ public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetLayer_rotation() throws Exception {
+  void testGetLayer_rotation() throws Exception {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 102, 215,
         null, 90);
 
@@ -86,7 +86,7 @@ public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetLayer_cropping_rotation() throws Exception {
+  void testGetLayer_cropping_rotation() throws Exception {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 25, 30,
         new CropDimension(5, 5, 25, 30), 180);
 
@@ -96,7 +96,7 @@ public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testGetInputStream() throws Exception {
+  void testGetInputStream() throws Exception {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
 
@@ -105,7 +105,7 @@ public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testEquals() {
+  void testEquals() {
     VirtualTransformedRenditionMetadata m1 = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
     VirtualTransformedRenditionMetadata m2 = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
@@ -121,7 +121,7 @@ public class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  public void testCompareTo() {
+  void testCompareTo() {
     VirtualTransformedRenditionMetadata virtualRendition = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
     RenditionMetadata biggerRendition = new RenditionMetadata(rendition);

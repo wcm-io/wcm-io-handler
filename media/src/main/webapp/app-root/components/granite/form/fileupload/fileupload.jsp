@@ -139,7 +139,11 @@ boolean mediaCropAuto = cfg.get("mediaCropAuto",
 // add info about media formats in field description
 String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
 if (mediaFormatsFieldDescription != null) {
-  fileUploadProps.put("fieldDescription", cfg.get("fieldDescription", mediaFormatsFieldDescription));
+  String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
+  if (StringUtils.isBlank(fieldDescription)) {
+    fieldDescription = null;
+  }
+  fileUploadProps.put("fieldDescription", fieldDescription);
 }
 
 // simulate resource for dialog field def with updated properties

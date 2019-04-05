@@ -22,9 +22,9 @@ package io.wcm.handler.url.suffix;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.ESCAPE_DELIMITER;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.SUFFIX_PART_DELIMITER;
 import static io.wcm.handler.url.suffix.impl.UrlSuffixUtil.hexCode;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -34,20 +34,21 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.jcr.resource.JcrResourceConstants;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class SuffixParserTest {
+class SuffixParserTest {
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private static final String DEFAULT_RESOURCE_TYPE = "test/resourceType";
 
@@ -93,7 +94,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringString() {
+  void testGetLongIntBooleanStringString() {
     // create UrlSuffixHelper with single-part suffix in request
     String suffix = "/abc=def";
     SuffixParser parser = getParserWithIncomingSuffix(suffix);
@@ -132,7 +133,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringBoolean() {
+  void testGetLongIntBooleanStringBoolean() {
     // create UrlSuffixHelper with single-part suffix in request
     SuffixParser parser = getParserWithIncomingSuffix("/abc=true");
     // reading existing key with any default value should return the right value
@@ -168,7 +169,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringInt() {
+  void testGetLongIntBooleanStringInt() {
     // create UrlSuffixHelper with single-part suffix in request
     SuffixParser parser = getParserWithIncomingSuffix("/abc=123");
     // reading existing key with any default value should return the right value
@@ -208,7 +209,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringLong() {
+  void testGetLongIntBooleanStringLong() {
     // create UrlSuffixHelper with single-part suffix in request
     SuffixParser parser = getParserWithIncomingSuffix("/abc=123");
     // reading existing key with any default value should return the right value
@@ -248,7 +249,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringResource() {
+  void testGetLongIntBooleanStringResource() {
 
     // create a page and a resource within the page
     Page currentPage = context.create().page("/content/a", "template", "title");
@@ -275,7 +276,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringResourceString() {
+  void testGetLongIntBooleanStringResourceString() {
 
     // create a page that and a resource that within the page
     String resourceType = "theResourceType";
@@ -307,7 +308,7 @@ public class SuffixParserTest {
 
 
   @Test
-  public void testGetLongIntBooleanStringResourceFilterOfResource() {
+  void testGetLongIntBooleanStringResourceFilterOfResource() {
     // create a page and a resource within the page
     String resourceType = "theResourceType";
     Predicate<Resource> filter = new ResourceTypeFilter(resourceType);
@@ -339,7 +340,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringResourceFilterOfResourceString() {
+  void testGetLongIntBooleanStringResourceFilterOfResourceString() {
     // create a page that and a resource that within the page
     final String resourceType = "theResourceType";
     Page basePage = context.create().page("/content/a", "template", "title");
@@ -376,7 +377,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testGetLongIntBooleanStringResources() {
+  void testGetLongIntBooleanStringResources() {
     // create a page with 4 resources
     final String resourceType = "theResourceType";
     Page basePage = context.create().page("/content/a", "template", "title");
@@ -434,7 +435,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testTag() {
+  void testTag() {
     String tagId = "test:tag1/tag11";
     String suffix = new SuffixBuilder().put("tag", tagId).build();
     context.requestPathInfo().setSuffix(suffix);
@@ -442,7 +443,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPage() {
+  void testPage() {
     Page currentPage = context.create().page("/content/a");
     Page targetPage = context.create().page("/content/a/b/c");
 
@@ -454,7 +455,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPageNonExistingPath() {
+  void testPageNonExistingPath() {
     Page currentPage = context.create().page("/content/a");
 
     SuffixParser parser = getParserWithIncommingSuffix("x" + ESCAPED_SLASH + "y", currentPage);
@@ -464,7 +465,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPageNullSuffix() {
+  void testPageNullSuffix() {
     Page currentPage = context.create().page("/content/a");
 
     SuffixParser parser = getParserWithIncommingSuffix(null, currentPage);
@@ -474,7 +475,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPageWithFilter() {
+  void testPageWithFilter() {
     Page currentPage = context.create().page("/content/a");
     Page targetPage = context.create().page("/content/a/b/c", "/apps/app1/templates/template1");
 
@@ -489,7 +490,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPages() {
+  void testPages() {
     Page currentPage = context.create().page("/content/a");
     Page targetPage1 = context.create().page("/content/a/b/c");
     Page targetPage2 = context.create().page("/content/a/d/1");
@@ -507,7 +508,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPagesWithInvalidPath() {
+  void testPagesWithInvalidPath() {
     Page currentPage = context.create().page("/content/a");
     Page targetPage1 = context.create().page("/content/a/b/c");
     Page targetPage3 = context.create().page("/content/a/d/2");
@@ -523,7 +524,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPagesWithFiltering() {
+  void testPagesWithFiltering() {
     Page currentPage = context.create().page("/content/a", "/apps/app1/templates/template1");
     context.create().page("/content/a/b/c", "/apps/app1/templates/template2");
     Page targetPage2 = context.create().page("/content/a/d/1", "/apps/app1/templates/template1");
@@ -539,7 +540,7 @@ public class SuffixParserTest {
   }
 
   @Test
-  public void testPagesWithNonPageResourcesMixed() {
+  void testPagesWithNonPageResourcesMixed() {
     Page currentPage = context.create().page("/content/a");
     Page targetPage1 = context.create().page("/content/a/b/c");
     context.create().page("/content/a/d/1");

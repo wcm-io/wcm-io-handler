@@ -19,17 +19,18 @@
  */
 package io.wcm.handler.media;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("null")
-public class CropDimensionTest {
+class CropDimensionTest {
 
   @Test
-  public void testSimple() {
+  void testSimple() {
     CropDimension dimension = new CropDimension(15, 5, 20, 10);
 
     assertEquals(15, dimension.getLeft());
@@ -47,7 +48,7 @@ public class CropDimensionTest {
   }
 
   @Test
-  public void testEquals() {
+  void testEquals() {
     CropDimension dimension1 = new CropDimension(15, 5, 20, 10);
     CropDimension dimension2 = new CropDimension(15, 5, 20, 10);
     CropDimension dimension3 = new CropDimension(15, 5, 21, 10);
@@ -92,48 +93,64 @@ public class CropDimensionTest {
     assertFalse(dimension6.equals(dimension5));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringNull() {
-    CropDimension.fromCropString(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringEmpty() {
-    CropDimension.fromCropString("");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringInvalid1() {
-    CropDimension.fromCropString("wurst");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringInvalid2() {
-    CropDimension.fromCropString("w,u,r,s,t");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringInvalid3() {
-    CropDimension.fromCropString("w,u,r,s");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringInvalid4() {
-    CropDimension.fromCropString("0,0,0,0");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringInvalid5() {
-    CropDimension.fromCropString("0,-1,10,10");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testFromCropStringInvalid6() {
-    CropDimension.fromCropString("-1,0,10,10");
+  @Test
+  void testFromCropStringNull() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString(null);
+    });
   }
 
   @Test
-  public void testFromCropStringValid1() {
+  void testFromCropStringEmpty() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString("");
+    });
+  }
+
+  @Test
+  void testFromCropStringInvalid1() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString("wurst");
+    });
+  }
+
+  @Test
+  void testFromCropStringInvalid2() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString("w,u,r,s,t");
+    });
+  }
+
+  @Test
+  void testFromCropStringInvalid3() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString("w,u,r,s");
+    });
+  }
+
+  @Test
+  void testFromCropStringInvalid4() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString("0,0,0,0");
+    });
+  }
+
+  @Test
+  void testFromCropStringInvalid5() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString("0,-1,10,10");
+    });
+  }
+
+  @Test
+  void testFromCropStringInvalid6() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      CropDimension.fromCropString("-1,0,10,10");
+    });
+  }
+
+  @Test
+  void testFromCropStringValid1() {
     CropDimension dimension = CropDimension.fromCropString("15,5,35,15");
 
     assertEquals(15, dimension.getLeft());
@@ -151,7 +168,7 @@ public class CropDimensionTest {
   }
 
   @Test
-  public void testFromCropStringValid2() {
+  void testFromCropStringValid2() {
     CropDimension dimension = CropDimension.fromCropString("15,5,35,15/5,5");
 
     assertEquals(15, dimension.getLeft());

@@ -27,11 +27,11 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -42,7 +42,7 @@ import java.util.List;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -77,281 +77,281 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * Test {@link DamMediaSource}
  */
 @SuppressWarnings("null")
-public class DamMediaSourceTest extends AbstractDamTest {
+class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
-  public void testGetAssetInfoStringExisting() {
+  void testGetAssetInfoStringExisting() {
     // get AssetInfo for an existing item - should return the info object
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
-    assertTrue("valid", media.isValid());
-    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertTrue(media.isValid(), "valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
     Asset info = media.getAsset();
-    assertNotNull("returned info?", info);
-    assertEquals("path equals?", MEDIAITEM_PATH_STANDARD, info.getPath());
+    assertNotNull(info, "returned info?");
+    assertEquals(MEDIAITEM_PATH_STANDARD, info.getPath(), "path equals?");
   }
 
   @Test
-  public void testGetAssetInfoStringNonExistant() {
+  void testGetAssetInfoStringNonExistant() {
     // get AssetInfo for an item that does not exist - should return null
     Media media = mediaHandler().get(MEDIAITEM_PATH_NONEXISTANT).build();
-    assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
+    assertFalse(media.isValid(), "valid");
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason(), "invalid reason");
     Asset info = media.getAsset();
-    assertNull("returned null?", info);
+    assertNull(info, "returned null?");
   }
 
   @Test
-  public void testGetAssetInfoStringEmpty() {
+  void testGetAssetInfoStringEmpty() {
     // get AssetInfo for empty string path - should not crash but return null
     Media media = mediaHandler().get("").build();
-    assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
+    assertFalse(media.isValid(), "valid");
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason(), "invalid reason");
     Asset info = media.getAsset();
-    assertNull("returned null?", info);
+    assertNull(info, "returned null?");
   }
 
   @Test
-  public void testGetAssetInfoStringNull() {
+  void testGetAssetInfoStringNull() {
     // get AssetInfo for null path - should not crash but return null
     Media media = mediaHandler().get((String)null).build();
-    assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
+    assertFalse(media.isValid(), "valid");
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason(), "invalid reason");
     Asset info = media.getAsset();
-    assertNull("returned null?", info);
+    assertNull(info, "returned null?");
   }
 
   @Test
-  public void testGetAssetInfoResource() {
+  void testGetAssetInfoResource() {
     // get the info for the paragraph that contains a mediaRef to the 'standard' media item
     Media media = mediaHandler().get(parStandardMediaRef).build();
-    assertTrue("valid", media.isValid());
-    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertTrue(media.isValid(), "valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
     Asset info = media.getAsset();
-    assertNotNull("returned info?", info);
-    assertEquals("mediaRef correctly resolved?", MEDIAITEM_PATH_STANDARD, info.getPath());
-    assertEquals("alt text from medialib?", "Editorial Standard 1", info.getAltText());
+    assertNotNull(info, "returned info?");
+    assertEquals(MEDIAITEM_PATH_STANDARD, info.getPath(), "mediaRef correctly resolved?");
+    assertEquals("Editorial Standard 1", info.getAltText(), "alt text from medialib?");
   }
 
   @Test
-  public void testGetAssetInfoResourceCrop() {
+  void testGetAssetInfoResourceCrop() {
     // get the info for the paragraph that contains a mediaRef to the 'standard' media item
     Media media = mediaHandler().get(parStandardMediaRefCrop).build();
-    assertTrue("valid", media.isValid());
-    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertTrue(media.isValid(), "valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
     Asset info = media.getAsset();
-    assertNotNull("returned info?", info);
-    assertEquals("mediaRef correctly resolved?", MEDIAITEM_PATH_STANDARD, info.getPath());
+    assertNotNull(info, "returned info?");
+    assertEquals(MEDIAITEM_PATH_STANDARD, info.getPath(), "mediaRef correctly resolved?");
   }
 
   @Test
-  public void testGetAssetInfoResourceAltText() {
+  void testGetAssetInfoResourceAltText() {
     // get the info for the paragraph that contains a mediaRef to the 'standard' media item & editorial alt.Text
     Media media = mediaHandler().get(parStandardMediaRefAltText).build();
-    assertTrue("valid", media.isValid());
-    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertTrue(media.isValid(), "valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
     Asset info = media.getAsset();
-    assertNotNull("returned info?", info);
-    assertEquals("mediaRef correctly resolved?", MEDIAITEM_PATH_STANDARD, info.getPath());
-    assertEquals("alt text from paragraph?", "Alt. Text from Paragraph", info.getAltText());
+    assertNotNull(info, "returned info?");
+    assertEquals(MEDIAITEM_PATH_STANDARD, info.getPath(), "mediaRef correctly resolved?");
+    assertEquals("Alt. Text from Paragraph", info.getAltText(), "alt text from paragraph?");
   }
 
   @Test
-  public void testGetAssetInfoResourceInvalid() {
+  void testGetAssetInfoResourceInvalid() {
     // get the info for the paragraph that contains a invalid mediaRef - should return null
     Media media = mediaHandler().get(parInvalidMediaRef).build();
-    assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
+    assertFalse(media.isValid(), "valid");
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason(), "invalid reason");
     Asset info = media.getAsset();
-    assertNull("returned null?", info);
+    assertNull(info, "returned null?");
   }
 
   @Test
-  public void testGetAssetInfoResourceEmpty() {
+  void testGetAssetInfoResourceEmpty() {
     // get the info for the paragraph that contains an empty mediaRef - should return null
     Media media = mediaHandler().get(parEmptyMediaRef).build();
-    assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
+    assertFalse(media.isValid(), "valid");
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason(), "invalid reason");
     Asset info = media.getAsset();
-    assertNull("returned null?", info);
+    assertNull(info, "returned null?");
   }
 
   @Test
-  public void testGetAssetInfoResourceNull() {
+  void testGetAssetInfoResourceNull() {
     // get the info for the paragraph that contains a null mediaRef - should return null
     Media media = mediaHandler().get(parNullMediaRef).build();
-    assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason());
+    assertFalse(media.isValid(), "valid");
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_MISSING, media.getMediaInvalidReason(), "invalid reason");
     Asset info = media.getAsset();
-    assertNull("returned null?", info);
+    assertNull(info, "returned null?");
   }
 
   @Test
-  public void testGetAssetInfoResourceString() {
+  void testGetAssetInfoResourceString() {
     // get the info for the paragraph that contains a mediaRef2 to the 'standard' media item
     Media media = mediaHandler().get(parStandardMediaRef2).refProperty("mediaRef2").build();
-    assertTrue("valid", media.isValid());
-    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertTrue(media.isValid(), "valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
     Asset info = media.getAsset();
-    assertNotNull("returned info?", info);
-    assertEquals("mediaRef correctly resolved?", MEDIAITEM_PATH_STANDARD, info.getPath());
-    assertEquals("alt text from medialib?", "Editorial Standard 1", info.getAltText());
+    assertNotNull(info, "returned info?");
+    assertEquals(MEDIAITEM_PATH_STANDARD, info.getPath(), "mediaRef correctly resolved?");
+    assertEquals("Editorial Standard 1", info.getAltText(), "alt text from medialib?");
   }
 
   // TEST METHODS GENERATING HTML ELEMENTS *****************************************************************************
 
   @Test
-  public void testGetMediaElementInvalid() {
+  void testGetMediaElementInvalid() {
     // create img element for a paragraph with invalid media ref - should not crash but return null
     HtmlElement img = mediaHandler().get(parInvalidMediaRef).buildElement();
-    assertNull("returned null?", img);
+    assertNull(img, "returned null?");
   }
 
   @Test
-  public void testGetMediaElementEmpty() {
+  void testGetMediaElementEmpty() {
     // create img element for a paragraph with empty media ref - should not crash but return null
     HtmlElement img = mediaHandler().get(parEmptyMediaRef).buildElement();
-    assertNull("returned null?", img);
+    assertNull(img, "returned null?");
   }
 
   @Test
-  public void testGetMediaElementNull() {
+  void testGetMediaElementNull() {
     // create img element for a paragraph with null media ref - should not crash but return null
     HtmlElement img = mediaHandler().get(parNullMediaRef).buildElement();
-    assertNull("returned null?", img);
+    assertNull(img, "returned null?");
   }
 
   @Test
-  public void testGetMediaElementNullResource() {
+  void testGetMediaElementNullResource() {
     // pass-in null for the paragraph resource - should not crash but return null
     HtmlElement img = mediaHandler().get((Resource)null).buildElement();
-    assertNull("returned null?", img);
+    assertNull(img, "returned null?");
   }
 
   @Test
-  public void testGetMediaElementImageAltTextFromMediaLib() {
+  void testGetMediaElementImageAltTextFromMediaLib() {
     // create img element for the first rendition of the 'standard' media-item
     MediaArgs args = new MediaArgs();
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
-    assertNotNull("returned html element?", img);
-    assertEquals("is img?", "img", img.getName());
-    assertEquals("src set?", mediaHandler().get(MEDIAITEM_PATH_STANDARD, args).buildUrl(), img.getAttributeValue("src"));
-    assertEquals("width set?", 215, img.getAttributeValueAsInteger("width"));
-    assertEquals("height set?", 102, img.getAttributeValueAsInteger("height"));
-    assertEquals("alt text from medialib?", "Editorial Standard 1", img.getAttributeValue("alt"));
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
+    assertEquals(mediaHandler().get(MEDIAITEM_PATH_STANDARD, args).buildUrl(), img.getAttributeValue("src"), "src set?");
+    assertEquals(215, img.getAttributeValueAsInteger("width"), "width set?");
+    assertEquals(102, img.getAttributeValueAsInteger("height"), "height set?");
+    assertEquals("Editorial Standard 1", img.getAttributeValue("alt"), "alt text from medialib?");
   }
 
   @Test
-  public void testGetMediaElementImageAltTextFromParagraph() {
+  void testGetMediaElementImageAltTextFromParagraph() {
     // create img element for the paragraph that has a editorial alt-text defined in the paragraph
     HtmlElement img = mediaHandler().get(parStandardMediaRefAltText).buildElement();
-    assertNotNull("returned html element?", img);
-    assertEquals("alt text from paragraph?", "Alt. Text from Paragraph", img.getAttributeValue("alt"));
+    assertNotNull(img, "returned html element?");
+    assertEquals("Alt. Text from Paragraph", img.getAttributeValue("alt"), "alt text from paragraph?");
   }
 
   @Test
-  public void testGetMediaElementImageAltTextOverride() {
+  void testGetMediaElementImageAltTextOverride() {
     // define alt-text-override via MediaArgs and check if it is appears in the img-tag
     MediaArgs args = new MediaArgs();
     args.altText("Alt. Text Override!");
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
-    assertNotNull("returned html element?", img);
-    assertEquals("alt text from override?", "Alt. Text Override!", img.getAttributeValue("alt"));
+    assertNotNull(img, "returned html element?");
+    assertEquals("Alt. Text Override!", img.getAttributeValue("alt"), "alt text from override?");
   }
 
   @Test
-  public void testGetMediaElementImageNoAltTextNoDimensions() {
+  void testGetMediaElementImageNoAltTextNoDimensions() {
     // create img-tag for the medialib-item that has no alt-text, and its rendition lacks dimension information
     HtmlElement img = mediaHandler().get(parImgNoAltNoDimension).buildElement();
-    assertNotNull("returned html element?", img);
-    assertEquals("src set?", mediaHandler().get(MEDIAITEM_PATH_IMAGE_NOALT_NODIMENSIONS).buildUrl(), img.getAttributeValue("src"));
+    assertNotNull(img, "returned html element?");
+    assertEquals(mediaHandler().get(MEDIAITEM_PATH_IMAGE_NOALT_NODIMENSIONS).buildUrl(), img.getAttributeValue("src"), "src set?");
 
-    assertEquals("alt text", "Image with no altText and a rendition w/o fileSize & dimensions", img.getAttributeValue("alt"));
+    assertEquals("Image with no altText and a rendition w/o fileSize & dimensions", img.getAttributeValue("alt"), "alt text");
 
-    assertEquals("width from mediaformat?", 0, img.getAttributeValueAsInteger("width"));
-    assertEquals("height from mediaformat?", 0, img.getAttributeValueAsInteger("height"));
+    assertEquals(0, img.getAttributeValueAsInteger("width"), "width from mediaformat?");
+    assertEquals(0, img.getAttributeValueAsInteger("height"), "height from mediaformat?");
   }
 
   @Test
-  public void testGetMediaElementImageSpecificMediaFormat() {
+  void testGetMediaElementImageSpecificMediaFormat() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(EDITORIAL_2COL);
     Media media = mediaHandler().get(parStandardMediaRef, args).build();
     HtmlElement img = media.getElement();
-    assertNotNull("returned html element?", img);
-    assertEquals("is img?", "img", img.getName());
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
     // check that this is the requested mediaformat via width/height-attributes of the img-tag
-    assertEquals("width set?", 450, img.getAttributeValueAsInteger("width"));
-    assertEquals("height set?", 213, img.getAttributeValueAsInteger("height"));
+    assertEquals(450, img.getAttributeValueAsInteger("width"), "width set?");
+    assertEquals(213, img.getAttributeValueAsInteger("height"), "height set?");
     assertEquals(EDITORIAL_2COL, media.getRendition().getMediaFormat());
     assertEquals(ContentType.JPEG, media.getRendition().getMimeType());
   }
 
   @Test
-  public void testGetMediaElementImageSpecificMediaFormat_Resize() {
+  void testGetMediaElementImageSpecificMediaFormat_Resize() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler().get(parStandardMediaRef, args).build();
     HtmlElement img = media.getElement();
-    assertNotNull("returned html element?", img);
-    assertEquals("is img?", "img", img.getName());
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
     // check that this is the requested mediaformat via width/height-attributes of the img-tag
-    assertEquals("width set?", 64, img.getAttributeValueAsInteger("width"));
-    assertEquals("height set?", 30, img.getAttributeValueAsInteger("height"));
+    assertEquals(64, img.getAttributeValueAsInteger("width"), "width set?");
+    assertEquals(30, img.getAttributeValueAsInteger("height"), "height set?");
     assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
   }
 
   @Test
-  public void testGetMediaElementImageSpecificMediaFormatCrop() {
+  void testGetMediaElementImageSpecificMediaFormatCrop() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler().get(parStandardMediaRefCrop, args).build();
     HtmlElement img = media.getElement();
-    assertNotNull("returned html element?", img);
-    assertEquals("is img?", "img", img.getName());
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
     // check that this is the requested mediaformat via width/height-attributes of the img-tag
-    assertEquals("width set?", 64, img.getAttributeValueAsInteger("width"));
-    assertEquals("height set?", 30, img.getAttributeValueAsInteger("height"));
+    assertEquals(64, img.getAttributeValueAsInteger("width"), "width set?");
+    assertEquals(30, img.getAttributeValueAsInteger("height"), "height set?");
     assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
   }
 
   @Test
-  public void testGetMediaElementImageSpecificMediaFormatCropInvalid() {
+  void testGetMediaElementImageSpecificMediaFormatCropInvalid() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(EDITORIAL_2COL);
     Media media = mediaHandler().get(parStandardMediaRefCrop, args).build();
     HtmlElement img = media.getElement();
-    assertNull("returned html element?", img);
+    assertNull(img, "returned html element?");
   }
 
   @Test
-  public void testGetMediaElementImageSpecificMediaFormatCropInvalidWithoutFallback() {
+  void testGetMediaElementImageSpecificMediaFormatCropInvalidWithoutFallback() {
     // create img element for rendition with standard_2col media format
     MediaArgs args = new MediaArgs(PRODUCT_CUTOUT_LARGE);
     HtmlElement img = mediaHandler().get(parStandardMediaRefCrop, args).buildElement();
-    assertNull("returned html element?", img);
+    assertNull(img, "returned html element?");
   }
 
   @Test
-  public void testGetMediaElementImageInvalidMediaFormat() {
+  void testGetMediaElementImageInvalidMediaFormat() {
     // create img element in a mediaFormat for which there is no rendition is available - returns any rendition
     MediaArgs args = new MediaArgs(MediaFormatBuilder.create("someotherformat").build());
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
-    assertNotNull("returned null?", img);
+    assertNotNull(img, "returned null?");
   }
 
   @Test
-  public void testGetMediaElementFlashWithoutFallback() {
+  void testGetMediaElementFlashWithoutFallback() {
     // create media-element from a flash mediaRef with no fallback image - should return a div
     Media media = mediaHandler().get(parFlashWithoutFallbackMediaRef).build();
-    assertTrue("valid?", media.isValid());
-    assertNotNull("asset?", media.getAsset());
-    assertNotNull("rendition?", media.getRendition());
-    assertEquals("rendition.mediaUrl", "/content/dam/test/flashWithoutFallback.swf/_jcr_content/renditions/original./flashWithoutFallback.swf",
-        media.getRendition().getUrl());
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertNotNull(media.getRendition(), "rendition?");
+    assertEquals("/content/dam/test/flashWithoutFallback.swf/_jcr_content/renditions/original./flashWithoutFallback.swf",
+        media.getRendition().getUrl(), "rendition.mediaUrl");
   }
 
   @Test
-  public void testGetMediaElementEditModeDummyImage() {
+  void testGetMediaElementEditModeDummyImage() {
     if (!(adaptable() instanceof SlingHttpServletRequest)) {
       return;
     }
@@ -363,16 +363,16 @@ public class DamMediaSourceTest extends AbstractDamTest {
     MediaArgs args = new MediaArgs(EDITORIAL_2COL);
     HtmlElement img = mediaHandler().get(parInvalidMediaRef, args).buildElement();
 
-    assertNotNull("returned element?", img);
-    assertEquals("is img?", "img", img.getName());
-    assertEquals("src set?", MediaMarkupBuilder.DUMMY_IMAGE, img.getAttributeValue("src"));
-    assertEquals("width set?", 450, img.getAttributeValueAsInteger("width"));
-    assertEquals("height set?", 213, img.getAttributeValueAsInteger("height"));
-    assertTrue("has dummy css class?", img.getCssClass().contains(MediaNameConstants.CSS_DUMMYIMAGE));
+    assertNotNull(img, "returned element?");
+    assertEquals("img", img.getName(), "is img?");
+    assertEquals(MediaMarkupBuilder.DUMMY_IMAGE, img.getAttributeValue("src"), "src set?");
+    assertEquals(450, img.getAttributeValueAsInteger("width"), "width set?");
+    assertEquals(213, img.getAttributeValueAsInteger("height"), "height set?");
+    assertTrue(img.getCssClass().contains(MediaNameConstants.CSS_DUMMYIMAGE), "has dummy css class?");
   }
 
   @Test
-  public void testGetMediaElementEditModeDummyImageThumbnail() {
+  void testGetMediaElementEditModeDummyImageThumbnail() {
     if (!(adaptable() instanceof SlingHttpServletRequest)) {
       return;
     }
@@ -385,71 +385,72 @@ public class DamMediaSourceTest extends AbstractDamTest {
     args.fixedDimension(100, 100);
     HtmlElement img = mediaHandler().get(parNullMediaRef, args).buildElement();
 
-    assertNotNull("returned element?", img);
-    assertEquals("width set?", 100, img.getAttributeValueAsInteger("width"));
-    assertEquals("height set?", 100, img.getAttributeValueAsInteger("height"));
+    assertNotNull(img, "returned element?");
+    assertEquals(100, img.getAttributeValueAsInteger("width"), "width set?");
+    assertEquals(100, img.getAttributeValueAsInteger("height"), "height set?");
   }
 
   // TESTS FOR FUNCTIONS THAT DELEGATE TO MediaHandler (WHERE THEY ARE TESTED IN MORE DETAIL)
 
   @Test
-  public void testGetMediaUrlStandard() {
+  void testGetMediaUrlStandard() {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl();
-    assertNotNull("returned url?", url);
-    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url);
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url, "url as expected?");
   }
 
   @Test
-  public void testGetMediaUrlStandard_Resize() {
+  void testGetMediaUrlStandard_Resize() {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, SHOWROOM_CONTROLS_SCALE1).buildUrl();
-    assertNotNull("returned url?", url);
-    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.file/standard.jpg", url);
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.file/standard.jpg", url, "url as expected?");
   }
 
   @Test
-  public void testGetMediaUrlStandard_Resize_Download() {
+  void testGetMediaUrlStandard_Resize_Download() {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs(SHOWROOM_CONTROLS_SCALE1).contentDispositionAttachment(true)).buildUrl();
-    assertNotNull("returned url?", url);
-    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.download_attachment.file/standard.jpg",
-        url);
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.download_attachment.file/standard.jpg",
+        url, "url as expected?");
   }
 
   @Test
-  public void testGetMediaUrlStandard_FixedDimension_ExactMatch() {
+  void testGetMediaUrlStandard_FixedDimension_ExactMatch() {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs().fixedDimension(450, 213)).buildUrl();
-    assertNotNull("returned url?", url);
-    assertEquals("url as expected?",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg", url);
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg", url,
+        "url as expected?");
   }
 
   @Test
-  public void testGetMediaUrlStandard_FixedDimension_Resize() {
+  void testGetMediaUrlStandard_FixedDimension_Resize() {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, new MediaArgs().fixedDimension(64, 30)).buildUrl();
-    assertNotNull("returned url?", url);
-    assertEquals("url as expected?", "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.file/standard.jpg", url);
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.file/standard.jpg", url,
+        "url as expected?");
   }
 
   @Test
-  public void testGetMediaUrlNull() {
+  void testGetMediaUrlNull() {
     // getMediaUrl should handle null mediaRefs and return null
     String url = mediaHandler().get((String)null).buildUrl();
-    assertNull("returned null?", url);
+    assertNull(url, "returned null?");
   }
 
   @Test
-  public void testGetMediaUrlEmpty() {
+  void testGetMediaUrlEmpty() {
     // getMediaUrl should handle empty mediaRefs and return null
     String url = mediaHandler().get("").buildUrl();
-    assertNull("returned null?", url);
+    assertNull(url, "returned null?");
   }
 
   @Test
-  public void testGetMediaUrlIntegrator() {
+  void testGetMediaUrlIntegrator() {
     if (!(adaptable() instanceof SlingHttpServletRequest)) {
       return;
     }
@@ -459,66 +460,66 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl();
-    assertNotNull("returned url?", url);
-    assertEquals("url as expected?", "http://www.dummysite.org/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url);
+    assertNotNull(url, "returned url?");
+    assertEquals("http://www.dummysite.org/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url,
+        "url as expected?");
 
   }
 
   @Test
-  public void testGetMediaProperties() {
+  void testGetMediaProperties() {
     // get the properties of the first rendition of the 'standard' media item
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     ValueMap props = media.getAsset().getProperties();
-    assertNotNull("returned props?", props);
-    assertEquals("are there media item props?", "Editorial Standard 1",
-        props.get(DamConstants.DC_TITLE, String[].class)[0]);
+    assertNotNull(props, "returned props?");
+    assertEquals("Editorial Standard 1", props.get(DamConstants.DC_TITLE, String[].class)[0],
+        "are there media item props?");
   }
 
   @Test
-  public void testGetRenditionProperties() {
+  void testGetRenditionProperties() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     ValueMap props = media.getRendition().getProperties();
-    assertNotNull("returned props?", props);
-    assertEquals("are there rendition props?", 1, props.size());
+    assertNotNull(props, "returned props?");
+    assertEquals(1, props.size(), "are there rendition props?");
   }
 
   @Test
-  public void testGetAssetInfoVideo() {
+  void testGetAssetInfoVideo() {
     Media media = mediaHandler().get(MEDIAITEM_VIDEO, new MediaArgs(VIDEO_2COL)).build();
-    assertTrue("valid", media.isValid());
-    assertNull("no invalid reason", media.getMediaInvalidReason());
+    assertTrue(media.isValid(), "valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
 
     Asset asset = media.getAsset();
-    assertNotNull("returned null?", asset);
+    assertNotNull(asset, "returned null?");
 
     Rendition rendition = media.getRendition();
-    assertEquals("ref-path", "/content/dam/test/movie.wmf/jcr:content/renditions/cq5dam.video.firefoxhq.ogg", rendition.getPath());
+    assertEquals("/content/dam/test/movie.wmf/jcr:content/renditions/cq5dam.video.firefoxhq.ogg", rendition.getPath(), "ref-path");
   }
 
   @Test
-  public void testGetAssetInfoVideoAsImage() {
+  void testGetAssetInfoVideoAsImage() {
     Media media = mediaHandler().get(MEDIAITEM_VIDEO, new MediaArgs(EDITORIAL_2COL)).build();
-    assertFalse("valid", media.isValid());
-    assertEquals("invalid reason", MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
+    assertFalse(media.isValid(), "valid");
+    assertEquals(MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason(), "invalid reason");
 
     Asset asset = media.getAsset();
-    assertNotNull("returned null?", asset);
+    assertNotNull(asset, "returned null?");
   }
 
   @Test
-  public void testDownloadMediaElement() {
+  void testDownloadMediaElement() {
     MediaArgs mediaArgs = new MediaArgs().contentDispositionAttachment(true);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
-    assertTrue("valid?", media.isValid());
-    assertNotNull("asset?", media.getAsset());
-    assertNotNull("rendition?", media.getRendition());
-    assertEquals("rendition.mediaUrl",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/original.media_file.download_attachment.file/standard.jpg",
-        media.getRendition().getUrl());
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertNotNull(media.getRendition(), "rendition?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.media_file.download_attachment.file/standard.jpg",
+        media.getRendition().getUrl(), "rendition.mediaUrl");
   }
 
   @Test
-  public void testGetMediaMarkup() {
+  void testGetMediaMarkup() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     assertEquals(
         "<img src=\"/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg\" alt=\"Editorial Standard 1\" height=\"102\" width=\"215\" />",
@@ -526,7 +527,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  public void testIsValidElement() {
+  void testIsValidElement() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     assertTrue(mediaHandler().isValidElement(media.getElement()));
     assertFalse(mediaHandler().isValidElement(new Div()));
@@ -534,86 +535,78 @@ public class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  public void testMultipleMediaMediaFormats() {
+  void testMultipleMediaMediaFormats() {
     MediaArgs mediaArgs = new MediaArgs(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
-    assertTrue("valid?", media.isValid());
-    assertNotNull("asset?", media.getAsset());
-    assertEquals("renditions", 1, media.getRenditions().size());
-    assertEquals("rendition.mediaUrl",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
-        media.getUrl());
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(1, media.getRenditions().size(), "renditions");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
+        media.getUrl(), "rendition.mediaUrl");
     assertEquals(EDITORIAL_1COL, media.getRendition().getMediaFormat());
   }
 
   @Test
-  public void testMultipleMandatoryMediaFormats() {
+  void testMultipleMandatoryMediaFormats() {
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
-    assertTrue("valid?", media.isValid());
-    assertNotNull("asset?", media.getAsset());
-    assertEquals("renditions", 3, media.getRenditions().size());
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(3, media.getRenditions().size(), "renditions");
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
 
-    assertEquals("rendition.mediaUrl.1",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
-        renditions.get(0).getUrl());
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
     assertEquals(EDITORIAL_1COL, renditions.get(0).getMediaFormat());
 
-    assertEquals("rendition.mediaUrl.2",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
-        renditions.get(1).getUrl());
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
     assertEquals(EDITORIAL_2COL, renditions.get(1).getMediaFormat());
 
-    assertEquals("rendition.mediaUrl.3",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
-        renditions.get(2).getUrl());
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
+        renditions.get(2).getUrl(), "rendition.mediaUrl.3");
     assertEquals(EDITORIAL_3COL, renditions.get(2).getMediaFormat());
   }
 
   @Test
-  public void testMultipleMandatoryMediaFormatsWithCropping() {
+  void testMultipleMandatoryMediaFormatsWithCropping() {
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS_SCALE1, MATERIAL_TILE);
     Media media = mediaHandler().get(parResponsiveMediaRefCrop).args(mediaArgs).build();
-    assertTrue("valid?", media.isValid());
-    assertNotNull("asset?", media.getAsset());
-    assertEquals("renditions", 2, media.getRenditions().size());
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
 
-    assertEquals("rendition.mediaUrl.1",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.2,2,86,42.file/standard.jpg",
-        renditions.get(0).getUrl());
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.2,2,86,42.file/standard.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
     assertEquals(SHOWROOM_CONTROLS_SCALE1, renditions.get(0).getMediaFormat());
 
-    assertEquals("rendition.mediaUrl.2",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.84.40.2,2,86,42.file/standard.jpg",
-        renditions.get(1).getUrl());
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.84.40.2,2,86,42.file/standard.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
     assertEquals(MATERIAL_TILE, renditions.get(1).getMediaFormat());
   }
 
   @Test
-  public void testMultipleMandatoryMediaFormatsNotAllMatch() {
+  void testMultipleMandatoryMediaFormatsNotAllMatch() {
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(VIDEO_2COL, EDITORIAL_2COL, EDITORIAL_3COL);
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
-    assertFalse("valid?", media.isValid());
+    assertFalse(media.isValid(), "valid?");
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
-    assertNotNull("asset?", media.getAsset());
-    assertEquals("renditions", 2, media.getRenditions().size());
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
 
-    assertEquals("rendition.mediaUrl.1",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
-        renditions.get(0).getUrl());
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
     assertEquals(EDITORIAL_2COL, renditions.get(0).getMediaFormat());
 
-    assertEquals("rendition.mediaUrl.2",
-        "/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
-        renditions.get(1).getUrl());
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
     assertEquals(EDITORIAL_3COL, renditions.get(1).getMediaFormat());
   }
 
   @Test
-  public void testEnableMediaDrop() {
+  void testEnableMediaDrop() {
     // simulate component context
     ComponentContext wcmComponentContext = mock(ComponentContext.class);
     context.request().setAttribute(ComponentContext.CONTEXT_ATTR_NAME, wcmComponentContext);
@@ -631,7 +624,7 @@ public class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  public void testCustomizeIPEConfig() {
+  void testCustomizeIPEConfig() {
     // simulate component context
     ComponentContext wcmComponentContext = mock(ComponentContext.class);
     context.request().setAttribute(ComponentContext.CONTEXT_ATTR_NAME, wcmComponentContext);
@@ -670,22 +663,21 @@ public class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   @SuppressWarnings("deprecation")
-  public void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
+  void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO)
         .breakpoint("B1", 160, 100)
         .breakpoint("B2", 320, 200)
         .build());
 
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10, mediaArgs).build();
-    assertTrue("valid?", media.isValid());
-    assertNotNull("asset?", media.getAsset());
-    assertEquals("renditions", 2, media.getRenditions().size());
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
-    assertEquals("rendition.mediaUrl.1",
-        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
-        rendition0.getUrl());
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
+        rendition0.getUrl(), "rendition.mediaUrl.1");
     assertEquals(160, rendition0.getWidth());
     assertEquals(100, rendition0.getHeight());
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
@@ -698,9 +690,8 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("B1", mediaFormat0.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
 
     Rendition rendition1 = renditions.get(1);
-    assertEquals("rendition.mediaUrl.2",
-        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
-        rendition1.getUrl());
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
+        rendition1.getUrl(), "rendition.mediaUrl.2");
     assertEquals(320, rendition1.getWidth());
     assertEquals(200, rendition1.getHeight());
 
@@ -713,22 +704,21 @@ public class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  public void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
+  void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
         .mediaFormat(RATIO)
         .pictureSource(RATIO, "media1", 160)
         .pictureSource(RATIO, "media2", 320)
         .build();
 
-    assertTrue("valid?", media.isValid());
-    assertNotNull("asset?", media.getAsset());
-    assertEquals("renditions", 3, media.getRenditions().size());
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(3, media.getRenditions().size(), "renditions");
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
-    assertEquals("rendition.mediaUrl.1",
-        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
-        rendition0.getUrl());
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
+        rendition0.getUrl(), "rendition.mediaUrl.1");
     assertEquals(1600, rendition0.getWidth());
     assertEquals(1000, rendition0.getHeight());
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
@@ -737,9 +727,8 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(RATIO.getName(), mediaFormat0.getName());
 
     Rendition rendition1 = renditions.get(1);
-    assertEquals("rendition.mediaUrl.2",
-        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
-        rendition1.getUrl());
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
+        rendition1.getUrl(), "rendition.mediaUrl.2");
     assertEquals(160, rendition1.getWidth());
     assertEquals(100, rendition1.getHeight());
     assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
@@ -750,9 +739,8 @@ public class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160, mediaFormat1.getWidth());
 
     Rendition rendition2 = renditions.get(2);
-    assertEquals("rendition.mediaUrl.3",
-        "/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
-        rendition2.getUrl());
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
+        rendition2.getUrl(), "rendition.mediaUrl.3");
     assertEquals(320, rendition2.getWidth());
     assertEquals(200, rendition2.getHeight());
 

@@ -19,21 +19,21 @@
  */
 package io.wcm.handler.media.markup;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.google.common.collect.ImmutableList;
@@ -52,17 +52,18 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test ResponsiveImageMediaMarkupBuilder
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(AemContextExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings({ "deprecation", "null" })
-public class ResponsiveImageMediaMarkupBuilderTest {
+class ResponsiveImageMediaMarkupBuilderTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Mock
   private MediaSource mediaSource;
@@ -78,25 +79,25 @@ public class ResponsiveImageMediaMarkupBuilderTest {
   private Resource resource;
 
   @Test
-  public void testAccepts() {
+  void testAccepts() {
     MediaMarkupBuilder underTest = AdaptTo.notNull(context.request(), ResponsiveImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     Media media = new Media(mediaSource, mediaRequest);
 
-    assertFalse("no rendition", underTest.accepts(media));
+    assertFalse(underTest.accepts(media), "no rendition");
 
     media.setRenditions(ImmutableList.of(renditionL));
 
-    assertFalse("media format not mandatory", underTest.accepts(media));
+    assertFalse(underTest.accepts(media),"media format not mandatory");
 
     mediaRequest.getMediaArgs().mandatoryMediaFormats(DummyMediaFormats.RESPONSIVE_32_9_L1);
 
-    assertFalse("no multiple media formats", underTest.accepts(media));
+    assertFalse(underTest.accepts(media),"no multiple media formats");
 
     mediaRequest.getMediaArgs().mandatoryMediaFormats(DummyMediaFormats.RESPONSIVE_32_9_L1, DummyMediaFormats.RESPONSIVE_32_9_M1);
 
-    assertFalse("only one rendition", underTest.accepts(media));
+    assertFalse(underTest.accepts(media),"only one rendition");
 
     media.setRenditions(ImmutableList.of(renditionL, renditionS));
 
@@ -108,7 +109,7 @@ public class ResponsiveImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testBuild() throws JSONException {
+  void testBuild() throws JSONException {
     MediaMarkupBuilder underTest = AdaptTo.notNull(context.request(), ResponsiveImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
@@ -133,12 +134,12 @@ public class ResponsiveImageMediaMarkupBuilderTest {
 
     assertEquals("M1", sources.getJSONObject(1).get(MediaNameConstants.PROP_BREAKPOINT));
     assertEquals("/media/dummy/120x100png", sources.getJSONObject(1).get("src"));
-    assertEquals("alt", null, image.getAttributeValue("alt"));
+    assertNull(image.getAttributeValue("alt"), "alt");
 
     when(asset.getAltText()).thenReturn("Alt Text");
     media.setAsset(asset);
     image = underTest.build(media);
-    assertEquals("alt", "Alt Text", image.getAttributeValue("alt"));
+    assertEquals("Alt Text", image.getAttributeValue("alt"), "alt");
 
     // compare whole string
     assertEquals(
@@ -148,7 +149,7 @@ public class ResponsiveImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testBuild_EditMode() {
+  void testBuild_EditMode() {
     WCMMode.EDIT.toRequest(context.request());
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), ResponsiveImageMediaMarkupBuilder.class);
@@ -169,7 +170,7 @@ public class ResponsiveImageMediaMarkupBuilderTest {
 
 
   @Test
-  public void testBuild_PreviewMode() {
+  void testBuild_PreviewMode() {
     WCMMode.PREVIEW.toRequest(context.request());
 
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), ResponsiveImageMediaMarkupBuilder.class);
@@ -189,7 +190,7 @@ public class ResponsiveImageMediaMarkupBuilderTest {
   }
 
   @Test
-  public void testIsValidMedia() {
+  void testIsValidMedia() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), ResponsiveImageMediaMarkupBuilder.class);
 
     assertFalse(builder.isValidMedia(null));

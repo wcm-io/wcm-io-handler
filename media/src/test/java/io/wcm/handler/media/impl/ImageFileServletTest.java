@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,38 +27,39 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.image.Layer;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
-public class ImageFileServletTest {
+@ExtendWith(AemContextExtension.class)
+class ImageFileServletTest {
 
-  @Rule
-  public AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private ImageFileServlet underTest;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     underTest = new ImageFileServlet();
     context.currentResource(context.load().binaryFile("/sample_image_215x102.jpg", "/content/sample_image.jpg"));
   }
 
   @Test
-  public void testGet_NoSelector() throws Exception {
+  void testGet_NoSelector() throws Exception {
     underTest.service(context.request(), context.response());
 
     assertEquals(HttpServletResponse.SC_NOT_FOUND, context.response().getStatus());
   }
 
   @Test
-  public void testGet() throws Exception {
+  void testGet() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102");
 
     underTest.service(context.request(), context.response());
@@ -69,7 +70,7 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGet_Cropping() throws Exception {
+  void testGet_Cropping() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.10,10,20,25");
 
     underTest.service(context.request(), context.response());
@@ -80,7 +81,7 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGet_Cropping_InvalidSyntax() throws Exception {
+  void testGet_Cropping_InvalidSyntax() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.10,10");
 
     underTest.service(context.request(), context.response());
@@ -91,7 +92,7 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGet_Rotation() throws Exception {
+  void testGet_Rotation() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.-.90");
 
     underTest.service(context.request(), context.response());
@@ -102,7 +103,7 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGet_Cropping_Rotation() throws Exception {
+  void testGet_Cropping_Rotation() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.10,10,25,20.180");
 
     underTest.service(context.request(), context.response());
@@ -113,7 +114,7 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGet_Rotation_InvalidValue() throws Exception {
+  void testGet_Rotation_InvalidValue() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.-.45");
 
     underTest.service(context.request(), context.response());
@@ -124,7 +125,7 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGet_SizeTooLarge() throws Exception {
+  void testGet_SizeTooLarge() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.2150.1020");
 
     underTest.service(context.request(), context.response());
@@ -135,7 +136,7 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGet_RenderToPng() throws Exception {
+  void testGet_RenderToPng() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102");
     context.requestPathInfo().setSuffix("image.png");
 
@@ -147,18 +148,18 @@ public class ImageFileServletTest {
   }
 
   @Test
-  public void testGetImageFileNameJpeg() {
+  void testGetImageFileNameJpeg() {
     assertEquals("myimage.jpg", ImageFileServlet.getImageFileName("myimage.jpg"));
     assertEquals("myimage.jpg", ImageFileServlet.getImageFileName("myimage.jpeg"));
   }
 
   @Test
-  public void testGetImageFileNamePng() {
+  void testGetImageFileNamePng() {
     assertEquals("myImage.png", ImageFileServlet.getImageFileName("myImage.Png"));
   }
 
   @Test
-  public void testGetImageFileNameOther() {
+  void testGetImageFileNameOther() {
     assertEquals("myimage.jpg", ImageFileServlet.getImageFileName("myimage.gif"));
   }
 

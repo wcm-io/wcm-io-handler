@@ -22,18 +22,16 @@ package io.wcm.handler.mediasource.dam.impl;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.Resource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.osgi.service.event.EventHandler;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamEvent;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
@@ -42,29 +40,31 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.util.RunMode;
 
-public class AutoCroppingMediaHandlerTest {
+@ExtendWith(AemContextExtension.class)
+class AutoCroppingMediaHandlerTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private MediaHandler mediaHandler;
   private Asset asset;
   private Resource resource;
 
-  @Before
-  public void setUp() {
-    context.runMode("author");
-    EventHandler eventHandler = context.registerInjectActivateService(new DamRenditionMetadataService());
+  @BeforeEach
+  void setUp() {
+    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
+    context.runMode(RunMode.AUTHOR);
+    context.registerInjectActivateService(new DamRenditionMetadataService());
+
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     // prepare asset with web rendition
     asset = context.create().asset("/content/dam/test.jpg", 400, 200, ContentType.JPEG);
-    com.day.cq.dam.api.Rendition rendition = context.create().assetRendition(asset,
-        "cq5dam.web.300.150.jpg", 300, 150, ContentType.JPEG);
-    eventHandler.handleEvent(DamEvent.renditionUpdated(asset.getPath(), "admin", rendition.getPath()).toEvent());
+    context.create().assetRendition(asset, "cq5dam.web.300.150.jpg", 300, 150, ContentType.JPEG);
 
     // prepare component with auto-cropping
     context.create().resource("/apps/app1/components/comp1",
@@ -77,7 +77,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMediaFormatWithRatio() {
+  void testMediaFormatWithRatio() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(RATIO)
         .build();
@@ -89,7 +89,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMediaFormatFixedDimension() {
+  void testMediaFormatFixedDimension() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(EDITORIAL_1COL)
         .build();
@@ -101,7 +101,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMultipleMediaFormatsFixedDimension() {
+  void testMultipleMediaFormatsFixedDimension() {
     Media media = mediaHandler.get(resource)
         .mediaFormats(EDITORIAL_2COL, EDITORIAL_1COL)
         .build();
@@ -113,7 +113,7 @@ public class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  public void testMediaFormatFixedDimension_NoMatch() {
+  void testMediaFormatFixedDimension_NoMatch() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(EDITORIAL_2COL)
         .build();
@@ -125,7 +125,7 @@ public class AutoCroppingMediaHandlerTest {
    * media format) disables auto-cropping.
    */
   @Test
-  public void testManualCroppingParametersDisableAutoCropping() {
+  void testManualCroppingParametersDisableAutoCropping() {
 
     // prepare resource with asset reference and manual cropping parameters
     // this manual cropping results in a 1:1 image not matching the media format
@@ -138,6 +138,19 @@ public class AutoCroppingMediaHandlerTest {
         .mediaFormat(RATIO)
         .build();
     assertFalse(media.isValid());
+  }
+
+  @Test
+  void testMediaFormatWithRatio_WebRenditionsExcludedFromMediaHandling() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(RATIO)
+        .includeAssetWebRenditions(false)
+        .build();
+    assertTrue(media.isValid());
+    Rendition rendition = media.getRendition();
+    assertEquals(320, rendition.getWidth());
+    assertEquals(200, rendition.getHeight());
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.320.200.40,0,360,200.file/test.jpg", media.getUrl());
   }
 
 }

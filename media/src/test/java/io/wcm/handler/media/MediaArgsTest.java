@@ -21,17 +21,17 @@ package io.wcm.handler.media;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -43,10 +43,10 @@ import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 
-public class MediaArgsTest {
+class MediaArgsTest {
 
   @Test
-  public void testGetMediaFormats() {
+  void testGetMediaFormats() {
     MediaArgs mediaArgs;
 
     mediaArgs = new MediaArgs(EDITORIAL_1COL);
@@ -78,7 +78,7 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testGetMediaFormatsMandatory() {
+  void testGetMediaFormatsMandatory() {
     MediaArgs mediaArgs;
 
     mediaArgs = new MediaArgs().mandatoryMediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
@@ -98,12 +98,12 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testGetUrlMode() {
+  void testGetUrlMode() {
     assertEquals(UrlModes.FULL_URL, new MediaArgs().urlMode(UrlModes.FULL_URL).getUrlMode());
   }
 
   @Test
-  public void testFixedDimension() {
+  void testFixedDimension() {
     MediaArgs mediaArgs = new MediaArgs().fixedDimension(100, 50);
     assertEquals(100, mediaArgs.getFixedWidth());
     assertEquals(50, mediaArgs.getFixedHeight());
@@ -115,7 +115,7 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testGetFileExtensions() {
+  void testGetFileExtensions() {
     assertArrayEquals(new String[] {
         "gif"
     }, new MediaArgs().fileExtension("gif").getFileExtensions());
@@ -127,7 +127,7 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testGetProperties() {
+  void testGetProperties() {
     Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
 
     MediaArgs mediaArgs = new MediaArgs()
@@ -142,7 +142,7 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testDragDropSupport() {
+  void testDragDropSupport() {
     MediaArgs mediaArgs = new MediaArgs();
     assertEquals(DragDropSupport.AUTO, mediaArgs.getDragDropSupport());
 
@@ -151,7 +151,7 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testClone() {
+  void testClone() {
     MediaFormat[] mediaFormats = new MediaFormat[] {
         EDITORIAL_1COL,
         EDITORIAL_2COL
@@ -186,6 +186,7 @@ public class MediaArgsTest {
     mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
     mediaArgs.includeAssetThumbnails(true);
+    mediaArgs.includeAssetWebRenditions(true);
     mediaArgs.imageSizes(imageSizes);
     mediaArgs.pictureSources(pictureSourceSets);
     mediaArgs.dragDropSupport(DragDropSupport.NEVER);
@@ -213,6 +214,7 @@ public class MediaArgsTest {
     assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
     assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());
+    assertEquals(mediaArgs.isIncludeAssetWebRenditions(), clone.isIncludeAssetWebRenditions());
     assertEquals(mediaArgs.getImageSizes(), clone.getImageSizes());
     assertArrayEquals(mediaArgs.getPictureSources(), clone.getPictureSources());
     assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());
@@ -221,7 +223,7 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testEquals() {
+  void testEquals() {
     MediaArgs mediaArgs1 = new MediaArgs().mediaFormat(EDITORIAL_1COL).urlMode(UrlModes.FULL_URL).altText("abc");
     MediaArgs mediaArgs2 = new MediaArgs().mediaFormat(EDITORIAL_1COL).urlMode(UrlModes.FULL_URL).altText("abc");
     MediaArgs mediaArgs3 = new MediaArgs().mediaFormat(EDITORIAL_2COL).urlMode(UrlModes.FULL_URL).altText("abc");
@@ -233,7 +235,7 @@ public class MediaArgsTest {
   }
 
   @Test
-  public void testToString() throws Exception {
+  void testToString() throws Exception {
     MediaArgs mediaArgs = new MediaArgs().altText("abc");
     assertTrue(StringUtils.contains(mediaArgs.toString(), "abc"));
   }

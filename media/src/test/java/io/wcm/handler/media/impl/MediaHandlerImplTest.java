@@ -20,12 +20,12 @@
 package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -34,8 +34,8 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableList;
@@ -58,17 +58,18 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 /**
  * Test {@link MediaHandlerImpl} methods.
  */
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class MediaHandlerImplTest {
+class MediaHandlerImplTest {
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
+  final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(MediaHandlerConfig.class, new TestMediaHandlerConfig(),
@@ -83,7 +84,7 @@ public class MediaHandlerImplTest {
   }
 
   @Test
-  public void testPipelining() {
+  void testPipelining() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     // test pipelining and resolve link
@@ -108,7 +109,7 @@ public class MediaHandlerImplTest {
   }
 
   @Test
-  public void testDownload() {
+  void testDownload() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     // test pipelining and resolve link
@@ -135,7 +136,7 @@ public class MediaHandlerImplTest {
   }
 
   @Test
-  public void testMediaFormatResolving() {
+  void testMediaFormatResolving() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
@@ -152,7 +153,7 @@ public class MediaHandlerImplTest {
   }
 
   @Test
-  public void testFailedMediaFormatResolving() {
+  void testFailedMediaFormatResolving() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1",
@@ -164,7 +165,7 @@ public class MediaHandlerImplTest {
   }
 
   @Test
-  public void testAllBuilderProps() {
+  void testAllBuilderProps() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
     MediaFormat[] mediaFormats = {
@@ -196,7 +197,7 @@ public class MediaHandlerImplTest {
   }
 
   @Test
-  public void testComponentProperties() {
+  void testComponentProperties() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
         MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
         MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, true,
@@ -354,7 +355,7 @@ public class MediaHandlerImplTest {
     }
 
     /* home_stage */
-    public static final MediaFormat HOME_STAGE = create("home_stage")
+    static final MediaFormat HOME_STAGE = create("home_stage")
         .label("Home Stage")
         .width(960)
         .height(485)
@@ -362,7 +363,7 @@ public class MediaHandlerImplTest {
         .build();
 
     /* home_teaser */
-    public static final MediaFormat HOME_TEASER = create("home_teaser")
+    static final MediaFormat HOME_TEASER = create("home_teaser")
         .label("Home Teaser")
         .width(206)
         .height(104)
@@ -374,7 +375,7 @@ public class MediaHandlerImplTest {
 
   public static class TestMediaFormatProvider extends MediaFormatProvider {
 
-    public TestMediaFormatProvider() {
+    TestMediaFormatProvider() {
       super(TestMediaFormats.class);
     }
 

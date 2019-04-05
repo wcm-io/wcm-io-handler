@@ -19,16 +19,16 @@
  */
 package io.wcm.handler.url.integrator.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
@@ -38,29 +38,30 @@ import io.wcm.handler.url.integrator.IntegratorNameConstants;
 import io.wcm.handler.url.integrator.IntegratorProtocol;
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
-import io.wcm.testing.mock.aem.junit.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
+@ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-public class IntegratorHandlerImplTest {
+class IntegratorHandlerImplTest {
 
   private static final String PAGE_PATH = "/content/unittest/de_test/brand/de/section/page";
 
-  @Rule
-  public final AemContext context = AppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   protected Adaptable adaptable() {
     return context.request();
   }
 
   @Test
-  public void testIsIntegratorTemplateModes_NoSelector() {
+  void testIsIntegratorTemplateModes_NoSelector() {
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertFalse(underTest.isIntegratorTemplateMode());
     assertFalse(underTest.isIntegratorTemplateSecureMode());
   }
 
   @Test
-  public void testIsIntegratorTemplateModes_IntegratorTemplateSelector() {
+  void testIsIntegratorTemplateModes_IntegratorTemplateSelector() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertTrue(underTest.isIntegratorTemplateMode());
@@ -68,7 +69,7 @@ public class IntegratorHandlerImplTest {
   }
 
   @Test
-  public void testIsIntegratorTemplateModes_IntegratorTemplateSecureSelector() {
+  void testIsIntegratorTemplateModes_IntegratorTemplateSecureSelector() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE_SECURE);
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertTrue(underTest.isIntegratorTemplateMode());
@@ -76,34 +77,34 @@ public class IntegratorHandlerImplTest {
   }
 
   @Test
-  public void testGetIntegratorTemplateSelector_NoSelector() {
+  void testGetIntegratorTemplateSelector_NoSelector() {
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertEquals(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE, underTest.getIntegratorTemplateSelector());
   }
 
   @Test
-  public void testGetIntegratorTemplateSelector_IntegratorTemplateSelector() {
+  void testGetIntegratorTemplateSelector_IntegratorTemplateSelector() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertEquals(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE, underTest.getIntegratorTemplateSelector());
   }
 
   @Test
-  public void testGetIntegratorTemplateSelector_IntegratorTemplateSecureSelector() {
+  void testGetIntegratorTemplateSelector_IntegratorTemplateSecureSelector() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE_SECURE);
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertEquals(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE_SECURE, underTest.getIntegratorTemplateSelector());
   }
 
   @Test
-  public void testNoIntegratorPage() {
+  void testNoIntegratorPage() {
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertEquals(IntegratorModes.SIMPLE, underTest.getIntegratorMode());
     assertEquals(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE, underTest.getIntegratorTemplateSelector());
   }
 
   @Test
-  public void testIntegratorPage() {
+  void testIntegratorPage() {
     Page integratorPage = context.create().page(PAGE_PATH, DummyAppTemplate.INTEGRATOR.getTemplatePath());
     context.currentPage(integratorPage);
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
@@ -112,7 +113,7 @@ public class IntegratorHandlerImplTest {
   }
 
   @Test
-  public void testIntegratorPageExtended() throws PersistenceException {
+  void testIntegratorPageExtended() throws PersistenceException {
     Page integratorPage = context.create().page(PAGE_PATH, DummyAppTemplate.INTEGRATOR.getTemplatePath());
     ModifiableValueMap props = integratorPage.getContentResource().adaptTo(ModifiableValueMap.class);
     props.put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.EXTENDED.getId());
@@ -123,9 +124,8 @@ public class IntegratorHandlerImplTest {
     assertEquals(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE, underTest.getIntegratorTemplateSelector());
   }
 
-  @SuppressWarnings("unused")
   @Test
-  public void testIntegratorPageNull() {
+  void testIntegratorPageNull() {
     context.currentPage((Page)null);
     IntegratorHandler underTest = adaptable().adaptTo(IntegratorHandler.class);
     assertNull(underTest.getIntegratorMode());
@@ -133,7 +133,7 @@ public class IntegratorHandlerImplTest {
   }
 
   @Test
-  public void testIntegratorPage_IntegratorTemplateSecureSelector() {
+  void testIntegratorPage_IntegratorTemplateSecureSelector() {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE_SECURE);
     Page integratorPage = context.create().page(PAGE_PATH, DummyAppTemplate.INTEGRATOR.getTemplatePath());
     context.currentPage(integratorPage);
@@ -143,7 +143,7 @@ public class IntegratorHandlerImplTest {
   }
 
   @Test
-  public void testIntegratorPage_IntegratorProtocolSecure() throws PersistenceException {
+  void testIntegratorPage_IntegratorProtocolSecure() throws PersistenceException {
     Page integratorPage = context.create().page(PAGE_PATH, DummyAppTemplate.INTEGRATOR.getTemplatePath());
     ModifiableValueMap props = integratorPage.getContentResource().adaptTo(ModifiableValueMap.class);
     props.put(IntegratorNameConstants.PN_INTEGRATOR_PROTOCOL, IntegratorProtocol.HTTPS.name());

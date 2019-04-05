@@ -19,14 +19,14 @@
  */
 package io.wcm.handler.commons.dom;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class HtmlCommentTest {
+class HtmlCommentTest {
 
   @Test
-  public void testSimpleAttributes() throws Exception {
+  void testSimpleAttributes() throws Exception {
     HtmlComment comment = new HtmlComment("text1");
     assertEquals("text1", comment.getText());
     assertEquals("<!--text1-->", comment.toString());

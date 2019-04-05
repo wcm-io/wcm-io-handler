@@ -26,28 +26,7 @@
             "jcr:primaryType":"nt:resource"
           }
         },
-        "cq5dam.thumbnail.215.102.jpg": {
-          "jcr:primaryType":"nt:file",
-          "jcr:content": {
-            "jcr:mimeType":"image/jpeg",
-            "jcr:primaryType":"nt:resource"
-          }
-        },
-        "cq5dam.web.450.213.jpg": {
-          "jcr:primaryType":"nt:file",
-          "jcr:content": {
-            "jcr:mimeType":"image/jpeg",
-            "jcr:primaryType":"nt:resource"
-          }
-        },
-        "cq5dam.web.685.325.jpg": {
-          "jcr:primaryType":"nt:file",
-          "jcr:content": {
-            "jcr:mimeType":"image/jpeg",
-            "jcr:primaryType":"nt:resource"
-          }
-        },
-        "cq5dam.web.960.455.jpg": {
+        "cq5dam.web.1280.1024.jpg": {
           "jcr:primaryType":"nt:file",
           "jcr:content": {
             "jcr:mimeType":"image/jpeg",
@@ -61,7 +40,28 @@
             "jcr:primaryType":"nt:resource"
           }
         },
-        "cq5dam.web.1280.1024.jpg": {
+        "cq5dam.web.960.455.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.685.325.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.web.450.213.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        },
+        "cq5dam.thumbnail.215.102.jpg": {
           "jcr:primaryType":"nt:file",
           "jcr:content": {
             "jcr:mimeType":"image/jpeg",

@@ -36,9 +36,9 @@ import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
 import io.wcm.handler.url.impl.SiteRootDetectorImpl;
 import io.wcm.handler.url.impl.UrlHandlerAdapterFactory;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import io.wcm.testing.mock.aem.junit.AemContextBuilder;
-import io.wcm.testing.mock.aem.junit.AemContextCallback;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
+import io.wcm.testing.mock.aem.junit5.AemContextCallback;
 import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 
 /**

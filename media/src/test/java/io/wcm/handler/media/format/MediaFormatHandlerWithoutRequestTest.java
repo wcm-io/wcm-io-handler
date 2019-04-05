@@ -20,14 +20,14 @@
 package io.wcm.handler.media.format;
 
 import org.apache.sling.api.adapter.Adaptable;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Test {@link MediaFormatHandler}
  */
-@RunWith(MockitoJUnitRunner.class)
-public class MediaFormatHandlerWithoutRequestTest extends MediaFormatHandlerTest {
+@ExtendWith(MockitoExtension.class)
+class MediaFormatHandlerWithoutRequestTest extends MediaFormatHandlerTest {
 
   @Override
   protected Adaptable adaptable() {
