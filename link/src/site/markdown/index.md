@@ -25,6 +25,8 @@ The Link Handler provides:
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic [Granite UI components][graniteui-components] that can be used in component dialogs
 
+Read the [general concepts][general-concepts] to get an overview of the functionality.
+
 
 ### AEM Version Support Matrix
 

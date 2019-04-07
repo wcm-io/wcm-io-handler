@@ -32,6 +32,8 @@ The Media Handler provides:
 * Generic HTL Placeholder template
 * Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
 
+Read the [general concepts][general-concepts] to get an overview of the functionality.
+
 
 ### AEM Version Support Matrix
 
