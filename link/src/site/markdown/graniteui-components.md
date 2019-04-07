@@ -1,6 +1,34 @@
 ## Link Handler Granite UI components
 
 
+### Link Reference Container
+
+![Link Reference Container](images/linkRefContainer-component.png)
+
+A component that defines the full set of fields for defining a link with it's properties to be included in a dialog tab. The link types are displayed dynamically as configured in the link handler configuration. It is possible to add your own fields.
+
+```json
+{
+  "jcr:primaryType": "nt:unstructured",
+  "sling:resourceType": "granite/ui/components/coral/foundation/fixedcolumns",
+  "jcr:title": "Link",
+  "margin": true,
+  "cq:showOnCreate": false,
+  "items": {
+    "column": {
+      "sling:resourceType": "granite/ui/components/coral/foundation/container",
+      "items": {
+        "linkRef": {
+          "sling:resourceType": "wcm-io/handler/link/components/granite/form/linkRefContainer",
+          "showLinkTitle": true
+        }
+      }
+    }
+  }
+}
+```
+
+
 ### Internal Link Type Path Field
 
 This is a customized Path Field that always sets the root path to the link root path as defined by the Link Handler configuration for internal links. By default, this is the site root path as defined by the URL Handler configuration.
@@ -52,28 +80,3 @@ This component extends the "Media Handler-aware Path Field". Enhancements over t
 * Dynamically sets `name` to the default property name for media links
 * Dynamically sets `mediaFormats` to a list of all media formats with "download" flag
 
-
-### Link reference container
-
-Component that defines the full set of fields for defining a link with it's properties to be included in a dialog tab. The link types are displayed dynamically as configured in the link handler configuration. It is possible to add your own fields.
-
-```json
-{
-  "jcr:primaryType": "nt:unstructured",
-  "sling:resourceType": "granite/ui/components/coral/foundation/fixedcolumns",
-  "jcr:title": "Link",
-  "margin": true,
-  "cq:showOnCreate": false,
-  "items": {
-    "column": {
-      "sling:resourceType": "granite/ui/components/coral/foundation/container",
-      "items": {
-        "linkRef": {
-          "sling:resourceType": "wcm-io/handler/link/components/granite/form/linkRefContainer",
-          "showLinkTitle": true
-        }
-      }
-    }
-  }
-}
-```

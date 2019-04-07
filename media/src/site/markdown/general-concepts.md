@@ -1,4 +1,4 @@
-## Media Handler Basic Concepts
+## Media Handler General concepts
 
 The wcm.io Media Handler makes use of a set of basic concepts that helps to enable a flexible and powerful handling of images and other assets in your AEM application.
 
@@ -9,7 +9,7 @@ This page describes these basic concepts, the [usage][usage] page shows examples
 
 The approach of both the [AEM Core WCM Components][aem-core-wcm-components] and the classic AEM foundation components is it to build a single "Image" or "Adaptive Image" component that implements the image handling in a smart and flexible way. This is a good solution for a standalone image component. However, in most AEM applications there are lots of components that need to display images in some way, some of them editable, and some not. Having them all extend the image component is inflexible and sometimes not even possible. Embedding the image component has also its limitations, especially when the parameterizing of the image handling is done via content policies.
 
-Thus the wcm.io Media Handler supports adding image capability to any AEM component as an "aspect", without the need to inherit from or embed any other AEM component to add the image functionality. And most parts of this aspect functionality can be configured in a central place in the AEM project so in each AEM component only very little image handling code is required.
+Thus the wcm.io Media Handler supports adding image capability to any AEM component as an "aspect", without the need to inherit from or embed any other AEM component to add the image functionality. And most parts of this aspect functionality can be configured in a central place in the AEM project so in each AEM component only very little image handling code is required. If the predefined Sling Models are used no Java code is required at all.
 
 
 ### Media Formats
