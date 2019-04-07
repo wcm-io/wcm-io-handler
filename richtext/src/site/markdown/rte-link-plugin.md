@@ -1,13 +1,15 @@
-## RTE link plugin
+## RichText Handler RTE link plugin
 
-The wcm.io Rich Text Handler includes a plugin for the [AEM Rich Text Editor (RTE)][aem-rte] that provides all the features from the [wcm.io Link Handler][link-handler] standard link dialog. It shows a select field to pick the link type and the associated fields. The list of link types that is shown depended on the project's link handler configuration. It is possible to add your own fields.
+*Please note:* The RTE link plugin is only supported in AEM 6.3 and higher.
+
+The wcm.io RichText Handler includes a plugin for the [AEM Rich Text Editor (RTE)][aem-rte] that provides all the features from the [wcm.io Link Handler][link-handler] standard link dialog. It shows a select field to pick the link type and the associated fields. The list of link types that is shown depended on the project's link handler configuration. It is possible to add your own fields.
 
 ![RTE link plugin](images/rte-link-plugin.png)
 
 
 ### Enable the RTE link plugin
 
-To enable plugin you have to disable the AEM built-in link (`links`) plugin and instead enable the wcm.io Rich Text Handler link plugin (`wcmio.handler.richtext.links`):
+To enable plugin you have to disable the AEM built-in link (`links`) plugin and instead enable the wcm.io RichText Handler link plugin (`wcmio.handler.richtext.links`):
 
 ```json
 // Configure rich text plugins
@@ -57,7 +59,7 @@ For a complete example see [richTextConfig.json][rte-full-example].
 
 ### Customize the RTE link plugin dialog
 
-If you want to customize the link plugin dialog you have to create your own custom RTE link plugin that inherits from the wcm.io Rich Text Handler link plugin. Then you can override some of the methods that control which fields are displayed for each link type or all link types.
+If you want to customize the link plugin dialog you have to create your own custom RTE link plugin that inherits from the wcm.io RichText Handler link plugin. Then you can override some of the methods that control which fields are displayed for each link type or all link types.
 
 Example for a custom `linkPlugin.js`:
 
@@ -123,7 +125,7 @@ Example for a custom `linkDialog.js`:
 })(window.jQuery);
 ````
 
-For more details have a look into the [sources of the wcm.io Rich Text Handler link plugin][rte-link-plugin-sources].
+For more details have a look into the [sources of the wcm.io RichText Handler link plugin][rte-link-plugin-sources].
 
 
 

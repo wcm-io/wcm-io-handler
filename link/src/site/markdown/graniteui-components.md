@@ -1,4 +1,4 @@
-## Granite UI components
+## Link Handler Granite UI components
 
 
 ### Internal Link Type Path Field

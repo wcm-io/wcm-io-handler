@@ -7,8 +7,10 @@ Media resolving, processing and markup generation.
 
 ### Documentation
 
+* [Basic concepts][basic-concepts]
 * [Usage][usage]
 * [Granite UI components][graniteui-components]
+* [Component properties][component-properties]
 * [System configuration][configuration]
 * [API documentation][apidocs]
 * [Changelog][changelog]
@@ -53,8 +55,10 @@ To use this module you have to deploy also:
 | [wcm.io URL Handler](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url) |
 
 
+[basic-concepts]: basic-concepts.html
 [usage]: usage.html
 [graniteui-components]: graniteui-components.html
+[component-properties]: component-properties.html
 [configuration]: configuration.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
