@@ -2,6 +2,8 @@
 
 The wcm.io Rich Text Handler includes a plugin for the [AEM Rich Text Editor (RTE)][aem-rte] that provides all the features from the [wcm.io Link Handler][link-handler] standard link dialog. It shows a select field to pick the link type and the associated fields. The list of link types that is shown depended on the project's link handler configuration. It is possible to add your own fields.
 
+![RTE link plugin](images/rte-link-plugin.png)
+
 
 ### Enable the RTE link plugin
 
@@ -121,12 +123,12 @@ Example for a custom `linkDialog.js`:
 })(window.jQuery);
 ````
 
+For more details have a look into the [sources of the wcm.io Rich Text Handler link plugin][rte-link-plugin-sources].
 
-For details have a look into the sources of the wcm.io Rich Text Handler link plugin:
-https://github.com/wcm-io/wcm-io-handler/tree/develop/richtext/src/main/webapp/app-root/clientlibs/rte.plugins/js
 
 
 
 [aem-rte]: https://helpx.adobe.com/experience-manager/6-4/sites/administering/using/rich-text-editor.html
 [link-handler]: ../link/
 [rte-full-example]: https://github.com/wcm-io/wcm-io-samples/blob/develop/bundles/core/src/main/webapp/app-root/components/global/include/richTextConfig.json
+[rte-link-plugin-sources]: https://github.com/wcm-io/wcm-io-handler/tree/develop/richtext/src/main/webapp/app-root/clientlibs/rte.plugins/js
