@@ -8,6 +8,7 @@ RichText processing and markup generation.
 ### Documentation
 
 * [Usage][usage]
+* [RTE link plugin][rte-link-plugin]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -20,6 +21,7 @@ The RichText Handler provides:
 * Detect inline links and images and format them using [Link Handler][link-handler] and [Media Handler][media-handler]
 * Support XHTML and Plain Text
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
+* [RTE link plugin][rte-link-plugin] that provides all features of the default link handler link dialog.
 
 
 ### AEM Version Support Matrix
@@ -48,6 +50,7 @@ To use this module you have to deploy also:
 
 
 [usage]: usage.html
+[rte-link-plugin]: rte-link-plugin.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [link-handler]: ../link/
