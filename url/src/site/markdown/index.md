@@ -8,6 +8,7 @@ URL resolving and processing.
 ### Documentation
 
 * [Usage][usage]
+* [General concepts][general-concepts]
 * [Suffix Builder and Parser][suffix-builder-parser]
 * [Integrator Template Mode][integrator]
 * [Sling Rewriter Integration][rewriter]
@@ -55,6 +56,7 @@ To use this module you have to deploy also:
 
 
 [usage]: usage.html
+[general-concepts]: general-concepts.html
 [suffix-builder-parser]: suffix-builder-parser.html
 [integrator]: integrator.html
 [rewriter]: rewriter.html

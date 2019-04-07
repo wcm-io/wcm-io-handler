@@ -48,7 +48,7 @@ public final class UrlModes {
   public static final @NotNull UrlMode DEFAULT = new DefaultUrlMode();
 
   /**
-   * Default mode: Does generate a externalized URL without any protocol and hostname,
+   * Does generate a externalized URL without any protocol and hostname,
    * independent of any setting in context-specific configuration.
    */
   public static final @NotNull UrlMode NO_HOSTNAME = new NoHostnameUrlMode();
