@@ -41,6 +41,13 @@ Usually a project defines it's own redirect template by extending the wcm.io Red
 The wcm.io Link Handler provides a set of Granite UI components to define links in the Touch UI dialogs in a consistent way in all components of the project.
 
 
+### Inheriting URL parameters
+
+By default the AEM-built in URL parameters `wcmmode` and `debugClientLibs` are "inherited" to all links in a page, when they are currently used to render the page. This makes it easy especially on the authoring instance to preview a page in "view as published" mode and then navigate the site using the links in the page without leaving this mode.
+
+It's possible to add additional project-specific parameters to this list of inherited URL parameters.
+
+
 ### Highly customizable
 
 The Link Handler is highly customizable to adapt it to the needs of your project:

@@ -1,6 +1,6 @@
 ## About RichText Handler
 
-RichText processing and markup generation.
+Rich text processing and markup generation.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.richtext/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.richtext)
 
