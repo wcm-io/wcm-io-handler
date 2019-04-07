@@ -1,4 +1,4 @@
-## URL Handler General concepts
+## URL Handler general concepts
 
 The wcm.io URL Handler is responsible for building and externalizing all types or URLs within an AEM project.
 
@@ -69,7 +69,7 @@ Whenever an URL is built it's possible to process it using an "URL mode". In the
 
 Built-in URL modes:
 
-* *DEFAULT*: Default mode - Does generate a full externalized URL only if both siteUrl and siteUrlSecure parameter are set in context-specific configuration. If not set, only URLs without hostname are generated.
+* **DEFAULT**: Default mode - Does generate a full externalized URL only if both siteUrl and siteUrlSecure parameter are set in context-specific configuration. If not set, only URLs without hostname are generated.
 * **NO_HOSTNAME**: Does generate a externalized URL without any protocol and hostname, independent of any setting in context-specific configuration.
 * **FULL_URL**: Enforce the generation of a full URL with protocol and hostname.
 * **FULL_URL_FORCENONSECURE**: Enforce the generation of a full URL with protocol and hostname and non-secure mode.

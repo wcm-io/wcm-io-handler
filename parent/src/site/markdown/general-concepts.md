@@ -1,4 +1,4 @@
-## wcm.io Handler General concepts
+## wcm.io Handler general concepts
 
 The wcm.io Handler is a set of libraries that built on each other to provide the following highlevel functionality:
 

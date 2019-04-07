@@ -1,4 +1,4 @@
-## Link Handler General concepts
+## Link Handler general concepts
 
 The wcm.io Link Handler makes use of a set of basic concepts that helps to enable a flexible and powerful handling of links in your AEM application.
 

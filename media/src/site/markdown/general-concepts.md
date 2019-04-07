@@ -1,4 +1,4 @@
-## Media Handler General concepts
+## Media Handler general concepts
 
 The wcm.io Media Handler makes use of a set of basic concepts that helps to enable a flexible and powerful handling of images and other assets in your AEM application.
 

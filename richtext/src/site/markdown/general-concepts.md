@@ -1,4 +1,4 @@
-## RichText Handler General concepts
+## RichText Handler general concepts
 
 The wcm.io RichText Handler is responsible for rendering formatted rich text and helps processing links and images in it.
 
