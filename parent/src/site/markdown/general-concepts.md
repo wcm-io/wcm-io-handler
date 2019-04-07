@@ -50,19 +50,19 @@ The implementations for the handlers share common patterns:
 
 Each of the handler has their own "general concepts" page for more details:
 
-* [URL Handler general concepts][url-handler-basic-concepts]
-* [Link Handler general concepts][link-handler-basic-concepts]
-* [Media Handler general concepts][media-handler-basic-concepts]
-* [RichText Handler general concepts][richtext-handler-basic-concepts]
+* [URL Handler general concepts][url-handler-general-concepts]
+* [Link Handler general concepts][link-handler-general-concepts]
+* [Media Handler general concepts][media-handler-general-concepts]
+* [RichText Handler general concepts][richtext-handler-general-concepts]
 
 
 [url-handler]: url/
 [link-handler]: link/
 [media-handler]: media/
 [richtext-handler]: richtext/
-[url-handler-basic-concepts]: url/basic-concepts.html
-[link-handler-basic-concepts]: link/basic-concepts.html
-[media-handler-basic-concepts]: media/basic-concepts.html
-[richtext-handler-basic-concepts]: richtext/basic-concepts.html
+[url-handler-general-concepts]: url/general-concepts.html
+[link-handler-general-concepts]: link/general-concepts.html
+[media-handler-general-concepts]: media/general-concepts.html
+[richtext-handler-general-concepts]: richtext/general-concepts.html
 [sling-caconfig]: https://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
 [wcmmio-sling-caservices]: http://wcm.io/sling/commons/context-aware-services.html
