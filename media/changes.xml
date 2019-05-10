@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Allow media formats without ratio for auto-generated IPE cropping ratios (free-hand cropping).
       </action>
+      <action type="update" dev="sseifert">
+        Allow responsive image handling based in "imageSizes" also for media formats without ratio.
+      </action>
     </release>
 
     <release version="1.4.0" date="2019-04-05">

@@ -20,5 +20,5 @@
 /**
  * Default media markup builder implementations.
  */
-@org.osgi.annotation.versioning.Version("1.3.1")
+@org.osgi.annotation.versioning.Version("1.4.0")
 package io.wcm.handler.media.markup;

@@ -177,7 +177,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       // set image sizes/srcset
       ImageSizes imageSizes = mediaArgs.getImageSizes();
       if (imageSizes != null) {
-        MediaFormat primaryMediaFormat = getFirstMediaFormatWithRatio(media);
+        MediaFormat primaryMediaFormat = getFirstMediaFormat(media);
         if (primaryMediaFormat != null) {
           String srcSet = getSrcSetRenditions(media, primaryMediaFormat, imageSizes.getWidths());
           if (srcSet != null) {
@@ -208,7 +208,8 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
 
     for (long width : widths) {
       Optional<String> url = media.getRenditions().stream()
-          .filter(rendition -> Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+          .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+              || Ratio.matches(mediaFormat.getRatio(), 0d))
               && rendition.getWidth() == width)
           .map(rendition -> rendition.getUrl())
           .findFirst();
@@ -240,6 +241,21 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
         if (mediaFormat.hasRatio()) {
           return mediaFormat;
         }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get first media format from the media formats of the media args that has a ratio set.
+   * @param media Media
+   * @return Media format or null if none found
+   */
+  protected final @Nullable MediaFormat getFirstMediaFormat(@NotNull Media media) {
+    MediaFormat[] mediaFormats = media.getMediaRequest().getMediaArgs().getMediaFormats();
+    if (mediaFormats != null) {
+      for (MediaFormat mediaFormat : mediaFormats) {
+        return mediaFormat;
       }
     }
     return null;
