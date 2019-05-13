@@ -25,6 +25,9 @@
 
     <release version="1.5.0" date="not released">
       <action type="add" dev="sseifert">
+        Allow to define a mix of mandatory and non-mandatory media formats.
+      </action>
+      <action type="add" dev="sseifert">
         Allow to define mandatory and non-mandatory widths for responsive image handling with image sizes or picture source sets.
       </action>
       <action type="update" dev="sseifert">

@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,9 +45,7 @@ import io.wcm.wcm.commons.util.ToStringStyle;
 @ProviderType
 public final class MediaArgs implements Cloneable {
 
-  private MediaFormat[] mediaFormats;
-  private String[] mediaFormatNames;
-  private boolean mediaFormatsMandatory;
+  private MediaFormatOption[] mediaFormatOptions;
   private boolean autoCrop;
   private String[] fileExtensions;
   private UrlMode urlMode;
@@ -75,14 +74,15 @@ public final class MediaArgs implements Cloneable {
   /**
    * @param mediaFormats Media formats
    */
-  public MediaArgs(MediaFormat... mediaFormats) {
+  @SuppressWarnings("null")
+  public MediaArgs(@NotNull MediaFormat @NotNull... mediaFormats) {
     mediaFormats(mediaFormats);
   }
 
   /**
    * @param mediaFormatNames Media format names
    */
-  public MediaArgs(String... mediaFormatNames) {
+  public MediaArgs(@NotNull String @NotNull... mediaFormatNames) {
     mediaFormatNames(mediaFormatNames);
   }
 
@@ -94,7 +94,16 @@ public final class MediaArgs implements Cloneable {
    * @return Media formats
    */
   public MediaFormat[] getMediaFormats() {
-    return this.mediaFormats;
+    if (this.mediaFormatOptions != null) {
+      MediaFormat[] result = Arrays.stream(this.mediaFormatOptions)
+          .filter(option -> option.getMediaFormatName() == null)
+          .map(option -> option.getMediaFormat())
+          .toArray(size -> new MediaFormat[size]);
+      if (result.length > 0) {
+        return result;
+      }
+    }
+    return null;
   }
 
   /**
@@ -102,12 +111,14 @@ public final class MediaArgs implements Cloneable {
    * @param values Media formats
    * @return this
    */
-  public @NotNull MediaArgs mediaFormats(MediaFormat... values) {
+  public @NotNull MediaArgs mediaFormats(@Nullable MediaFormat @Nullable... values) {
     if (values == null || values.length == 0) {
-      this.mediaFormats = null;
+      this.mediaFormatOptions = null;
     }
     else {
-      this.mediaFormats = values;
+      this.mediaFormatOptions = Arrays.stream(values)
+          .map(mediaFormat -> new MediaFormatOption(mediaFormat, false))
+          .toArray(size -> new MediaFormatOption[size]);
     }
     return this;
   }
@@ -118,9 +129,15 @@ public final class MediaArgs implements Cloneable {
    * @param values Media formats
    * @return this
    */
-  public @NotNull MediaArgs mandatoryMediaFormats(MediaFormat... values) {
-    mediaFormats(values);
-    mediaFormatsMandatory(true);
+  public @NotNull MediaArgs mandatoryMediaFormats(@NotNull MediaFormat @Nullable... values) {
+    if (values == null || values.length == 0) {
+      this.mediaFormatOptions = null;
+    }
+    else {
+      this.mediaFormatOptions = Arrays.stream(values)
+          .map(mediaFormat -> new MediaFormatOption(mediaFormat, true))
+          .toArray(size -> new MediaFormatOption[size]);
+    }
     return this;
   }
 
@@ -131,32 +148,41 @@ public final class MediaArgs implements Cloneable {
    */
   public @NotNull MediaArgs mediaFormat(MediaFormat value) {
     if (value == null) {
-      this.mediaFormats = null;
+      this.mediaFormatOptions = null;
     }
     else {
-      this.mediaFormats = new MediaFormat[] {
-          value
+      this.mediaFormatOptions = new MediaFormatOption[] {
+          new MediaFormatOption(value, false)
       };
     }
     return this;
   }
 
   /**
-   * If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
-   * @return Resolving of all media formats is mandatory.
+   * Checks if all media format options have the "mandatory" flag set.
+   * If none or not all of them have the flag set, false is returned.
+   * @return true if all media format options have the "mandatory" flag set.
    */
   public boolean isMediaFormatsMandatory() {
-    return this.mediaFormatsMandatory;
+    if (this.mediaFormatOptions == null) {
+      return false;
+    }
+    return !Arrays.stream(this.mediaFormatOptions)
+        .filter(option -> !option.isMandatory())
+        .findFirst().isPresent();
   }
 
   /**
-   * If set to true, the media handler enforces the resolution of the whole list of given
-   * media formats. The resolution fails if any of the media formats does not match.
+   * The "mandatory" flag of all media format options is set to to the given value.
    * @param value Resolving of all media formats is mandatory.
    * @return this
    */
   public @NotNull MediaArgs mediaFormatsMandatory(boolean value) {
-    this.mediaFormatsMandatory = value;
+    if (this.mediaFormatOptions != null) {
+      this.mediaFormatOptions = Arrays.stream(this.mediaFormatOptions)
+          .map(option -> option.withMandatory(value))
+          .toArray(size -> new MediaFormatOption[size]);
+    }
     return this;
   }
 
@@ -165,20 +191,31 @@ public final class MediaArgs implements Cloneable {
    * @return Media format names
    */
   public String[] getMediaFormatNames() {
-    return this.mediaFormatNames;
+    if (this.mediaFormatOptions != null) {
+      String[] result = Arrays.stream(this.mediaFormatOptions)
+          .filter(option -> option.getMediaFormatName() != null)
+          .map(option -> option.getMediaFormatName())
+          .toArray(size -> new String[size]);
+      if (result.length > 0) {
+        return result;
+      }
+    }
+    return null;
   }
 
   /**
    * Sets list of media formats to resolve to.
-   * @param values Media format names.
+   * @param names Media format names.
    * @return this
    */
-  public @NotNull MediaArgs mediaFormatNames(String... values) {
-    if (values == null || values.length == 0) {
-      this.mediaFormatNames = null;
+  public @NotNull MediaArgs mediaFormatNames(@NotNull String @Nullable... names) {
+    if (names == null || names.length == 0) {
+      this.mediaFormatOptions = null;
     }
     else {
-      this.mediaFormatNames = values;
+      this.mediaFormatOptions = Arrays.stream(names)
+          .map(name -> new MediaFormatOption(name, false))
+          .toArray(size -> new MediaFormatOption[size]);
     }
     return this;
   }
@@ -186,28 +223,57 @@ public final class MediaArgs implements Cloneable {
   /**
    * Sets list of media formats to resolve to.
    * Additionally {@link #isMediaFormatsMandatory()} is set to true.
-   * @param values Media format names.
+   * @param names Media format names.
    * @return this
    */
-  public @NotNull MediaArgs mandatoryMediaFormatNames(String... values) {
-    mediaFormatNames(values);
-    mediaFormatsMandatory(true);
+  public @NotNull MediaArgs mandatoryMediaFormatNames(@NotNull String @Nullable... names) {
+    if (names == null || names.length == 0) {
+      this.mediaFormatOptions = null;
+    }
+    else {
+      this.mediaFormatOptions = Arrays.stream(names)
+          .map(name -> new MediaFormatOption(name, true))
+          .toArray(size -> new MediaFormatOption[size]);
+    }
     return this;
   }
 
   /**
    * Sets a single media format to resolve to.
-   * @param value Media format name
+   * @param name Media format name
    * @return this
    */
-  public @NotNull MediaArgs mediaFormatName(String value) {
-    if (value == null) {
-      this.mediaFormatNames = null;
+  public @NotNull MediaArgs mediaFormatName(String name) {
+    if (name == null) {
+      this.mediaFormatOptions = null;
     }
     else {
-      this.mediaFormatNames = new String[] {
-          value
+      this.mediaFormatOptions = new MediaFormatOption[] {
+          new MediaFormatOption(name, false)
       };
+    }
+    return this;
+  }
+
+  /**
+   * Gets list of media formats to resolve to.
+   * @return Media formats with mandatory flag
+   */
+  public MediaFormatOption[] getMediaFormatOptions() {
+    return this.mediaFormatOptions;
+  }
+
+  /**
+   * Sets list of media formats to resolve to.
+   * @param values Media formats with mandatory flag
+   * @return this
+   */
+  public @NotNull MediaArgs mediaFormatOptions(@NotNull MediaFormatOption @Nullable... values) {
+    if (values == null || values.length == 0) {
+      this.mediaFormatOptions = null;
+    }
+    else {
+      this.mediaFormatOptions = values;
     }
     return this;
   }
@@ -241,7 +307,7 @@ public final class MediaArgs implements Cloneable {
    * @param values File extensions
    * @return this
    */
-  public @NotNull MediaArgs fileExtensions(String... values) {
+  public @NotNull MediaArgs fileExtensions(@NotNull String @Nullable... values) {
     if (values == null || values.length == 0) {
       this.fileExtensions = null;
     }
@@ -477,7 +543,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Picture sources for responsive image handling
    * @return this
    */
-  public @NotNull MediaArgs pictureSources(PictureSource[] value) {
+  public @NotNull MediaArgs pictureSources(@NotNull PictureSource @Nullable... value) {
     this.pictureSourceSets = value;
     return this;
   }
@@ -582,9 +648,7 @@ public final class MediaArgs implements Cloneable {
     // CHECKSTYLE:ON
     MediaArgs clone = new MediaArgs();
 
-    clone.mediaFormats = ArrayUtils.clone(this.mediaFormats);
-    clone.mediaFormatNames = ArrayUtils.clone(this.mediaFormatNames);
-    clone.mediaFormatsMandatory = this.mediaFormatsMandatory;
+    clone.mediaFormatOptions = ArrayUtils.clone(this.mediaFormatOptions);
     clone.autoCrop = this.autoCrop;
     clone.fileExtensions = ArrayUtils.clone(this.fileExtensions);
     clone.urlMode = this.urlMode;
@@ -608,6 +672,79 @@ public final class MediaArgs implements Cloneable {
     return clone;
   }
 
+  /**
+   * Media format to be applied on media processing.
+   */
+  @ProviderType
+  public static final class MediaFormatOption {
+
+    private final MediaFormat mediaFormat;
+    private final String mediaFormatName;
+    private final boolean mandatory;
+
+    /**
+     * @param mediaFormat Media format
+     * @param mandatory Resolution of this media format is mandatory
+     */
+    public MediaFormatOption(@Nullable MediaFormat mediaFormat, boolean mandatory) {
+      this.mediaFormat = mediaFormat;
+      this.mediaFormatName = null;
+      this.mandatory = mandatory;
+    }
+
+    /**
+     * @param mediaFormatName Media format name
+     * @param mandatory Resolution of this media format is mandatory
+     */
+    public MediaFormatOption(@NotNull String mediaFormatName, boolean mandatory) {
+      this.mediaFormat = null;
+      this.mediaFormatName = mediaFormatName;
+      this.mandatory = mandatory;
+    }
+
+    public @Nullable MediaFormat getMediaFormat() {
+      return this.mediaFormat;
+    }
+
+    public @Nullable String getMediaFormatName() {
+      return this.mediaFormatName;
+    }
+
+    public boolean isMandatory() {
+      return this.mandatory;
+    }
+
+    @Override
+    public int hashCode() {
+      return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * Sets the mandatory flag to a new value and returns a new media format option.
+     * @param newMandatory Resolution of this media format is mandatory
+     * @return Media format option
+     */
+    @NotNull
+    MediaFormatOption withMandatory(boolean newMandatory) {
+      if (this.mediaFormat != null) {
+        return new MediaFormatOption(this.mediaFormat, newMandatory);
+      }
+      else {
+        return new MediaFormatOption(this.mediaFormatName, newMandatory);
+      }
+    }
+
+    @Override
+    public String toString() {
+      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+    }
+
+  }
 
   /**
    * Image sizes for responsive image handling.
@@ -617,6 +754,7 @@ public final class MediaArgs implements Cloneable {
 
     private final @NotNull String sizes;
     private final long @NotNull [] widths;
+    // TODO: make it immutable again! - introduce "WidthOption"
     private long[] mandatoryWidths;
 
     /**
@@ -670,6 +808,11 @@ public final class MediaArgs implements Cloneable {
       return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    @Override
+    public String toString() {
+      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+    }
+
   }
 
   /**
@@ -681,6 +824,7 @@ public final class MediaArgs implements Cloneable {
     private final @NotNull MediaFormat mediaFormat;
     private final @Nullable String media;
     private final long @NotNull [] widths;
+    // TODO: make it immutable again! - introduce "WidthOption"
     private long[] mandatoryWidths;
 
     /**
@@ -741,6 +885,11 @@ public final class MediaArgs implements Cloneable {
     @Override
     public boolean equals(Object obj) {
       return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public String toString() {
+      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
     }
 
   }

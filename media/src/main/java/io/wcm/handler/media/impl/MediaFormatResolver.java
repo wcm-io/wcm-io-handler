@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
@@ -67,26 +68,26 @@ final class MediaFormatResolver {
    * @return true if resolution was successful.
    */
   private boolean resolveByNames(MediaArgs mediaArgs) {
-    // resolved media formats already set? done.
-    if (mediaArgs.getMediaFormats() != null) {
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    if (mediaFormatOptions == null) {
       return true;
     }
-    // no media format names present? done.
-    if (mediaArgs.getMediaFormatNames() == null) {
-      return true;
-    }
-    String[] mediaFormatNames = mediaArgs.getMediaFormatNames();
-    MediaFormat[] mediaFormats = new MediaFormat[mediaFormatNames.length];
+
+    // resolve media format options that have only a name set
     boolean resolutionSuccessful = true;
-    for (int i = 0; i < mediaFormatNames.length; i++) {
-      mediaFormats[i] = mediaFormatHandler.getMediaFormat(mediaFormatNames[i]);
-      if (mediaFormats[i] == null) {
-        log.warn("Media format name '" + mediaFormatNames[i] + "' is invalid.");
-        resolutionSuccessful = false;
+    for (int i = 0; i < mediaFormatOptions.length; i++) {
+      MediaFormatOption option = mediaFormatOptions[i];
+      String mediaFormatName = option.getMediaFormatName();
+      if (option.getMediaFormat() == null && mediaFormatName != null) {
+        MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
+        if (mediaFormat == null) {
+          log.warn("Media format name '{}' is invalid.", option.getMediaFormatName());
+          resolutionSuccessful = false;
+        }
+        mediaFormatOptions[i] = new MediaFormatOption(mediaFormat, option.isMandatory());
       }
     }
-    mediaArgs.mediaFormats(mediaFormats);
-    mediaArgs.mediaFormatNames((String[])null);
+    mediaArgs.mediaFormatOptions(mediaFormatOptions);
     return resolutionSuccessful;
   }
 

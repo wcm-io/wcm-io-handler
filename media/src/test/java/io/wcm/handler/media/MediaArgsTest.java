@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.MediaArgs.ImageSizes;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
@@ -78,6 +79,7 @@ class MediaArgsTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testGetMediaFormatsMandatory() {
     MediaArgs mediaArgs;
 
@@ -152,13 +154,9 @@ class MediaArgsTest {
 
   @Test
   void testClone() {
-    MediaFormat[] mediaFormats = new MediaFormat[] {
-        EDITORIAL_1COL,
-        EDITORIAL_2COL
-    };
-    String[] mediaFormatNames = new String[] {
-        "mf1",
-        "mf2"
+    MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[] {
+        new MediaFormatOption(EDITORIAL_1COL, true),
+        new MediaFormatOption(EDITORIAL_2COL, false)
     };
     String[] fileExtensions = new String[] {
         "ext1",
@@ -173,9 +171,7 @@ class MediaArgsTest {
     };
 
     MediaArgs mediaArgs = new MediaArgs();
-    mediaArgs.mediaFormats(mediaFormats);
-    mediaArgs.mediaFormatNames(mediaFormatNames);
-    mediaArgs.mediaFormatsMandatory(true);
+    mediaArgs.mediaFormatOptions(mediaFormatOptions);
     mediaArgs.fileExtensions(fileExtensions);
     mediaArgs.urlMode(UrlModes.FULL_URL_FORCENONSECURE);
     mediaArgs.fixedWidth(10);
@@ -195,12 +191,13 @@ class MediaArgsTest {
 
     MediaArgs clone = mediaArgs.clone();
     assertNotSame(mediaArgs, clone);
+    assertNotSame(mediaArgs.getMediaFormatOptions(), clone.getMediaFormatOptions());
     assertNotSame(mediaArgs.getMediaFormats(), clone.getMediaFormats());
-    assertNotSame(mediaArgs.getMediaFormatNames(), clone.getMediaFormatNames());
     assertNotSame(mediaArgs.getFileExtensions(), clone.getFileExtensions());
     assertNotSame(mediaArgs.getPictureSources(), clone.getPictureSources());
     assertNotSame(mediaArgs.getProperties(), clone.getProperties());
 
+    assertArrayEquals(mediaArgs.getMediaFormatOptions(), clone.getMediaFormatOptions());
     assertArrayEquals(mediaArgs.getMediaFormats(), clone.getMediaFormats());
     assertArrayEquals(mediaArgs.getMediaFormatNames(), clone.getMediaFormatNames());
     assertEquals(mediaArgs.isMediaFormatsMandatory(), clone.isMediaFormatsMandatory());
@@ -235,7 +232,7 @@ class MediaArgsTest {
   }
 
   @Test
-  void testToString() throws Exception {
+  void testToString() {
     MediaArgs mediaArgs = new MediaArgs().altText("abc");
     assertTrue(StringUtils.contains(mediaArgs.toString(), "abc"));
   }

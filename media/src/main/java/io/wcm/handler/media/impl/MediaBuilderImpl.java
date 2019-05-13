@@ -65,6 +65,7 @@ final class MediaBuilderImpl implements MediaBuilder {
       ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource)
           .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
       mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+      // TODO: how to support more flexible mappings of mandatory media formats?
       mediaArgs.mediaFormatNames(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
       mediaArgs.mediaFormatsMandatory(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
     }
