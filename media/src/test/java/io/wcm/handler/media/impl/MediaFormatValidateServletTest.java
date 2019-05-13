@@ -21,10 +21,13 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.MEDIA_INVALID_REASON_I18N_PREFIX;
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_FORMATS;
+import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_FORMATS_MANDATORY;
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_STAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.servlet.http.HttpServletResponse;
@@ -72,6 +75,63 @@ class MediaFormatValidateServletTest {
     JSONObject result = new JSONObject(context.response().getOutputAsString());
     assertEquals(true, result.get("valid"));
     assertNull(result.opt("reason"));
+  }
+
+  @Test
+  void testValid_MultipleFormats() throws Exception {
+    Asset asset = context.create().asset("/content/dam/sample.jpg",
+        (int)EDITORIAL_1COL.getWidth(),
+        (int)EDITORIAL_1COL.getHeight(),
+        ContentType.JPEG);
+
+    context.request().setParameterMap(ImmutableMap.of(
+        RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
+        RP_MEDIA_FORMATS_MANDATORY, "true,true",
+        RP_MEDIA_REF, asset.getPath()));
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    JSONObject result = new JSONObject(context.response().getOutputAsString());
+    assertEquals(false, result.get("valid"));
+    assertNotNull(result.opt("reason"));
+  }
+
+  @Test
+  void testValid_MultipleFormats_Optional() throws Exception {
+    Asset asset = context.create().asset("/content/dam/sample.jpg",
+        (int)EDITORIAL_1COL.getWidth(),
+        (int)EDITORIAL_1COL.getHeight(),
+        ContentType.JPEG);
+
+    context.request().setParameterMap(ImmutableMap.of(
+        RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
+        RP_MEDIA_FORMATS_MANDATORY, "false,true",
+        RP_MEDIA_REF, asset.getPath()));
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    JSONObject result = new JSONObject(context.response().getOutputAsString());
+    assertEquals(true, result.get("valid"));
+    assertNull(result.opt("reason"));
+  }
+
+  @Test
+  void testValid_MultipleFormats_Legacy_SingleParam() throws Exception {
+    Asset asset = context.create().asset("/content/dam/sample.jpg",
+        (int)EDITORIAL_1COL.getWidth(),
+        (int)EDITORIAL_1COL.getHeight(),
+        ContentType.JPEG);
+
+    context.request().setParameterMap(ImmutableMap.of(
+        RP_MEDIA_FORMATS, EDITORIAL_1COL.getName() + "," + HOME_STAGE.getName(),
+        RP_MEDIA_FORMATS_MANDATORY, "true",
+        RP_MEDIA_REF, asset.getPath()));
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    JSONObject result = new JSONObject(context.response().getOutputAsString());
+    assertEquals(false, result.get("valid"));
+    assertNotNull(result.opt("reason"));
   }
 
   @Test
