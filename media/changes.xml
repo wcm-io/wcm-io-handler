@@ -30,6 +30,9 @@
       <action type="update" dev="sseifert">
         Allow responsive image handling based in "imageSizes" also for media formats without ratio.
       </action>
+      <action type="update" dev="sseifert">
+        Prefer original renditions above other renditions when creating virtual renditions on-the-fly.
+      </action>
     </release>
 
     <release version="1.4.0" date="2019-04-05">

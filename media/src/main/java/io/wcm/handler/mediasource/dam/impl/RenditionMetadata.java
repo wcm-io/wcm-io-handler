@@ -230,11 +230,23 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
 
   @Override
   public int compareTo(RenditionMetadata obj) {
-    // always prefer the virtual crop rendition
-    if (this instanceof VirtualTransformedRenditionMetadata) {
+    // always prefer the virtual rendition
+    boolean thisIsVirtualRendition = this instanceof VirtualTransformedRenditionMetadata;
+    boolean otherIsVirtualRendition = obj instanceof VirtualTransformedRenditionMetadata;
+    if (thisIsVirtualRendition && !otherIsVirtualRendition) {
+      return -2;
+    }
+    else if (otherIsVirtualRendition && !thisIsVirtualRendition) {
+      return 2;
+    }
+
+    // always prefer original rendition
+    boolean thisIsOriginalRendition = isOriginalRendition(getRendition());
+    boolean otherIsOriginalRendition = isOriginalRendition(obj.getRendition());
+    if (thisIsOriginalRendition && !otherIsOriginalRendition) {
       return -1;
     }
-    else if (obj instanceof VirtualTransformedRenditionMetadata) {
+    else if (otherIsOriginalRendition && !thisIsOriginalRendition) {
       return 1;
     }
 
@@ -248,16 +260,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
         String thisPath = getRendition().getPath();
         String otherPath = obj.getRendition().getPath();
         if (!StringUtils.equals(thisPath, otherPath)) {
-          // same with/height - prefer original rendition
-          if (isOriginalRendition(getRendition())) {
-            return -1;
-          }
-          else if (isOriginalRendition(obj.getRendition())) {
-            return 1;
-          }
-          else {
-            return thisPath.compareTo(otherPath);
-          }
+          // same with/height - compare paths as last resort
+          return thisPath.compareTo(otherPath);
         }
         else {
           return 0;

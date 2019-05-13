@@ -115,7 +115,7 @@ class TransformedRenditionHandlerTest {
   void testRotationInvalid() {
     TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, null, 45);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
-    assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/cq5dam.web.200.150.jpg./cq5dam.web.200.150.jpg",
+    assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original./cropTest.jpg",
         firstRendition.getMediaPath(false));
   }
 

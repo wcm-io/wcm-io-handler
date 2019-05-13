@@ -72,7 +72,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareOriginalRenditionToItself() {
-    assertTrue(originalRendition.compareTo(originalRendition) == 0, "original rendition is not eqaul to itself");
+    assertTrue(originalRendition.compareTo(originalRendition) == 0, "original rendition is not equal to itself");
   }
 
   /**

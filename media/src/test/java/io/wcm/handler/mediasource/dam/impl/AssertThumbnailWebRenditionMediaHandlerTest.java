@@ -58,7 +58,8 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
     context.registerInjectActivateService(new DamRenditionMetadataService());
 
     // prepare asset with web rendition
-    asset = context.create().asset("/content/dam/test.jpg", 400, 200, ContentType.JPEG);
+    // original uses a different ratio than the other renditions to test only with the other renditions
+    asset = context.create().asset("/content/dam/test.jpg", 400, 400, ContentType.JPEG);
     context.create().assetRendition(asset, "rendition1.jpg", 360, 180, ContentType.JPEG);
     context.create().assetRendition(asset, "cq5dam.web.300.150.jpg", 300, 150, ContentType.JPEG);
     context.create().assetRendition(asset, "cq5dam.thumbnail.60.30.jpg", 60, 30, ContentType.JPEG);
