@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
@@ -111,7 +112,8 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder args(MediaArgs value) {
+  @SuppressWarnings({ "null", "unused" })
+  public @NotNull MediaBuilder args(@NotNull MediaArgs value) {
     if (value == null) {
       throw new IllegalArgumentException("MediaArgs is null.");
     }
@@ -121,19 +123,20 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder mediaFormats(MediaFormat... values) {
+  @SuppressWarnings("null")
+  public @NotNull MediaBuilder mediaFormats(@NotNull MediaFormat @NotNull... values) {
     this.mediaArgs.mediaFormats(values);
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder mandatoryMediaFormats(MediaFormat... values) {
+  public @NotNull MediaBuilder mandatoryMediaFormats(@NotNull MediaFormat @NotNull... values) {
     this.mediaArgs.mandatoryMediaFormats(values);
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder mediaFormat(MediaFormat value) {
+  public @NotNull MediaBuilder mediaFormat(@NotNull MediaFormat value) {
     this.mediaArgs.mediaFormat(value);
     return this;
   }
@@ -145,20 +148,26 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder mediaFormatNames(String... values) {
+  public @NotNull MediaBuilder mediaFormatNames(@NotNull String @NotNull... values) {
     this.mediaArgs.mediaFormatNames(values);
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder mandatoryMediaFormatNames(String... values) {
+  public @NotNull MediaBuilder mandatoryMediaFormatNames(@NotNull String @NotNull... values) {
     this.mediaArgs.mandatoryMediaFormatNames(values);
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder mediaFormatName(String value) {
+  public @NotNull MediaBuilder mediaFormatName(@NotNull String value) {
     this.mediaArgs.mediaFormatName(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder mediaFormatOptions(@NotNull MediaFormatOption @NotNull... values) {
+    this.mediaArgs.mediaFormatOptions(values);
     return this;
   }
 
@@ -169,19 +178,19 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder fileExtensions(String... values) {
+  public @NotNull MediaBuilder fileExtensions(@NotNull String @NotNull... values) {
     this.mediaArgs.fileExtensions(values);
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder fileExtension(String value) {
+  public @NotNull MediaBuilder fileExtension(@NotNull String value) {
     this.mediaArgs.fileExtension(value);
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder urlMode(UrlMode value) {
+  public @NotNull MediaBuilder urlMode(@NotNull UrlMode value) {
     this.mediaArgs.urlMode(value);
     return this;
   }
@@ -211,7 +220,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder altText(String value) {
+  public @NotNull MediaBuilder altText(@NotNull String value) {
     this.mediaArgs.altText(value);
     return this;
   }
@@ -223,7 +232,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder dummyImageUrl(String value) {
+  public @NotNull MediaBuilder dummyImageUrl(@NotNull String value) {
     this.mediaArgs.dummyImageUrl(value);
     return this;
   }
@@ -241,13 +250,13 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder dragDropSupport(DragDropSupport value) {
+  public @NotNull MediaBuilder dragDropSupport(@NotNull DragDropSupport value) {
     this.mediaArgs.dragDropSupport(value);
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder property(String key, Object value) {
+  public @NotNull MediaBuilder property(@NotNull String key, @Nullable Object value) {
     this.mediaArgs.property(key, value);
     return this;
   }
@@ -279,19 +288,19 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder refProperty(String value) {
+  public @NotNull MediaBuilder refProperty(@NotNull String value) {
     this.refProperty = value;
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder cropProperty(String value) {
+  public @NotNull MediaBuilder cropProperty(@NotNull String value) {
     this.cropProperty = value;
     return this;
   }
 
   @Override
-  public @NotNull MediaBuilder rotationProperty(String value) {
+  public @NotNull MediaBuilder rotationProperty(@NotNull String value) {
     this.rotationProperty = value;
     return this;
   }
