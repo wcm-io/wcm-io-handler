@@ -44,6 +44,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
@@ -165,6 +166,7 @@ class MediaHandlerImplTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void testAllBuilderProps() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
@@ -198,6 +200,32 @@ class MediaHandlerImplTest {
 
   @Test
   void testComponentProperties() {
+    Resource component = context.create().resource("/apps/app1/components/comp1",
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] { true, false },
+        MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, true);
+
+    Resource resource = context.create().resource("/content/test",
+        "sling:resourceType", component.getPath(),
+        MediaNameConstants.PN_MEDIA_REF, "/content/dummymedia/item1");
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    Media metadata = mediaHandler.get(resource).build();
+
+    MediaFormatOption[] mediaFormatOptions = metadata.getMediaRequest().getMediaArgs().getMediaFormatOptions();
+
+    assertEquals(2, mediaFormatOptions.length);
+    assertEquals(TestMediaFormats.HOME_STAGE, mediaFormatOptions[0].getMediaFormat());
+    assertTrue(mediaFormatOptions[0].isMandatory());
+    assertEquals(TestMediaFormats.HOME_TEASER, mediaFormatOptions[1].getMediaFormat());
+    assertFalse(mediaFormatOptions[1].isMandatory());
+
+    assertTrue(metadata.getMediaRequest().getMediaArgs().isAutoCrop());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testComponentProperties_Legacy_SingleMandatoryFlag() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
         MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
         MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, true,

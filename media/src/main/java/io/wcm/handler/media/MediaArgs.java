@@ -162,7 +162,9 @@ public final class MediaArgs implements Cloneable {
    * Checks if all media format options have the "mandatory" flag set.
    * If none or not all of them have the flag set, false is returned.
    * @return true if all media format options have the "mandatory" flag set.
+   * @deprecated Please check the mandatory flag for each media format individually via {@link #getMediaFormatOptions()}
    */
+  @Deprecated
   public boolean isMediaFormatsMandatory() {
     if (this.mediaFormatOptions == null) {
       return false;
@@ -724,11 +726,11 @@ public final class MediaArgs implements Cloneable {
       return EqualsBuilder.reflectionEquals(this, obj);
     }
 
-    /**
-     * Sets the mandatory flag to a new value and returns a new media format option.
-     * @param newMandatory Resolution of this media format is mandatory
-     * @return Media format option
-     */
+    @Override
+    public String toString() {
+      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+    }
+
     @NotNull
     MediaFormatOption withMandatory(boolean newMandatory) {
       if (this.mediaFormat != null) {
@@ -737,11 +739,6 @@ public final class MediaArgs implements Cloneable {
       else {
         return new MediaFormatOption(this.mediaFormatName, newMandatory);
       }
-    }
-
-    @Override
-    public String toString() {
-      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
     }
 
   }
@@ -753,9 +750,7 @@ public final class MediaArgs implements Cloneable {
   public static final class ImageSizes {
 
     private final @NotNull String sizes;
-    private final long @NotNull [] widths;
-    // TODO: make it immutable again! - introduce "WidthOption"
-    private long[] mandatoryWidths;
+    private final @NotNull WidthOption @NotNull [] widthOptions;
 
     /**
      * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
@@ -764,7 +759,19 @@ public final class MediaArgs implements Cloneable {
      */
     public ImageSizes(@NotNull String sizes, long @NotNull... widths) {
       this.sizes = sizes;
-      this.widths = widths;
+      this.widthOptions = Arrays.stream(widths)
+          .mapToObj(width -> new WidthOption(width, true))
+          .toArray(size -> new WidthOption[size]);
+    }
+
+    /**
+     * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
+     *          source size list</a>
+     * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public ImageSizes(@NotNull String sizes, @NotNull WidthOption @NotNull... widths) {
+      this.sizes = sizes;
+      this.widthOptions = widths;
     }
 
     /**
@@ -777,25 +784,20 @@ public final class MediaArgs implements Cloneable {
 
     /**
      * @return Widths for the renditions in the <code>srcset</code> attribute.
+     * @deprecated Use {@link #getWidthOptions()}
      */
+    @Deprecated
     public long @NotNull [] getWidths() {
-      return this.widths;
+      return Arrays.stream(this.widthOptions)
+          .mapToLong(WidthOption::getWidth)
+          .toArray();
     }
 
     /**
-     * @return Subset (or same set) of the widths which are mandatory to be resolved.
-     *         The media formats derived from these widths are marked as "mandatory" in the media resolution process.
+     * @return Widths for the renditions in the <code>srcset</code> attribute.
      */
-    public long[] getMandatoryWidths() {
-      return this.mandatoryWidths;
-    }
-
-    /**
-     * @param mandatoryWidths Subset (or same set) of the widths which are mandatory to be resolved.
-     *          The media formats derived from these widths are marked as "mandatory" in the media resolution process.
-     */
-    public void setMandatoryWidths(long[] mandatoryWidths) {
-      this.mandatoryWidths = mandatoryWidths;
+    public WidthOption[] getWidthOptions() {
+      return this.widthOptions;
     }
 
     @Override
@@ -823,9 +825,7 @@ public final class MediaArgs implements Cloneable {
 
     private final @NotNull MediaFormat mediaFormat;
     private final @Nullable String media;
-    private final long @NotNull [] widths;
-    // TODO: make it immutable again! - introduce "WidthOption"
-    private long[] mandatoryWidths;
+    private final @NotNull WidthOption @NotNull [] widthOptions;
 
     /**
      * @param mediaFormat Media format
@@ -836,7 +836,21 @@ public final class MediaArgs implements Cloneable {
     public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media, long @NotNull... widths) {
       this.mediaFormat = mediaFormat;
       this.media = media;
-      this.widths = widths;
+      this.widthOptions = Arrays.stream(widths)
+          .mapToObj(width -> new WidthOption(width, true))
+          .toArray(size -> new WidthOption[size]);
+    }
+
+    /**
+     * @param mediaFormat Media format
+     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+     *          list</a>
+     * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media, @NotNull WidthOption @NotNull... widths) {
+      this.mediaFormat = mediaFormat;
+      this.media = media;
+      this.widthOptions = widths;
     }
 
     /**
@@ -856,25 +870,69 @@ public final class MediaArgs implements Cloneable {
 
     /**
      * @return Widths for the renditions in the <code>srcset</code> attribute.
+     * @deprecated Use {@link #getWidthOptions()}
      */
+    @Deprecated
     public long @NotNull [] getWidths() {
-      return this.widths;
+      return Arrays.stream(this.widthOptions)
+          .mapToLong(WidthOption::getWidth)
+          .toArray();
     }
 
     /**
-     * @return Subset (or same set) of the widths which are mandatory to be resolved.
-     *         The media formats derived from these widths are marked as "mandatory" in the media resolution process.
+     * @return Widths for the renditions in the <code>srcset</code> attribute.
      */
-    public long[] getMandatoryWidths() {
-      return this.mandatoryWidths;
+    public WidthOption[] getWidthOptions() {
+      return this.widthOptions;
+    }
+
+    @Override
+    public int hashCode() {
+      return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public String toString() {
+      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+    }
+
+  }
+
+  /**
+   * Width value with mandatory flag.
+   */
+  @ProviderType
+  public static final class WidthOption {
+
+    private final long width;
+    private final boolean mandatory;
+
+    /**
+     * @param width Width value
+     * @param mandatory Is it mandatory to resolve a rendition with this width
+     */
+    public WidthOption(long width, boolean mandatory) {
+      this.width = width;
+      this.mandatory = mandatory;
     }
 
     /**
-     * @param mandatoryWidths Subset (or same set) of the widths which are mandatory to be resolved.
-     *          The media formats derived from these widths are marked as "mandatory" in the media resolution process.
+     * @return Width value
      */
-    public void setMandatoryWidths(long[] mandatoryWidths) {
-      this.mandatoryWidths = mandatoryWidths;
+    public long getWidth() {
+      return this.width;
+    }
+
+    /**
+     * @return Is it mandatory to resolve a rendition with this width
+     */
+    public boolean isMandatory() {
+      return this.mandatory;
     }
 
     @Override

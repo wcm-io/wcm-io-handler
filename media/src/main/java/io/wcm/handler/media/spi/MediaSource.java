@@ -20,6 +20,7 @@
 package io.wcm.handler.media.spi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,11 +37,11 @@ import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
 
 /**
@@ -290,17 +291,21 @@ public abstract class MediaSource {
   }
 
   /**
-   * Resolves single rendition (or multiple renditions if {@link MediaArgs#isMediaFormatsMandatory()} is true
-   * and sets the resolved rendition and the URL of the first (best-matching) rendition in the media object.
+   * Resolves single rendition (or multiple renditions if any of the {@link MediaFormatOption#isMandatory()} is set to
+   * true and sets the resolved rendition and the URL of the first (best-matching) rendition in the media object.
    * @param media Media object
    * @param asset Asset
    * @param mediaArgs Media args
-   * @return true if all requested renditions could be resolved (at least one or all if
-   *         {@link MediaArgs#isMediaFormatsMandatory()} was set to true)
+   * @return true if all requested mandatory renditions could be resolved (at least one or all if none was set to
+   *         mandatory)
    */
   protected final boolean resolveRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
+    boolean anyMandatory = mediaArgs.getMediaFormatOptions() != null
+        && Arrays.stream(mediaArgs.getMediaFormatOptions())
+        .filter(MediaFormatOption::isMandatory)
+        .findFirst().isPresent();
     if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1
-        && (mediaArgs.isMediaFormatsMandatory() || mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null)) {
+        && (anyMandatory || mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null)) {
       return resolveAllRenditions(media, asset, mediaArgs);
     }
     else {
@@ -335,33 +340,26 @@ public abstract class MediaSource {
    * @return true if for all mandatory or for at least one media formats a rendition could be found.
    */
   private boolean resolveAllRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
-    boolean allMandatory = mediaArgs.isMediaFormatsMandatory();
-    boolean allResolved = true;
+    boolean allMandatoryResolved = true;
     boolean anyResolved = false;
     List<Rendition> resolvedRenditions = new ArrayList<>();
-    for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
+    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
       MediaArgs renditionMediaArgs = mediaArgs.clone();
-      renditionMediaArgs.mediaFormat(mediaFormat);
-      renditionMediaArgs.mediaFormatsMandatory(false);
+      renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
       Rendition rendition = asset.getRendition(renditionMediaArgs);
       if (rendition != null) {
         resolvedRenditions.add(rendition);
         anyResolved = true;
       }
-      else {
-        allResolved = false;
+      else if (mediaFormatOption.isMandatory()) {
+        allMandatoryResolved = false;
       }
     }
     media.setRenditions(resolvedRenditions);
     if (!resolvedRenditions.isEmpty()) {
       media.setUrl(resolvedRenditions.get(0).getUrl());
     }
-    if (allMandatory) {
-      return allResolved;
-    }
-    else {
-      return anyResolved;
-    }
+    return anyResolved && allMandatoryResolved;
   }
 
 }

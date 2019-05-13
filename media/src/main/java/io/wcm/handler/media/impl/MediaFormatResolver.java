@@ -32,6 +32,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.format.MediaFormatHandler;
@@ -98,7 +99,7 @@ final class MediaFormatResolver {
    * @return true if resolution was successful
    */
   private boolean addResponsiveImageMediaFormats(MediaArgs mediaArgs) {
-    Map<String, MediaFormat> additionalMediaFormats = new LinkedHashMap<>();
+    Map<String, MediaFormatOption> additionalMediaFormats = new LinkedHashMap<>();
 
     // check if additional on-the-fly generated media formats needs to be added for responsive image handling
     if (!resolveForImageSizes(mediaArgs, additionalMediaFormats)) {
@@ -110,18 +111,18 @@ final class MediaFormatResolver {
 
     // if additional media formats where found add them to the media format list in media args
     if (!additionalMediaFormats.isEmpty()) {
-      List<MediaFormat> allMediaFormats = new ArrayList<>();
-      if (mediaArgs.getMediaFormats() != null) {
-        allMediaFormats.addAll(Arrays.asList(mediaArgs.getMediaFormats()));
+      List<MediaFormatOption> allMediaFormats = new ArrayList<>();
+      if (mediaArgs.getMediaFormatOptions() != null) {
+        allMediaFormats.addAll(Arrays.asList(mediaArgs.getMediaFormatOptions()));
       }
       allMediaFormats.addAll(additionalMediaFormats.values());
-      mediaArgs.mediaFormats(allMediaFormats.toArray(new MediaFormat[allMediaFormats.size()]));
+      mediaArgs.mediaFormatOptions(allMediaFormats.toArray(new MediaFormatOption[allMediaFormats.size()]));
     }
 
     return true;
   }
 
-  private boolean resolveForImageSizes(MediaArgs mediaArgs, Map<String, MediaFormat> additionalMediaFormats) {
+  private boolean resolveForImageSizes(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
     ImageSizes imageSizes = mediaArgs.getImageSizes();
     if (imageSizes == null) {
       return true;
@@ -131,7 +132,7 @@ final class MediaFormatResolver {
       log.warn("No media format with ratio given - unable to fulfill resolve image sizes.");
       return false;
     }
-    generateMediaFormatsForWidths(additionalMediaFormats, primaryMediaFormat, imageSizes.getWidths());
+    generateMediaFormatsForWidths(additionalMediaFormats, primaryMediaFormat, imageSizes.getWidthOptions());
     return true;
   }
 
@@ -144,27 +145,28 @@ final class MediaFormatResolver {
     return null;
   }
 
-  private boolean resolveForResponsivePictureSources(MediaArgs mediaArgs, Map<String, MediaFormat> additionalMediaFormats) {
+  private boolean resolveForResponsivePictureSources(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
     PictureSource[] pictureSources = mediaArgs.getPictureSources();
     if (pictureSources == null || pictureSources.length == 0) {
       return true;
     }
     for (PictureSource pictureSource : pictureSources) {
-      generateMediaFormatsForWidths(additionalMediaFormats, pictureSource.getMediaFormat(), pictureSource.getWidths());
+      generateMediaFormatsForWidths(additionalMediaFormats, pictureSource.getMediaFormat(), pictureSource.getWidthOptions());
     }
     return true;
   }
 
-  private void generateMediaFormatsForWidths(Map<String, MediaFormat> additionalMediaFormats,
-      MediaFormat mediaFormat, long... widths) {
-    for (long width : widths) {
-      MediaFormat widthMediaFormat = MediaFormatBuilder.create(mediaFormat.getName() + MEDIAFORMAT_NAME_SEPARATOR + width)
+  private void generateMediaFormatsForWidths(Map<String, MediaFormatOption> additionalMediaFormats,
+      MediaFormat mediaFormat, WidthOption... widthOptions) {
+    for (WidthOption widthOption : widthOptions) {
+      MediaFormat widthMediaFormat = MediaFormatBuilder.create(
+          mediaFormat.getName() + MEDIAFORMAT_NAME_SEPARATOR + widthOption.getWidth())
           .label(mediaFormat.getLabel())
           .extensions(mediaFormat.getExtensions())
           .ratio(mediaFormat.getRatio())
-          .width(width)
+          .width(widthOption.getWidth())
           .build();
-      additionalMediaFormats.put(widthMediaFormat.getName(), widthMediaFormat);
+      additionalMediaFormats.put(widthMediaFormat.getName(), new MediaFormatOption(widthMediaFormat, widthOption.isMandatory()));
     }
   }
 

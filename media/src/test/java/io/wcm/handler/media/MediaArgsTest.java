@@ -47,6 +47,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 class MediaArgsTest {
 
   @Test
+  @SuppressWarnings("deprecation")
   void testGetMediaFormats() {
     MediaArgs mediaArgs;
 
@@ -79,7 +80,7 @@ class MediaArgsTest {
   }
 
   @Test
-  @SuppressWarnings("null")
+  @SuppressWarnings("deprecation")
   void testGetMediaFormatsMandatory() {
     MediaArgs mediaArgs;
 
@@ -94,9 +95,6 @@ class MediaArgsTest {
         "editorial_1col", "editorial_2col"
     }, mediaArgs.getMediaFormatNames());
     assertTrue(mediaArgs.isMediaFormatsMandatory());
-
-    assertNull(new MediaArgs().mandatoryMediaFormats((MediaFormat[])null).getMediaFormats());
-    assertNull(new MediaArgs().mandatoryMediaFormatNames((String[])null).getMediaFormatNames());
   }
 
   @Test
@@ -200,7 +198,6 @@ class MediaArgsTest {
     assertArrayEquals(mediaArgs.getMediaFormatOptions(), clone.getMediaFormatOptions());
     assertArrayEquals(mediaArgs.getMediaFormats(), clone.getMediaFormats());
     assertArrayEquals(mediaArgs.getMediaFormatNames(), clone.getMediaFormatNames());
-    assertEquals(mediaArgs.isMediaFormatsMandatory(), clone.isMediaFormatsMandatory());
     assertArrayEquals(mediaArgs.getFileExtensions(), clone.getFileExtensions());
     assertEquals(mediaArgs.getUrlMode(), clone.getUrlMode());
     assertEquals(mediaArgs.getFixedWidth(), clone.getFixedWidth());

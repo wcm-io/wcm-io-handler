@@ -29,6 +29,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaNameConstants;
@@ -65,9 +66,27 @@ final class MediaBuilderImpl implements MediaBuilder {
       ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource)
           .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
       mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
-      // TODO: how to support more flexible mappings of mandatory media formats?
-      mediaArgs.mediaFormatNames(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
-      mediaArgs.mediaFormatsMandatory(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
+
+      // media formats with optional mandatory flag(s)
+      String[] mediaFormatNames = resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class);
+      Boolean[] mediaFormatsMandatory = resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, Boolean[].class);
+      if (mediaFormatNames != null && mediaFormatNames.length > 0) {
+        MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[mediaFormatNames.length];
+        for (int i = 0; i < mediaFormatNames.length; i++) {
+          boolean mandatory = false;
+          if (mediaFormatsMandatory != null) {
+            if (mediaFormatsMandatory.length == 1) {
+              // backward compatibility: support a single flag for all media formats
+              mandatory = mediaFormatsMandatory[0];
+            }
+            else if (mediaFormatsMandatory.length > i) {
+              mandatory = mediaFormatsMandatory[i];
+            }
+          }
+          mediaFormatOptions[i] = new MediaFormatOption(mediaFormatNames[i], mandatory);
+        }
+        mediaArgs.mediaFormatOptions(mediaFormatOptions);
+      }
     }
   }
 
