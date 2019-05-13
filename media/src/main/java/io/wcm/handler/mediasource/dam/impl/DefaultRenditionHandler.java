@@ -67,7 +67,7 @@ class DefaultRenditionHandler implements RenditionHandler {
   Set<RenditionMetadata> getAvailableRenditions(MediaArgs mediaArgs) {
     if (this.renditions == null) {
       // gather rendition infos of all renditions and sort them by size (smallest or virtual crop rendition first)
-      Set<RenditionMetadata> candidates = new TreeSet<RenditionMetadata>();
+      Set<RenditionMetadata> candidates = new TreeSet<>();
       for (Rendition rendition : asset.getRenditions()) {
         addRendition(candidates, rendition, mediaArgs);
       }
@@ -130,7 +130,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
 
     // otherwise return those with matching extensions
-    Set<RenditionMetadata> matchingRenditions = new TreeSet<RenditionMetadata>();
+    Set<RenditionMetadata> matchingRenditions = new TreeSet<>();
     for (RenditionMetadata rendition : allRenditions) {
       for (String fileExtension : fileExtensions) {
         if (StringUtils.equalsIgnoreCase(fileExtension, rendition.getFileExtension())) {

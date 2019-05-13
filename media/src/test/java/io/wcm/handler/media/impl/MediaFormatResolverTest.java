@@ -123,9 +123,13 @@ class MediaFormatResolverTest {
         .mediaFormat(FIXEDWIDTH_UNCONSTRAINED)
         .imageSizes(new ImageSizes("size1", 10, 20));
 
-    assertFalse(underTest.resolve(mediaArgs));
+    assertTrue(underTest.resolve(mediaArgs));
 
-    assertArrayEquals(new MediaFormat[] { FIXEDWIDTH_UNCONSTRAINED }, mediaArgs.getMediaFormats());
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
+    assertEquals(3, mediaFormats.length);
+    assertEquals(FIXEDWIDTH_UNCONSTRAINED, mediaFormats[0]);
+    assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 10, mediaFormats[1]);
+    assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 20, mediaFormats[2]);
   }
 
   @Test

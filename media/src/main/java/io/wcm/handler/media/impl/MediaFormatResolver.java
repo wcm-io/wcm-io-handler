@@ -125,7 +125,7 @@ final class MediaFormatResolver {
     if (imageSizes == null) {
       return true;
     }
-    MediaFormat primaryMediaFormat = getFirstMediaFormatWithRatio(mediaArgs);
+    MediaFormat primaryMediaFormat = getFirstMediaFormat(mediaArgs);
     if (primaryMediaFormat == null) {
       log.warn("No media format with ratio given - unable to fulfill resolve image sizes.");
       return false;
@@ -134,12 +134,10 @@ final class MediaFormatResolver {
     return true;
   }
 
-  private MediaFormat getFirstMediaFormatWithRatio(MediaArgs mediaArgs) {
+  private MediaFormat getFirstMediaFormat(MediaArgs mediaArgs) {
     if (mediaArgs.getMediaFormats() != null) {
       for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
-        if (mediaFormat.hasRatio()) {
-          return mediaFormat;
-        }
+        return mediaFormat;
       }
     }
     return null;

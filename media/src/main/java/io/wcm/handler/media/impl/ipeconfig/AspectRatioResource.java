@@ -47,9 +47,14 @@ class AspectRatioResource extends AbstractResource {
     this.path = path;
     this.resourceMetadata = buildMetadata(path);
 
+    double ratio = 0d;
+    if (mediaFormat.getRatio() > 0d) {
+      ratio = 1d / mediaFormat.getRatio();
+    }
+
     this.properties = new ValueMapDecorator(ImmutableMap.<String, Object>of(
         "name", getDisplayString(mediaFormat),
-        "ratio", 1 / mediaFormat.getRatio()));
+        "ratio", ratio));
   }
 
   private static String getDisplayString(MediaFormat mf) {
@@ -57,7 +62,13 @@ class AspectRatioResource extends AbstractResource {
       return mf.getName();
     }
     else {
-      return mf.getLabel() + " (" + mf.getRatioDisplayString() + ")";
+      String ratioDisplayString = mf.getRatioDisplayString();
+      if (ratioDisplayString != null) {
+        return mf.getLabel() + " (" + mf.getRatioDisplayString() + ")";
+      }
+      else {
+        return mf.getLabel();
+      }
     }
   }
 

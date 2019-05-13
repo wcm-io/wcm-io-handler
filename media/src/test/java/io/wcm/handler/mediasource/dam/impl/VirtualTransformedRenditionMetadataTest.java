@@ -125,10 +125,15 @@ class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
     VirtualTransformedRenditionMetadata virtualRendition = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         new CropDimension(5, 5, 30, 25), null);
     RenditionMetadata biggerRendition = new RenditionMetadata(rendition);
-    assertEquals(-1, virtualRendition.compareTo(originalRendition));
-    assertEquals(-1, virtualRendition.compareTo(biggerRendition));
-    assertEquals(1, originalRendition.compareTo(virtualRendition));
-    assertEquals(1, biggerRendition.compareTo(virtualRendition));
+    assertEquals(-2, virtualRendition.compareTo(originalRendition));
+    assertEquals(-2, virtualRendition.compareTo(biggerRendition));
+    assertEquals(0, virtualRendition.compareTo(virtualRendition));
+    assertEquals(2, originalRendition.compareTo(virtualRendition));
+    assertEquals(-1, originalRendition.compareTo(biggerRendition));
+    assertEquals(0, originalRendition.compareTo(originalRendition));
+    assertEquals(2, biggerRendition.compareTo(virtualRendition));
+    assertEquals(1, biggerRendition.compareTo(originalRendition));
+    assertEquals(0, biggerRendition.compareTo(biggerRendition));
   }
 
 }
