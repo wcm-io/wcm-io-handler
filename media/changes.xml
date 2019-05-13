@@ -23,7 +23,10 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.4.2" date="not released">
+    <release version="1.5.0" date="not released">
+      <action type="add" dev="sseifert">
+        Allow to define mandatory and non-mandatory widths for responsive image handling with image sizes or picture source sets.
+      </action>
       <action type="update" dev="sseifert">
         Allow media formats without ratio for auto-generated IPE cropping ratios (free-hand cropping).
       </action>

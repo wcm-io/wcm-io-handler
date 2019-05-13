@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
@@ -233,6 +234,20 @@ public interface MediaBuilder {
    */
   @NotNull
   MediaBuilder imageSizes(@NotNull String sizes, long @NotNull... widths);
+
+
+  /**
+   * Apply responsive image handling for the <code>img</code> element based on the primary media format given.
+   * If multiple media formats are given the primary media format is the first media format with a ratio.
+   * <p>
+   * It will add a <code>srcset</code> attribute to the <code>img</code> element with renditions for each width given,
+   * and set the <code>sizes</code> attribute to the sizes string given.
+   * </p>
+   * @param imageSizes Contains sizes and widths definition
+   * @return this
+   */
+  @NotNull
+  MediaBuilder imageSizes(@NotNull ImageSizes imageSizes);
 
   /**
    * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.

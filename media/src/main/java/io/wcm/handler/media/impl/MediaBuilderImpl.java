@@ -239,6 +239,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder imageSizes(@NotNull ImageSizes imageSizes) {
+    this.mediaArgs.imageSizes(imageSizes);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths) {
     ensureMediaFormatHasRatio(mediaFormat);
     this.pictureSourceSets.add(new PictureSource(mediaFormat, media, widths));

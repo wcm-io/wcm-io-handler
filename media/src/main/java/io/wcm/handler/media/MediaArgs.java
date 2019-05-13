@@ -617,6 +617,7 @@ public final class MediaArgs implements Cloneable {
 
     private final @NotNull String sizes;
     private final long @NotNull [] widths;
+    private long[] mandatoryWidths;
 
     /**
      * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
@@ -643,6 +644,22 @@ public final class MediaArgs implements Cloneable {
       return this.widths;
     }
 
+    /**
+     * @return Subset (or same set) of the widths which are mandatory to be resolved.
+     *         The media formats derived from these widths are marked as "mandatory" in the media resolution process.
+     */
+    public long[] getMandatoryWidths() {
+      return this.mandatoryWidths;
+    }
+
+    /**
+     * @param mandatoryWidths Subset (or same set) of the widths which are mandatory to be resolved.
+     *          The media formats derived from these widths are marked as "mandatory" in the media resolution process.
+     */
+    public void setMandatoryWidths(long[] mandatoryWidths) {
+      this.mandatoryWidths = mandatoryWidths;
+    }
+
     @Override
     public int hashCode() {
       return HashCodeBuilder.reflectionHashCode(this);
@@ -664,6 +681,7 @@ public final class MediaArgs implements Cloneable {
     private final @NotNull MediaFormat mediaFormat;
     private final @Nullable String media;
     private final long @NotNull [] widths;
+    private long[] mandatoryWidths;
 
     /**
      * @param mediaFormat Media format
@@ -697,6 +715,22 @@ public final class MediaArgs implements Cloneable {
      */
     public long @NotNull [] getWidths() {
       return this.widths;
+    }
+
+    /**
+     * @return Subset (or same set) of the widths which are mandatory to be resolved.
+     *         The media formats derived from these widths are marked as "mandatory" in the media resolution process.
+     */
+    public long[] getMandatoryWidths() {
+      return this.mandatoryWidths;
+    }
+
+    /**
+     * @param mandatoryWidths Subset (or same set) of the widths which are mandatory to be resolved.
+     *          The media formats derived from these widths are marked as "mandatory" in the media resolution process.
+     */
+    public void setMandatoryWidths(long[] mandatoryWidths) {
+      this.mandatoryWidths = mandatoryWidths;
     }
 
     @Override
