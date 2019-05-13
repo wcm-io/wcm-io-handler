@@ -61,6 +61,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
@@ -602,6 +603,27 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(EDITORIAL_3COL, renditions.get(1).getMediaFormat());
+  }
+
+  @Test
+  void testMultipleMandatoryMediaFormatsNotAllMatch_MixedMandatory() {
+    MediaArgs mediaArgs = new MediaArgs().mediaFormatOptions(
+        new MediaFormatOption(VIDEO_2COL, false),
+        new MediaFormatOption(EDITORIAL_2COL, true),
+        new MediaFormatOption(EDITORIAL_3COL, false));
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(EDITORIAL_2COL, renditions.get(0).getMediaFormat());
+
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.3");
     assertEquals(EDITORIAL_3COL, renditions.get(1).getMediaFormat());
   }
 

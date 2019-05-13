@@ -102,8 +102,8 @@ ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResol
     .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
 String[] mediaFormats = cfg.get("mediaFormats",
     componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
-boolean mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
+String[] mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
+    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, String[].class));
 boolean mediaCropAuto = cfg.get("mediaCropAuto",
     componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
 
@@ -122,7 +122,9 @@ Resource pathField = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMap
 if (mediaFormats != null && mediaFormats.length > 0) {
   Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
-  dataProps.put("wcmio-mediaformats-mandatory", mediaFormatsMandatory);
+  if (mediaFormatsMandatory != null && mediaFormatsMandatory.length > 0) {
+    dataProps.put("wcmio-mediaformats-mandatory", StringUtils.join(mediaFormatsMandatory, ","));
+  }
   dataProps.put("wcmio-media-cropauto", mediaCropAuto);
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }
