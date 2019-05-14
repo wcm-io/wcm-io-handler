@@ -24,8 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
-import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
@@ -237,7 +237,7 @@ public interface MediaBuilder {
    * </p>
    * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
    *          source size list</a>
-   * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+   * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
    *          All renditions will use the ratio of the primary media format.
    * @return this
    */
@@ -252,11 +252,14 @@ public interface MediaBuilder {
    * It will add a <code>srcset</code> attribute to the <code>img</code> element with renditions for each width given,
    * and set the <code>sizes</code> attribute to the sizes string given.
    * </p>
-   * @param imageSizes Contains sizes and widths definition
+   * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
+   *          source size list</a>
+   * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
+   *          All renditions will use the ratio of the primary media format.
    * @return this
    */
   @NotNull
-  MediaBuilder imageSizes(@NotNull ImageSizes imageSizes);
+  MediaBuilder imageSizes(@NotNull String sizes, @NotNull WidthOption @NotNull... widthOptions);
 
   /**
    * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.

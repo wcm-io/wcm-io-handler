@@ -767,11 +767,11 @@ public final class MediaArgs implements Cloneable {
     /**
      * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
      *          source size list</a>
-     * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+     * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
      */
-    public ImageSizes(@NotNull String sizes, @NotNull WidthOption @NotNull... widths) {
+    public ImageSizes(@NotNull String sizes, @NotNull WidthOption @NotNull... widthOptions) {
       this.sizes = sizes;
-      this.widthOptions = widths;
+      this.widthOptions = widthOptions;
     }
 
     /**
@@ -845,12 +845,13 @@ public final class MediaArgs implements Cloneable {
      * @param mediaFormat Media format
      * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
      *          list</a>
-     * @param widths Widths for the renditions in the <code>srcset</code> attribute.
+     * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
      */
-    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media, @NotNull WidthOption @NotNull... widths) {
+    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media,
+        @NotNull WidthOption @NotNull... widthOptions) {
       this.mediaFormat = mediaFormat;
       this.media = media;
-      this.widthOptions = widths;
+      this.widthOptions = widthOptions;
     }
 
     /**

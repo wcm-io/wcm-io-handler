@@ -32,6 +32,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
@@ -268,8 +269,8 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder imageSizes(@NotNull ImageSizes imageSizes) {
-    this.mediaArgs.imageSizes(imageSizes);
+  public @NotNull MediaBuilder imageSizes(@NotNull String sizes, @NotNull WidthOption @NotNull... widthOptions) {
+    this.mediaArgs.imageSizes(new ImageSizes(sizes, widthOptions));
     return this;
   }
 
