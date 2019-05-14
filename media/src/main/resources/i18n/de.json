@@ -4,5 +4,7 @@
   "io.wcm.handler.media.invalidReason.MEDIA_REFERENCE_INVALID": "Ungültige Referenz",
   "io.wcm.handler.media.invalidReason.NO_MATCHING_RENDITION": "Passt nicht zum Medien-Format",
   "io.wcm.handler.media.invalidReason.NOT_ENOUGH_MATCHING_RENDITIONS": "Nicht genügend zum Medien-Format passende Renditions",
-  "io.wcm.handler.media.invalidReason.INVALID_MEDIA_FORMAT": "Ungültiges Medien-Format"
+  "io.wcm.handler.media.invalidReason.INVALID_MEDIA_FORMAT": "Ungültiges Medien-Format",
+  "io.wcm.handler.media.assetValid": "Asset gültig",
+  "io.wcm.handler.media.assetInfounresolvedMediaFormats": "Asset ist gültig, erfüllt aber nicht alle Anforderungen."
 }

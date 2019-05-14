@@ -104,7 +104,10 @@ class MediaFormatValidateServletTest {
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());
 
-    assertResponse("{'valid':true}");
+    assertResponse("{'valid':true,'info':{"
+        + "'message':'io.wcm.handler.media.assetInfounresolvedMediaFormats',"
+        + "'title':'io.wcm.handler.media.assetValid',"
+        + "'unresolvedMediaFormats':['" + HOME_STAGE.toString() + "']}}");
   }
 
   @Test

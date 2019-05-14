@@ -21,9 +21,11 @@ package io.wcm.handler.media.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -35,6 +37,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
@@ -48,6 +51,7 @@ import com.day.cq.wcm.api.PageManager;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -120,15 +124,24 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
         .build();
 
     // response
+    I18n i18n = getI18n(request);
     try {
       JSONObject result = new JSONObject();
       result.put("valid", media.isValid());
+
+      // reason strings when media resolution was not successful
       if (!media.isValid()) {
-        I18n i18n = getI18n(request);
         result.put("reason", getI18nText(i18n,
             MEDIA_INVALID_REASON_I18N_PREFIX + media.getMediaInvalidReason().name()));
         result.put("reasonTitle", getI18nText(i18n, ASSET_INVALID_I18N_KEY));
       }
+
+      // info block with additional resolution information
+      JSONObject info = getInfoMessages(media, i18n);
+      if (info != null) {
+        result.put("info", info);
+      }
+
       response.setContentType(ContentType.JSON);
       response.getWriter().write(result.toString());
     }
@@ -137,9 +150,9 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
     }
   }
 
-  private String getI18nText(I18n i18n, String key) {
+  private String getI18nText(I18n i18n, String key, Object... args) {
     try {
-      return i18n.get(key);
+      return i18n.get(key, (String)null, args);
     }
     catch (MissingResourceException ex) {
       return key;
@@ -155,6 +168,36 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
       return new I18n(resourceBundle);
     }
     return new I18n(request);
+  }
+
+  private JSONObject getInfoMessages(Media media, I18n i18n) throws JSONException {
+
+    // check for optional media formats that could not be resolved (only relevant if there is more than 1 media format)
+    List<MediaFormatOption> allMediaFormatOptions = Arrays.asList(media.getMediaRequest().getMediaArgs().getMediaFormatOptions());
+    if (allMediaFormatOptions.size() > 1) {
+      List<MediaFormat> unresolvedMediaFormats = allMediaFormatOptions.stream()
+          .filter(option -> !option.isMandatory())
+          .map(MediaFormatOption::getMediaFormat)
+          .filter(mediaFormat -> !hasRenditionWithMediaFormat(media, mediaFormat))
+          .collect(Collectors.toList());
+      if (!unresolvedMediaFormats.isEmpty()) {
+        JSONObject info = new JSONObject();
+        info.put("message", getI18nText(i18n, "io.wcm.handler.media.assetInfounresolvedMediaFormats"));
+        info.put("title", getI18nText(i18n, "io.wcm.handler.media.assetValid"));
+        info.put("unresolvedMediaFormats", new JSONArray(unresolvedMediaFormats.stream()
+            .map(mediaFormat -> mediaFormat.toString())
+            .collect(Collectors.toList())));
+        return info;
+      }
+    }
+
+    return null;
+  }
+
+  private boolean hasRenditionWithMediaFormat(Media media, MediaFormat mediaFormat) {
+    return media.getRenditions().stream()
+        .filter(rendition -> mediaFormat.equals(rendition.getMediaFormat()))
+        .findFirst().isPresent();
   }
 
 }
