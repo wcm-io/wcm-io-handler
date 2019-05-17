@@ -129,23 +129,28 @@ fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
     "image", "image/gif", "image/jpeg", "image/png" }));
 
 // media format properties for validation of associated media reference
-ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
-    .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
-String[] mediaFormats = cfg.get("mediaFormats",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
-String[] mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, String[].class));
-boolean mediaCropAuto = cfg.get("mediaCropAuto",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+String[] mediaFormats = null;
+String[] mediaFormatsMandatory = null;
+boolean mediaCropAuto = false;
+if (contentResource != null) {
+  ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
+      .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+  mediaFormats = cfg.get("mediaFormats",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
+  mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, String[].class));
+  mediaCropAuto = cfg.get("mediaCropAuto",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
 
-// add info about media formats in field description
-String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
-if (mediaFormatsFieldDescription != null) {
-  String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
-  if (StringUtils.isBlank(fieldDescription)) {
-    fieldDescription = null;
+  //add info about media formats in field description
+  String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
+  if (mediaFormatsFieldDescription != null) {
+   String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
+   if (StringUtils.isBlank(fieldDescription)) {
+     fieldDescription = null;
+   }
+   fileUploadProps.put("fieldDescription", fieldDescription);
   }
-  fileUploadProps.put("fieldDescription", fieldDescription);
 }
 
 // simulate resource for dialog field def with updated properties

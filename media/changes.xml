@@ -42,6 +42,9 @@
       <action type="update" dev="sseifert">
         Allow to set default DAM root path for Granite UI components in Media Handler configuration.
       </action>
+      <action type="fix" dev="sseifert">
+        Fix potential NPE in GraniteUI components when current content resource cannot be detected.
+      </action>
     </release>
 
     <release version="1.4.0" date="2019-04-05">
