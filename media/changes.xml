@@ -39,6 +39,9 @@
       <action type="update" dev="sseifert">
         Prefer original renditions above other renditions when creating virtual renditions on-the-fly.
       </action>
+      <action type="update" dev="sseifert">
+        Allow to set default DAM root path for Granite UI components in Media Handler configuration.
+      </action>
     </release>
 
     <release version="1.4.0" date="2019-04-05">

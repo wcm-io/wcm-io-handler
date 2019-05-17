@@ -31,6 +31,7 @@
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %>
+<%@include file="../../global/damRootPathDetection.jsp" %>
 <%@include file="mediaFormatSupport.jsp" %><%--###
 
 wcm.io Media Handler FileUpload
@@ -79,7 +80,7 @@ are overwritten or added.
   /**
    * The path of the root of the pathfield.
    */
-  - rootPath (StringEL) = '/content/dam'
+  - rootPath (StringEL) = '/content/dam', depending on media handler configuration
 
   /**
    * List of media formats required by this component.
@@ -108,6 +109,7 @@ Config cfg = cmp.getConfig();
 String propNameDefault = "./file";
 String propFileNameDefault = "./fileName";
 String propFileReferenceDefault = "./fileReference";
+String damRootPath = getDamRootPath(slingRequest, "/content/dam");
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
@@ -158,7 +160,7 @@ dispatcher.include(slingRequest, slingResponse);
 // add pathfield widget
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
-pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
+pathFieldProps.put("rootPath", cfg.get("rootPath", damRootPath));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
