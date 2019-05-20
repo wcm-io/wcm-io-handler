@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.markup;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +40,7 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.PictureSource;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
@@ -110,7 +112,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       if (pictureSource.getMedia() != null) {
         source.setMedia(pictureSource.getMedia());
       }
-      String srcSet = getSrcSetRenditions(media, pictureSource.getMediaFormat(), pictureSource.getWidths());
+      String srcSet = getSrcSetRenditions(media, pictureSource.getMediaFormat(), pictureSource.getWidthOptions());
       if (srcSet != null) {
         source.setSrcSet(srcSet);
         picture.add(source);
@@ -177,9 +179,9 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       // set image sizes/srcset
       ImageSizes imageSizes = mediaArgs.getImageSizes();
       if (imageSizes != null) {
-        MediaFormat primaryMediaFormat = getFirstMediaFormatWithRatio(media);
+        MediaFormat primaryMediaFormat = getFirstMediaFormat(media);
         if (primaryMediaFormat != null) {
-          String srcSet = getSrcSetRenditions(media, primaryMediaFormat, imageSizes.getWidths());
+          String srcSet = getSrcSetRenditions(media, primaryMediaFormat, imageSizes.getWidthOptions());
           if (srcSet != null) {
             img.setSrcSet(srcSet);
             img.setSizes(imageSizes.getSizes());
@@ -203,12 +205,29 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param widths widths
    * @return srcset String or null if no matching renditions found
    */
-  protected @Nullable String getSrcSetRenditions(@NotNull Media media, @NotNull MediaFormat mediaFormat, long @NotNull... widths) {
+  protected @Nullable String getSrcSetRenditions(@NotNull Media media, @NotNull MediaFormat mediaFormat,
+      @NotNull WidthOption @NotNull... widths) {
+    return getSrcSetRenditions(media, mediaFormat, Arrays.stream(widths)
+        .mapToLong(WidthOption::getWidth)
+        .toArray());
+  }
+
+  /**
+   * Generate srcset list from the resolved renditions for the ratio of the given media formats and the given widths.
+   * Widths that have no match are ignored.
+   * @param media Media
+   * @param mediaFormat Media format
+   * @param widths widths
+   * @return srcset String or null if no matching renditions found
+   */
+  protected @Nullable String getSrcSetRenditions(@NotNull Media media, @NotNull MediaFormat mediaFormat,
+      long @NotNull... widths) {
     StringBuilder srcset = new StringBuilder();
 
     for (long width : widths) {
       Optional<String> url = media.getRenditions().stream()
-          .filter(rendition -> Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+          .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+              || Ratio.matches(mediaFormat.getRatio(), 0d))
               && rendition.getWidth() == width)
           .map(rendition -> rendition.getUrl())
           .findFirst();
@@ -240,6 +259,21 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
         if (mediaFormat.hasRatio()) {
           return mediaFormat;
         }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get first media format from the media formats of the media args that has a ratio set.
+   * @param media Media
+   * @return Media format or null if none found
+   */
+  protected final @Nullable MediaFormat getFirstMediaFormat(@NotNull Media media) {
+    MediaFormat[] mediaFormats = media.getMediaRequest().getMediaArgs().getMediaFormats();
+    if (mediaFormats != null) {
+      for (MediaFormat mediaFormat : mediaFormats) {
+        return mediaFormat;
       }
     }
     return null;

@@ -177,7 +177,7 @@ public class IPEConfigResourceProvider extends ResourceProvider {
     if (componentContent != null) {
       MediaFormatHandler mediaFormatHandler = AdaptTo.notNull(componentContent, MediaFormatHandler.class);
       MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
-      if (mediaFormat != null && mediaFormat.getRatio() > 0) {
+      if (mediaFormat != null) {
         return new AspectRatioResource(resolver, mediaFormat, path);
       }
     }

@@ -81,6 +81,7 @@ You can control which element names and attribute names are rewritten via the `r
 
 The default values are:
 
+* `a:href`
 * `img:src`
 * `link:href`
 * `script:src`

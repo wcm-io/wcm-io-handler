@@ -222,8 +222,8 @@ class SimpleImageMediaMarkupBuilderTest {
     assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
     assertNull(element.getAttributeValue("width"));
     assertNull(element.getAttributeValue("height"));
-    assertNull(element.getAttributeValue("sizes"));
-    assertNull(element.getAttributeValue("srcset"));
+    assertEquals("sizes1", element.getAttributeValue("sizes"));
+    assertEquals("/media/dummy.64.png 64w, /media/dummy.16.png 16w", element.getAttributeValue("srcset"));
   }
 
   @Test

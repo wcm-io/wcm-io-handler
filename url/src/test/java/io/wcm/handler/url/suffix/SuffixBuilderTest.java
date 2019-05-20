@@ -40,8 +40,8 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.jcr.resource.JcrResourceConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -119,7 +119,7 @@ class SuffixBuilderTest {
 
   private Resource createResource(String path, String resourceType) {
     return context.create().resource(path, ImmutableValueMap.builder()
-        .put(JcrResourceConstants.SLING_RESOURCE_TYPE_PROPERTY, resourceType)
+        .put(ResourceResolver.PROPERTY_RESOURCE_TYPE, resourceType)
         .build());
   }
 

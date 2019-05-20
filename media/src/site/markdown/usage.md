@@ -121,20 +121,6 @@ if (media.isValid()) {
 A custom markup builder can then generated the image tag with metadata for all breakpoints (depending on the frontend solution).
 
 
-### Component properties
-
-It is possible to set "component properties" in the component definition (resource type node) of a component. These properties act as default values for the media handling process and do not need to be repeated in the Java code or dialog definitions when defined on component level. They are also used for customizing the cropping ratios in the in-place image editor.
-
-Available component properties:
-
-|Property name                  |Description
-|-------------------------------|-----------------------------------
-| `wcmio:mediaFormats`          | List of media formats accepted by this component.
-| `wcmio:mediaFormatsMandatory` | Resolving of all media formats is mandatory.
-| `wcmio:mediaCropAuto`         | Enable "auto-cropping" mode for this component by setting to true.
-
-
-
 ### Using media in HTL/Sightly template
 
 To resolve a media inside a HTL template you can use a generic Sling Model for calling the handler: [ResourceMedia](apidocs/io/wcm/handler/media/ui/ResourceMedia.html)
@@ -159,10 +145,9 @@ The HTL template library `wcm-io/handler/media/components/placeholder/mediaPlace
 
 The Media Handler supports manual cropping and image rotation using the AEM built-in in-place editor for images. This stores cropping and rotation parameters in two additional properties in the resource, which are respected by the Media Handler and are applied before the media format selection process takes place.
 
-Additionally it is possible to activate "auto-cropping" for components. If an asset is referenced which ratio does not match with the required ratio of the media format is is cropped automatically to the requested ratio when auto-cropping is activated. To activate auto, you can either set the flag `autoCrop(true)` in the MediaArgs, or set the component property `mediaCropAuto` to `true` for the image component. It is possible to combine auto-cropping and manual cropping - in this case manually defined cropping parameters have higher precedence than auto-cropping.
+Additionally it is possible to activate "auto-cropping" for components. If an asset is referenced which ratio does not match with the required ratio of the media format is is cropped automatically to the requested ratio when auto-cropping is activated. To activate auto, you can either set the flag `autoCrop(true)` in the MediaArgs, or set the [component property][component-properties] `wcmio:mediaCropAuto` to `true` for the image component. It is possible to combine auto-cropping and manual cropping - in this case manually defined cropping parameters have higher precedence than auto-cropping.
 
-If the expected media formats for a component are defined via component properties, these media formats are also used to customize the list of cropping ratios that are available in the in-place editor for images.
-
+If the expected media formats for a component are defined via [component properties][component-properties], these media formats are also used to customize the list of cropping ratios that are available in the in-place editor for images. This auto-generated list of cropping ratios is displayed by default when there is not custom list for cropping ratios defined for the image editor in the component definition.
 
 
 ### Configuring and tailoring the media resolving process
@@ -280,3 +265,4 @@ This results in a markup like this:
 [media-format-provider]: apidocs/io/wcm/handler/media/spi/MediaFormatProvider.html
 [url-handler]: ../url/
 [sling-commons-caservices]: ../../sling/commons/context-aware-services.html
+[component-properties]: component-properties.html

@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl.ipeconfig;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_RAW;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_STANDARD;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -111,13 +112,14 @@ class IPEConfigResourceProviderTest {
 
     when(mediaFormatHandler.getMediaFormat(EDITORIAL_1COL.getName())).thenReturn(EDITORIAL_1COL);
     when(mediaFormatHandler.getMediaFormat(SHOWROOM_STANDARD.getName())).thenReturn(SHOWROOM_STANDARD);
+    when(mediaFormatHandler.getMediaFormat(NONFIXED_RAW.getName())).thenReturn(NONFIXED_RAW);
   }
 
   @Test
   @SuppressWarnings("null")
   void testCustomIPEConfig() {
     String path = IPEConfigResourceProvider.buildPath(componentContentResource.getPath(),
-        ImmutableSet.of(EDITORIAL_1COL.getName(), SHOWROOM_STANDARD.getName()));
+        ImmutableSet.of(EDITORIAL_1COL.getName(), SHOWROOM_STANDARD.getName(), NONFIXED_RAW.getName()));
 
     Resource ipeConfig = context.resourceResolver().getResource(path);
     assertNotNull(ipeConfig);
@@ -130,11 +132,13 @@ class IPEConfigResourceProviderTest {
     assertNotNull(aspectRatios);
 
     List<Resource> aspectRatiosChildren = ImmutableList.copyOf(aspectRatios.listChildren());
-    assertEquals(2, aspectRatiosChildren.size());
+    assertEquals(3, aspectRatiosChildren.size());
     assertThat(aspectRatiosChildren.get(0), ResourceMatchers.nameAndProps(EDITORIAL_1COL.getName(),
-        "name", EDITORIAL_1COL.getLabel() + " (215:102)", "ratio", 1 / EDITORIAL_1COL.getRatio()));
-    assertThat(aspectRatiosChildren.get(1), ResourceMatchers.nameAndProps(SHOWROOM_STANDARD.getName(),
-        "name", SHOWROOM_STANDARD.getLabel() + " (1055:500)", "ratio", 1 / SHOWROOM_STANDARD.getRatio()));
+        "name", EDITORIAL_1COL.getLabel() + " (215:102)", "ratio", 1d / EDITORIAL_1COL.getRatio()));
+    assertThat(aspectRatiosChildren.get(1), ResourceMatchers.nameAndProps(NONFIXED_RAW.getName(),
+        "name", NONFIXED_RAW.getLabel(), "ratio", 0d));
+    assertThat(aspectRatiosChildren.get(2), ResourceMatchers.nameAndProps(SHOWROOM_STANDARD.getName(),
+        "name", SHOWROOM_STANDARD.getLabel() + " (1055:500)", "ratio", 1d / SHOWROOM_STANDARD.getRatio()));
   }
 
 }

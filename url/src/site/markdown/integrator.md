@@ -18,6 +18,16 @@ The "Integrator" hast to be implemented by the external application and may be a
 In a site multiple applications can be integrated using this application. For each application a integrator page is located on the correct navigation position. If the external application gets the markup of this specific page the navigation position is highlighted correctly. The integrator page uses a special template which produces the markup with a special selector, and otherwise acts as redirect template redirecting to the external applications URL which has to be defined in the page properties. The concept is fully generic and can be used with any external application using any technology without having to implement any specific in the CMS. It is not possible to integrate more than one external application per content page.
 
 
+### Terminology
+
+Within the URL Handler API the following terminology is used:
+
+* Link URL: Link to a content page to which the user can navigate to with his browser
+* Resource URL: Link of a resource that is included and loaded inside the current page (e.g. references to JavaScript, Stylesheets, Images, AJAX requests)
+
+This distinction is important because in case of Integrator Template Mode those two types of URLs are handled differently.
+
+
 ### URL Handler Integrator Template Support
 
 The URL Handler does not implement the full integrator template itself, but all logic that is required to build the URLs correctly to be used in this mode. Depending on configuration the URLs are prefixed with a placeholder as well that can be replaced by the external application (e.g. if the application has to need to proxy some resource URLs to its own domain to avoid same origin policy violations), or externalized to make sure they can be resolved.

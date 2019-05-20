@@ -31,6 +31,7 @@
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %>
+<%@include file="../../global/damRootPathDetection.jsp" %>
 <%@include file="../fileupload/mediaFormatSupport.jsp" %><%--###
 
 wcm.io Media Handler PathField
@@ -53,7 +54,7 @@ are overwritten or added.
   /**
    * The path of the root of the pathfield.
    */
-  - rootPath (StringEL) = '/content/dam'
+  - rootPath (StringEL) = '/content/dam', depending on media handler configuration
 
   /**
    * When the field description is not set, it is set automatically with an information about the
@@ -86,6 +87,7 @@ Config cfg = cmp.getConfig();
 
 // get default values for media ref properties as configured for media handler
 String propNameDefault = "./fileReference";
+String damRootPath = getDamRootPath(slingRequest, "/content/dam");
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
@@ -94,27 +96,32 @@ if (contentResource != null) {
 
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", cfg.get("name", propNameDefault));
-pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
+pathFieldProps.put("rootPath", cfg.get("rootPath", damRootPath));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-pathfield");
 
 // media format properties for validation of associated media reference
-ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
-    .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
-String[] mediaFormats = cfg.get("mediaFormats",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
-boolean mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
-boolean mediaCropAuto = cfg.get("mediaCropAuto",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
-
-// add info about media formats in field description
-String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
-if (mediaFormatsFieldDescription != null) {
-  String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
-  if (StringUtils.isBlank(fieldDescription)) {
-    fieldDescription = null;
+String[] mediaFormats = null;
+String[] mediaFormatsMandatory = null;
+boolean mediaCropAuto = false;
+if (contentResource != null) {
+  ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
+      .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+  mediaFormats = cfg.get("mediaFormats",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
+  mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, String[].class));
+  mediaCropAuto = cfg.get("mediaCropAuto",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+  
+  // add info about media formats in field description
+  String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
+  if (mediaFormatsFieldDescription != null) {
+    String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
+    if (StringUtils.isBlank(fieldDescription)) {
+      fieldDescription = null;
+    }
+    pathFieldProps.put("fieldDescription", fieldDescription);
   }
-  pathFieldProps.put("fieldDescription", fieldDescription);
 }
 
 // simulate resource for dialog field def with updated properties
@@ -122,7 +129,9 @@ Resource pathField = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMap
 if (mediaFormats != null && mediaFormats.length > 0) {
   Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
-  dataProps.put("wcmio-mediaformats-mandatory", mediaFormatsMandatory);
+  if (mediaFormatsMandatory != null && mediaFormatsMandatory.length > 0) {
+    dataProps.put("wcmio-mediaformats-mandatory", StringUtils.join(mediaFormatsMandatory, ","));
+  }
   dataProps.put("wcmio-media-cropauto", mediaCropAuto);
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }

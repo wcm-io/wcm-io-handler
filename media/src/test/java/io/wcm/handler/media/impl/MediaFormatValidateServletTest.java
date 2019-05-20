@@ -21,18 +21,20 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.MEDIA_INVALID_REASON_I18N_PREFIX;
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_FORMATS;
+import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_FORMATS_MANDATORY;
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.RP_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_STAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.sling.commons.json.JSONObject;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.day.cq.dam.api.Asset;
 import com.google.common.collect.ImmutableMap;
@@ -68,10 +70,59 @@ class MediaFormatValidateServletTest {
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
-    JSONObject result = new JSONObject(context.response().getOutputAsString());
-    assertEquals(true, result.get("valid"));
-    assertNull(result.opt("reason"));
+    assertResponse("{'valid':true}");
+  }
+
+  @Test
+  void testValid_MultipleFormats() throws Exception {
+    Asset asset = context.create().asset("/content/dam/sample.jpg",
+        (int)EDITORIAL_1COL.getWidth(),
+        (int)EDITORIAL_1COL.getHeight(),
+        ContentType.JPEG);
+
+    context.request().setParameterMap(ImmutableMap.of(
+        RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
+        RP_MEDIA_FORMATS_MANDATORY, "true,true",
+        RP_MEDIA_REF, asset.getPath()));
+    underTest.service(context.request(), context.response());
+
+    assertResponse("{'valid':false,"
+        + "'reason':'" + MEDIA_INVALID_REASON_I18N_PREFIX + MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS.name() + "',"
+        + "'reasonTitle':'io.wcm.handler.media.assetInvalid'}");
+  }
+
+  @Test
+  void testValid_MultipleFormats_Optional() throws Exception {
+    Asset asset = context.create().asset("/content/dam/sample.jpg",
+        (int)EDITORIAL_1COL.getWidth(),
+        (int)EDITORIAL_1COL.getHeight(),
+        ContentType.JPEG);
+
+    context.request().setParameterMap(ImmutableMap.of(
+        RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
+        RP_MEDIA_FORMATS_MANDATORY, "false,true",
+        RP_MEDIA_REF, asset.getPath()));
+    underTest.service(context.request(), context.response());
+
+    assertResponse("{'valid':true}");
+  }
+
+  @Test
+  void testValid_MultipleFormats_Legacy_SingleParam() throws Exception {
+    Asset asset = context.create().asset("/content/dam/sample.jpg",
+        (int)EDITORIAL_1COL.getWidth(),
+        (int)EDITORIAL_1COL.getHeight(),
+        ContentType.JPEG);
+
+    context.request().setParameterMap(ImmutableMap.of(
+        RP_MEDIA_FORMATS, EDITORIAL_1COL.getName() + "," + HOME_STAGE.getName(),
+        RP_MEDIA_FORMATS_MANDATORY, "true",
+        RP_MEDIA_REF, asset.getPath()));
+    underTest.service(context.request(), context.response());
+
+    assertResponse("{'valid':false,"
+        + "'reason':'" + MEDIA_INVALID_REASON_I18N_PREFIX + MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS.name() + "',"
+        + "'reasonTitle':'io.wcm.handler.media.assetInvalid'}");
   }
 
   @Test
@@ -86,11 +137,14 @@ class MediaFormatValidateServletTest {
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());
 
+    assertResponse("{'valid':false,"
+        + "'reason':'" + MEDIA_INVALID_REASON_I18N_PREFIX + MediaInvalidReason.NO_MATCHING_RENDITION.name() + "',"
+        + "'reasonTitle':'io.wcm.handler.media.assetInvalid'}");
+  }
+
+  private void assertResponse(String expectedJson) throws JSONException {
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
-    JSONObject result = new JSONObject(context.response().getOutputAsString());
-    assertEquals(false, result.get("valid"));
-    assertEquals(MEDIA_INVALID_REASON_I18N_PREFIX + MediaInvalidReason.NO_MATCHING_RENDITION.name(),
-        result.get("reason"));
+    JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
 }

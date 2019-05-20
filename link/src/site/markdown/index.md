@@ -8,6 +8,7 @@ Link resolving, processing and markup generation.
 ### Documentation
 
 * [Usage][usage]
+* [General concepts][general-concepts]
 * [Granite UI components][graniteui-components]
 * [API documentation][apidocs]
 * [Changelog][changelog]
@@ -22,6 +23,9 @@ The Link Handler provides:
 * Pluggable markup builders for links
 * Pluggable link pre- and postprocessing to further tailoring the link handling process
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
+* Generic [Granite UI components][graniteui-components] that can be used in component dialogs
+
+Read the [general concepts][general-concepts] to get an overview of the functionality.
 
 
 ### AEM Version Support Matrix
@@ -48,6 +52,7 @@ To use this module you have to deploy also:
 
 
 [usage]: usage.html
+[general-concepts]: general-concepts.html
 [apidocs]: apidocs/
 [graniteui-components]: graniteui-components.html
 [changelog]: changes-report.html

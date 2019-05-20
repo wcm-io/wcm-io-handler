@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -35,7 +35,7 @@
   <packaging>bundle</packaging>
 
   <name>RichText Handler</name>
-  <description>RichText processing and markup generation.</description>
+  <description>Rich text processing and markup generation.</description>
   <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
@@ -79,8 +79,8 @@
 
     <!-- For build compatibility with Java 11 -->
     <dependency>
-      <groupId>javax.annotation</groupId>
-      <artifactId>javax.annotation-api</artifactId>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-annotation_1.3_spec</artifactId>
       <scope>provided</scope>
     </dependency>
 

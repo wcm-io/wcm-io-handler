@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
+import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.MediaNameConstants;
@@ -189,6 +190,15 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    */
   public boolean includeAssetWebRenditionsByDefault() {
     return true;
+  }
+
+  /**
+   * Get root path for picking assets using path field widgets.
+   * @param page Context page
+   * @return DAM root path
+   */
+  public @NotNull String getDamRootPath(@NotNull Page page) {
+    return "/content/dam";
   }
 
 }

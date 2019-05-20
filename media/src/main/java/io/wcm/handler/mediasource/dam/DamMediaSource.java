@@ -210,7 +210,6 @@ public final class DamMediaSource extends MediaSource {
         && mediaRequest.getMediaArgs().getMediaFormats() != null) {
       // overlay IPE config with cropping ratios for each media format with a valid ratio
       Set<String> mediaFormatNames = Arrays.stream(mediaRequest.getMediaArgs().getMediaFormats())
-          .filter(mediaFormat -> mediaFormat.getRatio() > 0)
           .map(mediaFormat -> mediaFormat.getName())
           .collect(Collectors.toSet());
       if (!mediaFormatNames.isEmpty()) {

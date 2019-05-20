@@ -28,6 +28,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +42,9 @@ import org.mockito.quality.Strictness;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 
@@ -110,11 +113,26 @@ class MediaFormatResolverTest {
 
     assertTrue(underTest.resolve(mediaArgs));
 
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    assertEquals(3, mediaFormats.length);
-    assertEquals(RATIO, mediaFormats[0]);
-    assertResponsiveMediaFormat(RATIO, 10, mediaFormats[1]);
-    assertResponsiveMediaFormat(RATIO, 20, mediaFormats[2]);
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(3, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 10, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[2]);
+  }
+
+  @Test
+  void testImageSizes_MixedMandatory() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(RATIO)
+        .imageSizes(new ImageSizes("size1", new WidthOption(10, true), new WidthOption(20, false)));
+
+    assertTrue(underTest.resolve(mediaArgs));
+
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(3, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 10, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(RATIO, 20, false, mediaFormatOptions[2]);
   }
 
   @Test
@@ -123,9 +141,13 @@ class MediaFormatResolverTest {
         .mediaFormat(FIXEDWIDTH_UNCONSTRAINED)
         .imageSizes(new ImageSizes("size1", 10, 20));
 
-    assertFalse(underTest.resolve(mediaArgs));
+    assertTrue(underTest.resolve(mediaArgs));
 
-    assertArrayEquals(new MediaFormat[] { FIXEDWIDTH_UNCONSTRAINED }, mediaArgs.getMediaFormats());
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(3, mediaFormatOptions.length);
+    assertEquals(FIXEDWIDTH_UNCONSTRAINED, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 10, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 20, true, mediaFormatOptions[2]);
   }
 
   @Test
@@ -139,13 +161,33 @@ class MediaFormatResolverTest {
 
     assertTrue(underTest.resolve(mediaArgs));
 
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    assertEquals(5, mediaFormats.length);
-    assertEquals(RATIO, mediaFormats[0]);
-    assertResponsiveMediaFormat(RATIO, 20, mediaFormats[1]);
-    assertResponsiveMediaFormat(RATIO, 30, mediaFormats[2]);
-    assertResponsiveMediaFormat(RATIO2, 10, mediaFormats[3]);
-    assertResponsiveMediaFormat(RATIO2, 20, mediaFormats[4]);
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(5, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(RATIO, 30, true, mediaFormatOptions[2]);
+    assertResponsiveMediaFormat(RATIO2, 10, true, mediaFormatOptions[3]);
+    assertResponsiveMediaFormat(RATIO2, 20, true, mediaFormatOptions[4]);
+  }
+
+  @Test
+  void testPictureSources_DifferentRatio_MixedMandatory() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(RATIO)
+        .pictureSources(new PictureSource[] {
+            new PictureSource(RATIO, "media1", new WidthOption(20, true), new WidthOption(30, false)),
+            new PictureSource(RATIO2, null, new WidthOption(10, false), new WidthOption(20, true))
+        });
+
+    assertTrue(underTest.resolve(mediaArgs));
+
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(5, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(RATIO, 30, false, mediaFormatOptions[2]);
+    assertResponsiveMediaFormat(RATIO2, 10, false, mediaFormatOptions[3]);
+    assertResponsiveMediaFormat(RATIO2, 20, true, mediaFormatOptions[4]);
   }
 
   @Test
@@ -159,18 +201,23 @@ class MediaFormatResolverTest {
 
     assertTrue(underTest.resolve(mediaArgs));
 
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    assertEquals(4, mediaFormats.length);
-    assertEquals(RATIO, mediaFormats[0]);
-    assertResponsiveMediaFormat(RATIO, 20, mediaFormats[1]);
-    assertResponsiveMediaFormat(RATIO, 30, mediaFormats[2]);
-    assertResponsiveMediaFormat(RATIO, 10, mediaFormats[3]);
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(4, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(RATIO, 30, true, mediaFormatOptions[2]);
+    assertResponsiveMediaFormat(RATIO, 10, true, mediaFormatOptions[3]);
   }
 
-  private void assertResponsiveMediaFormat(MediaFormat baseMediaFormat, long width, MediaFormat actualMediaFormat) {
+  @SuppressWarnings("null")
+  private void assertResponsiveMediaFormat(MediaFormat baseMediaFormat, long width, boolean mandatory,
+      MediaFormatOption actualMediaFormatOption) {
+    MediaFormat actualMediaFormat = actualMediaFormatOption.getMediaFormat();
+    assertNotNull(actualMediaFormat);
     assertEquals(baseMediaFormat.getName() + MEDIAFORMAT_NAME_SEPARATOR + width, actualMediaFormat.getName());
     assertEquals(width, actualMediaFormat.getWidth());
     assertEquals(baseMediaFormat.getRatio(), actualMediaFormat.getRatio(), 0.001);
+    assertEquals(mandatory, actualMediaFormatOption.isMandatory());
   }
 
 }

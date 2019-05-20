@@ -8,7 +8,9 @@ Media resolving, processing and markup generation.
 ### Documentation
 
 * [Usage][usage]
+* [General concepts][general-concepts]
 * [Granite UI components][graniteui-components]
+* [Component properties][component-properties]
 * [System configuration][configuration]
 * [API documentation][apidocs]
 * [Changelog][changelog]
@@ -29,6 +31,8 @@ The Media Handler provides:
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic HTL Placeholder template
 * Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
+
+Read the [general concepts][general-concepts] to get an overview of the functionality.
 
 
 ### AEM Version Support Matrix
@@ -54,7 +58,9 @@ To use this module you have to deploy also:
 
 
 [usage]: usage.html
+[general-concepts]: general-concepts.html
 [graniteui-components]: graniteui-components.html
+[component-properties]: component-properties.html
 [configuration]: configuration.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html

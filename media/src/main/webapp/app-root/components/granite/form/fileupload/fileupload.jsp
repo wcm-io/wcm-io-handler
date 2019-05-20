@@ -31,6 +31,7 @@
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %>
+<%@include file="../../global/damRootPathDetection.jsp" %>
 <%@include file="mediaFormatSupport.jsp" %><%--###
 
 wcm.io Media Handler FileUpload
@@ -79,7 +80,7 @@ are overwritten or added.
   /**
    * The path of the root of the pathfield.
    */
-  - rootPath (StringEL) = '/content/dam'
+  - rootPath (StringEL) = '/content/dam', depending on media handler configuration
 
   /**
    * List of media formats required by this component.
@@ -108,6 +109,7 @@ Config cfg = cmp.getConfig();
 String propNameDefault = "./file";
 String propFileNameDefault = "./fileName";
 String propFileReferenceDefault = "./fileReference";
+String damRootPath = getDamRootPath(slingRequest, "/content/dam");
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
@@ -127,23 +129,28 @@ fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
     "image", "image/gif", "image/jpeg", "image/png" }));
 
 // media format properties for validation of associated media reference
-ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
-    .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
-String[] mediaFormats = cfg.get("mediaFormats",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
-boolean mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, false));
-boolean mediaCropAuto = cfg.get("mediaCropAuto",
-    componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+String[] mediaFormats = null;
+String[] mediaFormatsMandatory = null;
+boolean mediaCropAuto = false;
+if (contentResource != null) {
+  ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
+      .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+  mediaFormats = cfg.get("mediaFormats",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
+  mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, String[].class));
+  mediaCropAuto = cfg.get("mediaCropAuto",
+      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
 
-// add info about media formats in field description
-String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
-if (mediaFormatsFieldDescription != null) {
-  String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
-  if (StringUtils.isBlank(fieldDescription)) {
-    fieldDescription = null;
+  //add info about media formats in field description
+  String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
+  if (mediaFormatsFieldDescription != null) {
+   String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
+   if (StringUtils.isBlank(fieldDescription)) {
+     fieldDescription = null;
+   }
+   fileUploadProps.put("fieldDescription", fieldDescription);
   }
-  fileUploadProps.put("fieldDescription", fieldDescription);
 }
 
 // simulate resource for dialog field def with updated properties
@@ -158,14 +165,16 @@ dispatcher.include(slingRequest, slingResponse);
 // add pathfield widget
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
-pathFieldProps.put("rootPath", cfg.get("rootPath", "/content/dam"));
+pathFieldProps.put("rootPath", cfg.get("rootPath", damRootPath));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
 if (mediaFormats != null && mediaFormats.length > 0) {
   Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
-  dataProps.put("wcmio-mediaformats-mandatory", mediaFormatsMandatory);
+  if (mediaFormatsMandatory != null && mediaFormatsMandatory.length > 0) {
+    dataProps.put("wcmio-mediaformats-mandatory", StringUtils.join(mediaFormatsMandatory, ","));
+  }
   dataProps.put("wcmio-media-cropauto", mediaCropAuto);
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }
