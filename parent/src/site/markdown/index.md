@@ -30,7 +30,7 @@ Sources: https://github.com/wcm-io/wcm-io-handler
 [media-handler]: media/
 [richtext-handler]: richtext/
 [handler-commons]: commons/
-[wcmio-samples]: http://wcm.io/samples/
-[wcmio-handler-0x]: http://wcm.io/handler-0.x/
+[wcmio-samples]: https://wcm.io/samples/
+[wcmio-handler-0x]: https://wcm.io/handler-0.x/
 [wcmio-handler-migration]: https://wcm-io.atlassian.net/wiki/x/dhn9Ag
-[wcmio-maven-archetype-aem]: http://wcm.io/tooling/maven/archetypes/aem/
+[wcmio-maven-archetype-aem]: https://wcm.io/tooling/maven/archetypes/aem/

@@ -65,4 +65,4 @@ Each of the handler has their own "general concepts" page for more details:
 [media-handler-general-concepts]: media/general-concepts.html
 [richtext-handler-general-concepts]: richtext/general-concepts.html
 [sling-caconfig]: https://sling.apache.org/documentation/bundles/context-aware-configuration/context-aware-configuration.html
-[wcmmio-sling-caservices]: http://wcm.io/sling/commons/context-aware-services.html
+[wcmmio-sling-caservices]: https://wcm.io/sling/commons/context-aware-services.html
