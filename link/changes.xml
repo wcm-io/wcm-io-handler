@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.2.4" date="not released">
+      <action type="fix" dev="sseifert">
+        Media link path field: Fix NPE when content resource is null.
+      </action>
+    </release>
+
     <release version="1.2.2" date="2019-04-05">
       <action type="update" dev="sseifert">
         Link reference container Granite UI component: Enable URL validation for external link.
