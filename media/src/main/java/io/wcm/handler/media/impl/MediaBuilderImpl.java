@@ -276,14 +276,12 @@ final class MediaBuilderImpl implements MediaBuilder {
 
   @Override
   public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths) {
-    ensureMediaFormatHasRatio(mediaFormat);
     this.pictureSourceSets.add(new PictureSource(mediaFormat, media, widths));
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths) {
-    ensureMediaFormatHasRatio(mediaFormat);
     this.pictureSourceSets.add(new PictureSource(mediaFormat, null, widths));
     return this;
   }
@@ -332,12 +330,6 @@ final class MediaBuilderImpl implements MediaBuilder {
   @Override
   public String buildUrl() {
     return build().getUrl();
-  }
-
-  private void ensureMediaFormatHasRatio(MediaFormat mediaFormat) {
-    if (!mediaFormat.hasRatio()) {
-      throw new IllegalArgumentException("Media format '" + mediaFormat.getName() + "' does not has a ratio set.");
-    }
   }
 
 }

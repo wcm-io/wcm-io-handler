@@ -78,10 +78,12 @@ if (rootPath == null) {
 // get all media formats with "download" flag
 Set<String> mediaFormatNames = new TreeSet<String>();
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
-MediaFormatHandler mediaFormatHandler = contentResource.adaptTo(MediaFormatHandler.class);
-for (MediaFormat mediaFormat : mediaFormatHandler.getMediaFormats()) {
-  if (mediaFormat.isDownload()) {
-    mediaFormatNames.add(mediaFormat.getName());
+if (contentResource != null) {
+  MediaFormatHandler mediaFormatHandler = contentResource.adaptTo(MediaFormatHandler.class);
+  for (MediaFormat mediaFormat : mediaFormatHandler.getMediaFormats()) {
+    if (mediaFormat.isDownload()) {
+      mediaFormatNames.add(mediaFormat.getName());
+    }
   }
 }
 String[] mediaFormats = cfg.get("mediaFormats", mediaFormatNames.toArray(new String[mediaFormatNames.size()]));

@@ -53,6 +53,6 @@ The parser support different data types and optional filter strategies to valida
 
 
 
-[sling-url-decomposition]: http://sling.apache.org/documentation/the-sling-engine/url-decomposition.html
+[sling-url-decomposition]: https://sling.apache.org/documentation/the-sling-engine/url-decomposition.html
 [suffix-builder]: apidocs/io/wcm/handler/url/suffix/SuffixBuilder.html
 [suffix-parser]: apidocs/io/wcm/handler/url/suffix/SuffixParser.html
