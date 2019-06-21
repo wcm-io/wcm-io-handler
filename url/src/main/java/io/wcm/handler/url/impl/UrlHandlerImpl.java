@@ -40,6 +40,7 @@ import com.day.cq.wcm.api.Page;
 import io.wcm.handler.url.UrlBuilder;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.impl.clientlib.ClientlibProxyRewriter;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.sling.models.annotations.AemObject;
@@ -61,6 +62,8 @@ public final class UrlHandlerImpl implements UrlHandler {
   private ResourceResolver resolver;
   @OSGiService
   private SlingSettingsService slingSettings;
+  @OSGiService
+  private ClientlibProxyRewriter clientlibProxyRewriter;
 
   // optional injections (only available if called inside a request)
   @SlingObject(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -178,8 +181,11 @@ public final class UrlHandlerImpl implements UrlHandler {
       resource = resolver.resolve(url); // accept NonExistingResource as well
     }
 
+    // check for reference to static resource from proxied client library
+    String externalizedUrl = clientlibProxyRewriter.rewriteStaticResourcePath(url);
+
     // apply sling mapping when externalizing URLs
-    String externalizedUrl = Externalizer.externalizeUrl(url, resolver, request);
+    externalizedUrl = Externalizer.externalizeUrl(externalizedUrl, resolver, request);
 
     // add resource URL prefix (scheme/hostname or integrator placeholder) if required
     String resourceUrlPrefix = getResourceUrlPrefix(urlMode, resource);

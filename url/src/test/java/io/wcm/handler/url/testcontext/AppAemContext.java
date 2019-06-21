@@ -34,6 +34,7 @@ import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
 import io.wcm.handler.url.impl.SiteRootDetectorImpl;
 import io.wcm.handler.url.impl.UrlHandlerAdapterFactory;
+import io.wcm.handler.url.impl.clientlib.ClientlibProxyRewriterImpl;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextBuilder;
@@ -68,6 +69,7 @@ public final class AppAemContext {
       // handler SPI
       context.registerInjectActivateService(new SiteRootDetectorImpl());
       context.registerInjectActivateService(new UrlHandlerAdapterFactory());
+      context.registerInjectActivateService(new ClientlibProxyRewriterImpl());
       context.registerInjectActivateService(new DefaultUrlHandlerConfig());
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
 

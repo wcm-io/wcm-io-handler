@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.url.impl;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
+import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,12 +41,12 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.servlethelpers.MockSlingHttpServletRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.Page;
 import com.google.common.collect.ImmutableSet;
 
@@ -66,6 +68,16 @@ class UrlHandlerImplTest {
 
   protected Adaptable adaptable() {
     return context.request();
+  }
+
+  @BeforeEach
+  void setUp() {
+    // setup client libraries
+    context.create().resource("/apps/testapp/clientlibs/clientlib1",
+        JCR_PRIMARYTYPE, "cq:ClientLibraryFolder");
+    context.create().resource("/apps/testapp/clientlibs/clientlib2Proxy",
+        JCR_PRIMARYTYPE, "cq:ClientLibraryFolder",
+        "allowProxy", true);
   }
 
   /**
@@ -425,6 +437,14 @@ class UrlHandlerImplTest {
     assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a/_jcr_content.png",
         externalizeResourceUrl(urlHandler, targetPage.getContentResource().getPath() + ".png", UrlModes.FULL_URL));
 
+    // static resources from client libraries
+    assertEquals("/apps/testapp/clientlibs/clientlib1/resources/images/img.png",
+        externalizeResourceUrl(urlHandler, "/apps/testapp/clientlibs/clientlib1/resources/images/img.png"));
+    assertEquals("/etc.clientlibs/testapp/clientlibs/clientlib2Proxy/resources/images/img.png",
+        externalizeResourceUrl(urlHandler, "/apps/testapp/clientlibs/clientlib2Proxy/resources/images/img.png"));
+    assertEquals("/apps/testapp/clientlibs/clientlib3/resources/images/img.png",
+        externalizeResourceUrl(urlHandler, "/apps/testapp/clientlibs/clientlib3/resources/images/img.png"));
+
     // with query parameter or fragment
     assertEquals("/apps/testapp/docroot/img.png?param=1",
         externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png?param=1"));
@@ -714,7 +734,7 @@ class UrlHandlerImplTest {
     }
     try {
       return ResourceUtil.getOrCreateResource(context.resourceResolver(), path,
-          JcrConstants.NT_UNSTRUCTURED, JcrConstants.NT_UNSTRUCTURED, false);
+          NT_UNSTRUCTURED, NT_UNSTRUCTURED, false);
     }
     catch (PersistenceException ex) {
       throw new RuntimeException(ex);
