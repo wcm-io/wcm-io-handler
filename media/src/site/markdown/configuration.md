@@ -11,3 +11,5 @@ user.mapping=["io.wcm.handler.media=wcmioDamSystemUser"]
 ```
 
 The user should have `jcr:read` and `rep:write` privileges on `/content/dam`. This configuration and system user is only required on Author instances.
+
+This configuration is required **only on author instances**.

@@ -11,3 +11,5 @@ user.mapping=["io.wcm.handler.url:clientlibs-service\=sling-scripting"]
 ```
 
 The service user `sling-scripting` that comes with AEM can be used for this.
+
+This configuration is required **on both author and publish instances**.
