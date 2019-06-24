@@ -19,6 +19,13 @@
  */
 package io.wcm.handler.url.impl.clientlib;
 
+import static javax.jcr.observation.Event.NODE_ADDED;
+import static javax.jcr.observation.Event.NODE_MOVED;
+import static javax.jcr.observation.Event.NODE_REMOVED;
+import static javax.jcr.observation.Event.PROPERTY_ADDED;
+import static javax.jcr.observation.Event.PROPERTY_CHANGED;
+import static javax.jcr.observation.Event.PROPERTY_REMOVED;
+
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
@@ -111,10 +118,14 @@ class ClientlibPathCache implements EventListener, AutoCloseable {
     Session session = this.listenerServiceResourceResolver.adaptTo(Session.class);
     if (session != null) {
       try {
+        log.debug("Enable observation for client libraries.");
         JackrabbitObservationManager observationManager = (JackrabbitObservationManager)session.getWorkspace().getObservationManager();
-        JackrabbitEventFilter eventFilter = new JackrabbitEventFilter();
-        eventFilter.setAdditionalPaths("/apps", "/libs");
-        eventFilter.setNodeTypes(new String[] { NT_CLIENTLIBRARY });
+        JackrabbitEventFilter eventFilter = new JackrabbitEventFilter()
+            .setEventTypes(NODE_ADDED | NODE_MOVED | NODE_REMOVED | PROPERTY_ADDED | PROPERTY_CHANGED | PROPERTY_REMOVED)
+            .setAbsPath("/apps")
+            .setAdditionalPaths("/apps", "/libs")
+            .setIsDeep(true)
+            .setNodeTypes(new String[] { NT_CLIENTLIBRARY });
         observationManager.addEventListener(this, eventFilter);
       }
       catch (RepositoryException ex) {
