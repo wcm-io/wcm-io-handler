@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.jetbrains.annotations.NotNull;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -44,17 +43,26 @@ public class ClientlibProxyRewriterImpl implements ClientlibProxyRewriter {
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
 
-  private ClientlibPathCache clientlibPathCache;
-
-  @Activate
-  private void activate() {
-    this.clientlibPathCache = new ClientlibPathCache(resourceResolverFactory);
-  }
+  private volatile ClientlibPathCache clientlibPathCache;
 
   @Deactivate
   private void deactivate() throws Exception {
-    this.clientlibPathCache.close();
+    if (clientlibPathCache != null) {
+      this.clientlibPathCache.close();
+    }
     this.clientlibPathCache = null;
+  }
+
+  private ClientlibPathCache getClientlibPathCache() {
+    if (this.clientlibPathCache == null) {
+      // lazy initialization
+      synchronized (this) {
+        if (this.clientlibPathCache == null) {
+          this.clientlibPathCache = new ClientlibPathCache(resourceResolverFactory);
+        }
+      }
+    }
+    return this.clientlibPathCache;
   }
 
   @Override
@@ -62,7 +70,7 @@ public class ClientlibProxyRewriterImpl implements ClientlibProxyRewriter {
     Matcher matcher = STATIC_RESOURCE_PATH_PATTERN.matcher(path);
     if (matcher.matches()) {
       String clientlibPath = matcher.group(1);
-      boolean clientlibProxyMode = clientlibPathCache.isClientlibWithAllowProxy(clientlibPath);
+      boolean clientlibProxyMode = getClientlibPathCache().isClientlibWithAllowProxy(clientlibPath);
       if (clientlibProxyMode) {
         return rewriteClientlibProxyPath(path);
       }
