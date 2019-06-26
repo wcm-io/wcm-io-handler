@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.3.0" date="not released">
+    <release version="1.3.0" date="2019-06-26">
       <action type="add" dev="sseifert"><![CDATA[
         Rewrite resource URLs pointing to client libraries with "allowProxy" mode to <code>/etc.clientlibs</code>.<br/>
         <strong>New service user mapping required</strong>, see <a href="configuration.html">System configuration</a>.
