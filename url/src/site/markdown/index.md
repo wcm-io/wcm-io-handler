@@ -13,6 +13,7 @@ URL resolving and processing.
 * [Integrator Template Mode][integrator]
 * [Sling Rewriter Integration][rewriter]
 * [Granite UI components][graniteui-components]
+* [System configuration][configuration]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -29,6 +30,7 @@ The URL Handler provides:
 * [Suffix Builder and Parser][suffix-builder-parser] for passing around information via Sling Suffix string
 * Supports externalizing URLs for [Integrator Template Mode][integrator] with placeholders or Full URLs
 * Supports externalizing URLs in generated markup via [Sling Rewriter][rewriter]
+* Rewrites resource URLs pointing to client libraries with "allowProxy" mode to `/etc.clientlibs`.
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic [Granite UI components][graniteui-components] that can be used in link dialogs
 
@@ -64,6 +66,7 @@ To use this module you have to deploy also:
 [rewriter]: rewriter.html
 [ui-package]: apidocs/io/wcm/handler/url/ui/package-summary.html
 [graniteui-components]: graniteui-components.html
+[configuration]: configuration.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [caconfig]: ../../caconfig/

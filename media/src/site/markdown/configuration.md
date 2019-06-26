@@ -7,7 +7,9 @@ The DAM source implementation for Media Handler requires a background services t
 This service needs a service user mapping for the factory configuration `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended` with an entry like this:
 
 ```
-user.mapping="[io.wcm.handler.media=wcmioDamSystemUser]"
+user.mapping=["io.wcm.handler.media=wcmioDamSystemUser"]
 ```
 
 The user should have `jcr:read` and `rep:write` privileges on `/content/dam`. This configuration and system user is only required on Author instances.
+
+This configuration is required **only on author instances**.
