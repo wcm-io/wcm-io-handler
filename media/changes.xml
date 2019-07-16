@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.6.0" date="not released">
+      <action type="add" dev="sseifert">
+        Add workflow process implementation to generate rendition metadata.
+      </action>
+      <action type="update" dev="sseifert">
+        Rendition metadata generation: Store timestamp for rendition metadata, and re-generate it only if rendition was updated more recently.
+      </action>
+      <action type="update" dev="sseifert">
+        Rendition metadata generation: Do not remove metadata for existing renditions (e.g. if listener events are processed with delays).
+      </action>
+    </release>
+
     <release version="1.5.2" date="2019-06-06">
       <action type="update" dev="sseifert" issue="WHAN-23">
         MediaBuilder: Allow media formats without ratios for picture sources.

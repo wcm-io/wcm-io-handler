@@ -44,6 +44,10 @@ import io.wcm.wcm.commons.util.RunMode;
 @ExtendWith(AemContextExtension.class)
 class DamRenditionMetadataServiceTest {
 
+  // TODO: add unit test for no re-generating metadata if rendition was not updated / was updated
+  // TODO: add unit test for skipping metadata if rendition still exists
+  // TODO: add unit test for rendition metadata workflow process
+
   private static final String ASSET_PATH = MediaSourceDamAppAemContext.DAM_PATH + "/standard.jpg";
   private static final String RENDITIONS_PATH = ASSET_PATH + "/jcr:content/renditions";
   private static final String RENDITIONS_METADATA_PATH = ASSET_PATH + "/jcr:content/" + NN_RENDITIONS_METADATA;

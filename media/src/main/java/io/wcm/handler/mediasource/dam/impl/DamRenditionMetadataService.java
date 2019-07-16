@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import java.util.EnumSet;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.LoginException;
@@ -105,7 +106,7 @@ public final class DamRenditionMetadataService implements EventHandler {
     // make sure rendition file extension is an image extensions
     String renditionPath = event.getAdditionalInfo();
     String renditionNodeName = Text.getName(renditionPath);
-    String fileExtension = StringUtils.substringAfterLast(renditionNodeName, ".");
+    String fileExtension = FilenameUtils.getExtension(renditionNodeName);
     if (!FileExtension.isImage(fileExtension)) {
       return;
     }
@@ -123,10 +124,10 @@ public final class DamRenditionMetadataService implements EventHandler {
       }
 
       if (event.getType() == DamEvent.Type.RENDITION_UPDATED) {
-        renditionAddedOrUpdated(asset, renditionPath, event.getUserId(), adminResourceResolver);
+        renditionAddedOrUpdated(asset, renditionPath, adminResourceResolver);
       }
       else if (event.getType() == DamEvent.Type.RENDITION_REMOVED) {
-        renditionRemoved(asset, renditionPath, event.getUserId(), adminResourceResolver);
+        renditionRemoved(asset, renditionPath, adminResourceResolver);
       }
 
     }
@@ -146,8 +147,8 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param asset Asset
    * @param renditionPath Rendition path
    */
-  private void renditionAddedOrUpdated(Asset asset, String renditionPath, String userId, ResourceResolver resolver) {
-    RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver, userId);
+  private void renditionAddedOrUpdated(Asset asset, String renditionPath, ResourceResolver resolver) {
+    RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
     generator.renditionAddedOrUpdated(asset, renditionPath);
   }
 
@@ -156,8 +157,8 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param asset Asset
    * @param renditionPath Rendition path
    */
-  private void renditionRemoved(Asset asset, String renditionPath, String userId, ResourceResolver resolver) {
-    RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver, userId);
+  private void renditionRemoved(Asset asset, String renditionPath, ResourceResolver resolver) {
+    RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
     generator.renditionRemoved(asset, renditionPath);
   }
 
