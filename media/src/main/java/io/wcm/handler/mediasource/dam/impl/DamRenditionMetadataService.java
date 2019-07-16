@@ -142,6 +142,7 @@ public final class DamRenditionMetadataService implements EventHandler {
       // make sure asset exists
       Asset asset = getAsset(event.getAssetPath(), adminResourceResolver);
       if (asset == null) {
+        log.debug("Unable to read DAM asset at {} with user {}", event.getAssetPath(), adminResourceResolver.getUserID());
         return;
       }
 
@@ -173,11 +174,14 @@ public final class DamRenditionMetadataService implements EventHandler {
     String renditionNodeName = Text.getName(renditionPath);
 
     // check for resource existence and try to get layer from image
+    // (record duration of converting resource to layer for debugging)
     Resource renditionResource = resolver.getResource(renditionPath);
     if (renditionResource == null) {
       return;
     }
+    long startTime = System.currentTimeMillis();
     Layer renditionLayer = renditionResource.adaptTo(Layer.class);
+    long conversionDuration = System.currentTimeMillis() - startTime;
     if (renditionLayer == null) {
       return;
     }
@@ -193,8 +197,11 @@ public final class DamRenditionMetadataService implements EventHandler {
         props.put(PN_IMAGE_WIDTH, renditionLayer.getWidth());
         props.put(PN_IMAGE_HEIGHT, renditionLayer.getHeight());
         updateLastModifiedAndSave(asset, userId, resolver);
-        log.debug("Updated rendition metadata at " + metadataResource.getPath() + " "
-            + "(width=" + renditionLayer.getWidth() + ", height=" + renditionLayer.getHeight() + ").");
+        log.debug("Updated rendition metadata at {} (width={}, height={}); duration={}ms.",
+            metadataResource.getPath(),
+            renditionLayer.getWidth(),
+            renditionLayer.getHeight(),
+            conversionDuration);
       }
       catch (PersistenceException ex) {
         log.error("Unable to create or update rendition metadata node for " + renditionPath, ex);
@@ -219,7 +226,7 @@ public final class DamRenditionMetadataService implements EventHandler {
         String pathToRemove = metadataResource.getPath();
         renditionsResource.getResourceResolver().delete(metadataResource);
         updateLastModifiedAndSave(asset, userId, resolver);
-        log.debug("Removed rendition metadata at " + pathToRemove + ".");
+        log.debug("Removed rendition metadata at {}.", pathToRemove);
       }
     }
     catch (PersistenceException ex) {
