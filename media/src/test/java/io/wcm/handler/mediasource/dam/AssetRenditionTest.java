@@ -20,7 +20,7 @@
 package io.wcm.handler.mediasource.dam;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.NN_RENDITIONS_METADATA;
+import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

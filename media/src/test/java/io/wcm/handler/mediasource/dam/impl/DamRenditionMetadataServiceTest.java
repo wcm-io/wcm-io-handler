@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.NN_RENDITIONS_METADATA;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_HEIGHT;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_WIDTH;
+import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
+import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_HEIGHT;
+import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_WIDTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
