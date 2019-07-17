@@ -34,11 +34,12 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
+import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
-import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Tests inclusion and exclusion of AEM-generated asset thumbnails and web renditions.
@@ -53,9 +54,11 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
 
   @BeforeEach
   void setUp() {
-    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
-    context.runMode(RunMode.AUTHOR);
-    context.registerInjectActivateService(new DamRenditionMetadataService());
+    // register RenditionMetadataListenerService to generate rendition metadata
+    context.registerInjectActivateService(new AssetSynchonizationService());
+    context.registerInjectActivateService(new RenditionMetadataListenerService(),
+        "threadPoolSize", 0,
+        "allowedRunMode", new String[0]);
 
     // prepare asset with web rendition
     // original uses a different ratio than the other renditions to test only with the other renditions

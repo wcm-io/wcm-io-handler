@@ -33,10 +33,11 @@ import com.day.cq.dam.api.Rendition;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
+import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
-import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Tests for {@link TransformedRenditionHandler}
@@ -53,9 +54,11 @@ class TransformedRenditionHandlerTest {
   @BeforeEach
   void setUp() throws Exception {
 
-    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
-    context.runMode(RunMode.AUTHOR);
-    context.registerInjectActivateService(new DamRenditionMetadataService());
+    // register RenditionMetadataListenerService to generate rendition metadata
+    context.registerInjectActivateService(new AssetSynchonizationService());
+    context.registerInjectActivateService(new RenditionMetadataListenerService(),
+        "threadPoolSize", 0,
+        "allowedRunMode", new String[0]);
 
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 

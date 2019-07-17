@@ -27,9 +27,9 @@ import static com.day.cq.dam.api.DamConstants.PREFIX_ASSET_THUMBNAIL;
 import static com.day.cq.dam.api.DamConstants.PREFIX_ASSET_WEB;
 import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
 import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.NN_RENDITIONS_METADATA;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_HEIGHT;
-import static io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService.PN_IMAGE_WIDTH;
+import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
+import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_HEIGHT;
+import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_WIDTH;
 
 import java.io.IOException;
 import java.io.InputStream;
