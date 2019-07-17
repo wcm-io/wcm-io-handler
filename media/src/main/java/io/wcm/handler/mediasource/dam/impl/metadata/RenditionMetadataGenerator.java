@@ -103,7 +103,12 @@ public final class RenditionMetadataGenerator {
 
     // generate metadata for all existing renditions
     for (String renditionPath : renditionPaths) {
-      renditionAddedOrUpdated(asset, renditionPath);
+      try {
+        renditionAddedOrUpdated(asset, renditionPath);
+      }
+      catch (PersistenceException ex) {
+        log.error(ex.getMessage(), ex);
+      }
     }
 
     // remove obsolete metadata
@@ -111,7 +116,12 @@ public final class RenditionMetadataGenerator {
     for (String obsoleteRenditionName : existingMetadataRenditionNames) {
       String nonexistingRenditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
           + "/" + obsoleteRenditionName;
-      renditionRemoved(asset, nonexistingRenditionPath);
+      try {
+        renditionRemoved(asset, nonexistingRenditionPath);
+      }
+      catch (PersistenceException ex) {
+        log.error(ex.getMessage(), ex);
+      }
     }
 
   }
@@ -120,8 +130,9 @@ public final class RenditionMetadataGenerator {
    * Create or update rendition metadata if rendition is created or updated.
    * @param asset Asset
    * @param renditionPath Rendition path
+   * @throws PersistenceException Persistence exception
    */
-  public void renditionAddedOrUpdated(Asset asset, String renditionPath) {
+  public void renditionAddedOrUpdated(Asset asset, String renditionPath) throws PersistenceException {
 
     // ensure rendition is an image rendition for which metadata can be generated
     String fileExtension = FilenameUtils.getExtension(renditionPath);
@@ -180,7 +191,7 @@ public final class RenditionMetadataGenerator {
       resourceResolver.commit();
     }
     catch (PersistenceException ex) {
-      log.error("Unable to create or update rendition metadata node for " + renditionPath, ex);
+      throw new PersistenceException("Unable to create or update rendition metadata node for " + renditionPath, ex);
     }
   }
 
@@ -206,8 +217,9 @@ public final class RenditionMetadataGenerator {
    * Remove rendition metadata node if rendition is removed.
    * @param asset Asset
    * @param renditionPath Rendition path
+   * @throws PersistenceException Persistence exception
    */
-  public void renditionRemoved(Asset asset, String renditionPath) {
+  public void renditionRemoved(Asset asset, String renditionPath) throws PersistenceException {
 
     // check if rendition still exist (or exists again) - in this case skip removing of renditions metadata
     Resource renditionResource = resourceResolver.getResource(renditionPath);
@@ -228,7 +240,7 @@ public final class RenditionMetadataGenerator {
       resourceResolver.commit();
     }
     catch (PersistenceException ex) {
-      log.error("Unable to delete rendition metadata node for " + renditionPath, ex);
+      throw new PersistenceException("Unable to delete rendition metadata node for " + renditionPath, ex);
     }
   }
 

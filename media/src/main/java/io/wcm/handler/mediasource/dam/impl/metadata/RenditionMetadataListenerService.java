@@ -29,6 +29,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -82,6 +83,9 @@ public final class RenditionMetadataListenerService implements EventHandler {
   }
 
   private static final int THREADPOOL_SIZE = 10;
+  private static final int REMOVE_EVENT_EXECUTION_DELAY_SECONDS = 10;
+  private static final int MAX_RETRY_COUNT = 3;
+  private static final int RETRY_DELAY_SECONDS = 5;
 
   private static final EnumSet<DamEvent.Type> SUPPORTED_EVENT_TYPES = EnumSet.of(DamEvent.Type.RENDITION_UPDATED, DamEvent.Type.RENDITION_REMOVED);
   private static final Logger log = LoggerFactory.getLogger(RenditionMetadataListenerService.class);
@@ -179,6 +183,8 @@ public final class RenditionMetadataListenerService implements EventHandler {
     private final String renditionPath;
     private final DamEvent.Type eventType;
 
+    private int retryCount;
+
     RenditionMetadataEvent(String assetPath, String renditionPath, Type eventType) {
       this.assetPath = assetPath;
       this.renditionPath = renditionPath;
@@ -190,7 +196,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
         // delay event handling in case of removed event for some time to avoid repository conflicts
         // e.g. when new packages with sample content are installed remove and udpate events
         // are quickly fired after another
-        return 10;
+        return REMOVE_EVENT_EXECUTION_DELAY_SECONDS;
       }
       else {
         return 0;
@@ -223,8 +229,20 @@ public final class RenditionMetadataListenerService implements EventHandler {
         }
 
       }
+      catch (PersistenceException ex) {
+        // in case of persistence exception retry execution some times later
+        this.retryCount++;
+        if (this.retryCount >= MAX_RETRY_COUNT) {
+          // retried too often - log as error
+          log.error("Failed after {} attempts: {}", this.retryCount, ex.getMessage(), ex);
+        }
+        else {
+          log.debug("Failed {} attempt(s), retry: {}", this.retryCount, ex.getMessage(), ex);
+          executorService.schedule(this, RETRY_DELAY_SECONDS, TimeUnit.SECONDS);
+        }
+      }
       catch (LoginException ex) {
-        log.warn("Missing service user mapping for 'io.wcm.handler.media' - "
+        log.error("Missing service user mapping for 'io.wcm.handler.media' - "
             + "see https://wcm.io/handler/media/configuration.html", ex);
       }
       finally {
@@ -238,8 +256,9 @@ public final class RenditionMetadataListenerService implements EventHandler {
     /**
      * Create or update rendition metadata if rendition is created or updated.
      * @param asset Asset
+     * @throws PersistenceException Persistence exception
      */
-    private void renditionAddedOrUpdated(Asset asset, ResourceResolver resolver) {
+    private void renditionAddedOrUpdated(Asset asset, ResourceResolver resolver) throws PersistenceException {
       log.trace("Process rendition added/updated event: {}", renditionPath);
       RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
       generator.renditionAddedOrUpdated(asset, renditionPath);
@@ -248,8 +267,9 @@ public final class RenditionMetadataListenerService implements EventHandler {
     /**
      * Remove rendition metadata node if rendition is removed.
      * @param asset Asset
+     * @throws PersistenceException Persistence exception
      */
-    private void renditionRemoved(Asset asset, ResourceResolver resolver) {
+    private void renditionRemoved(Asset asset, ResourceResolver resolver) throws PersistenceException {
       log.trace("Process rendition removed event: {}", renditionPath);
       RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
       generator.renditionRemoved(asset, renditionPath);
