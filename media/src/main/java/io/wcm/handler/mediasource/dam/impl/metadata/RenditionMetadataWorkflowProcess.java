@@ -80,37 +80,53 @@ public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
     }
 
     // process all assets
-    RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resourceResolver);
     for (String assetPath : assetPaths) {
-      process(assetPath, resourceResolver, generator);
+      process(assetPath, resourceResolver);
     }
   }
 
   /**
    * Process a single asset path.
-   * @param assetPath Asset path
-   * @param resourceResolver resource resolver
-   * @param generator Rendition metadata generator
+   * @param assetOrRenditionPath Path to asset or a rendition of it
+   * @param resourceResolver Resource resolver from workflow
    */
-  private void process(@NotNull String assetPath, @NotNull ResourceResolver resourceResolver,
-      @NotNull RenditionMetadataGenerator generator) {
-    Resource resource = resourceResolver.getResource(assetPath);
+  private void process(@NotNull String assetOrRenditionPath, @NotNull ResourceResolver resourceResolver) {
+    // make sure asset exists
+    Asset asset = getAsset(assetOrRenditionPath, resourceResolver);
+    if (asset == null) {
+      log.debug("Unable to read asset at {} with user {}", assetOrRenditionPath, resourceResolver.getUserID());
+      return;
+    }
+
+    // process event synchronized per asset path
+    Lock lock = assetSynchronizationService.getLock(asset.getPath());
+    lock.lock();
+
+    try {
+      // refresh resource resolver to reflect changes on metadata probably made by listener service
+      resourceResolver.refresh();
+
+      // process asset renditions
+      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resourceResolver);
+      generator.processAllRenditions(asset);
+    }
+    finally {
+      lock.unlock();
+    }
+  }
+
+  /**
+   * Get asset instance for given asset path.
+   * @param assetOrRenditionPath Path to asset or a rendition of it
+   * @return Asset or null if path is invalid
+   */
+  private Asset getAsset(String assetOrRenditionPath, ResourceResolver resolver) {
+    Resource resource = resolver.getResource(assetOrRenditionPath);
     if (resource != null) {
-      Asset asset = DamUtil.resolveToAsset(resource);
-      if (asset != null) {
-        // process workflow step synchronized per asset path
-        Lock lock = assetSynchronizationService.getLock(asset.getPath());
-        lock.lock();
-        try {
-          // refresh session as rendition metadata may already be created triggered by listener service
-          resourceResolver.refresh();
-          // process all renditions
-          generator.processAllRenditions(asset);
-        }
-        finally {
-          lock.unlock();
-        }
-      }
+      return DamUtil.resolveToAsset(resource);
+    }
+    else {
+      return null;
     }
   }
 

@@ -20,8 +20,8 @@
 package io.wcm.handler.mediasource.dam.impl.metadata;
 
 import java.util.EnumSet;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
@@ -81,6 +81,8 @@ public final class RenditionMetadataListenerService implements EventHandler {
 
   }
 
+  private static final int THREADPOOL_SIZE = 10;
+
   private static final EnumSet<DamEvent.Type> SUPPORTED_EVENT_TYPES = EnumSet.of(DamEvent.Type.RENDITION_UPDATED, DamEvent.Type.RENDITION_REMOVED);
   private static final Logger log = LoggerFactory.getLogger(RenditionMetadataListenerService.class);
 
@@ -94,7 +96,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
   @Reference
   private AssetSynchonizationService assetSynchronizationService;
 
-  private ExecutorService executorService;
+  private ScheduledExecutorService executorService;
 
   @Activate
   @SuppressWarnings("deprecation")
@@ -108,7 +110,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     }
     this.synchronousProcessing = config.synchronousProcessing();
     if (this.enabled && !this.synchronousProcessing) {
-      this.executorService = Executors.newCachedThreadPool(
+      this.executorService = Executors.newScheduledThreadPool(THREADPOOL_SIZE,
           new ThreadFactoryBuilder().setNameFormat(getClass().getSimpleName() + "-%d").build());
     }
   }
@@ -159,7 +161,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
       return;
     }
 
-    Runnable runnable = new RenditionMetadataEvent(event.getAssetPath(),
+    RenditionMetadataEvent runnable = new RenditionMetadataEvent(event.getAssetPath(),
         renditionPath, event.getType());
     if (synchronousProcessing) {
       // execute directly in synchronous mode (e.g. for unit tests)
@@ -167,7 +169,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     }
     else {
       // decouple event processing from listener to avoid timeouts
-      executorService.submit(runnable);
+      executorService.schedule(runnable, runnable.getDelaySeconds(), TimeUnit.SECONDS);
     }
   }
 
@@ -183,29 +185,41 @@ public final class RenditionMetadataListenerService implements EventHandler {
       this.eventType = eventType;
     }
 
+    private int getDelaySeconds() {
+      if (eventType == DamEvent.Type.RENDITION_REMOVED) {
+        // delay event handling in case of removed event for some time to avoid repository conflicts
+        // e.g. when new packages with sample content are installed remove and udpate events
+        // are quickly fired after another
+        return 10;
+      }
+      else {
+        return 0;
+      }
+    }
+
     @Override
     public void run() {
       // process event synchronized per asset path
       Lock lock = assetSynchronizationService.getLock(assetPath);
       lock.lock();
 
-      ResourceResolver adminResourceResolver = null;
+      ResourceResolver serviceResourceResolver = null;
       try {
-        // open admin session for reading/writing rendition metadata
-        adminResourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
+        // open service user session for reading/writing rendition metadata
+        serviceResourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
 
         // make sure asset exists
-        Asset asset = getAsset(adminResourceResolver);
+        Asset asset = getAsset(serviceResourceResolver);
         if (asset == null) {
-          log.debug("Unable to read DAM asset at {} with user {}", assetPath, adminResourceResolver.getUserID());
+          log.debug("Unable to read asset at {} with user {}", assetPath, serviceResourceResolver.getUserID());
           return;
         }
 
         if (eventType == DamEvent.Type.RENDITION_UPDATED) {
-          renditionAddedOrUpdated(asset, adminResourceResolver);
+          renditionAddedOrUpdated(asset, serviceResourceResolver);
         }
         else if (eventType == DamEvent.Type.RENDITION_REMOVED) {
-          renditionRemoved(asset, adminResourceResolver);
+          renditionRemoved(asset, serviceResourceResolver);
         }
 
       }
@@ -215,11 +229,10 @@ public final class RenditionMetadataListenerService implements EventHandler {
       }
       finally {
         lock.unlock();
-        if (adminResourceResolver != null) {
-          adminResourceResolver.close();
+        if (serviceResourceResolver != null) {
+          serviceResourceResolver.close();
         }
       }
-
     }
 
     /**
@@ -255,7 +268,6 @@ public final class RenditionMetadataListenerService implements EventHandler {
         return null;
       }
     }
-
 
   }
 
