@@ -24,11 +24,13 @@ import java.util.EnumSet;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.settings.SlingSettingsService;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -42,6 +44,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.adobe.granite.workflow.status.WorkflowStatus;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamEvent;
 
@@ -65,12 +68,19 @@ public final class DamRenditionMetadataService implements EventHandler {
     @AttributeDefinition(name = "Enabled", description = "Switch to enable or disable this service.")
     boolean enabled() default true;
 
+    @AttributeDefinition(name = "Skip in running workflow", description = "Skip processing events on rendition "
+        + "changes when asset is currently running in a workflow. "
+        + "You should enable this only when you added the 'wcm.io Media Handler: Rendition metadata' "
+        + "workflow process to all asset workflows that add or manipulate renditions.")
+    boolean skipInRunningWorkflow() default false;
+
   }
 
   private static final EnumSet<DamEvent.Type> SUPPORTED_EVENT_TYPES = EnumSet.of(DamEvent.Type.RENDITION_UPDATED, DamEvent.Type.RENDITION_REMOVED);
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
   private boolean enabled;
+  private boolean skipInRunningWorkflow;
 
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
@@ -88,6 +98,7 @@ public final class DamRenditionMetadataService implements EventHandler {
     else {
       this.enabled = false;
     }
+    this.skipInRunningWorkflow = config.skipInRunningWorkflow();
   }
 
   @Override
@@ -124,6 +135,12 @@ public final class DamRenditionMetadataService implements EventHandler {
       Asset asset = getAsset(event.getAssetPath(), adminResourceResolver);
       if (asset == null) {
         log.debug("Unable to read DAM asset at {} with user {}", event.getAssetPath(), adminResourceResolver.getUserID());
+        return;
+      }
+
+      // if enabled: skip further event processing if asset is currentl in workflow
+      if (skipInRunningWorkflow && (isInRunningWorkflow(asset) || isInRunningWorkflow(asset.getOriginal()))) {
+        log.debug("Skip further processing of asset that is in running workflow: {}", event.getAssetPath());
         return;
       }
 
@@ -181,6 +198,26 @@ public final class DamRenditionMetadataService implements EventHandler {
     else {
       return null;
     }
+  }
+
+  /**
+   * Checks if the given object is currently in a workflow.
+   * @param adaptable Object that can be adapted to a resource
+   * @return true if it is in workflow
+   */
+  private boolean isInRunningWorkflow(@Nullable Adaptable adaptable) {
+    if (adaptable == null) {
+      return false;
+    }
+    Resource resource = adaptable.adaptTo(Resource.class);
+    if (resource == null) {
+      return false;
+    }
+    WorkflowStatus workflowStatus = resource.adaptTo(WorkflowStatus.class);
+    if (workflowStatus == null) {
+      return false;
+    }
+    return workflowStatus.isInRunningWorkflow(true);
   }
 
 }
