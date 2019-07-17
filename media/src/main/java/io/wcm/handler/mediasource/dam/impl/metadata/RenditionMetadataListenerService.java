@@ -20,6 +20,9 @@
 package io.wcm.handler.mediasource.dam.impl.metadata;
 
 import java.util.EnumSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import org.apache.commons.io.FilenameUtils;
@@ -33,6 +36,7 @@ import org.apache.sling.settings.SlingSettingsService;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
@@ -45,6 +49,8 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamEvent;
+import com.day.cq.dam.api.DamEvent.Type;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;
@@ -69,12 +75,17 @@ public final class RenditionMetadataListenerService implements EventHandler {
     @AttributeDefinition(name = "Enabled", description = "Switch to enable or disable this service.")
     boolean enabled() default true;
 
+    @AttributeDefinition(name = "Synchronous processing", description = "Handle AEM asset events in a synchronous way. "
+        + "It is not recommended to enable this in production environments.")
+    boolean synchronousProcessing() default false;
+
   }
 
   private static final EnumSet<DamEvent.Type> SUPPORTED_EVENT_TYPES = EnumSet.of(DamEvent.Type.RENDITION_UPDATED, DamEvent.Type.RENDITION_REMOVED);
   private static final Logger log = LoggerFactory.getLogger(RenditionMetadataListenerService.class);
 
   private boolean enabled;
+  private boolean synchronousProcessing;
 
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
@@ -82,6 +93,8 @@ public final class RenditionMetadataListenerService implements EventHandler {
   private SlingSettingsService slingSettings;
   @Reference
   private AssetSynchonizationService assetSynchronizationService;
+
+  private ExecutorService executorService;
 
   @Activate
   @SuppressWarnings("deprecation")
@@ -92,6 +105,26 @@ public final class RenditionMetadataListenerService implements EventHandler {
     }
     else {
       this.enabled = false;
+    }
+    this.synchronousProcessing = config.synchronousProcessing();
+    if (this.enabled && !this.synchronousProcessing) {
+      this.executorService = Executors.newCachedThreadPool(
+          new ThreadFactoryBuilder().setNameFormat(getClass().getSimpleName() + "-%d").build());
+    }
+  }
+
+  @Deactivate
+  private void deactivate() {
+    this.enabled = false;
+    if (executorService != null) {
+      executorService.shutdown();
+      try {
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+      }
+      catch (InterruptedException ex) {
+        // ignore
+      }
+      executorService = null;
     }
   }
 
@@ -126,77 +159,104 @@ public final class RenditionMetadataListenerService implements EventHandler {
       return;
     }
 
-    // process event synchronized per asset path
-    Lock lock = assetSynchronizationService.getLock(event.getAssetPath());
-    lock.lock();
-
-    ResourceResolver adminResourceResolver = null;
-    try {
-      // open admin session for reading/writing rendition metadata
-      adminResourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
-
-      // make sure asset exists
-      Asset asset = getAsset(event.getAssetPath(), adminResourceResolver);
-      if (asset == null) {
-        log.debug("Unable to read DAM asset at {} with user {}", event.getAssetPath(), adminResourceResolver.getUserID());
-        return;
-      }
-
-      if (event.getType() == DamEvent.Type.RENDITION_UPDATED) {
-        renditionAddedOrUpdated(asset, renditionPath, adminResourceResolver);
-      }
-      else if (event.getType() == DamEvent.Type.RENDITION_REMOVED) {
-        renditionRemoved(asset, renditionPath, adminResourceResolver);
-      }
-
-    }
-    catch (LoginException ex) {
-      log.warn("Missing service user mapping for 'io.wcm.handler.media' - "
-          + "see https://wcm.io/handler/media/configuration.html", ex);
-    }
-    finally {
-      lock.unlock();
-      if (adminResourceResolver != null) {
-        adminResourceResolver.close();
-      }
-    }
-  }
-
-  /**
-   * Create or update rendition metadata if rendition is created or updated.
-   * @param asset Asset
-   * @param renditionPath Rendition path
-   */
-  private void renditionAddedOrUpdated(Asset asset, String renditionPath, ResourceResolver resolver) {
-    log.trace("Process rendition added/updated event: {}", renditionPath);
-    RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
-    generator.renditionAddedOrUpdated(asset, renditionPath);
-  }
-
-  /**
-   * Remove rendition metadata node if rendition is removed.
-   * @param asset Asset
-   * @param renditionPath Rendition path
-   */
-  private void renditionRemoved(Asset asset, String renditionPath, ResourceResolver resolver) {
-    log.trace("Process rendition removed event: {}", renditionPath);
-    RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
-    generator.renditionRemoved(asset, renditionPath);
-  }
-
-  /**
-   * Get asset instance for given asset path.
-   * @param assetPath Asset path
-   * @return Asset or null if path is invalid
-   */
-  private Asset getAsset(String assetPath, ResourceResolver resolver) {
-    Resource assetResource = resolver.getResource(assetPath);
-    if (assetResource != null) {
-      return assetResource.adaptTo(Asset.class);
+    Runnable runnable = new RenditionMetadataEvent(event.getAssetPath(),
+        renditionPath, event.getType());
+    if (synchronousProcessing) {
+      // execute directly in synchronous mode (e.g. for unit tests)
+      runnable.run();
     }
     else {
-      return null;
+      // decouple event processing from listener to avoid timeouts
+      executorService.submit(runnable);
     }
+  }
+
+  private final class RenditionMetadataEvent implements Runnable {
+
+    private final String assetPath;
+    private final String renditionPath;
+    private final DamEvent.Type eventType;
+
+    RenditionMetadataEvent(String assetPath, String renditionPath, Type eventType) {
+      this.assetPath = assetPath;
+      this.renditionPath = renditionPath;
+      this.eventType = eventType;
+    }
+
+    @Override
+    public void run() {
+      // process event synchronized per asset path
+      Lock lock = assetSynchronizationService.getLock(assetPath);
+      lock.lock();
+
+      ResourceResolver adminResourceResolver = null;
+      try {
+        // open admin session for reading/writing rendition metadata
+        adminResourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
+
+        // make sure asset exists
+        Asset asset = getAsset(adminResourceResolver);
+        if (asset == null) {
+          log.debug("Unable to read DAM asset at {} with user {}", assetPath, adminResourceResolver.getUserID());
+          return;
+        }
+
+        if (eventType == DamEvent.Type.RENDITION_UPDATED) {
+          renditionAddedOrUpdated(asset, adminResourceResolver);
+        }
+        else if (eventType == DamEvent.Type.RENDITION_REMOVED) {
+          renditionRemoved(asset, adminResourceResolver);
+        }
+
+      }
+      catch (LoginException ex) {
+        log.warn("Missing service user mapping for 'io.wcm.handler.media' - "
+            + "see https://wcm.io/handler/media/configuration.html", ex);
+      }
+      finally {
+        lock.unlock();
+        if (adminResourceResolver != null) {
+          adminResourceResolver.close();
+        }
+      }
+
+    }
+
+    /**
+     * Create or update rendition metadata if rendition is created or updated.
+     * @param asset Asset
+     */
+    private void renditionAddedOrUpdated(Asset asset, ResourceResolver resolver) {
+      log.trace("Process rendition added/updated event: {}", renditionPath);
+      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
+      generator.renditionAddedOrUpdated(asset, renditionPath);
+    }
+
+    /**
+     * Remove rendition metadata node if rendition is removed.
+     * @param asset Asset
+     */
+    private void renditionRemoved(Asset asset, ResourceResolver resolver) {
+      log.trace("Process rendition removed event: {}", renditionPath);
+      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
+      generator.renditionRemoved(asset, renditionPath);
+    }
+
+    /**
+     * Get asset instance for given asset path.
+     * @return Asset or null if path is invalid
+     */
+    private Asset getAsset(ResourceResolver resolver) {
+      Resource assetResource = resolver.getResource(assetPath);
+      if (assetResource != null) {
+        return assetResource.adaptTo(Asset.class);
+      }
+      else {
+        return null;
+      }
+    }
+
+
   }
 
 }

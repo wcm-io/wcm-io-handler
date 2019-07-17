@@ -37,8 +37,8 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
+import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextCallback;
@@ -67,7 +67,8 @@ class MediaHandlerImplAdobeStandardNamingTest {
     // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
     context.runMode(RunMode.AUTHOR);
     context.registerInjectActivateService(new AssetSynchonizationService());
-    context.registerInjectActivateService(new RenditionMetadataListenerService());
+    context.registerInjectActivateService(new RenditionMetadataListenerService(),
+        "synchronousProcessing", true);
 
     Asset asset = context.create().asset("/content/dam/test.jpg", 20, 20, ContentType.JPEG);
 

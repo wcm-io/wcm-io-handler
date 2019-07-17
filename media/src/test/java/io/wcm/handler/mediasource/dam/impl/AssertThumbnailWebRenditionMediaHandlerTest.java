@@ -34,8 +34,8 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
+import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -58,7 +58,8 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
     // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
     context.runMode(RunMode.AUTHOR);
     context.registerInjectActivateService(new AssetSynchonizationService());
-    context.registerInjectActivateService(new RenditionMetadataListenerService());
+    context.registerInjectActivateService(new RenditionMetadataListenerService(),
+        "synchronousProcessing", true);
 
     // prepare asset with web rendition
     // original uses a different ratio than the other renditions to test only with the other renditions

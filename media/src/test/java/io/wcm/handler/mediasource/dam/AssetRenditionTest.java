@@ -37,8 +37,8 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
+import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -58,7 +58,8 @@ class AssetRenditionTest {
     // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
     context.runMode(RunMode.AUTHOR);
     context.registerInjectActivateService(new AssetSynchonizationService());
-    context.registerInjectActivateService(new RenditionMetadataListenerService());
+    context.registerInjectActivateService(new RenditionMetadataListenerService(),
+        "synchronousProcessing", true);
 
     asset = context.create().asset("/content/dam/asset1.jpg", 16, 9, "image/jpeg");
     original = asset.getOriginal();

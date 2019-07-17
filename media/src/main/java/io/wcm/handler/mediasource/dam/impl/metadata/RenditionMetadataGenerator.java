@@ -223,8 +223,7 @@ public final class RenditionMetadataGenerator {
       return;
     }
     try {
-      String pathToRemove = metadataResource.getPath();
-      log.debug("Remove rendition metadata at {}.", pathToRemove);
+      log.debug("Remove rendition metadata at {}.", metadataResource.getPath());
       resourceResolver.delete(metadataResource);
       resourceResolver.commit();
     }
