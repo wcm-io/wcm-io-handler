@@ -25,6 +25,7 @@ import static com.day.cq.commons.jcr.JcrConstants.JCR_LASTMODIFIED;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_LAST_MODIFIED_BY;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
+import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
 import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_HEIGHT;
@@ -36,13 +37,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
-import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,7 @@ import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Generates metadata (widht/height) for renditions in DAM assets.
@@ -81,6 +84,10 @@ public final class RenditionMetadataGenerator {
 
     // get existing rendition names and paths
     for (Rendition rendition : asset.getRenditions()) {
+      // skip original rendition
+      if (StringUtils.equals(rendition.getName(), ORIGINAL_FILE)) {
+        continue;
+      }
       existingRenditionNames.add(rendition.getName());
       renditionPaths.add(rendition.getPath());
     }
@@ -115,6 +122,13 @@ public final class RenditionMetadataGenerator {
    * @param renditionPath Rendition path
    */
   public void renditionAddedOrUpdated(Asset asset, String renditionPath) {
+
+    // ensure rendition is an image rendition for which metadata can be generated
+    String fileExtension = FilenameUtils.getExtension(renditionPath);
+    if (!FileExtension.isImage(fileExtension)) {
+      log.debug("Skip non-image rendition {}", renditionPath);
+      return;
+    }
 
     // check for resource existence and try to get layer from image
     // (record duration of converting resource to layer for debugging)
@@ -152,7 +166,7 @@ public final class RenditionMetadataGenerator {
         metadataResource = ResourceUtil.getOrCreateResource(resourceResolver,
             metdataResourcePath,
             ImmutableMap.<String, Object>of(JCR_PRIMARYTYPE, NT_UNSTRUCTURED),
-            NT_UNSTRUCTURED, false);
+            null, false);
       }
       ModifiableValueMap props = AdaptTo.notNull(metadataResource, ModifiableValueMap.class);
       props.put(PN_IMAGE_WIDTH, dimension.getWidth());
@@ -171,12 +185,20 @@ public final class RenditionMetadataGenerator {
     }
   }
 
-  @SuppressWarnings("null")
   private Calendar getLastModified(@Nullable Resource resource) {
-    ValueMap props = ResourceUtil.getValueMap(resource);
-    Calendar lastModified = props.get(JCR_LASTMODIFIED, Calendar.class);
-    if (lastModified == null) {
-      lastModified = props.get(JCR_CREATED, Calendar.class);
+    Calendar lastModified = null;
+    if (resource != null) {
+      // if a rendition is updated it's last modified date is stored in the jcr:content child node
+      Resource contentResource = resource.getChild(JCR_CONTENT);
+      if (contentResource != null) {
+        lastModified = contentResource.getValueMap().get(JCR_LASTMODIFIED, Calendar.class);
+      }
+      if (lastModified == null) {
+        lastModified = resource.getValueMap().get(JCR_LASTMODIFIED, Calendar.class);
+      }
+      if (lastModified == null) {
+        lastModified = resource.getValueMap().get(JCR_CREATED, Calendar.class);
+      }
     }
     return lastModified;
   }
