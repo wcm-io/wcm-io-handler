@@ -76,13 +76,17 @@ public final class RenditionMetadataListenerService implements EventHandler {
     @AttributeDefinition(name = "Enabled", description = "Switch to enable or disable this service.")
     boolean enabled() default true;
 
-    @AttributeDefinition(name = "Synchronous processing", description = "Handle AEM asset events in a synchronous way. "
-        + "It is not recommended to enable this in production environments.")
-    boolean synchronousProcessing() default false;
+    @AttributeDefinition(name = "Allowed run mode(s)", description = "Run modes this service is allowed on. "
+        + "The service is disabled if the run mode does not match.")
+    String[] allowedRunMode() default RunMode.AUTHOR;
+
+    @AttributeDefinition(name = "Thread pool size", description = "Size of threads in pool that is used to process "
+        + "asset rendition events asynchronously. "
+        + "Setting it to 0 disables asynchronous processing completely (not recommended for production environments).")
+    int threadPoolSize() default 10;
 
   }
 
-  private static final int THREADPOOL_SIZE = 10;
   private static final int REMOVE_EVENT_EXECUTION_DELAY_SECONDS = 10;
   private static final int MAX_RETRY_COUNT = 3;
   private static final int RETRY_DELAY_SECONDS = 5;
@@ -106,15 +110,20 @@ public final class RenditionMetadataListenerService implements EventHandler {
   @SuppressWarnings("deprecation")
   private void activate(ComponentContext componentContext, Config config) {
     if (config.enabled()) {
-      // Activate only in author mode, and check enabled status in service configuration as well
-      this.enabled = !RunMode.disableIfNotAuthor(slingSettings.getRunModes(), componentContext, log);
+      if (config.allowedRunMode() != null && config.allowedRunMode().length > 0) {
+        // Activate only if configured run modes are met
+        this.enabled = !RunMode.disableIfNoRunModeActive(slingSettings.getRunModes(), config.allowedRunMode(), componentContext, log);
+      }
+      else {
+        this.enabled = true;
+      }
     }
     else {
       this.enabled = false;
     }
-    this.synchronousProcessing = config.synchronousProcessing();
+    this.synchronousProcessing = config.threadPoolSize() <= 0;
     if (this.enabled && !this.synchronousProcessing) {
-      this.executorService = Executors.newScheduledThreadPool(THREADPOOL_SIZE,
+      this.executorService = Executors.newScheduledThreadPool(config.threadPoolSize(),
           new ThreadFactoryBuilder().setNameFormat(getClass().getSimpleName() + "-%d").build());
     }
   }

@@ -45,7 +45,6 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
-import io.wcm.wcm.commons.util.RunMode;
 
 @ExtendWith(AemContextExtension.class)
 class AutoCroppingMediaHandlerTest {
@@ -58,11 +57,11 @@ class AutoCroppingMediaHandlerTest {
 
   @BeforeEach
   void setUp() {
-    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
-    context.runMode(RunMode.AUTHOR);
+    // register RenditionMetadataListenerService to generate rendition metadata
     context.registerInjectActivateService(new AssetSynchonizationService());
     context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0,
+        "allowedRunMode", new String[0]);
 
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 

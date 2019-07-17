@@ -44,7 +44,6 @@ import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextCallback;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
-import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Test {@link MediaHandlerImpl} methods with adobe standard naming.
@@ -64,11 +63,11 @@ class MediaHandlerImplAdobeStandardNamingTest {
   @Test
   void testMediaResolve() {
 
-    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
-    context.runMode(RunMode.AUTHOR);
+    // register RenditionMetadataListenerService to generate rendition metadata
     context.registerInjectActivateService(new AssetSynchonizationService());
     context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0,
+        "allowedRunMode", new String[0]);
 
     Asset asset = context.create().asset("/content/dam/test.jpg", 20, 20, ContentType.JPEG);
 

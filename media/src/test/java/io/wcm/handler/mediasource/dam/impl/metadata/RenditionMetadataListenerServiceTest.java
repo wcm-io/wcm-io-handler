@@ -73,7 +73,7 @@ class RenditionMetadataListenerServiceTest {
   @Test
   void testAddRendition_Metadata() {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
     addRendition("test.jpg");
     assertRenditionMetadata("test.jpg", 215, 102, true);
   }
@@ -82,7 +82,7 @@ class RenditionMetadataListenerServiceTest {
   @SuppressWarnings("null")
   void testAddRendition_Metadata_createMetadataNode() throws PersistenceException {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
 
     // remove all existing renditions metadata incl. renditionsMetadata node
     Resource metadata = context.resourceResolver().getResource(RENDITIONS_METADATA_PATH);
@@ -97,7 +97,7 @@ class RenditionMetadataListenerServiceTest {
   void testAddRendition_PublishInstance_NoMetadata() {
     context.runMode(RunMode.PUBLISH);
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
     addRendition("test.jpg");
     assertNoRenditionMetadata("test.jpg");
   }
@@ -113,7 +113,7 @@ class RenditionMetadataListenerServiceTest {
   @Test
   void testUpdateRendition() throws PersistenceException {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
 
     // check existing metadata
     assertRenditionMetadata("cq5dam.web.450.213.jpg", 450, 213, false);
@@ -128,7 +128,7 @@ class RenditionMetadataListenerServiceTest {
   @Test
   void testUpdateRendition_LastModified() throws PersistenceException, InterruptedException {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
 
     // check existing metadata
     assertNull(getRenditionMetadataLastModified("cq5dam.web.450.213.jpg"));
@@ -159,7 +159,7 @@ class RenditionMetadataListenerServiceTest {
   @Test
   void testUpdateRendition_Video_NoMetadata() {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
 
     // simulate rendition update on video rendition
     String assetPath = MediaSourceDamAppAemContext.DAM_PATH + "/movie.wmf";
@@ -175,7 +175,7 @@ class RenditionMetadataListenerServiceTest {
   @Test
   void testRemoveRendition() throws PersistenceException {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
 
     // check existing metadata
     assertRenditionMetadata("cq5dam.web.450.213.jpg", 450, 213, false);
@@ -190,7 +190,7 @@ class RenditionMetadataListenerServiceTest {
   @Test
   void testRemoveRendition_RenditionNotRemoved() {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
-        "synchronousProcessing", true);
+        "threadPoolSize", 0);
 
     // check existing metadata
     assertRenditionMetadata("cq5dam.web.450.213.jpg", 450, 213, false);
