@@ -50,10 +50,10 @@ final class WorkflowTestUtil {
    */
   public static Resource createPackage(AemContext context, String path, String... filterPaths) {
     Resource page = context.create().resource(path,
-        JCR_PRIMARYTYPE, NT_PAGE,
-        PROPERTY_RESOURCE_TYPE, RT_WORKFLOW_PACKAGE);
+        JCR_PRIMARYTYPE, NT_PAGE);
     Resource pageContent = context.create().resource(page, JCR_CONTENT,
-        JCR_PRIMARYTYPE, "cq:PageContent");
+        JCR_PRIMARYTYPE, "cq:PageContent",
+        PROPERTY_RESOURCE_TYPE, RT_WORKFLOW_PACKAGE);
     Resource vltDef = context.create().resource(pageContent, NN_VLT_DEFINITION,
         JCR_PRIMARYTYPE, NT_VLT_PACKAGE_DEFINITION);
     for (int i = 0; i < filterPaths.length; i++) {

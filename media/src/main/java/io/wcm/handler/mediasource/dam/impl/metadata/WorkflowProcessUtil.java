@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam.impl.metadata;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +118,7 @@ final class WorkflowProcessUtil {
 
   private static boolean isWorkflowPackagePage(Node node, ResourceResolver resourceResolver) throws RepositoryException {
     if (node.isNodeType(NameConstants.NT_PAGE)) {
-      Resource resource = resourceResolver.getResource(node.getPath());
+      Resource resource = resourceResolver.getResource(node.getPath() + "/" + JCR_CONTENT);
       if (resource != null) {
         return resource.isResourceType(RT_WORKFLOW_PACKAGE);
       }
