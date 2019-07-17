@@ -78,12 +78,16 @@ public final class DamRenditionMetadataService implements EventHandler {
   @Reference
   private SlingSettingsService slingSettings;
 
-  @SuppressWarnings("deprecation")
   @Activate
+  @SuppressWarnings("deprecation")
   private void activate(ComponentContext componentContext, Config config) {
-    // Activate only in author mode, and check enabled status in service configuration as well
-    enabled = !RunMode.disableIfNotAuthor(slingSettings.getRunModes(), componentContext, log)
-        && config.enabled();
+    if (config.enabled()) {
+      // Activate only in author mode, and check enabled status in service configuration as well
+      this.enabled = !RunMode.disableIfNotAuthor(slingSettings.getRunModes(), componentContext, log);
+    }
+    else {
+      this.enabled = false;
+    }
   }
 
   @Override
@@ -148,6 +152,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param renditionPath Rendition path
    */
   private void renditionAddedOrUpdated(Asset asset, String renditionPath, ResourceResolver resolver) {
+    log.trace("Process rendition added/updated event: {}", renditionPath);
     RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
     generator.renditionAddedOrUpdated(asset, renditionPath);
   }
@@ -158,6 +163,7 @@ public final class DamRenditionMetadataService implements EventHandler {
    * @param renditionPath Rendition path
    */
   private void renditionRemoved(Asset asset, String renditionPath, ResourceResolver resolver) {
+    log.trace("Process rendition removed event: {}", renditionPath);
     RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
     generator.renditionRemoved(asset, renditionPath);
   }

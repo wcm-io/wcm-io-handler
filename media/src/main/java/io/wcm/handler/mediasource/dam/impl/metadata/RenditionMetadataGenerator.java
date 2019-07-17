@@ -162,23 +162,22 @@ public final class RenditionMetadataGenerator {
 
     // write metadata
     try {
+      log.debug("Update rendition metadata at {} (width={}, height={}); duration={}ms.",
+          metdataResourcePath, dimension.getWidth(), dimension.getHeight(), conversionDuration);
+
       if (metadataResource == null) {
         metadataResource = ResourceUtil.getOrCreateResource(resourceResolver,
             metdataResourcePath,
             ImmutableMap.<String, Object>of(JCR_PRIMARYTYPE, NT_UNSTRUCTURED),
             null, false);
       }
+
       ModifiableValueMap props = AdaptTo.notNull(metadataResource, ModifiableValueMap.class);
       props.put(PN_IMAGE_WIDTH, dimension.getWidth());
       props.put(PN_IMAGE_HEIGHT, dimension.getHeight());
       props.put(JCR_LASTMODIFIED, Calendar.getInstance());
       props.put(JCR_LAST_MODIFIED_BY, resourceResolver.getUserID());
       resourceResolver.commit();
-      log.debug("Updated rendition metadata at {} (width={}, height={}); duration={}ms.",
-          metadataResource.getPath(),
-          dimension.getWidth(),
-          dimension.getHeight(),
-          conversionDuration);
     }
     catch (PersistenceException ex) {
       log.error("Unable to create or update rendition metadata node for " + renditionPath, ex);
@@ -225,9 +224,9 @@ public final class RenditionMetadataGenerator {
     }
     try {
       String pathToRemove = metadataResource.getPath();
+      log.debug("Remove rendition metadata at {}.", pathToRemove);
       resourceResolver.delete(metadataResource);
       resourceResolver.commit();
-      log.debug("Removed rendition metadata at {}.", pathToRemove);
     }
     catch (PersistenceException ex) {
       log.error("Unable to delete rendition metadata node for " + renditionPath, ex);
