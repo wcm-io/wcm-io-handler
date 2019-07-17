@@ -77,6 +77,7 @@ public class RenditionMetadataWorkflowProcessTest {
     when(workflowData.getPayloadType()).thenReturn(PayloadMap.TYPE_JCR_PATH);
     when(workflowSession.adaptTo(ResourceResolver.class)).thenReturn(context.resourceResolver());
 
+    context.registerInjectActivateService(new AssetSynchonizationService());
     underTest = context.registerInjectActivateService(new RenditionMetadataWorkflowProcess());
   }
 

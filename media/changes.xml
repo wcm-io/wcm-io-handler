@@ -33,6 +33,9 @@
       <action type="update" dev="sseifert">
         Rendition metadata generation: Do not remove metadata for existing renditions (e.g. if listener events are processed with delays).
       </action>
+      <action type="update" dev="sseifert">
+        Rendition metadata generation: Synchronize writing asset metadata per asset path to avoid threading conflicts.
+      </action>
     </release>
 
     <release version="1.5.2" date="2019-06-06">

@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl.metadata;
 import static com.day.cq.dam.api.DamConstants.NT_DAM_ASSET;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -56,6 +57,8 @@ public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
 
   @Reference
   private ResourceCollectionManager resourceCollectionManager;
+  @Reference
+  private AssetSynchonizationService assetSynchronizationService;
 
   @Override
   public void execute(WorkItem item, WorkflowSession workflowSession, MetaDataMap args) {
@@ -95,7 +98,18 @@ public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
     if (resource != null) {
       Asset asset = DamUtil.resolveToAsset(resource);
       if (asset != null) {
-        generator.processAllRenditions(asset);
+        // process workflow step synchronized per asset path
+        Lock lock = assetSynchronizationService.getLock(asset.getPath());
+        lock.lock();
+        try {
+          // refresh session as rendition metadata may already be created triggered by listener service
+          resourceResolver.refresh();
+          // process all renditions
+          generator.processAllRenditions(asset);
+        }
+        finally {
+          lock.unlock();
+        }
       }
     }
   }

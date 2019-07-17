@@ -17,9 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
+package io.wcm.handler.mediasource.dam.impl.metadata;
 
 import java.util.EnumSet;
+import java.util.concurrent.locks.Lock;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,20 +46,23 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamEvent;
 
-import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataGenerator;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Background service that extracts additional metadata like width and height for DAM renditions.
  */
-@Component(service = EventHandler.class, immediate = true, property = {
-    EventConstants.EVENT_TOPIC + "=" + DamEvent.EVENT_TOPIC
-})
-@Designate(ocd = DamRenditionMetadataService.Config.class)
-public final class DamRenditionMetadataService implements EventHandler {
+@Component(service = EventHandler.class, immediate = true,
+    // define explicit PID which was the old location of the implementation class
+    configurationPid = "io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService",
+    property = {
+        EventConstants.EVENT_TOPIC + "=" + DamEvent.EVENT_TOPIC
+    })
+@Designate(ocd = RenditionMetadataListenerService.Config.class)
+public final class RenditionMetadataListenerService implements EventHandler {
 
-  @ObjectClassDefinition(name = "wcm.io Media Handler Rendition Metadata Service",
+  @ObjectClassDefinition(
+      name = "wcm.io Media Handler Rendition Metadata Service",
       description = "Extracts additional metadata like width and height for AEM asset renditions.")
   static @interface Config {
 
@@ -68,15 +72,16 @@ public final class DamRenditionMetadataService implements EventHandler {
   }
 
   private static final EnumSet<DamEvent.Type> SUPPORTED_EVENT_TYPES = EnumSet.of(DamEvent.Type.RENDITION_UPDATED, DamEvent.Type.RENDITION_REMOVED);
+  private static final Logger log = LoggerFactory.getLogger(RenditionMetadataListenerService.class);
 
-  private final Logger log = LoggerFactory.getLogger(this.getClass());
   private boolean enabled;
 
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
-
   @Reference
   private SlingSettingsService slingSettings;
+  @Reference
+  private AssetSynchonizationService assetSynchronizationService;
 
   @Activate
   @SuppressWarnings("deprecation")
@@ -107,6 +112,12 @@ public final class DamRenditionMetadataService implements EventHandler {
    */
   private void handleDamEvent(DamEvent event) {
 
+    // process only rendition-related events
+    if (event.getType() != DamEvent.Type.RENDITION_UPDATED
+        && event.getType() != DamEvent.Type.RENDITION_REMOVED) {
+      return;
+    }
+
     // make sure rendition file extension is an image extensions
     String renditionPath = event.getAdditionalInfo();
     String renditionNodeName = Text.getName(renditionPath);
@@ -115,9 +126,13 @@ public final class DamRenditionMetadataService implements EventHandler {
       return;
     }
 
-    // open admin session for reading/writing rendition metadata
+    // process event synchronized per asset path
+    Lock lock = assetSynchronizationService.getLock(event.getAssetPath());
+    lock.lock();
+
     ResourceResolver adminResourceResolver = null;
     try {
+      // open admin session for reading/writing rendition metadata
       adminResourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
 
       // make sure asset exists
@@ -140,6 +155,7 @@ public final class DamRenditionMetadataService implements EventHandler {
           + "see https://wcm.io/handler/media/configuration.html", ex);
     }
     finally {
+      lock.unlock();
       if (adminResourceResolver != null) {
         adminResourceResolver.close();
       }
