@@ -58,8 +58,8 @@ import io.wcm.wcm.commons.util.RunMode;
 @Designate(ocd = DamRenditionMetadataService.Config.class)
 public final class DamRenditionMetadataService implements EventHandler {
 
-  @ObjectClassDefinition(name = "wcm.io DAM Rendition Metadata Service",
-      description = "Extracts additional metadata like width and height for DAM renditions")
+  @ObjectClassDefinition(name = "wcm.io Media Handler Rendition Metadata Service",
+      description = "Extracts additional metadata like width and height for AEM asset renditions.")
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled", description = "Switch to enable or disable this service.")
