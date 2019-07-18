@@ -78,10 +78,11 @@ class InternalCrossScopeLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -96,16 +97,35 @@ class InternalCrossScopeLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
     assertTrue(link.isValid(), "link valid");
     assertEquals("http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html",
         link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
+  }
+
+  @Test
+  void testTargetPage_Deprecated() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+
+    SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        ImmutableValueMap.builder()
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .build());
+
+    Link link = linkHandler.get(linkResource).build();
+
+    assertTrue(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
   }
 

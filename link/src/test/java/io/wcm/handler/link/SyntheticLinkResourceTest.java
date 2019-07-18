@@ -43,7 +43,7 @@ class SyntheticLinkResourceTest {
 
   @Test
   void testSimpleConstructor() {
-    Resource underTest = new SyntheticLinkResource(resourceResolver);
+    Resource underTest = new SyntheticLinkResource(resourceResolver, "/content/dummy-path");
     ValueMap props = underTest.getValueMap();
     assertTrue(props.isEmpty());
   }
@@ -51,13 +51,38 @@ class SyntheticLinkResourceTest {
   @Test
   void testWithMap() {
     ValueMap givenProps = ImmutableValueMap.of("prop1", "value1");
-    Resource underTest = new SyntheticLinkResource(resourceResolver, givenProps);
+    Resource underTest = new SyntheticLinkResource(resourceResolver, "/content/dummy-path", givenProps);
     ValueMap props = underTest.getValueMap();
     assertEquals(givenProps, ImmutableValueMap.copyOf(props));
   }
 
   @Test
   void testAdaptTo() {
+    Resource underTest = new SyntheticLinkResource(resourceResolver, "/content/dummy-path");
+    Page page = underTest.adaptTo(Page.class);
+    assertNull(page);
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testSimpleConstructor_Deprecated() {
+    Resource underTest = new SyntheticLinkResource(resourceResolver);
+    ValueMap props = underTest.getValueMap();
+    assertTrue(props.isEmpty());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testWithMap_Deprecated() {
+    ValueMap givenProps = ImmutableValueMap.of("prop1", "value1");
+    Resource underTest = new SyntheticLinkResource(resourceResolver, givenProps);
+    ValueMap props = underTest.getValueMap();
+    assertEquals(givenProps, ImmutableValueMap.copyOf(props));
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testAdaptTo_Deprecated() {
     Resource underTest = new SyntheticLinkResource(resourceResolver);
     Page page = underTest.adaptTo(Page.class);
     assertNull(page);

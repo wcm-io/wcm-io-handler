@@ -62,6 +62,7 @@ class LinkHandlerImplTest {
   static final String APP_ID = "linkHandlerImplTestApp";
 
   final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
+
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(LinkHandlerConfig.class, new TestLinkHandlerConfig(),
@@ -82,10 +83,11 @@ class LinkHandlerImplTest {
 
     // test pipelining and resolve link
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, "dummy")
-        .put("dummyLinkRef", "/path1")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, "dummy")
+            .put("dummyLinkRef", "/path1")
+            .build());
     LinkRequest linkRequest = new LinkRequest(linkResource, null, new LinkArgs().urlMode(UrlModes.DEFAULT));
     Link link = linkHandler.get(linkRequest).build();
 
@@ -130,6 +132,7 @@ class LinkHandlerImplTest {
       SlingHttpServletRequest.class, Resource.class
   })
   public static class TestLinkPreProcessor implements LinkProcessor {
+
     @Override
     public Link process(Link link) {
       LinkRequest linkRequest = link.getLinkRequest();
@@ -140,8 +143,7 @@ class LinkHandlerImplTest {
       LinkRequest newLinkRequest = new LinkRequest(
           linkRequest.getResource(),
           linkRequest.getPage(),
-          new LinkArgs().urlMode(UrlModes.FULL_URL)
-          );
+          new LinkArgs().urlMode(UrlModes.FULL_URL));
       newLinkRequest.getResourceProperties().put("dummyLinkRef", contentRef);
       link.setLinkRequest(newLinkRequest);
       return link;
@@ -181,6 +183,7 @@ class LinkHandlerImplTest {
       SlingHttpServletRequest.class, Resource.class
   })
   public static class TestLinkPostProcessor implements LinkProcessor {
+
     @Override
     public Link process(Link link) {
       String linkUrl = StringUtils.defaultString(link.getUrl()) + "/post1";
