@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,21 +114,22 @@ class InternalCrossScopeLinkTypeTest {
   }
 
   @Test
-  void testTargetPage_Deprecated() {
-    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+  void testGetSyntheticLinkResource() {
+    Resource resource = InternalCrossScopeLinkType.getSyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
+        "/page/ref");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID,
+        LinkNameConstants.PN_LINK_CONTENT_REF, "/page/ref");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
+  }
 
-    SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
-        ImmutableValueMap.builder()
-            .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID)
-            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-            .build());
-
-    Link link = linkHandler.get(linkResource).build();
-
-    assertTrue(link.isValid(), "link valid");
-    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
-    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
-    assertNotNull(link.getAnchor(), "anchor");
+  @Test
+  void testGetSyntheticLinkResource_Deprecated() {
+    Resource resource = InternalCrossScopeLinkType.getSyntheticLinkResource(context.resourceResolver(),
+        "/page/ref");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalCrossScopeLinkType.ID,
+        LinkNameConstants.PN_LINK_CONTENT_REF, "/page/ref");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
   }
 
 }
