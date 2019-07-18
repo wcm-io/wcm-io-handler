@@ -43,19 +43,48 @@ public final class SyntheticLinkResource extends SyntheticResource {
   /**
    * Instantiate resource with static path/resource type
    * @param resourceResolver Resource resolver
+   * @param path Resource path. Can be a non-existing path, but the path should be located somewhere within the
+   *          applications content paths to make sure the handler configuration looked up via context-aware services
+   *          is the expected one.
    */
+  public SyntheticLinkResource(@NotNull ResourceResolver resourceResolver,
+      @NotNull String path) {
+    this(resourceResolver, path, new HashMap<String, Object>());
+  }
+
+  /**
+   * Instantiate resource with static path/resource type
+   * @param resourceResolver Resource resolver
+   * @param path Resource path. Can be a non-existing path, but the path should be located somewhere within the
+   *          applications content paths to make sure the handler configuration looked up via context-aware services
+   *          is the expected one.
+   * @param properties Properties for resource
+   */
+  public SyntheticLinkResource(@NotNull ResourceResolver resourceResolver,
+      @NotNull String path, @NotNull Map<String, Object> properties) {
+    super(resourceResolver, path, PATH);
+    this.properties = new ValueMapDecorator(properties);
+  }
+
+  /**
+   * Instantiate resource with static path/resource type
+   * @param resourceResolver Resource resolver
+   * @deprecated Please use {@link #SyntheticLinkResource(ResourceResolver, String)}
+   */
+  @Deprecated
   public SyntheticLinkResource(@NotNull ResourceResolver resourceResolver) {
-    this(resourceResolver, new HashMap<String, Object>());
+    this(resourceResolver, PATH);
   }
 
   /**
    * Instantiate resource with static path/resource type
    * @param resourceResolver Resource resolver
    * @param properties Properties for resource
+   * @deprecated Please use {@link #SyntheticLinkResource(ResourceResolver, String, Map)}
    */
+  @Deprecated
   public SyntheticLinkResource(@NotNull ResourceResolver resourceResolver, @NotNull Map<String, Object> properties) {
-    super(resourceResolver, PATH, PATH);
-    this.properties = new ValueMapDecorator(properties);
+    this(resourceResolver, PATH, properties);
   }
 
   @Override

@@ -71,10 +71,12 @@ class InternalLinkResolverTest {
   void testTargetPage_RewritePathToContext() {
     InternalLinkResolver resolver = AdaptTo.notNull(context.request(), InternalLinkResolver.class);
 
-    SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
-        .build());
+    SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
+        ImmutableValueMap.builder()
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+            .build());
 
     LinkRequest linkRequest = new LinkRequest(linkResource, null, null);
     Link link = new Link(new InternalLinkType(), linkRequest);
@@ -91,10 +93,12 @@ class InternalLinkResolverTest {
   void testTargetPageOtherSite_NoRewritePathToContext() {
     InternalLinkResolver resolver = AdaptTo.notNull(context.request(), InternalLinkResolver.class);
 
-    SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
-        .build());
+    SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
+        ImmutableValueMap.builder()
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+            .build());
 
     LinkRequest linkRequest = new LinkRequest(linkResource, null, null);
     Link link = new Link(new InternalLinkType(), linkRequest);

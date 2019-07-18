@@ -84,9 +84,10 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -103,9 +104,10 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
             .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .build());
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -120,10 +122,11 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/content/path")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/content/path")
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -144,10 +147,11 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/content/path")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/content/path")
+            .build());
 
     Link link = linkHandler.get(linkResource).dummyLink(true).build();
 
@@ -163,10 +167,11 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -210,9 +215,9 @@ class InternalLinkTypeTest {
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .build());
 
     Link link = linkHandler.get(redirectInternalPage).build();
 
@@ -232,9 +237,9 @@ class InternalLinkTypeTest {
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .build());
 
     Link link = linkHandler.get(redirectInternalPage).build();
 
@@ -249,15 +254,15 @@ class InternalLinkTypeTest {
 
     Page redirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectInternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .build());
 
     Page redirectRedirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectRedirectInternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalPage.getPath())
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalPage.getPath())
+            .build());
 
     Link link = linkHandler.get(redirectRedirectInternalPage).build();
 
@@ -272,9 +277,9 @@ class InternalLinkTypeTest {
 
     Page redirectExternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectExternal",
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/abc")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/abc")
+            .build());
 
     Link link = linkHandler.get(redirectExternalPage).build();
 
@@ -292,14 +297,14 @@ class InternalLinkTypeTest {
 
     Page redirectInternalCyclic1Page = context.create().page(redirectInternalCyclic1Path,
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalCyclic2Path)
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalCyclic2Path)
+            .build());
     Page redirectInternalCyclic2Page = context.create().page(redirectInternalCyclic2Path,
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalCyclic1Path)
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, redirectInternalCyclic1Path)
+            .build());
 
     Link link = linkHandler.get(redirectInternalCyclic1Page).build();
 
@@ -320,11 +325,11 @@ class InternalLinkTypeTest {
 
     Page integratorPage = context.create().page("/content/unittest/de_test/brand/de/section/integrator",
         DummyAppTemplate.INTEGRATOR.getTemplatePath(), ImmutableValueMap.builder()
-        .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.SIMPLE.getId())
-        .put(IntegratorNameConstants.PN_INTEGRATOR_PROTOCOL, IntegratorProtocol.HTTP.name())
-        .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/app")
-        .build());
+            .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.SIMPLE.getId())
+            .put(IntegratorNameConstants.PN_INTEGRATOR_PROTOCOL, IntegratorProtocol.HTTP.name())
+            .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/app")
+            .build());
 
     Link link = linkHandler.get(integratorPage).build();
 
@@ -344,11 +349,11 @@ class InternalLinkTypeTest {
 
     Page integratorPage = context.create().page("/content/unittest/de_test/brand/de/section/integrator",
         DummyAppTemplate.INTEGRATOR.getTemplatePath(), ImmutableValueMap.builder()
-        .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.SIMPLE.getId())
-        .put(IntegratorNameConstants.PN_INTEGRATOR_PROTOCOL, IntegratorProtocol.HTTP.name())
-        .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/app")
-        .build());
+            .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.SIMPLE.getId())
+            .put(IntegratorNameConstants.PN_INTEGRATOR_PROTOCOL, IntegratorProtocol.HTTP.name())
+            .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/app")
+            .build());
 
     Link link = linkHandler.get(integratorPage).build();
 
@@ -362,10 +367,11 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -403,11 +409,12 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -422,11 +429,12 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -441,12 +449,13 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
-        .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
+            .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -461,10 +470,11 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .build());
 
     Link link = linkHandler.get(linkResource).queryString("p5=abc&p6=xyz").fragment("anchor2").build();
 
@@ -479,12 +489,13 @@ class InternalLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
-        .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-        .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
-        .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
-        .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
-        .build());
+            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
+            .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .put(LinkNameConstants.PN_LINK_QUERY_PARAM, "p1=abc&p2=def")
+            .put(LinkNameConstants.PN_LINK_FRAGMENT, "anchor1")
+            .build());
 
     Link link = linkHandler.get(linkResource).queryString("p5=abc&p6=xyz").fragment("anchor2").build();
 
@@ -496,7 +507,19 @@ class InternalLinkTypeTest {
 
   @Test
   void testGetSyntheticLinkResource() {
-    Resource resource = InternalLinkType.getSyntheticLinkResource(context.resourceResolver(), "/page/ref");
+    Resource resource = InternalLinkType.getSyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
+        "/page/ref");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
+        LinkNameConstants.PN_LINK_CONTENT_REF, "/page/ref");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetSyntheticLinkResource_Deprecated() {
+    Resource resource = InternalLinkType.getSyntheticLinkResource(context.resourceResolver(),
+        "/page/ref");
     ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
         LinkNameConstants.PN_LINK_CONTENT_REF, "/page/ref");
     assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
