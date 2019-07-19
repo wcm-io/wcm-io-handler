@@ -21,3 +21,5 @@ This configuration is required **only on author instances**.
 There is also a workflow process implementation named "wcm.io Media Handler: Rendition metadata" that can be applied to any existing asset to generate the metadata (width/height information) for all assets that were present in the system before the background service was deployed. Create a custom workflow, add a "Process Step" and assign this process with "Handler Advance" flag.
 
 However, this workflow process should not be part of the main "DAM Update Asset" workflow, as this would trigger the metadata generation twice for new assets.
+
+See this [How-to article][https://wcm-io.atlassian.net/wiki/x/AQDrRw] for details.
