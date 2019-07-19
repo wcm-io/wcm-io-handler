@@ -49,7 +49,7 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 @Component(
     service = WorkflowProcess.class,
     property = {
-        "process.label=wcm.io Media Handler: Rendition metadata"
+        "process.label=wcm.io Media Handler: Rendition Metadata"
     })
 public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
 

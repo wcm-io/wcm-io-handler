@@ -82,6 +82,10 @@ public final class RenditionMetadataGenerator {
     Set<String> existingRenditionNames = new HashSet<>();
     List<String> renditionPaths = new ArrayList<>();
 
+    int addUpdateCount = 0;
+    int removeCount = 0;
+    int errorCount = 0;
+
     // get existing rendition names and paths
     for (Rendition rendition : asset.getRenditions()) {
       // skip original rendition
@@ -104,10 +108,13 @@ public final class RenditionMetadataGenerator {
     // generate metadata for all existing renditions
     for (String renditionPath : renditionPaths) {
       try {
-        renditionAddedOrUpdated(asset, renditionPath);
+        if (renditionAddedOrUpdated(asset, renditionPath)) {
+          addUpdateCount++;
+        }
       }
       catch (PersistenceException ex) {
         log.error(ex.getMessage(), ex);
+        errorCount++;
       }
     }
 
@@ -117,13 +124,18 @@ public final class RenditionMetadataGenerator {
       String nonexistingRenditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
           + "/" + obsoleteRenditionName;
       try {
-        renditionRemoved(asset, nonexistingRenditionPath);
+        if (renditionRemoved(asset, nonexistingRenditionPath)) {
+          removeCount++;
+        }
       }
       catch (PersistenceException ex) {
         log.error(ex.getMessage(), ex);
+        errorCount++;
       }
     }
 
+    log.info("Processed rendition metadata for {}, {} added/updated, {} removed, {} error(s)",
+        asset.getPath(), addUpdateCount, removeCount, errorCount);
   }
 
   /**
@@ -131,14 +143,15 @@ public final class RenditionMetadataGenerator {
    * @param asset Asset
    * @param renditionPath Rendition path
    * @throws PersistenceException Persistence exception
+   * @return true if rendition data was added or updated
    */
-  public void renditionAddedOrUpdated(Asset asset, String renditionPath) throws PersistenceException {
+  public boolean renditionAddedOrUpdated(Asset asset, String renditionPath) throws PersistenceException {
 
     // ensure rendition is an image rendition for which metadata can be generated
     String fileExtension = FilenameUtils.getExtension(renditionPath);
     if (!FileExtension.isImage(fileExtension)) {
       log.debug("Skip non-image rendition {}", renditionPath);
-      return;
+      return false;
     }
 
     // check for resource existence and try to get layer from image
@@ -146,7 +159,7 @@ public final class RenditionMetadataGenerator {
     Resource renditionResource = resourceResolver.getResource(renditionPath);
     if (renditionResource == null) {
       log.debug("Skip generation of metadata for non-existing rendition {}", renditionPath);
-      return;
+      return false;
     }
 
     // Compare timestamps of rendition and rendition metadata
@@ -159,7 +172,7 @@ public final class RenditionMetadataGenerator {
         || renditionsMetadataTimestamp.before(renditionTimestamp);
     if (!metadataOutdated) {
       log.debug("Skip re-generation of metadata for unchanged rendition {}", renditionPath);
-      return;
+      return false;
     }
 
     // calculate rendition dimension
@@ -168,7 +181,7 @@ public final class RenditionMetadataGenerator {
     long conversionDuration = System.currentTimeMillis() - startTime;
     if (dimension == null) {
       log.debug("Unable to calculate dimension of rendition {}", renditionPath);
-      return;
+      return false;
     }
 
     // write metadata
@@ -189,6 +202,7 @@ public final class RenditionMetadataGenerator {
       props.put(JCR_LASTMODIFIED, Calendar.getInstance());
       props.put(JCR_LAST_MODIFIED_BY, resourceResolver.getUserID());
       resourceResolver.commit();
+      return true;
     }
     catch (PersistenceException ex) {
       throw new PersistenceException("Unable to create or update rendition metadata node for " + renditionPath, ex);
@@ -218,26 +232,28 @@ public final class RenditionMetadataGenerator {
    * @param asset Asset
    * @param renditionPath Rendition path
    * @throws PersistenceException Persistence exception
+   * @return true if rendition data was removed
    */
-  public void renditionRemoved(Asset asset, String renditionPath) throws PersistenceException {
+  public boolean renditionRemoved(Asset asset, String renditionPath) throws PersistenceException {
 
     // check if rendition still exist (or exists again) - in this case skip removing of renditions metadata
     Resource renditionResource = resourceResolver.getResource(renditionPath);
     if (renditionResource != null) {
       log.debug("Skip removing of metadata for existing rendition {}", renditionPath);
-      return;
+      return false;
     }
 
     // remove rendition metadata for non-existing rendition
     String metdataResourcePath = getRenditionMetadataResourcePath(asset, renditionPath);
     Resource metadataResource = resourceResolver.getResource(metdataResourcePath);
     if (metadataResource == null) {
-      return;
+      return false;
     }
     try {
       log.debug("Remove rendition metadata at {}.", metadataResource.getPath());
       resourceResolver.delete(metadataResource);
       resourceResolver.commit();
+      return true;
     }
     catch (PersistenceException ex) {
       throw new PersistenceException("Unable to delete rendition metadata node for " + renditionPath, ex);
