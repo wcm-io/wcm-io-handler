@@ -24,9 +24,9 @@
   <body>
 
     <release version="1.6.0" date="not released">
-      <action type="add" dev="sseifert">
-        Add workflow process implementation to generate rendition metadata.
-      </action>
+      <action type="add" dev="sseifert"><![CDATA[
+        Add workflow process implementation to generate rendition metadata. See <a href="https://wcm-io.atlassian.net/wiki/x/AQDrRw">How-to article</a>.
+      ]]></action>
       <action type="update" dev="sseifert">
         Rendition metadata generation: Store timestamp for rendition metadata, and re-generate it only if rendition was updated more recently.
       </action>

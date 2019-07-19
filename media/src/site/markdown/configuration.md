@@ -22,4 +22,8 @@ There is also a workflow process implementation named "wcm.io Media Handler: Ren
 
 However, this workflow process should not be part of the main "DAM Update Asset" workflow, as this would trigger the metadata generation twice for new assets.
 
-See this [How-to article][https://wcm-io.atlassian.net/wiki/x/AQDrRw] for details.
+See this [How-to article][workflow-how-to] for details.
+
+
+
+[workflow-how-to]: https://wcm-io.atlassian.net/wiki/x/AQDrRw
