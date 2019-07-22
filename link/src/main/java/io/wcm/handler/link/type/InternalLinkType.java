@@ -112,9 +112,28 @@ public final class InternalLinkType extends LinkType {
   /**
    * Get synthetic link resource for this link type.
    * @param resourceResolver Resource resolver
+   * @param path Resource path. Can be a non-existing path, but the path should be located somewhere within the
+   *          applications content paths to make sure the handler configuration looked up via context-aware services
+   *          is the expected one.
    * @param pageRef Path to target page
    * @return Synthetic link resource
    */
+  public static @NotNull Resource getSyntheticLinkResource(@NotNull ResourceResolver resourceResolver,
+      @NotNull String path, @NotNull String pageRef) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(LinkNameConstants.PN_LINK_TYPE, ID);
+    map.put(LinkNameConstants.PN_LINK_CONTENT_REF, pageRef);
+    return new SyntheticLinkResource(resourceResolver, path, map);
+  }
+
+  /**
+   * Get synthetic link resource for this link type.
+   * @param resourceResolver Resource resolver
+   * @param pageRef Path to target page
+   * @return Synthetic link resource
+   * @deprecated Please use {@link #getSyntheticLinkResource(ResourceResolver, String, String)}
+   */
+  @Deprecated
   public static @NotNull Resource getSyntheticLinkResource(@NotNull ResourceResolver resourceResolver, @NotNull String pageRef) {
     Map<String, Object> map = new HashMap<>();
     map.put(LinkNameConstants.PN_LINK_TYPE, ID);

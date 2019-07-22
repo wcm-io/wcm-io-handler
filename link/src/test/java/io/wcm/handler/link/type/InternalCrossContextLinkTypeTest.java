@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,10 +79,11 @@ class InternalCrossContextLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
             .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossContextLinkType.ID)
             .put(LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF, targetPage.getPath())
-        .build());
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -95,10 +98,11 @@ class InternalCrossContextLinkTypeTest {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
         ImmutableValueMap.builder()
             .put(LinkNameConstants.PN_LINK_TYPE, InternalCrossContextLinkType.ID)
             .put(LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
-        .build());
+            .build());
 
     Link link = linkHandler.get(linkResource).build();
 
@@ -106,6 +110,26 @@ class InternalCrossContextLinkTypeTest {
     assertEquals("http://en.dummysite.org/content/unittest/en_test/brand/en/section/content.html",
         link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
+  }
+
+  @Test
+  void testGetSyntheticLinkResource() {
+    Resource resource = InternalCrossContextLinkType.getSyntheticLinkResource(context.resourceResolver(),
+        "/content/dummy-path",
+        "/page/ref");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalCrossContextLinkType.ID,
+        LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF, "/page/ref");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetSyntheticLinkResource_Deprecated() {
+    Resource resource = InternalCrossContextLinkType.getSyntheticLinkResource(context.resourceResolver(),
+        "/page/ref");
+    ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, InternalCrossContextLinkType.ID,
+        LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF, "/page/ref");
+    assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
   }
 
 }

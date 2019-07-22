@@ -37,13 +37,13 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.mediasource.dam.impl.DamRenditionMetadataService;
+import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
+import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextCallback;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
-import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Test {@link MediaHandlerImpl} methods with adobe standard naming.
@@ -63,9 +63,11 @@ class MediaHandlerImplAdobeStandardNamingTest {
   @Test
   void testMediaResolve() {
 
-    // register DamRenditionMetadataService (which is only active on author run mode) to generate rendition metadata
-    context.runMode(RunMode.AUTHOR);
-    context.registerInjectActivateService(new DamRenditionMetadataService());
+    // register RenditionMetadataListenerService to generate rendition metadata
+    context.registerInjectActivateService(new AssetSynchonizationService());
+    context.registerInjectActivateService(new RenditionMetadataListenerService(),
+        "threadPoolSize", 0,
+        "allowedRunMode", new String[0]);
 
     Asset asset = context.create().asset("/content/dam/test.jpg", 20, 20, ContentType.JPEG);
 

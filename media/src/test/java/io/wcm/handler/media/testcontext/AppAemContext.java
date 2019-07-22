@@ -24,7 +24,9 @@ import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
+import org.apache.sling.testing.mock.sling.ResourceResolverType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
@@ -61,14 +63,28 @@ public final class AppAemContext {
   }
 
   public static AemContext newAemContext() {
-    return newAemContext(null);
+    return newAemContext(null, null);
   }
 
-  public static AemContext newAemContext(AemContextCallback callback) {
-    return new AemContextBuilder()
+  public static AemContext newAemContext(@NotNull ResourceResolverType resourceResolverType) {
+    return newAemContext(resourceResolverType, null);
+  }
+
+  public static AemContext newAemContext(@NotNull AemContextCallback callback) {
+    return newAemContext(null, callback);
+  }
+
+  public static AemContext newAemContext(@Nullable ResourceResolverType resourceResolverType, @Nullable AemContextCallback callback) {
+    AemContextBuilder builder = new AemContextBuilder();
+    if (resourceResolverType != null) {
+      builder.resourceResolverType(resourceResolverType);
+    }
+    if (callback != null) {
+      builder.afterSetUp(callback);
+    }
+    return builder
         .plugin(CACONFIG)
         .plugin(WCMIO_SLING, WCMIO_CACONFIG)
-        .afterSetUp(callback)
         .afterSetUp(SETUP_CALLBACK)
         .build();
   }

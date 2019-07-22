@@ -45,7 +45,7 @@ import io.wcm.handler.media.MediaHandler;
  * </p>
  * <ul>
  * <li><code>mediaFormat</code>: Media format name to restrict the allowed media items</li>
- * <li><code>refProperty</code>: NHame of the property from which the media reference path is read, or node name for
+ * <li><code>refProperty</code>: Name of the property from which the media reference path is read, or node name for
  * inline media.</li>
  * <li><code>cropProperty</code>: Name of the property which contains the cropping parameters</li>
  * <li><code>rotationProperty</code>: Name of the property which contains the rotation parameter</li>
