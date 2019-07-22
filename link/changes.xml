@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.2.6" date="not released">
+    <release version="1.2.6" date="2019-07-22">
       <action type="update" dev="sseifert">
         Synthetic link resources: Allow to specify a path for the synthetic resource, and deprecate the signatures without path.
         Without a valid application-specific path the wrong handler configuration may be looked up via context-aware services.
