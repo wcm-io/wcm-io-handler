@@ -73,16 +73,19 @@ public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
     List<String> assetPaths = WorkflowProcessUtil.getPayloadResourcePaths(payloadPath,
         NT_DAM_ASSET, resourceResolver, resourceCollectionManager);
     if (assetPaths.isEmpty()) {
-      log.debug("Did not found any asset reference in workflow payload: {}", payloadPath);
+      log.info("Did not found any asset reference in workflow payload: {}", payloadPath);
     }
     else {
-      log.debug("Process asset references: {}", assetPaths);
+      log.info("Start processing {} asset references from workflow payload {} ...", assetPaths.size(), payloadPath);
+      log.debug("All asset references: {}", assetPaths);
     }
 
     // process all assets
     for (String assetPath : assetPaths) {
       process(assetPath, resourceResolver);
     }
+
+    log.info("Finished processing {} asset references from workflow payload {}.", assetPaths.size(), payloadPath);
   }
 
   /**
