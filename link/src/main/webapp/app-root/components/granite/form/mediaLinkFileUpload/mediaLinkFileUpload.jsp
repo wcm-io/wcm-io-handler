@@ -35,12 +35,12 @@
 <%@include file="../../global/global.jsp" %>
 <%@include file="../../global/linkRootPathDetection.jsp" %><%--###
 
-wcm.io Media Handler PathField for selecting a download link reference
+wcm.io Media Handler FileUpload for selecting a download link reference
 ======================================================================
 
-A field that allows the user to enter path.
+A field component for uploading or selecting files from an authoring dialog context.
 
-It extends `/apps/wcm-io/handler/media/components/granite/form/pathfield` component.
+It extends `/apps/wcm-io/handler/media/components/granite/form/fileupload` component.
 
 It supports the same properties as it's super component. The following properties
 are overwritten or added.
@@ -97,7 +97,7 @@ ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of(
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
 
 RequestDispatcherOptions options = new RequestDispatcherOptions();
-options.setForceResourceType("wcm-io/handler/media/components/granite/form/pathfield");
+options.setForceResourceType("wcm-io/handler/media/components/granite/form/fileupload");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(resourceWrapper, options);
 dispatcher.include(slingRequest, slingResponse);
 
