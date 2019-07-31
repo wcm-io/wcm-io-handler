@@ -149,7 +149,7 @@ if (mediaFormats != null && mediaFormats.length > 0) {
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }
 
-// render original fileupload widget
+// render original component
 RequestDispatcherOptions options = new RequestDispatcherOptions();
 options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
 RequestDispatcher dispatcher = slingRequest.getRequestDispatcher(pathField, options);
