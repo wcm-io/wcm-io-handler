@@ -17,17 +17,21 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.format.impl;
+package io.wcm.handler.media.format;
 
+import java.util.SortedMap;
 import java.util.SortedSet;
 
 import org.apache.sling.api.resource.Resource;
 
-import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 
 /**
  * Collects all media format definitions provided by applications via {@link MediaFormatProvider} interface.
+ * <p>
+ * This interface is implemented by an OSGi services.
+ * It should be considered INTERNAL and not be used by applications.
+ * </p>
  */
 public interface MediaFormatProviderManager {
 
@@ -37,5 +41,11 @@ public interface MediaFormatProviderManager {
    * @return Media format definitions
    */
   SortedSet<MediaFormat> getMediaFormats(Resource contextResource);
+
+  /**
+   * Get all media format definitions deployed in the system, grouped by bundle which exposes them.
+   * @return Map with bundle name as key, set of media formats as values.
+   */
+  SortedMap<String, SortedSet<MediaFormat>> getAllMediaFormats();
 
 }

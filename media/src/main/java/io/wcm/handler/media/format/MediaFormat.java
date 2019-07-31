@@ -476,9 +476,13 @@ public final class MediaFormat implements Comparable<MediaFormat> {
           }
         }
         else {
-          sbRestrictions.append(widthMin);
+          if (widthMin > 0) {
+            sbRestrictions.append(widthMin);
+          }
           sbRestrictions.append("..");
-          sbRestrictions.append(widthMax);
+          if (widthMax > 0) {
+            sbRestrictions.append(widthMax);
+          }
         }
         sbRestrictions.append('x');
         if (heightMin == heightMax) {
@@ -490,9 +494,13 @@ public final class MediaFormat implements Comparable<MediaFormat> {
           }
         }
         else {
-          sbRestrictions.append(heightMin);
+          if (heightMin > 0) {
+            sbRestrictions.append(heightMin);
+          }
           sbRestrictions.append("..");
-          sbRestrictions.append(heightMax);
+          if (heightMax > 0) {
+            sbRestrictions.append(heightMax);
+          }
         }
         sbRestrictions.append("px");
         extParts.add(sbRestrictions.toString());

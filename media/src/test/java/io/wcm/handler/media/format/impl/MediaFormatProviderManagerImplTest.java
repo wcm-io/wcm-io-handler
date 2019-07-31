@@ -22,6 +22,8 @@ package io.wcm.handler.media.format.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.SortedSet;
 
 import org.apache.sling.api.resource.Resource;
@@ -38,6 +40,7 @@ import com.google.common.collect.ImmutableSortedSet;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
+import io.wcm.handler.media.format.MediaFormatProviderManager;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.sling.commons.caservice.impl.ContextAwareServiceResolverImpl;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -97,6 +100,19 @@ class MediaFormatProviderManagerImplTest {
   @Test
   void testNullResource() {
     assertEquals(ImmutableSortedSet.of(), underTest.getMediaFormats(null));
+  }
+
+  @Test
+  void testGetAllMediaFormats() {
+    SortedMap<String, SortedSet<MediaFormat>> allMediaFormats = underTest.getAllMediaFormats();
+
+    assertEquals(1, allMediaFormats.size());
+
+    Map.Entry<String, SortedSet<MediaFormat>> entry = allMediaFormats.entrySet().iterator().next();
+    assertEquals("mock-bundle", entry.getKey());
+
+    SortedSet<MediaFormat> mediaFormats = entry.getValue();
+    assertEquals(ImmutableSortedSet.of(MF11, MF12, MF21), mediaFormats);
   }
 
 }
