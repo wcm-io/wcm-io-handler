@@ -48,5 +48,19 @@ Enhancements over AEM version:
 * When the property `fieldDescription` is not set, it is set automatically with information about the expected media formats
 
 
+### Media Formats Select Field
+
+![Media Formats Select Field Component](images/mediaformatselect-component.png)
+
+Multi-select field that allows to select one or multiple media formats.
+
+```json
+"mediaFormats": {
+  "sling:resourceType": "wcm-io/handler/media/components/granite/form/mediaformatselect",
+  "name": "./mediaFormats",
+  "fieldLabel": "Media Formats"
+}
+```
+
 
 [component-properties]: component-properties.html
