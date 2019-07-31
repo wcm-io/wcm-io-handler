@@ -17,13 +17,18 @@
   limitations under the License.
   #L%
 --%>
+<%@page import="io.wcm.handler.media.format.MediaFormatProviderManager"%>
 <%@page import="com.adobe.granite.ui.components.ds.DataSource"%>
 <%@page import="com.adobe.granite.ui.components.ds.SimpleDataSource"%>
 <%@page import="com.adobe.granite.ui.components.ds.ValueMapResource"%>
 <%@page import="com.day.cq.commons.jcr.JcrConstants"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Collections"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="java.util.Set"%>
+<%@page import="java.util.SortedMap"%>
+<%@page import="java.util.SortedSet"%>
 <%@page import="io.wcm.handler.media.format.MediaFormat"%>
 <%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
@@ -44,26 +49,55 @@
   @location /apps/wcm-io/handler/media/components/granite/datasources/mediaformats
  */
 
+// try to fetch media formats matching for current content resource
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
-Set<MediaFormat> mediaFormats;
+SortedSet<MediaFormat> mediaFormats = null;
 if (contentResource != null) {
   MediaFormatHandler mediaFormatHandler = resource.adaptTo(MediaFormatHandler.class);
   mediaFormats = mediaFormatHandler.getMediaFormats();
-}
-else {
-  mediaFormats = Collections.emptySet();
+  if (mediaFormats.size() == 0) {
+    mediaFormats = null;
+  }
 }
 
+// if none found display all media formats of all bundles deployed on this instance
+MediaFormatProviderManager mediaFormatProviderManager = sling.getService(MediaFormatProviderManager.class);
+SortedMap<String, SortedSet<MediaFormat>> groupedMediaFormats = mediaFormatProviderManager.getAllMediaFormats();
+
 final ResourceResolver resolver = resourceResolver;
-DataSource ds = new SimpleDataSource(new TransformIterator(mediaFormats.iterator(), new Transformer() {
-  public Object transform(Object obj) {
-    MediaFormat mediaFormat = (MediaFormat)obj;
-    ValueMap vm = new ValueMapDecorator(new HashMap<String, Object>());
-    vm.put("value", mediaFormat.getName());
-    vm.put("text", mediaFormat.getLabel());
-    return new ValueMapResource(resolver, new ResourceMetadata(), JcrConstants.NT_UNSTRUCTURED, vm);
-  }
-}));
+DataSource ds;
+if (mediaFormats != null) {
+  ds = new SimpleDataSource(new TransformIterator(mediaFormats.iterator(), new Transformer() {
+    public Object transform(Object obj) {
+      MediaFormat mediaFormat = (MediaFormat)obj;
+      ValueMap vm = new ValueMapDecorator(new HashMap<String, Object>());
+      vm.put("value", mediaFormat.getName());
+      vm.put("text", mediaFormat.getLabel());
+      return new ValueMapResource(resolver, new ResourceMetadata(), JcrConstants.NT_UNSTRUCTURED, vm);
+    }
+  }));
+}
+else {
+  ds = new SimpleDataSource(new TransformIterator(groupedMediaFormats.entrySet().iterator(), new Transformer() {
+    public Object transform(Object obj) {
+      Map.Entry<String, SortedSet<MediaFormat>> entry = (Map.Entry<String, SortedSet<MediaFormat>>)obj;
+
+      ValueMap vm = new ValueMapDecorator(new HashMap<String, Object>());
+      vm.put("value", entry.getKey());
+      vm.put("text", entry.getKey());
+      vm.put("group", true);
+      
+      List<Resource> children = new ArrayList<>();
+      for (MediaFormat mediaFormat : entry.getValue()) {
+        ValueMap childvm = new ValueMapDecorator(new HashMap<String, Object>());
+        childvm.put("value", mediaFormat.getName());
+        childvm.put("text", mediaFormat.getLabel());
+      }
+      
+      return new ValueMapResource(resolver, new ResourceMetadata(), JcrConstants.NT_UNSTRUCTURED, vm, children);
+    }
+  }));
+}
 
 request.setAttribute(DataSource.class.getName(), ds);
 %>

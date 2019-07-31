@@ -38,6 +38,7 @@ import com.google.common.collect.ImmutableSortedSet;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.format.MediaFormatProviderManager;
 import io.wcm.handler.media.format.MediaFormatRankingComparator;
 import io.wcm.handler.media.format.MediaFormatSizeRankingComparator;
 import io.wcm.handler.media.format.Ratio;
