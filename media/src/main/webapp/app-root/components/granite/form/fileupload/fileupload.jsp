@@ -24,6 +24,7 @@
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
+<%@page import="com.adobe.granite.ui.components.ExpressionHelper"%>
 <%@page import="io.wcm.handler.media.MediaNameConstants"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
 <%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolver"%>
@@ -69,7 +70,7 @@ are overwritten or added.
   /**
    * Indicates whether upload from local file system is allowed.
    */
-  - allowUpload (Boolean) = 'false'
+  - allowUpload (BooleanEL) = 'false'
 
   /**
    * When the field description is not set, it is set automatically with an information about the
@@ -86,24 +87,25 @@ are overwritten or added.
    * List of media formats required by this component.
    * If not set the property value is looked up from component properties or policy.
    */
-  - mediaFormats (String[])
+  - mediaFormats (StringEL[])
 
   /**
    * Resolving of all media formats is mandatory.
    * If not set the property value is looked up from component properties or policy.
    */
-  - mediaFormatsMandatory (Boolean) = 'false'
+  - mediaFormatsMandatory (StringEL[])
 
   /**
    * Enables "auto-cropping" mode.
    * If not set the property value is looked up from component properties or policy.
    */
-  - mediaCropAuto (Boolean) = 'false'
+  - mediaCropAuto (BooleanEL) = 'false'
 
 
 ###--%><%
 
 Config cfg = cmp.getConfig();
+ExpressionHelper ex = cmp.getExpressionHelper();
 
 // get default values for media ref properties as configured for media handler
 String propNameDefault = "./file";
@@ -124,7 +126,7 @@ fileUploadProps.put("fileNameParameter", cfg.get("fileNameParameter", propFileNa
 fileUploadProps.put("fileReferenceParameter", cfg.get("fileReferenceParameter", propFileReferenceDefault));
 
 // default values for allowUpload and mimeTypes
-fileUploadProps.put("allowUpload", cfg.get("allowUpload", false));
+fileUploadProps.put("allowUpload", ex.getBoolean(cfg.get("allowUpload", String.class)));
 fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
     "image", "image/gif", "image/jpeg", "image/png" }));
 
@@ -139,9 +141,20 @@ if (contentResource != null) {
       componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
   mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
       componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, String[].class));
-  mediaCropAuto = cfg.get("mediaCropAuto",
-      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
+  mediaCropAuto = ex.getBoolean(cfg.get("mediaCropAuto",
+      Boolean.toString(componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false))));
 
+  if (mediaFormats != null) {
+    for (int i=0; i<mediaFormats.length; i++) {
+      mediaFormats[i] = ex.getString(mediaFormats[i]);
+    }
+  }
+  if (mediaFormatsMandatory != null) {
+    for (int i=0; i<mediaFormatsMandatory.length; i++) {
+      mediaFormatsMandatory[i] = ex.getString(mediaFormatsMandatory[i]);
+    }
+  }
+  
   //add info about media formats in field description
   String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
   if (mediaFormatsFieldDescription != null) {
