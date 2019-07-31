@@ -17,20 +17,18 @@
   limitations under the License.
   #L%
 --%>
-<%@page import="io.wcm.handler.media.format.MediaFormatProviderManager"%>
 <%@page import="com.adobe.granite.ui.components.ds.DataSource"%>
 <%@page import="com.adobe.granite.ui.components.ds.SimpleDataSource"%>
 <%@page import="com.adobe.granite.ui.components.ds.ValueMapResource"%>
 <%@page import="com.day.cq.commons.jcr.JcrConstants"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Collections"%>
-<%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.SortedMap"%>
 <%@page import="java.util.SortedSet"%>
+<%@page import="java.util.TreeSet"%>
 <%@page import="io.wcm.handler.media.format.MediaFormat"%>
 <%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
+<%@page import="io.wcm.handler.media.format.MediaFormatProviderManager"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@page import="org.apache.commons.collections.Transformer"%>
 <%@page import="org.apache.commons.collections.iterators.TransformIterator"%>
@@ -53,7 +51,7 @@
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 SortedSet<MediaFormat> mediaFormats = null;
 if (contentResource != null) {
-  MediaFormatHandler mediaFormatHandler = resource.adaptTo(MediaFormatHandler.class);
+  MediaFormatHandler mediaFormatHandler = contentResource.adaptTo(MediaFormatHandler.class);
   mediaFormats = mediaFormatHandler.getMediaFormats();
   if (mediaFormats.size() == 0) {
     mediaFormats = null;
@@ -61,43 +59,30 @@ if (contentResource != null) {
 }
 
 // if none found display all media formats of all bundles deployed on this instance
-MediaFormatProviderManager mediaFormatProviderManager = sling.getService(MediaFormatProviderManager.class);
-SortedMap<String, SortedSet<MediaFormat>> groupedMediaFormats = mediaFormatProviderManager.getAllMediaFormats();
+if (mediaFormats == null) {
+  mediaFormats = new TreeSet<>();
+  MediaFormatProviderManager mediaFormatProviderManager = sling.getService(MediaFormatProviderManager.class);
+  SortedMap<String, SortedSet<MediaFormat>> groupedMediaFormats = mediaFormatProviderManager.getAllMediaFormats();
+  for (Map.Entry<String, SortedSet<MediaFormat>> entry : groupedMediaFormats.entrySet()) {
+    String bundleName = entry.getKey();
+    for (MediaFormat mf : entry.getValue()) {
+      if (!mediaFormats.contains(mf)) {
+        mediaFormats.add(mf);
+      }
+    }
+  }
+}
 
 final ResourceResolver resolver = resourceResolver;
-DataSource ds;
-if (mediaFormats != null) {
-  ds = new SimpleDataSource(new TransformIterator(mediaFormats.iterator(), new Transformer() {
-    public Object transform(Object obj) {
-      MediaFormat mediaFormat = (MediaFormat)obj;
-      ValueMap vm = new ValueMapDecorator(new HashMap<String, Object>());
-      vm.put("value", mediaFormat.getName());
-      vm.put("text", mediaFormat.getLabel());
-      return new ValueMapResource(resolver, new ResourceMetadata(), JcrConstants.NT_UNSTRUCTURED, vm);
-    }
-  }));
-}
-else {
-  ds = new SimpleDataSource(new TransformIterator(groupedMediaFormats.entrySet().iterator(), new Transformer() {
-    public Object transform(Object obj) {
-      Map.Entry<String, SortedSet<MediaFormat>> entry = (Map.Entry<String, SortedSet<MediaFormat>>)obj;
-
-      ValueMap vm = new ValueMapDecorator(new HashMap<String, Object>());
-      vm.put("value", entry.getKey());
-      vm.put("text", entry.getKey());
-      vm.put("group", true);
-      
-      List<Resource> children = new ArrayList<>();
-      for (MediaFormat mediaFormat : entry.getValue()) {
-        ValueMap childvm = new ValueMapDecorator(new HashMap<String, Object>());
-        childvm.put("value", mediaFormat.getName());
-        childvm.put("text", mediaFormat.getLabel());
-      }
-      
-      return new ValueMapResource(resolver, new ResourceMetadata(), JcrConstants.NT_UNSTRUCTURED, vm, children);
-    }
-  }));
-}
+DataSource ds = new SimpleDataSource(new TransformIterator(mediaFormats.iterator(), new Transformer() {
+  public Object transform(Object obj) {
+    MediaFormat mediaFormat = (MediaFormat)obj;
+    ValueMap vm = new ValueMapDecorator(new HashMap<String, Object>());
+    vm.put("value", mediaFormat.getName());
+    vm.put("text", mediaFormat.toString());
+    return new ValueMapResource(resolver, new ResourceMetadata(), JcrConstants.NT_UNSTRUCTURED, vm);
+  }
+}));
 
 request.setAttribute(DataSource.class.getName(), ds);
 %>
