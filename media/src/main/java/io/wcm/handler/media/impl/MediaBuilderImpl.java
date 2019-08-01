@@ -66,6 +66,7 @@ final class MediaBuilderImpl implements MediaBuilder {
     // resolve component properties
     if (resource != null) {
       ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource)
+          .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
           .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
       mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
 

@@ -60,11 +60,11 @@ static String[] getStringArrayWithExpressionSupport(String propertyName, String 
     Config cfg, ExpressionHelper ex, ComponentPropertyResolver componentPropertyResolver) {
   String[] result = null;
 
-  Object value = cfg.get(propertyName);
+  Object value = cfg.get(propertyName, (Object)null);
   if (value instanceof String) {
     // try to resolve as expression
     value = ex.get((String)value, Object.class);
-    if (value instanceof String) {
+    if ((value instanceof String) && StringUtils.isNotEmpty((String)value)) {
       result = new String[] { (String)value };
     }
     else if (value instanceof String[]) {
@@ -89,8 +89,8 @@ static boolean getBooleanWithExpressionSupport(String propertyName, String compo
   String[] mediaFormats = null;
 
   Boolean result = null;
-  Object value = cfg.get(propertyName);
-  if (value instanceof String) {
+  Object value = cfg.get(propertyName, (Object)null);
+  if ((value instanceof String) && StringUtils.isNotEmpty((String)value)) {
     // try to resolve as expression
     result = ex.get((String)value, Boolean.class);
   }  
