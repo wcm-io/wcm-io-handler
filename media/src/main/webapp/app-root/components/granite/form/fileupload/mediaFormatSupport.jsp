@@ -17,12 +17,16 @@
   limitations under the License.
   #L%
 --%>
+<%@page import="com.adobe.granite.ui.components.Config"%>
+<%@page import="com.adobe.granite.ui.components.ExpressionHelper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="io.wcm.handler.media.format.MediaFormat"%>
-<%@page import="io.wcm.handler.media.format.MediaFormatHandler"%><%!
+<%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
+<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolver"%>
+<%!
 
 static String buildMediaFormatsFieldDescription(String[] mediaFormats, Resource resource) {
   if (mediaFormats == null || mediaFormats.length == 0) {
@@ -50,6 +54,53 @@ static String buildMediaFormatsFieldDescription(String[] mediaFormats, Resource 
   }
   fieldDescription += StringUtils.join(mediaFormatDescriptions, ", ");
   return fieldDescription;
+}
+
+static String[] getStringArrayWithExpressionSupport(String propertyName, String componentPropertyName,
+    Config cfg, ExpressionHelper ex, ComponentPropertyResolver componentPropertyResolver) {
+  String[] result = null;
+
+  Object value = cfg.get(propertyName);
+  if (value instanceof String) {
+    // try to resolve as expression
+    value = ex.get((String)value, Object.class);
+    if (value instanceof String) {
+      result = new String[] { (String)value };
+    }
+    else if (value instanceof String[]) {
+      result = (String[])value;
+    }
+  }
+  else {
+    // try to get directly from config
+    result = cfg.get(propertyName, String[].class);
+  }
+
+  // fallback to component properties
+  if (result == null) {
+    result = componentPropertyResolver.get(componentPropertyName, String[].class);
+  }
+
+  return result;
+}
+
+static boolean getBooleanWithExpressionSupport(String propertyName, String componentPropertyName,
+    Config cfg, ExpressionHelper ex, ComponentPropertyResolver componentPropertyResolver) {
+  String[] mediaFormats = null;
+
+  Boolean result = null;
+  Object value = cfg.get(propertyName);
+  if (value instanceof String) {
+    // try to resolve as expression
+    result = ex.get((String)value, Boolean.class);
+  }  
+
+  // try to get directly from config, fallback to component properties
+  if (result == null) {
+    result = cfg.get(propertyName, componentPropertyResolver.get(componentPropertyName, false));
+  }
+
+  return result;
 }
 
 %>

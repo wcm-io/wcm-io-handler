@@ -87,13 +87,13 @@ are overwritten or added.
    * List of media formats required by this component.
    * If not set the property value is looked up from component properties or policy.
    */
-  - mediaFormats (StringEL[])
+  - mediaFormats (String[]/StringEL)
 
   /**
    * Resolving of all media formats is mandatory.
    * If not set the property value is looked up from component properties or policy.
    */
-  - mediaFormatsMandatory (StringEL[])
+  - mediaFormatsMandatory (String[]/StringEL)
 
   /**
    * Enables "auto-cropping" mode.
@@ -137,25 +137,14 @@ boolean mediaCropAuto = false;
 if (contentResource != null) {
   ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
       .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
-  mediaFormats = cfg.get("mediaFormats",
-      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class));
-  mediaFormatsMandatory = cfg.get("mediaFormatsMandatory",
-      componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, String[].class));
-  mediaCropAuto = ex.getBoolean(cfg.get("mediaCropAuto",
-      Boolean.toString(componentPropertyResolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false))));
+  mediaFormats = getStringArrayWithExpressionSupport("mediaFormats",
+      MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, cfg, ex, componentPropertyResolver);
+  mediaFormatsMandatory = getStringArrayWithExpressionSupport("mediaFormatsMandatory",
+      MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, cfg, ex, componentPropertyResolver);
+  mediaCropAuto = getBooleanWithExpressionSupport("mediaCropAuto",
+      MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, cfg, ex, componentPropertyResolver);
 
-  if (mediaFormats != null) {
-    for (int i=0; i<mediaFormats.length; i++) {
-      mediaFormats[i] = ex.getString(mediaFormats[i]);
-    }
-  }
-  if (mediaFormatsMandatory != null) {
-    for (int i=0; i<mediaFormatsMandatory.length; i++) {
-      mediaFormatsMandatory[i] = ex.getString(mediaFormatsMandatory[i]);
-    }
-  }
-  
-  //add info about media formats in field description
+  // add info about media formats in field description
   String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
   if (mediaFormatsFieldDescription != null) {
    String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
@@ -178,7 +167,7 @@ dispatcher.include(slingRequest, slingResponse);
 // add pathfield widget
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
-pathFieldProps.put("rootPath", cfg.get("rootPath", damRootPath));
+pathFieldProps.put("rootPath", ex.getString(cfg.get("rootPath", damRootPath)));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
