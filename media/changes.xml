@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert">
         Add Granite UI components: Media Formats Select field and Media Formats data source.
       </action>
+      <action type="add" dev="sseifert">
+        Add MediaHandler.invalid() method.
+      </action>
       <action type="update" dev="sseifert">
         PathField and FileUpload Granite UI components: Support expression language for properties 'mediaFormats', 'mediaFormatsMandatory', 'mediaCropAuto', 'allowUpload'.
       </action>

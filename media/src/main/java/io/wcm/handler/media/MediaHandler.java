@@ -111,4 +111,10 @@ public interface MediaHandler {
    */
   boolean isValidElement(HtmlElement<?> element);
 
+  /**
+   * Returns an empty media that is marked as invalid.
+   * @return Invalid media
+   */
+  Media invalid();
+
 }

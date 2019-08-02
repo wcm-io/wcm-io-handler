@@ -252,4 +252,18 @@ public final class MediaHandlerImpl implements MediaHandler {
     }
   }
 
+  @Override
+  @SuppressWarnings("null")
+  public Media invalid() {
+    // build invalid media with first media source
+    Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().stream().findFirst().orElse(null);
+    if (mediaSourceClass == null) {
+      throw new RuntimeException("No media sources defined.");
+    }
+    MediaSource mediaSource = AdaptTo.notNull(adaptable, mediaSourceClass);
+    Media media = new Media(mediaSource, new MediaRequest((String)null, null));
+    media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_MISSING);
+    return media;
+  }
+
 }
