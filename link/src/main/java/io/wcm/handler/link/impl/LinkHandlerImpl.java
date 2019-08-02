@@ -143,4 +143,15 @@ public final class LinkHandlerImpl implements LinkHandler {
     return link;
   }
 
+  @Override
+  public Link invalid() {
+    // build invalid link with first link type
+    Class<? extends LinkType> linkTypeClass = linkHandlerConfig.getLinkTypes().stream().findFirst().orElse(null);
+    if (linkTypeClass == null) {
+      throw new RuntimeException("No link types defined.");
+    }
+    LinkType linkType = AdaptTo.notNull(adaptable, linkTypeClass);
+    return new Link(linkType, new LinkRequest(null, null, null));
+  }
+
 }

@@ -66,4 +66,10 @@ public interface LinkHandler {
   @NotNull
   LinkBuilder get(@NotNull LinkRequest linkRequest);
 
+  /**
+   * Returns an empty link that is marked as invalid.
+   * @return Invalid link
+   */
+  Link invalid();
+
 }

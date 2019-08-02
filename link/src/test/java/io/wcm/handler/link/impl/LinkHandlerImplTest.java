@@ -20,6 +20,7 @@
 package io.wcm.handler.link.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
@@ -108,6 +109,14 @@ class LinkHandlerImplTest {
 
   }
 
+  @Test
+  void testInvalid() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+
+    Link link = linkHandler.invalid();
+    assertFalse(link.isValid());
+  }
+
 
   public static class TestLinkHandlerConfig extends LinkHandlerConfig {
 
@@ -183,7 +192,6 @@ class LinkHandlerImplTest {
       SlingHttpServletRequest.class, Resource.class
   })
   public static class TestLinkPostProcessor implements LinkProcessor {
-
     @Override
     public Link process(Link link) {
       String linkUrl = StringUtils.defaultString(link.getUrl()) + "/post1";
