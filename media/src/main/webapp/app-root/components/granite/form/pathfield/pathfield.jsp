@@ -107,6 +107,7 @@ String[] mediaFormatsMandatory = null;
 boolean mediaCropAuto = false;
 if (contentResource != null) {
   ComponentPropertyResolver componentPropertyResolver = new ComponentPropertyResolver(contentResource)
+      .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
       .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
   mediaFormats = getStringArrayWithExpressionSupport("mediaFormats",
       MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, cfg, ex, componentPropertyResolver);

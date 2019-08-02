@@ -91,7 +91,9 @@ String[] mediaFormats = cfg.get("mediaFormats", mediaFormatNames.toArray(new Str
 ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of(
     "name", name,
     "rootPath", rootPath,
-    "mediaFormats", mediaFormats));
+    "mediaFormats", mediaFormats,
+    "mediaFormatsMandatory", new String[0],
+    "mediaCropAuto", false));
 
 // simulate resource for dialog field def with new rootPath instead of configured one
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
