@@ -120,6 +120,21 @@ class MediaHandlerImplImageFileTypesTest {
         ContentType.PNG);
   }
 
+  @Test
+  void testTIFFOriginal() {
+    Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
+    buildAssertMedia(asset, 100, 50,
+        "/content/dam/sample.tif/_jcr_content/renditions/original./sample.tif");
+  }
+
+  @Test
+  void testTIFFCrop() {
+    Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
+    buildCropAssertMedia(asset, 50, 50,
+        "/content/dam/sample.tif/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.file/sample.png",
+        ContentType.PNG);
+  }
+
   private Asset createSampleAsset(String classpathResource, String contentType) {
     String fileName = FilenameUtils.getName(classpathResource);
     Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType);

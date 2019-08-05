@@ -27,14 +27,21 @@ import org.junit.jupiter.api.Test;
 class MediaFileExtensionTest {
 
   @Test
-  void testIsImage() throws Exception {
+  void testIsImage() {
+    assertTrue(MediaFileExtension.isImage("gif"));
+    assertTrue(MediaFileExtension.isImage("jpg"));
+    assertTrue(MediaFileExtension.isImage("jpeg"));
     assertTrue(MediaFileExtension.isImage("png"));
+    assertTrue(MediaFileExtension.isImage("tif"));
+    assertTrue(MediaFileExtension.isImage("tiff"));
+    assertFalse(MediaFileExtension.isImage("pdf"));
     assertFalse(MediaFileExtension.isImage(null));
   }
 
   @Test
-  void testIsFlash() throws Exception {
+  void testIsFlash() {
     assertTrue(MediaFileExtension.isFlash("swf"));
+    assertFalse(MediaFileExtension.isFlash("pdf"));
     assertFalse(MediaFileExtension.isFlash(null));
   }
 

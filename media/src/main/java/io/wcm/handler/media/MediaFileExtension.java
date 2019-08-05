@@ -23,6 +23,7 @@ import static io.wcm.wcm.commons.contenttype.FileExtension.GIF;
 import static io.wcm.wcm.commons.contenttype.FileExtension.JPEG;
 import static io.wcm.wcm.commons.contenttype.FileExtension.PNG;
 import static io.wcm.wcm.commons.contenttype.FileExtension.SWF;
+import static io.wcm.wcm.commons.contenttype.FileExtension.TIFF;
 
 import java.util.Set;
 
@@ -49,8 +50,10 @@ public final class MediaFileExtension {
   private static final Set<String> IMAGE_FILE_EXTENSIONS = ImmutableSet.of(
       GIF,
       JPEG,
+      "jpeg", // alternative JEPG extension
       PNG,
-      "jpeg" // check for this alternative JEPG extension as well
+      TIFF,
+      "tiff" // alternative TIFF extension
       );
 
   /**
