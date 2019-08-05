@@ -55,8 +55,8 @@ import com.day.image.Layer;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.MediaFileExtension;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Generates metadata (widht/height) for renditions in DAM assets.
@@ -149,7 +149,7 @@ public final class RenditionMetadataGenerator {
 
     // ensure rendition is an image rendition for which metadata can be generated
     String fileExtension = FilenameUtils.getExtension(renditionPath);
-    if (!FileExtension.isImage(fileExtension)) {
+    if (!MediaFileExtension.isImage(fileExtension)) {
       log.debug("Skip non-image rendition {}", renditionPath);
       return false;
     }

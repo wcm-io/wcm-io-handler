@@ -53,7 +53,7 @@ import com.day.cq.dam.api.DamEvent;
 import com.day.cq.dam.api.DamEvent.Type;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.handler.media.MediaFileExtension;
 import io.wcm.wcm.commons.util.RunMode;
 
 /**
@@ -170,7 +170,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     String renditionPath = event.getAdditionalInfo();
     String renditionNodeName = Text.getName(renditionPath);
     String fileExtension = FilenameUtils.getExtension(renditionNodeName);
-    if (!FileExtension.isImage(fileExtension)) {
+    if (!MediaFileExtension.isImage(fileExtension)) {
       return;
     }
 

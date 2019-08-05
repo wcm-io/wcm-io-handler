@@ -34,11 +34,12 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.MediaFileExtension;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.AssetRendition;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Wrapper class for rendition metadata retrieved from DAM rendition filenames.
@@ -93,7 +94,12 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @return File name
    */
   public String getFileName() {
-    return this.fileName;
+    if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
+      return this.fileName;
+    }
+    else {
+      return ImageFileServlet.getImageFileName(this.fileName);
+    }
   }
 
   /**
@@ -156,10 +162,16 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
           + "." + MediaFileServlet.SELECTOR_DOWNLOAD
           + "." + MediaFileServlet.EXTENSION, getFileName());
     }
-    else {
+    else if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
       // use "deep URL" to reference rendition directly
       // do not use Asset URL for original rendition because it creates conflicts for dispatcher cache (filename vs. directory for asset resource name)
       return RenditionMetadata.buildMediaPath(this.rendition.getPath() + ".", getFileName());
+    }
+    else {
+      // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
+      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
+          + "." + getWidth() + "." + getHeight()
+          + "." + MediaFileServlet.EXTENSION, getFileName());
     }
   }
 
@@ -278,7 +290,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
 
   @SuppressWarnings("null")
   protected Layer getLayer() {
-    if (FileExtension.isImage(getFileExtension())) {
+    if (MediaFileExtension.isImage(getFileExtension())) {
       return this.rendition.adaptTo(Resource.class).adaptTo(Layer.class);
     }
     else {

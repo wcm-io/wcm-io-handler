@@ -33,10 +33,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileExtension;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.mediasource.dam.AssetRendition;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -247,7 +247,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     // check that at least one image file extension is in the list of requested extensions
     boolean anyImageFileExtension = false;
     for (String fileExtension : requestedFileExtensions) {
-      if (FileExtension.isImage(fileExtension)) {
+      if (MediaFileExtension.isImage(fileExtension)) {
         anyImageFileExtension = true;
       }
     }

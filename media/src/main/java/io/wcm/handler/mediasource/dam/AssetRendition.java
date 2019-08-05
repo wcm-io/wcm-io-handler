@@ -51,8 +51,8 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.MediaFileExtension;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Helper methods for getting metadata for DAM renditions.
@@ -101,7 +101,7 @@ public final class AssetRendition {
       boolean suppressLogWarningNoRenditionsMetadata) {
 
     String fileExtension = FilenameUtils.getExtension(getFilename(rendition));
-    if (!FileExtension.isImage(fileExtension)) {
+    if (!MediaFileExtension.isImage(fileExtension)) {
       // this is not a supported image file extension - skip further processing
       return null;
     }

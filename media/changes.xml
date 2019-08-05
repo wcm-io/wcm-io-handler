@@ -25,6 +25,9 @@
 
     <release version="1.7.0" date="not released">
       <action type="add" dev="sseifert">
+        Support TIFF images in media handler (with conversion to JPEG for displaying in browser).
+      </action>
+      <action type="add" dev="sseifert">
         Add Granite UI components: Media Formats Select field and Media Formats data source.
       </action>
       <action type="add" dev="sseifert">
