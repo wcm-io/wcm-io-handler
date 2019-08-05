@@ -41,6 +41,7 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileExtension;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
@@ -89,7 +90,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // check if scaling is possible
     String fileExtension = StringUtils.substringAfterLast(processedFileName, ".");
-    boolean isImage = FileExtension.isImage(fileExtension);
+    boolean isImage = MediaFileExtension.isImage(fileExtension);
 
     Dimension dimension = null;
     Dimension scaledDimension = null;
@@ -409,12 +410,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public boolean isImage() {
-    return FileExtension.isImage(getFileExtension());
+    return MediaFileExtension.isImage(getFileExtension());
   }
 
   @Override
   public boolean isFlash() {
-    return FileExtension.isFlash(getFileExtension());
+    return MediaFileExtension.isFlash(getFileExtension());
   }
 
   @Override

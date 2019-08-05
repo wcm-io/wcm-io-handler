@@ -34,11 +34,11 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.MediaFileExtension;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.AssetRendition;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Wrapper class for rendition metadata retrieved from DAM rendition filenames.
@@ -278,7 +278,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
 
   @SuppressWarnings("null")
   protected Layer getLayer() {
-    if (FileExtension.isImage(getFileExtension())) {
+    if (MediaFileExtension.isImage(getFileExtension())) {
       return this.rendition.adaptTo(Resource.class).adaptTo(Layer.class);
     }
     else {
