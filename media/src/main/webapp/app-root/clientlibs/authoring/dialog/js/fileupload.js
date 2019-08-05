@@ -106,6 +106,12 @@
     if (fileExtension == "gif") {
       return "image/gif";
     }
+    if (fileExtension == "tif" || fileExtension == "tiff") {
+      return "image/tiff";
+    }
+    if (fileExtension == "svg") {
+      return "image/svg+xml";
+    }
     return null;
   };
 

@@ -65,7 +65,7 @@ are overwritten or added.
   /**
    * The browse and selection filter for file selection. E.g. [".png",".jpg"] or ["image/\*"].
    */
-  - mimeTypes (String) multiple = ["image","image/gif","image/jpeg","image/png"]
+  - mimeTypes (String) multiple = ["image/gif","image/jpeg","image/png","image/tiff","image/svg+xml"]
 
   /**
    * Indicates whether upload from local file system is allowed.
@@ -128,7 +128,7 @@ fileUploadProps.put("fileReferenceParameter", cfg.get("fileReferenceParameter", 
 // default values for allowUpload and mimeTypes
 fileUploadProps.put("allowUpload", ex.getBoolean(cfg.get("allowUpload", String.class)));
 fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
-    "image", "image/gif", "image/jpeg", "image/png" }));
+    "image/gif","image/jpeg","image/png","image/tiff","image/svg+xml" }));
 
 // media format properties for validation of associated media reference
 String[] mediaFormats = null;
