@@ -57,6 +57,15 @@ public final class MediaFileExtension {
       );
 
   /**
+   * All file extension that are supported by the browser for direct display.
+   */
+  private static final Set<String> BROWSER_IMAGE_FILE_EXTENSIONS = ImmutableSet.of(
+      GIF,
+      JPEG,
+      "jpeg", // alternative JEPG extension
+      PNG);
+
+  /**
    * All file extensions that will be displayed as Flash.
    */
   private static final Set<String> FLASH_FILE_EXTENSIONS = ImmutableSet.of(
@@ -81,6 +90,26 @@ public final class MediaFileExtension {
    */
   public static @NotNull Set<String> getImageFileExtensions() {
     return IMAGE_FILE_EXTENSIONS;
+  }
+
+  /**
+   * Check if the given file extension is supported for direct display in a browser.
+   * @param fileExtension File extension
+   * @return true if image is supported in browsers
+   */
+  @SuppressWarnings("null")
+  public static boolean isBrowserImage(@Nullable String fileExtension) {
+    if (StringUtils.isEmpty(fileExtension)) {
+      return false;
+    }
+    return BROWSER_IMAGE_FILE_EXTENSIONS.contains(fileExtension.toLowerCase());
+  }
+
+  /**
+   * @return Image file extensions supported for direct display in a browser.
+   */
+  public static @NotNull Set<String> getBrowserImageFileExtensions() {
+    return BROWSER_IMAGE_FILE_EXTENSIONS;
   }
 
   /**

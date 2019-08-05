@@ -210,7 +210,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       return buildScaledMediaUrl(scaledDimension, this.media.getCropDimension());
     }
 
-    // if no scaling but cropping required builid scaled image URL
+    // if no scaling but cropping required build scaled image URL
     if (this.media.getCropDimension() != null) {
       return buildScaledMediaUrl(this.media.getCropDimension(), this.media.getCropDimension());
     }
@@ -219,9 +219,13 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       // if not scaling and no cropping required but special content disposition headers required build download url
       return buildDownloadMediaUrl();
     }
-    else {
-      // if not scaling and no cropping required build native media URL
+    else if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
+      // if no scaling and no cropping required build native media URL
       return buildNativeMediaUrl();
+    }
+    else {
+      // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
+      return buildScaledMediaUrl(this.imageDimension, null);
     }
   }
 
@@ -356,7 +360,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public String getFileName() {
-    return this.fileName;
+    if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
+      return this.fileName;
+    }
+    else {
+      return ImageFileServlet.getImageFileName(this.fileName);
+    }
   }
 
   @Override
