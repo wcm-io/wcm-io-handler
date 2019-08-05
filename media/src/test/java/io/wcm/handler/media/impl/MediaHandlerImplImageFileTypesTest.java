@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.media.impl;
 
-import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -87,6 +86,14 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
+  void testAsset_JPEG_Original_ContentDisposition() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.media_file.download_attachment.file/sample.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
   void testAsset_JPEG_Crop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildCropAssertMedia(asset, 50, 50,
@@ -99,6 +106,14 @@ class MediaHandlerImplImageFileTypesTest {
     Resource resource = createSampleFileUpload("/filetype/sample.jpg");
     buildAssertMedia(resource, 100, 50,
         "/content/upload/mediaInline./sample.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
+  void testFileUpload_JPEG_Original_ContentDisposition() {
+    Resource resource = createSampleFileUpload("/filetype/sample.jpg");
+    buildAssertMedia_ContentDisposition(resource, 100, 50,
+        "/content/upload/mediaInline.media_file.download_attachment.file/sample.jpg",
         ContentType.JPEG);
   }
 
@@ -186,6 +201,14 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
+  void testAsset_TIFF_Original_ContentDisposition() {
+    Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "/content/dam/sample.tif/_jcr_content/renditions/original.media_file.download_attachment.file/sample.tif",
+        ContentType.JPEG);
+  }
+
+  @Test
   void testAsset_TIFF_Crop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildCropAssertMedia(asset, 50, 50,
@@ -198,6 +221,14 @@ class MediaHandlerImplImageFileTypesTest {
     Resource resource = createSampleFileUpload("/filetype/sample.tif");
     buildAssertMedia(resource, 100, 50,
         "/content/upload/mediaInline.image_file.100.50.file/sample.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
+  void testFileUpload_TIFF_Original_ContentDisposition() {
+    Resource resource = createSampleFileUpload("/filetype/sample.tif");
+    buildAssertMedia_ContentDisposition(resource, 100, 50,
+        "/content/upload/mediaInline.media_file.download_attachment.file/sample.tif",
         ContentType.JPEG);
   }
 
@@ -220,6 +251,14 @@ class MediaHandlerImplImageFileTypesTest {
   private void buildAssertMedia(Asset asset, int width, int height, String mediaUrl,
       String contentType) {
     Media media = mediaHandler.get(asset.getPath())
+        .build();
+    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildAssertMedia_ContentDisposition(Asset asset, int width, int height, String mediaUrl,
+      String contentType) {
+    Media media = mediaHandler.get(asset.getPath())
+        .contentDispositionAttachment(true)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }
@@ -287,6 +326,13 @@ class MediaHandlerImplImageFileTypesTest {
 
   private void buildAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
+        .build();
+    assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildAssertMedia_ContentDisposition(Resource resource, int width, int height, String mediaUrl, String contentType) {
+    Media media = mediaHandler.get(resource)
+        .contentDispositionAttachment(true)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
   }

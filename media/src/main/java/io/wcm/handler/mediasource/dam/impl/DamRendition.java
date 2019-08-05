@@ -111,7 +111,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
   @Override
   public String getFileName() {
     if (this.rendition != null) {
-      return this.rendition.getFileName();
+      return this.rendition.getFileName(this.mediaArgs.isContentDispositionAttachment());
     }
     else {
       return null;

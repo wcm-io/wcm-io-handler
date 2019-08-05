@@ -93,8 +93,10 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   /**
    * @return File name
    */
-  public String getFileName() {
-    if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
+  public String getFileName(boolean contentDispositionAttachment) {
+    if (MediaFileExtension.isBrowserImage(getFileExtension())
+        || !MediaFileExtension.isImage(getFileExtension())
+        || contentDispositionAttachment) {
       return this.fileName;
     }
     else {
@@ -160,18 +162,18 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     if (contentDispositionAttachment) {
       return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServlet.SELECTOR
           + "." + MediaFileServlet.SELECTOR_DOWNLOAD
-          + "." + MediaFileServlet.EXTENSION, getFileName());
+          + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
     }
     else if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
       // use "deep URL" to reference rendition directly
       // do not use Asset URL for original rendition because it creates conflicts for dispatcher cache (filename vs. directory for asset resource name)
-      return RenditionMetadata.buildMediaPath(this.rendition.getPath() + ".", getFileName());
+      return RenditionMetadata.buildMediaPath(this.rendition.getPath() + ".", getFileName(contentDispositionAttachment));
     }
     else {
       // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
       return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
           + "." + getWidth() + "." + getHeight()
-          + "." + MediaFileServlet.EXTENSION, getFileName());
+          + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
     }
   }
 

@@ -45,9 +45,9 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public String getFileName() {
+  public String getFileName(boolean contentDispositionAttachment) {
     // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
-    return ImageFileServlet.getImageFileName(super.getFileName());
+    return ImageFileServlet.getImageFileName(super.getFileName(contentDispositionAttachment));
   }
 
   @Override
@@ -71,7 +71,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
     return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
         + "." + getWidth() + "." + getHeight()
         + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
-        + "." + MediaFileServlet.EXTENSION, getFileName());
+        + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
 
   @Override

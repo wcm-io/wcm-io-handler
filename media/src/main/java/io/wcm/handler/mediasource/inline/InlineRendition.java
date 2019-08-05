@@ -360,7 +360,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public String getFileName() {
-    if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
+    if (MediaFileExtension.isBrowserImage(getFileExtension())
+        || !MediaFileExtension.isImage(getFileExtension())
+        || this.mediaArgs.isContentDispositionAttachment()) {
       return this.fileName;
     }
     else {
