@@ -51,6 +51,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   private final String fileExtension;
   private final long width;
   private final long height;
+  private final boolean isVectorImage;
   private MediaFormat mediaFormat;
 
   /**
@@ -62,6 +63,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     // get filename and extension
     this.fileName = AssetRendition.getFilename(rendition);
     this.fileExtension = FilenameUtils.getExtension(this.fileName);
+    this.isVectorImage = MediaFileType.isVectorImage(this.fileExtension);
 
     // get image width/height
     Dimension dimension = AssetRendition.getDimension(rendition);
@@ -81,6 +83,13 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    */
   private boolean isOriginalRendition(Rendition value) {
     return StringUtils.equals(value.getName(), ORIGINAL_FILE);
+  }
+
+  /**
+   * @return True if rendition is a vector image
+   */
+  public boolean isVectorImage() {
+    return this.isVectorImage;
   }
 
   /**

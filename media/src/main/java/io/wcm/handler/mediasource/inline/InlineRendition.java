@@ -68,6 +68,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final MediaArgs mediaArgs;
   private final String fileName;
   private final String fileExtension;
+  private final String originalFileExtension;
   private final Dimension imageDimension;
   private final String url;
   private CropDimension cropDimension;
@@ -94,43 +95,51 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.cropDimension = media.getCropDimension();
 
     // detect image dimension
-    String processedFileName = fileName;
-    String processedFileExtension = FilenameUtils.getExtension(processedFileName);
+    this.originalFileExtension = FilenameUtils.getExtension(fileName);
 
     // check if scaling is possible
-    boolean isImage = MediaFileType.isImage(processedFileExtension);
+    boolean isImage = MediaFileType.isImage(this.originalFileExtension);
+    boolean isVectorImage = MediaFileType.isVectorImage(this.originalFileExtension);
 
     Dimension dimension = null;
     Dimension scaledDimension = null;
+    String processedFileName = fileName;
     if (isImage) {
       // get dimension from image binary
       dimension = getImageDimension();
 
-      // check if scaling is required
-      scaledDimension = getScaledDimension(dimension);
-      if (scaledDimension != null) {
-        if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
-          // overwrite image dimension of {@link Rendition} instance with scaled dimensions
-          dimension = scaledDimension;
-          // extension may have to be changed because scaling case produce different file format
-          processedFileName = ImageFileServlet.getImageFileName(processedFileName);
-        }
-        else if (mediaArgs.isAutoCrop() && this.cropDimension == null) {
-          // scaling is required, but not match with inline media - try auto cropping (if enabled)
-          InlineAutoCropping autoCropping = new InlineAutoCropping(dimension, mediaArgs);
-          List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
-          for (CropDimension autoCropDimension : autoCropDimensions) {
-            scaledDimension = getScaledDimension(autoCropDimension);
-            if (scaledDimension == null) {
-              scaledDimension = autoCropDimension;
-            }
-            if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
-              // overwrite image dimension of {@link Rendition} instance with scaled dimensions
-              dimension = scaledDimension;
-              cropDimension = autoCropDimension;
-              // extension may have to be changed because scaling case produce different file format
-              processedFileName = ImageFileServlet.getImageFileName(processedFileName);
-              break;
+      if (isVectorImage && (this.rotation != null && this.cropDimension != null)) {
+        // transformation not possible for vector images
+        scaledDimension = SCALING_NOT_POSSIBLE_DIMENSION;
+      }
+
+      else {
+        // check if scaling is required
+        scaledDimension = getScaledDimension(dimension);
+        if (scaledDimension != null) {
+          if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
+            // overwrite image dimension of {@link Rendition} instance with scaled dimensions
+            dimension = scaledDimension;
+            // extension may have to be changed because scaling case produce different file format
+            processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+          }
+          else if (mediaArgs.isAutoCrop() && this.cropDimension == null && !isVectorImage) {
+            // scaling is required, but not match with inline media - try auto cropping (if enabled)
+            InlineAutoCropping autoCropping = new InlineAutoCropping(dimension, mediaArgs);
+            List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
+            for (CropDimension autoCropDimension : autoCropDimensions) {
+              scaledDimension = getScaledDimension(autoCropDimension);
+              if (scaledDimension == null) {
+                scaledDimension = autoCropDimension;
+              }
+              if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
+                // overwrite image dimension of {@link Rendition} instance with scaled dimensions
+                dimension = scaledDimension;
+                cropDimension = autoCropDimension;
+                // extension may have to be changed because scaling case produce different file format
+                processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+                break;
+              }
             }
           }
         }
@@ -355,7 +364,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       return true;
     }
     for (String extension : extensions) {
-      if (StringUtils.equalsIgnoreCase(extension, getFileExtension())) {
+      if (StringUtils.equalsIgnoreCase(extension, this.originalFileExtension)) {
         return true;
       }
     }

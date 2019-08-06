@@ -21,6 +21,7 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -203,7 +204,7 @@ class MediaHandlerImplImageFileTypesTest {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_ContentDisposition(asset, 100, 50,
         "/content/dam/sample.tif/_jcr_content/renditions/original.media_file.download_attachment.file/sample.tif",
-        ContentType.JPEG);
+        ContentType.TIFF);
   }
 
   @Test
@@ -227,7 +228,7 @@ class MediaHandlerImplImageFileTypesTest {
     Resource resource = createSampleFileUpload("/filetype/sample.tif");
     buildAssertMedia_ContentDisposition(resource, 100, 50,
         "/content/upload/mediaInline.media_file.download_attachment.file/sample.tif",
-        ContentType.JPEG);
+        ContentType.TIFF);
   }
 
   @Test
@@ -238,10 +239,55 @@ class MediaHandlerImplImageFileTypesTest {
         ContentType.JPEG);
   }
 
+  @Test
+  void testAsset_SVG_Original() {
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia(asset, 100, 50,
+        "/content/dam/sample.svg/_jcr_content/renditions/original./sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testAsset_SVG_Original_ContentDisposition() {
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "/content/dam/sample.svg/_jcr_content/renditions/original.media_file.download_attachment.file/sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testAsset_SVG_Crop() {
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildCropAssertInvalidMedia(asset);
+  }
+
+  @Test
+  void testFileUpload_SVG_Original() {
+    Resource resource = createSampleFileUpload("/filetype/sample.svg");
+    buildAssertMedia(resource, 100, 50,
+        "/content/upload/mediaInline./sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testFileUpload_SVG_Original_ContentDisposition() {
+    Resource resource = createSampleFileUpload("/filetype/sample.svg");
+    buildAssertMedia_ContentDisposition(resource, 100, 50,
+        "/content/upload/mediaInline.media_file.download_attachment.file/sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testFileUpload_SVG_Crop() {
+    Resource resource = createSampleFileUpload("/filetype/sample.svg");
+    buildCropAssertInvalidMedia(resource);
+  }
+
   private Asset createSampleAsset(String classpathResource, String contentType) {
     String fileName = FilenameUtils.getName(classpathResource);
+    String fileExtension = FilenameUtils.getExtension(classpathResource);
     Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType);
-    context.create().assetRendition(asset, "cq5dam.web.sample.jpg", classpathResource, contentType);
+    context.create().assetRendition(asset, "cq5dam.web.sample." + fileExtension, classpathResource, contentType);
     return asset;
   }
 
@@ -266,6 +312,14 @@ class MediaHandlerImplImageFileTypesTest {
         .autoCrop(true)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildCropAssertInvalidMedia(Asset asset) {
+    Media media = mediaHandler.get(asset.getPath())
+        .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
+        .autoCrop(true)
+        .build();
+    assertFalse(media.isValid(), "media valid");
   }
 
   private void assertMedia(Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
@@ -326,6 +380,14 @@ class MediaHandlerImplImageFileTypesTest {
         .autoCrop(true)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildCropAssertInvalidMedia(Resource resource) {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
+        .autoCrop(true)
+        .build();
+    assertFalse(media.isValid(), "media valid");
   }
 
   private void buildAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {

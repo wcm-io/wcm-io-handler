@@ -61,7 +61,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
   protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
     NavigableSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);
     if (cropDimension != null) {
-      VirtualTransformedRenditionMetadata cropRendition = getCropRendition(processedCandidates);
+      VirtualTransformedRenditionMetadata cropRendition = getCropRendition();
       if (cropRendition != null) {
         // return only cropped rendition
         processedCandidates.clear();
@@ -82,6 +82,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
       return new TreeSet<>(candidates);
     }
     return candidates.stream()
+        .filter(rendition -> !rendition.isVectorImage())
         .map(rendition -> new VirtualTransformedRenditionMetadata(rendition.getRendition(),
             rotateMapWidth(rendition.getWidth(), rendition.getHeight(), rotation),
             rotateMapHeight(rendition.getWidth(), rendition.getHeight(), rotation),
@@ -91,12 +92,11 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
 
   /**
    * Searches for the biggest web-enabled rendition that matches the crop dimensions width and height or is bigger.
-   * @param candidates
    * @return Rendition or null if no match found
    */
-  private VirtualTransformedRenditionMetadata getCropRendition(NavigableSet<RenditionMetadata> candidates) {
+  private VirtualTransformedRenditionMetadata getCropRendition() {
     RenditionMetadata original = getOriginalRendition();
-    if (original == null) {
+    if (original == null || original.isVectorImage()) {
       return null;
     }
     Double scaleFactor = getCropScaleFactor();
