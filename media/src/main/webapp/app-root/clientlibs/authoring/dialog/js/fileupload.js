@@ -97,6 +97,10 @@
    */
   FileUploadExtension.prototype._detectMimeType = function (assetPath)  {
     var fileExtension = assetPath.substring(assetPath.lastIndexOf('.')+1, assetPath.length);
+    if (!fileExtension) {
+      return null;      
+    }
+    fileExtension = fileExtension.toLowerCase();
     if (fileExtension == "jpg" || fileExtension == "jpeg") {
       return "image/jpeg";
     }
