@@ -82,13 +82,18 @@
    */
   FileUploadExtension.prototype._triggerAssetSelected = function (assetPath)  {
     var self = this;
-    var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
+    var mimeType = self._detectMimeType(assetPath);
+    var thumbnailObject;
+    if (mimeType) {
+      var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
+      thumbnailObject = $("<img src='" + thumbnailUrl + "'>");
+    }
     self._$element.trigger($.Event("assetselected", {
       path: assetPath,
       group: "media",
-      mimetype: self._detectMimeType(assetPath),
+      mimetype: mimeType,
       param: {},
-      thumbnail: $("<img src='" + thumbnailUrl + "'>")
+      thumbnail: thumbnailObject
     }));
   };
 
