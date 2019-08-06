@@ -63,7 +63,9 @@ public enum MediaFileType {
 
   /**
    * Flash
+   * @deprecated Flash support is deprecated
    */
+  @Deprecated
   SWF("swf");
 
   private final Set<String> extensions;
@@ -162,14 +164,18 @@ public enum MediaFileType {
    * Check if the given file extension is an flash.
    * @param fileExtension File extension
    * @return true if flash
+   * @deprecated Flash support is deprecated
    */
+  @Deprecated
   public static boolean isFlash(@Nullable String fileExtension) {
     return isExtension(FLASH_FILE_TYPES, fileExtension);
   }
 
   /**
    * @return Flash file extensions
+   * @deprecated Flash support is deprecated
    */
+  @Deprecated
   public static @NotNull Set<String> getFlashFileExtensions() {
     return getFileExtensions(FLASH_FILE_TYPES);
   }

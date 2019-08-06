@@ -22,7 +22,6 @@ package io.wcm.handler.media.impl;
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -330,12 +329,11 @@ class MediaHandlerImplImageFileTypesTest {
     assertEquals(width, layer.getWidth(), "rendition layer width");
     assertEquals(height, layer.getHeight(), "rendition layer height");
 
-    assertNotNull(media.getMarkup());
-    assertEquals(mediaUrl, media.getElement().getAttributeValue("src"));
-
-    Rendition rendition = media.getRendition();
-    assertEquals(FilenameUtils.getName(mediaUrl), rendition.getFileName());
-    assertEquals(FilenameUtils.getExtension(mediaUrl), rendition.getFileExtension());
+    if (!StringUtils.contains(mediaUrl, ".download_attachment.")) {
+      Rendition rendition = media.getRendition();
+      assertEquals(FilenameUtils.getName(mediaUrl), rendition.getFileName());
+      assertEquals(FilenameUtils.getExtension(mediaUrl), rendition.getFileExtension());
+    }
 
     if (StringUtils.contains(mediaUrl, ".image_file.")) {
       // extract selector string from media url

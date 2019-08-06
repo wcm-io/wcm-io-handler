@@ -108,6 +108,7 @@ class SimpleImageMediaMarkupBuilderTest {
 
     when(rendition.getFileName()).thenReturn("image.gif");
     when(rendition.isImage()).thenReturn(true);
+    when(rendition.isBrowserImage()).thenReturn(true);
 
     assertTrue(builder.accepts(media), "image rendition");
 

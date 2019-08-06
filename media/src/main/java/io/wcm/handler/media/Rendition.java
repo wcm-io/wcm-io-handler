@@ -88,9 +88,19 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   ValueMap getProperties();
 
   /**
-   * @return true if the rendition is a web image file format that can be displayed and resized.
+   * @return true if the rendition is an image format supported by the media handler.
    */
   boolean isImage();
+
+  /**
+   * @return true if the rendition is a web image file that can be displayed in a browser.
+   */
+  boolean isBrowserImage();
+
+  /**
+   * @return true if the rendition is a vector image that can be displayed in a browser.
+   */
+  boolean isVectorImage();
 
   /**
    * @return true if the rendition has a flash movie.

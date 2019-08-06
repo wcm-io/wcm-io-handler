@@ -181,6 +181,17 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  public boolean isBrowserImage() {
+    return MediaFileType.isBrowserImage(getFileExtension());
+  }
+
+  @Override
+  public boolean isVectorImage() {
+    return MediaFileType.isVectorImage(getFileExtension());
+  }
+
+  @Override
+  @SuppressWarnings("deprecation")
   public boolean isFlash() {
     return MediaFileType.isFlash(getFileExtension());
   }

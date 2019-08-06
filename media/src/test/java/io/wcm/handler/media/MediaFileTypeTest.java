@@ -75,6 +75,7 @@ class MediaFileTypeTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void testIsFlash() {
     assertTrue(MediaFileType.isFlash("swf"));
     assertFalse(MediaFileType.isFlash("pdf"));
@@ -82,6 +83,7 @@ class MediaFileTypeTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void testGetFlashFileExtensions() {
     assertEquals(ImmutableSet.of("swf"), MediaFileType.getFlashFileExtensions());
   }
