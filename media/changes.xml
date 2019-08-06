@@ -28,6 +28,9 @@
         Support TIFF images in media handler (with conversion to JPEG for displaying in browser).
       </action>
       <action type="add" dev="sseifert">
+        Support SVG vector images in media handler (without transformation support).
+      </action>
+      <action type="add" dev="sseifert">
         Add Granite UI components: Media Formats Select field and Media Formats data source.
       </action>
       <action type="add" dev="sseifert">

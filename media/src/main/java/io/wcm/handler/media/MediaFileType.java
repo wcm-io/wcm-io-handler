@@ -57,6 +57,11 @@ public enum MediaFileType {
   TIFF("tif", "tiff"),
 
   /**
+   * SVG
+   */
+  SVG("svg"),
+
+  /**
    * Flash
    */
   SWF("swf");
@@ -81,7 +86,8 @@ public enum MediaFileType {
       GIF,
       JPEG,
       PNG,
-      TIFF);
+      TIFF,
+      SVG);
 
   /**
    * All file types that are supported by the browser for direct display.
@@ -89,7 +95,14 @@ public enum MediaFileType {
   private static final EnumSet<MediaFileType> BROWSER_IMAGE_FILE_TYPES = EnumSet.of(
       GIF,
       JPEG,
-      PNG);
+      PNG,
+      SVG);
+
+  /**
+   * All file types that are vector formats and can be scaled by the browser.
+   */
+  private static final EnumSet<MediaFileType> VECTOR_IMAGE_FILE_TYPES = EnumSet.of(
+      SVG);
 
   /**
    * All file types that will be displayed as Flash.
@@ -102,7 +115,6 @@ public enum MediaFileType {
    * @param fileExtension File extension
    * @return true if image
    */
-  @SuppressWarnings("null")
   public static boolean isImage(@Nullable String fileExtension) {
     return isExtension(IMAGE_FILE_TYPES, fileExtension);
   }
@@ -119,7 +131,6 @@ public enum MediaFileType {
    * @param fileExtension File extension
    * @return true if image is supported in browsers
    */
-  @SuppressWarnings("null")
   public static boolean isBrowserImage(@Nullable String fileExtension) {
     return isExtension(BROWSER_IMAGE_FILE_TYPES, fileExtension);
   }
@@ -132,11 +143,26 @@ public enum MediaFileType {
   }
 
   /**
+   * Check if the given file extension is a vector image file extension.
+   * @param fileExtension File extension
+   * @return true if image is a vector image.
+   */
+  public static boolean isVectorImage(@Nullable String fileExtension) {
+    return isExtension(VECTOR_IMAGE_FILE_TYPES, fileExtension);
+  }
+
+  /**
+   * @return Image file extensions that are vector images.
+   */
+  public static @NotNull Set<String> getVectorImageFileExtensions() {
+    return getFileExtensions(VECTOR_IMAGE_FILE_TYPES);
+  }
+
+  /**
    * Check if the given file extension is an flash.
    * @param fileExtension File extension
    * @return true if flash
    */
-  @SuppressWarnings("null")
   public static boolean isFlash(@Nullable String fileExtension) {
     return isExtension(FLASH_FILE_TYPES, fileExtension);
   }
@@ -148,7 +174,7 @@ public enum MediaFileType {
     return getFileExtensions(FLASH_FILE_TYPES);
   }
 
-  private static boolean isExtension(@NotNull EnumSet<MediaFileType> fileTypes, @NotNull String fileExtension) {
+  private static boolean isExtension(@NotNull EnumSet<MediaFileType> fileTypes, @Nullable String fileExtension) {
     if (StringUtils.isEmpty(fileExtension)) {
       return false;
     }
