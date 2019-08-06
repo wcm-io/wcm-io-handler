@@ -24,6 +24,8 @@ import static io.wcm.handler.media.format.MediaFormatHandler.RATIO_TOLERANCE;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
+import io.wcm.handler.media.Dimension;
+
 /**
  * Compare ratios with tolerance.
  */
@@ -57,6 +59,41 @@ public final class Ratio {
       return false;
     }
     return matches(first.getRatio(), second.getRatio());
+  }
+
+  /**
+   * Get ratio from width/height.
+   * @param width Width
+   * @param height Height
+   * @return Ratio (returns 0 when ratio is invalid)
+   */
+  public static double get(double width, double height) {
+    if (width <= 0) {
+      return 0d;
+    }
+    if (height <= 0) {
+      return 0d;
+    }
+    return width / height;
+  }
+
+  /**
+   * Get ratio from width/height.
+   * @param width Width
+   * @param height Height
+   * @return Ratio (returns 0 when ratio is invalid)
+   */
+  public static double get(long width, long height) {
+    return Ratio.get((double)width, (double)height);
+  }
+
+  /**
+   * Get ratio from width/height.
+   * @param dimension Dimension
+   * @return Ratio (returns 0 when ratio is invalid)
+   */
+  public static double get(@NotNull Dimension dimension) {
+    return get(dimension.getWidth(), dimension.getHeight());
   }
 
 }

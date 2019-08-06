@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -29,14 +31,15 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.HttpConstants;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.image.Layer;
+import com.drew.lang.annotations.Nullable;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
-import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -96,7 +99,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     if (selectors.length >= 5) {
       String rotationString = selectors[4];
       rotation = NumberUtils.toInt(rotationString);
-      if (!TransformedRenditionHandler.isValidRotation(rotation)) {
+      if (!isValidRotation(rotation)) {
         rotation = 0;
       }
     }
@@ -152,7 +155,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
    * @param originalFilename Original filename of the image to render.
    * @return Filename to be used for URL.
    */
-  public static String getImageFileName(String originalFilename) {
+  public static String getImageFileName(@NotNull String originalFilename) {
     String namePart = StringUtils.substringBeforeLast(originalFilename, ".");
     String extensionPart = StringUtils.substringAfterLast(originalFilename, ".");
 
@@ -164,6 +167,39 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       extensionPart = FileExtension.JPEG;
     }
     return namePart + "." + extensionPart;
+  }
+
+  /**
+   * Build selector string for this servlet.
+   * @param width Width
+   * @param height Height
+   * @param cropDimension Crop dimension
+   * @param rotation Rotation
+   * @param contentDispositionAttachment Content disposition attachment
+   * @return Selector string
+   */
+  public static @NotNull String buildSelectorString(long width, long height,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      boolean contentDispositionAttachment) {
+    StringBuffer result = new StringBuffer();
+    result.append(SELECTOR);
+    result.append(".").append(Long.toString(width));
+    result.append(".").append(Long.toString(height));
+
+    if (cropDimension != null) {
+      result.append(".").append(cropDimension.getCropString());
+    }
+    else if (rotation != null) {
+      result.append(".-");
+    }
+    if (rotation != null) {
+      result.append(".").append(rotation.toString());
+    }
+    if (contentDispositionAttachment) {
+      result.append(".").append(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);
+    }
+
+    return result.toString();
   }
 
 }

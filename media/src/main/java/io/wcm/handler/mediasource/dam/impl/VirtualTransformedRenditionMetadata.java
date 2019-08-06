@@ -82,11 +82,9 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
 
   @Override
   public String getMediaPath(boolean contentDispositionAttachment) {
-    return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
-        + "." + getWidth() + "." + getHeight()
-        + "." + (this.cropDimension != null ? this.cropDimension.getCropString() : "-")
-        + (this.rotation != null ? "." + this.rotation : "")
-        + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
+    return RenditionMetadata.buildMediaPath(getRendition().getPath()
+        + "." + ImageFileServlet.buildSelectorString(getWidth(), getHeight(),
+            this.cropDimension, this.rotation, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
 

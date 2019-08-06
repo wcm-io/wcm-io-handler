@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.wcm.commons.caching.ModificationDateProvider;
 
 /**
@@ -123,7 +124,7 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
     long width = getWidth();
     long height = getHeight();
     if (width > 0 && height > 0) {
-      return (double)width / (double)height;
+      return Ratio.get(width, height);
     }
     return 0d;
   }

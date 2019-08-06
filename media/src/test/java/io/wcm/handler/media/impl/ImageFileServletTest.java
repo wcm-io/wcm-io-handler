@@ -19,13 +19,15 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.impl.ImageFileServlet.buildSelectorString;
+import static io.wcm.handler.media.impl.ImageFileServlet.getImageFileName;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.image.Layer;
 
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -55,7 +58,7 @@ class ImageFileServletTest {
   void testGet_NoSelector() throws Exception {
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_NOT_FOUND, context.response().getStatus());
+    assertEquals(SC_NOT_FOUND, context.response().getStatus());
   }
 
   @Test
@@ -64,7 +67,7 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertResponseLayerSize(215, 102);
   }
@@ -75,7 +78,7 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertResponseLayerSize(10, 15);
   }
@@ -86,7 +89,7 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertResponseLayerSize(215, 102);
   }
@@ -97,7 +100,7 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertResponseLayerSize(102, 215);
   }
@@ -108,7 +111,7 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertResponseLayerSize(15, 10);
   }
@@ -119,7 +122,7 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertResponseLayerSize(215, 102);
   }
@@ -130,7 +133,7 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertResponseLayerSize(215, 102);
   }
@@ -142,25 +145,25 @@ class ImageFileServletTest {
 
     underTest.service(context.request(), context.response());
 
-    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(SC_OK, context.response().getStatus());
     assertEquals(ContentType.PNG, context.response().getContentType());
     assertResponseLayerSize(215, 102);
   }
 
   @Test
   void testGetImageFileNameJpeg() {
-    assertEquals("myimage.jpg", ImageFileServlet.getImageFileName("myimage.jpg"));
-    assertEquals("myimage.jpg", ImageFileServlet.getImageFileName("myimage.jpeg"));
+    assertEquals("myimage.jpg", getImageFileName("myimage.jpg"));
+    assertEquals("myimage.jpg", getImageFileName("myimage.jpeg"));
   }
 
   @Test
   void testGetImageFileNamePng() {
-    assertEquals("myImage.png", ImageFileServlet.getImageFileName("myImage.Png"));
+    assertEquals("myImage.png", getImageFileName("myImage.Png"));
   }
 
   @Test
   void testGetImageFileNameOther() {
-    assertEquals("myimage.jpg", ImageFileServlet.getImageFileName("myimage.gif"));
+    assertEquals("myimage.jpg", getImageFileName("myimage.gif"));
   }
 
   private void assertResponseLayerSize(long width, long height) throws IOException {
@@ -169,6 +172,19 @@ class ImageFileServletTest {
     is.close();
     assertEquals(width, layer.getWidth());
     assertEquals(height, layer.getHeight());
+  }
+
+  @Test
+  void testBuildSelectorString() {
+    CropDimension crop = new CropDimension(2, 4, 6, 8);
+    assertEquals("image_file.10.20", buildSelectorString(10, 20, null, null, false));
+    assertEquals("image_file.10.20.download_attachment", buildSelectorString(10, 20, null, null, true));
+    assertEquals("image_file.10.20.2,4,8,12", buildSelectorString(10, 20, crop, null, false));
+    assertEquals("image_file.10.20.2,4,8,12.download_attachment", buildSelectorString(10, 20, crop, null, true));
+    assertEquals("image_file.10.20.2,4,8,12.90", buildSelectorString(10, 20, crop, 90, false));
+    assertEquals("image_file.10.20.2,4,8,12.90.download_attachment", buildSelectorString(10, 20, crop, 90, true));
+    assertEquals("image_file.10.20.-.90", buildSelectorString(10, 20, null, 90, false));
+    assertEquals("image_file.10.20.-.90.download_attachment", buildSelectorString(10, 20, null, 90, true));
   }
 
 }
