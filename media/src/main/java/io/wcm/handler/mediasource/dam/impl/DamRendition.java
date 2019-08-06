@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
@@ -69,7 +70,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
     // if auto-cropping is enabled, and no cropping or rotation parameters set, try to build a
     // transformed rendition with automatically devised cropping parameters
     if (resolvedRendition == null && mediaArgs.isAutoCrop() && !(renditionHandler instanceof TransformedRenditionHandler)) {
-      AutoCropping autoCropping = new AutoCropping(asset, mediaArgs);
+      DamAutoCropping autoCropping = new DamAutoCropping(asset, mediaArgs);
       List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
       for (CropDimension autoCropDimension : autoCropDimensions) {
         renditionHandler = new TransformedRenditionHandler(asset, autoCropDimension, null);
@@ -120,12 +121,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public String getFileExtension() {
-    if (this.rendition != null) {
-      return this.rendition.getFileExtension();
-    }
-    else {
-      return null;
-    }
+    return FilenameUtils.getExtension(getFileName());
   }
 
   @Override

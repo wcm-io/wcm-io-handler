@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.format.Ratio;
 
 /**
  * Extended rendition handler supporting cropping and rotating of images.
@@ -117,11 +118,11 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
    */
   private double getCropScaleFactor() {
     RenditionMetadata original = getOriginalRendition();
-    RenditionMetadata webEnabled = AutoCropping.getWebRenditionForCropping(getAsset());
+    RenditionMetadata webEnabled = DamAutoCropping.getWebRenditionForCropping(getAsset());
     if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
       return 1d;
     }
-    return (double)original.getWidth() / (double)webEnabled.getWidth();
+    return Ratio.get(original.getWidth(), webEnabled.getWidth());
   }
 
 }

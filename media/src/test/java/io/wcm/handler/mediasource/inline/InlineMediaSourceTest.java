@@ -57,6 +57,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
+import com.day.image.Layer;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.Asset;
@@ -319,6 +320,10 @@ class InlineMediaSourceTest {
     assertNotNull(media.getAsset().getImageRendition(new MediaArgs()));
     assertNull(media.getAsset().getFlashRendition(new MediaArgs()));
     assertNull(media.getAsset().getDownloadRendition(new MediaArgs()));
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(215, layer.getWidth());
+    assertEquals(102, layer.getHeight());
   }
 
   @Test
@@ -408,6 +413,10 @@ class InlineMediaSourceTest {
     assertEquals(108, rendition.getWidth(), "width");
     assertEquals(51, rendition.getHeight(), "height");
     assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".108.51.file/sample_image_215x102.jpg", rendition.getUrl(), "url");
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(108, layer.getWidth());
+    assertEquals(51, layer.getHeight());
 
     rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(42, 20)).refProperty("mediaInline").build().getRendition();
     assertEquals(42, rendition.getWidth(), "width");
@@ -504,6 +513,10 @@ class InlineMediaSourceTest {
     assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl(), "url");
     assertEquals(SHOWROOM_CONTROLS_SCALE1, rendition.getMediaFormat());
 
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(64, layer.getWidth());
+    assertEquals(30, layer.getHeight());
+
     // test image resource with dimensions only width
     media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH)).refProperty("mediaInline")
         .build();
@@ -565,7 +578,7 @@ class InlineMediaSourceTest {
   void testWithCroppping() {
     // set cropping parameters
     ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
-    props.put(PN_MEDIA_CROP, "10,10,74,40");
+    props.put(PN_MEDIA_CROP, "5,10,69,40");
 
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
@@ -574,11 +587,40 @@ class InlineMediaSourceTest {
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(1, media.getRenditions().size(), "renditions");
     assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.10,10,74,40.file/sample_image_215x102.jpg",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.5,10,69,40.file/sample_image_215x102.jpg",
         media.getUrl(), "rendition.mediaUrl");
-    assertEquals(64, media.getRendition().getWidth());
-    assertEquals(30, media.getRendition().getHeight());
+
+    Rendition rendition = media.getRendition();
+    assertEquals(64, rendition.getWidth());
+    assertEquals(30, rendition.getHeight());
     assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(64, layer.getWidth());
+    assertEquals(30, layer.getHeight());
+  }
+
+  @Test
+  void testWithAutoCroppping() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2)
+        .autoCrop(true);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(1, media.getRenditions().size(), "renditions");
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.64.57,0,159,102.file/sample_image_215x102.jpg",
+        media.getUrl(), "rendition.mediaUrl");
+
+    Rendition rendition = media.getRendition();
+    assertEquals(64, rendition.getWidth());
+    assertEquals(64, rendition.getHeight());
+    assertEquals(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2, media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(64, layer.getWidth());
+    assertEquals(64, layer.getHeight());
   }
 
   @Test
@@ -588,17 +630,50 @@ class InlineMediaSourceTest {
     props.put(PN_MEDIA_ROTATION, "90");
 
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs();
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(1, media.getRenditions().size(), "renditions");
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.215.102.-.90.file/sample_image_215x102.jpg",
+        media.getUrl(), "rendition.mediaUrl");
+
+    Rendition rendition = media.getRendition();
+    assertEquals(102, rendition.getWidth());
+    assertEquals(215, rendition.getHeight());
+    assertNull(media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(102, layer.getWidth());
+    assertEquals(215, layer.getHeight());
+  }
+
+  @Test
+  void testWithCroppingAndRotation() {
+    // set rotation parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
+    props.put(PN_MEDIA_CROP, "5,10,69,40");
+    props.put(PN_MEDIA_ROTATION, "270");
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(1, media.getRenditions().size(), "renditions");
     assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.-.90.file/sample_image_215x102.jpg",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.5,10,69,40.270.file/sample_image_215x102.jpg",
         media.getUrl(), "rendition.mediaUrl");
-    assertEquals(30, media.getRendition().getWidth());
-    assertEquals(64, media.getRendition().getHeight());
+
+    Rendition rendition = media.getRendition();
+    assertEquals(30, rendition.getWidth());
+    assertEquals(64, rendition.getHeight());
     assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(30, layer.getWidth());
+    assertEquals(64, layer.getHeight());
   }
 
   @Test

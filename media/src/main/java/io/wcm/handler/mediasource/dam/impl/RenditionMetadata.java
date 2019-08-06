@@ -216,7 +216,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       return false;
     }
     if (ratio > 0) {
-      double renditionRatio = (double)getWidth() / (double)getHeight();
+      double renditionRatio = Ratio.get(getWidth(), getHeight());
       if (!Ratio.matches(renditionRatio, ratio)) {
         return false;
       }

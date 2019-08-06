@@ -36,6 +36,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 
 /**
@@ -353,7 +354,7 @@ class DefaultRenditionHandler implements RenditionHandler {
       long destHeight = mediaArgs.getFixedHeight();
       double destRatio = 0;
       if (destWidth > 0 && destHeight > 0) {
-        destRatio = (double)destWidth / (double)destHeight;
+        destRatio = Ratio.get(destWidth, destHeight);
       }
       return getVirtualRendition(candidates, destWidth, destHeight, destRatio);
     }
@@ -424,7 +425,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if ratio is missing: calculate from given rendition
     if (ratio < MediaFormatHandler.RATIO_TOLERANCE) {
-      ratio = (double)rendition.getWidth() / (double)rendition.getHeight();
+      ratio = Ratio.get(rendition.getWidth(), rendition.getHeight());
     }
 
     // if height is missing - calculate from width

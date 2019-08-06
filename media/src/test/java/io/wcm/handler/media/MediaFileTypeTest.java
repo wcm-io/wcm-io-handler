@@ -32,9 +32,10 @@ class MediaFileTypeTest {
   @Test
   void testIsImage() {
     assertTrue(MediaFileType.isImage("gif"));
-    assertTrue(MediaFileType.isImage("jpg"));
+    assertTrue(MediaFileType.isImage("JPG"));
     assertTrue(MediaFileType.isImage("jpeg"));
     assertTrue(MediaFileType.isImage("tif"));
+    assertTrue(MediaFileType.isImage("TIFF"));
     assertFalse(MediaFileType.isImage("pdf"));
     assertFalse(MediaFileType.isImage(null));
   }
@@ -46,7 +47,7 @@ class MediaFileTypeTest {
 
   @Test
   void testIsBrowserImage() {
-    assertTrue(MediaFileType.isBrowserImage("gif"));
+    assertTrue(MediaFileType.isBrowserImage("GIF"));
     assertTrue(MediaFileType.isBrowserImage("jpg"));
     assertTrue(MediaFileType.isBrowserImage("jpeg"));
     assertFalse(MediaFileType.isBrowserImage("tif"));

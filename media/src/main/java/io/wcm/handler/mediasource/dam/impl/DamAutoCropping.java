@@ -34,17 +34,18 @@ import com.day.cq.dam.api.Asset;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 
 /**
  * Helper class for calculating crop dimensions for auto-cropping.
  */
-class AutoCropping {
+class DamAutoCropping {
 
   private final Asset asset;
   private final MediaArgs mediaArgs;
 
-  AutoCropping(Asset asset, MediaArgs mediaArgs) {
+  DamAutoCropping(@NotNull Asset asset, @NotNull MediaArgs mediaArgs) {
     this.asset = asset;
     this.mediaArgs = mediaArgs;
   }
@@ -58,36 +59,15 @@ class AutoCropping {
         .collect(Collectors.toList());
   }
 
-  private CropDimension calculateAutoCropDimension(MediaFormat mediaFormat) {
+  private CropDimension calculateAutoCropDimension(@NotNull MediaFormat mediaFormat) {
     double ratio = mediaFormat.getRatio();
     if (ratio > 0) {
-      RenditionMetadata rendition = AutoCropping.getWebRenditionForCropping(asset);
+      RenditionMetadata rendition = DamAutoCropping.getWebRenditionForCropping(asset);
       if (rendition != null && rendition.getWidth() > 0 && rendition.getHeight() > 0) {
-        return calculateAutoCropDimension(rendition.getWidth(), rendition.getHeight(), ratio);
+        return ImageTransformation.calculateAutoCropDimension(rendition.getWidth(), rendition.getHeight(), ratio);
       }
     }
     return null;
-  }
-
-  static CropDimension calculateAutoCropDimension(long givenWidth, long givenHeight, double expectedRatio) {
-    double givenRatio = (double)givenWidth / (double)givenHeight;
-    long width;
-    long height;
-    long top;
-    long left;
-    if (givenRatio > expectedRatio) {
-      width = Math.round(givenHeight * expectedRatio);
-      height = givenHeight;
-      top = 0;
-      left = Math.round(((double)givenWidth - (double)width) / 2d);
-    }
-    else {
-      width = givenWidth;
-      height = Math.round(givenWidth / expectedRatio);
-      top = Math.round(((double)givenHeight - (double)height) / 2d);
-      left = 0;
-    }
-    return new CropDimension(left, top, width, height);
   }
 
   /**

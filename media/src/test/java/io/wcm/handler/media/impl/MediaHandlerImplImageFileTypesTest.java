@@ -21,6 +21,7 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -33,7 +34,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -43,6 +43,7 @@ import com.day.image.Layer;
 import ch.randelshofer.io.ByteArrayImageInputStream;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
@@ -118,11 +119,10 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  @Disabled // TODO: support cropping for inline media
   void testFileUpload_JPEG_Crop() {
     Resource resource = createSampleFileUpload("/filetype/sample.jpg");
     buildCropAssertMedia(resource, 50, 50,
-        "/content/upload/mediaInline./sample.jpg",
+        "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
 
@@ -151,11 +151,10 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  @Disabled // TODO: support cropping for inline media
   void testFileUpload_GIF_Crop() {
     Resource resource = createSampleFileUpload("/filetype/sample.gif");
     buildCropAssertMedia(resource, 50, 50,
-        "/content/upload/mediaInline./sample.gif",
+        "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
 
@@ -184,11 +183,10 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  @Disabled // TODO: support cropping for inline media
   void testFileUpload_PNG_Crop() {
     Resource resource = createSampleFileUpload("/filetype/sample.png");
     buildCropAssertMedia(resource, 50, 50,
-        "/content/upload/mediaInline./sample.png",
+        "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.png",
         ContentType.PNG);
   }
 
@@ -233,11 +231,10 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  @Disabled // TODO: support cropping for inline media
   void testFileUpload_TIFF_Crop() {
     Resource resource = createSampleFileUpload("/filetype/sample.tif");
     buildCropAssertMedia(resource, 50, 50,
-        "/content/upload/mediaInline./sample.tif",
+        "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
 
@@ -278,6 +275,13 @@ class MediaHandlerImplImageFileTypesTest {
     Layer layer = AdaptTo.notNull(media.getRendition(), Layer.class);
     assertEquals(width, layer.getWidth(), "rendition layer width");
     assertEquals(height, layer.getHeight(), "rendition layer height");
+
+    assertNotNull(media.getMarkup());
+    assertEquals(mediaUrl, media.getElement().getAttributeValue("src"));
+
+    Rendition rendition = media.getRendition();
+    assertEquals(FilenameUtils.getName(mediaUrl), rendition.getFileName());
+    assertEquals(FilenameUtils.getExtension(mediaUrl), rendition.getFileExtension());
 
     if (StringUtils.contains(mediaUrl, ".image_file.")) {
       // extract selector string from media url

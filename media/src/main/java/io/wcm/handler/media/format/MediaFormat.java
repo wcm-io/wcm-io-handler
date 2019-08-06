@@ -200,12 +200,12 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
     // get ratio from media format definition calculated from ratio sample/display values
     if (this.ratioWidth > 0 && this.ratioHeight > 0) {
-      return this.ratioWidth / this.ratioHeight;
+      return Ratio.get(this.ratioWidth, this.ratioHeight);
     }
 
     // otherwise calculate ratio
     if (isFixedDimension() && this.width > 0 && this.height > 0) {
-      return (double)this.width / (double)this.height;
+      return Ratio.get(this.width, this.height);
     }
 
     return 0d;
