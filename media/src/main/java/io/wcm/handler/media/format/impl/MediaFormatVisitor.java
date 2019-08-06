@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
+package io.wcm.handler.media.format.impl;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.format.MediaFormat;
 
@@ -25,13 +28,14 @@ import io.wcm.handler.media.format.MediaFormat;
  * Interface for iterating over all valid media formats.
  * @param <T> Return type
  */
-interface MediaFormatVisitor<T> {
+public interface MediaFormatVisitor<T> {
 
   /**
    * Visit media format
    * @param mediaFormat Media format
    * @return Return value - if not null the visit process is finished and the return value returned
    */
-  T visit(MediaFormat mediaFormat);
+  @Nullable
+  T visit(@NotNull MediaFormat mediaFormat);
 
 }

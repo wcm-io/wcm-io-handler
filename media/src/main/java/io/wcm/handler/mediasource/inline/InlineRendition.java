@@ -49,6 +49,7 @@ import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.media.format.impl.MediaFormatSupport;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.JcrBinary;
@@ -345,8 +346,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @return true if file extension matches
    */
   private boolean isMatchingFileExtension() {
-    String[] extensions = mediaArgs.getFileExtensions();
-    if (extensions == null || extensions.length == 0) {
+    String[] extensions = MediaFormatSupport.getRequestedFileExtensions(mediaArgs);
+    if (extensions == null) {
+      // constraints for filtering file extensions are not fulfilled - not matching possible
+      return false;
+    }
+    if (extensions.length == 0) {
       return true;
     }
     for (String extension : extensions) {
