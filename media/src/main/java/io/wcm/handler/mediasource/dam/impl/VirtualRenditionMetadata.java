@@ -46,8 +46,13 @@ class VirtualRenditionMetadata extends RenditionMetadata {
 
   @Override
   public String getFileName(boolean contentDispositionAttachment) {
-    // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
-    return ImageFileServlet.getImageFileName(super.getFileName(contentDispositionAttachment));
+    if (isVectorImage()) {
+      return super.getFileName(contentDispositionAttachment);
+    }
+    else {
+      // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
+      return ImageFileServlet.getImageFileName(super.getFileName(contentDispositionAttachment));
+    }
   }
 
   @Override
@@ -68,6 +73,10 @@ class VirtualRenditionMetadata extends RenditionMetadata {
 
   @Override
   public String getMediaPath(boolean contentDispositionAttachment) {
+    if (isVectorImage()) {
+      // vector images can be scaled in browser without need of ImageFileServlet
+      return super.getMediaPath(contentDispositionAttachment);
+    }
     return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
         + "." + getWidth() + "." + getHeight()
         + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")

@@ -507,7 +507,7 @@ public final class DummyMediaFormats {
   public static final MediaFormat RATIO_SQUARE = create("ratio_square")
       .label("Ratio (1:1)")
       .ratio(1, 1)
-      .extensions("gif", "jpg", "png", "tif")
+      .extensions("gif", "jpg", "png", "tif", "svg")
       .build();
 
   /* formats for testing responsive images */

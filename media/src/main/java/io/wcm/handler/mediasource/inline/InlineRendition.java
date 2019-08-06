@@ -49,6 +49,7 @@ import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.media.format.impl.MediaFormatSupport;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.JcrBinary;
@@ -67,6 +68,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final MediaArgs mediaArgs;
   private final String fileName;
   private final String fileExtension;
+  private final String originalFileExtension;
   private final Dimension imageDimension;
   private final String url;
   private CropDimension cropDimension;
@@ -93,43 +95,55 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.cropDimension = media.getCropDimension();
 
     // detect image dimension
-    String processedFileName = fileName;
-    String processedFileExtension = FilenameUtils.getExtension(processedFileName);
+    this.originalFileExtension = FilenameUtils.getExtension(fileName);
 
     // check if scaling is possible
-    boolean isImage = MediaFileType.isImage(processedFileExtension);
+    boolean isImage = MediaFileType.isImage(this.originalFileExtension);
+    boolean isVectorImage = MediaFileType.isVectorImage(this.originalFileExtension);
 
     Dimension dimension = null;
     Dimension scaledDimension = null;
+    String processedFileName = fileName;
     if (isImage) {
       // get dimension from image binary
       dimension = getImageDimension();
 
-      // check if scaling is required
-      scaledDimension = getScaledDimension(dimension);
-      if (scaledDimension != null) {
-        if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
-          // overwrite image dimension of {@link Rendition} instance with scaled dimensions
-          dimension = scaledDimension;
-          // extension may have to be changed because scaling case produce different file format
-          processedFileName = ImageFileServlet.getImageFileName(processedFileName);
-        }
-        else if (mediaArgs.isAutoCrop() && this.cropDimension == null) {
-          // scaling is required, but not match with inline media - try auto cropping (if enabled)
-          InlineAutoCropping autoCropping = new InlineAutoCropping(dimension, mediaArgs);
-          List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
-          for (CropDimension autoCropDimension : autoCropDimensions) {
-            scaledDimension = getScaledDimension(autoCropDimension);
-            if (scaledDimension == null) {
-              scaledDimension = autoCropDimension;
-            }
-            if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
-              // overwrite image dimension of {@link Rendition} instance with scaled dimensions
-              dimension = scaledDimension;
-              cropDimension = autoCropDimension;
-              // extension may have to be changed because scaling case produce different file format
+      if (isVectorImage && (this.rotation != null && this.cropDimension != null)) {
+        // transformation not possible for vector images
+        scaledDimension = SCALING_NOT_POSSIBLE_DIMENSION;
+      }
+
+      else {
+        // check if scaling is required
+        scaledDimension = getScaledDimension(dimension);
+        if (scaledDimension != null) {
+          if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
+            // overwrite image dimension of {@link Rendition} instance with scaled dimensions
+            dimension = scaledDimension;
+            // extension may have to be changed because scaling case produce different file format
+            if (!isVectorImage) {
               processedFileName = ImageFileServlet.getImageFileName(processedFileName);
-              break;
+            }
+          }
+          else if (mediaArgs.isAutoCrop() && this.cropDimension == null && !isVectorImage) {
+            // scaling is required, but not match with inline media - try auto cropping (if enabled)
+            InlineAutoCropping autoCropping = new InlineAutoCropping(dimension, mediaArgs);
+            List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
+            for (CropDimension autoCropDimension : autoCropDimensions) {
+              scaledDimension = getScaledDimension(autoCropDimension);
+              if (scaledDimension == null) {
+                scaledDimension = autoCropDimension;
+              }
+              if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
+                // overwrite image dimension of {@link Rendition} instance with scaled dimensions
+                dimension = scaledDimension;
+                cropDimension = autoCropDimension;
+                // extension may have to be changed because scaling case produce different file format
+                if (!isVectorImage) {
+                  processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+                }
+                break;
+              }
             }
           }
         }
@@ -296,6 +310,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @return Media URL
    */
   private String buildScaledMediaUrl(@NotNull Dimension dimension, @Nullable CropDimension mediaUrlCropDimension) {
+
+    if (isVectorImage()) {
+      // vector images are scaled in browser, so use native URL
+      return buildNativeMediaUrl();
+    }
+
     String resourcePath = this.resource.getPath();
 
     // if parent resource is a nt:file resource, use this one as path for scaled image
@@ -345,12 +365,16 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @return true if file extension matches
    */
   private boolean isMatchingFileExtension() {
-    String[] extensions = mediaArgs.getFileExtensions();
-    if (extensions == null || extensions.length == 0) {
+    String[] extensions = MediaFormatSupport.getRequestedFileExtensions(mediaArgs);
+    if (extensions == null) {
+      // constraints for filtering file extensions are not fulfilled - not matching possible
+      return false;
+    }
+    if (extensions.length == 0) {
       return true;
     }
     for (String extension : extensions) {
-      if (StringUtils.equalsIgnoreCase(extension, getFileExtension())) {
+      if (StringUtils.equalsIgnoreCase(extension, this.originalFileExtension)) {
         return true;
       }
     }
@@ -427,7 +451,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     if (this.url != null) {
       return FilenameUtils.getExtension(this.url);
     }
-    return this.fileExtension;
+    return StringUtils.defaultString(this.fileExtension, this.originalFileExtension);
   }
 
   @Override
@@ -481,6 +505,17 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  public boolean isBrowserImage() {
+    return MediaFileType.isBrowserImage(getFileExtension());
+  }
+
+  @Override
+  public boolean isVectorImage() {
+    return MediaFileType.isVectorImage(getFileExtension());
+  }
+
+  @Override
+  @SuppressWarnings("deprecation")
   public boolean isFlash() {
     return MediaFileType.isFlash(getFileExtension());
   }

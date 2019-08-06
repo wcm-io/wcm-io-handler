@@ -42,7 +42,7 @@ class MediaFileTypeTest {
 
   @Test
   void testGetImageFileExtensions() {
-    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png", "tif", "tiff"), MediaFileType.getImageFileExtensions());
+    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png", "svg", "tif", "tiff"), MediaFileType.getImageFileExtensions());
   }
 
   @Test
@@ -50,17 +50,32 @@ class MediaFileTypeTest {
     assertTrue(MediaFileType.isBrowserImage("GIF"));
     assertTrue(MediaFileType.isBrowserImage("jpg"));
     assertTrue(MediaFileType.isBrowserImage("jpeg"));
+    assertTrue(MediaFileType.isBrowserImage("SVG"));
     assertFalse(MediaFileType.isBrowserImage("tif"));
     assertFalse(MediaFileType.isBrowserImage("pdf"));
     assertFalse(MediaFileType.isBrowserImage(null));
   }
 
   @Test
-  void testGetBrowserImageFileExtensions() {
-    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png"), MediaFileType.getBrowserImageFileExtensions());
+  void testGetVectorImageFileExtensions() {
+    assertEquals(ImmutableSet.of("svg"), MediaFileType.getVectorImageFileExtensions());
   }
 
   @Test
+  void testIsVectorImage() {
+    assertTrue(MediaFileType.isVectorImage("svg"));
+    assertFalse(MediaFileType.isVectorImage("jpg"));
+    assertFalse(MediaFileType.isVectorImage("pdf"));
+    assertFalse(MediaFileType.isVectorImage(null));
+  }
+
+  @Test
+  void testGetBrowserImageFileExtensions() {
+    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png", "svg"), MediaFileType.getBrowserImageFileExtensions());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
   void testIsFlash() {
     assertTrue(MediaFileType.isFlash("swf"));
     assertFalse(MediaFileType.isFlash("pdf"));
@@ -68,6 +83,7 @@ class MediaFileTypeTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void testGetFlashFileExtensions() {
     assertEquals(ImmutableSet.of("swf"), MediaFileType.getFlashFileExtensions());
   }

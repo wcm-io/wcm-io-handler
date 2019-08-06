@@ -21,7 +21,7 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * and renders the result using the ImageFileServlet.
  */
 @ExtendWith(AemContextExtension.class)
-class MediaHandlerImplImageFileTypesTest {
+class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
@@ -95,9 +95,17 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  void testAsset_JPEG_Crop() {
+  void testAsset_JPEG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
-    buildCropAssertMedia(asset, 50, 50,
+    buildAssertMedia_Rescale(asset, 80, 40,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.80.40.file/sample.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
+  void testAsset_JPEG_AutoCrop() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
         "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
@@ -119,9 +127,17 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  void testFileUpload_JPEG_Crop() {
+  void testFileUpload_JPEG_Rescale() {
     Resource resource = createSampleFileUpload("/filetype/sample.jpg");
-    buildCropAssertMedia(resource, 50, 50,
+    buildAssertMedia_Rescale(resource, 80, 40,
+        "/content/upload/mediaInline.image_file.80.40.file/sample.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
+  void testFileUpload_JPEG_AutoCrop() {
+    Resource resource = createSampleFileUpload("/filetype/sample.jpg");
+    buildAssertMedia_AutoCrop(resource, 50, 50,
         "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
@@ -135,9 +151,17 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  void testAsset_GIF_Crop() {
+  void testAsset_GIF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
-    buildCropAssertMedia(asset, 50, 50,
+    buildAssertMedia_Rescale(asset, 80, 40,
+        "/content/dam/sample.gif/_jcr_content/renditions/original.image_file.80.40.file/sample.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
+  void testAsset_GIF_AutoCrop() {
+    Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
         "/content/dam/sample.gif/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
@@ -151,9 +175,17 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  void testFileUpload_GIF_Crop() {
+  void testFileUpload_GIF_Rescale() {
     Resource resource = createSampleFileUpload("/filetype/sample.gif");
-    buildCropAssertMedia(resource, 50, 50,
+    buildAssertMedia_Rescale(resource, 80, 40,
+        "/content/upload/mediaInline.image_file.80.40.file/sample.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
+  void testFileUpload_GIF_AutoCrop() {
+    Resource resource = createSampleFileUpload("/filetype/sample.gif");
+    buildAssertMedia_AutoCrop(resource, 50, 50,
         "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
@@ -167,9 +199,17 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  void testAsset_PNG_Crop() {
+  void testAsset_PNG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
-    buildCropAssertMedia(asset, 50, 50,
+    buildAssertMedia_Rescale(asset, 80, 40,
+        "/content/dam/sample.png/_jcr_content/renditions/original.image_file.80.40.file/sample.png",
+        ContentType.PNG);
+  }
+
+  @Test
+  void testAsset_PNG_AutoCrop() {
+    Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
         "/content/dam/sample.png/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.file/sample.png",
         ContentType.PNG);
   }
@@ -183,9 +223,17 @@ class MediaHandlerImplImageFileTypesTest {
   }
 
   @Test
-  void testFileUpload_PNG_Crop() {
+  void testFileUpload_PNG_Rescale() {
     Resource resource = createSampleFileUpload("/filetype/sample.png");
-    buildCropAssertMedia(resource, 50, 50,
+    buildAssertMedia_Rescale(resource, 80, 40,
+        "/content/upload/mediaInline.image_file.80.40.file/sample.png",
+        ContentType.PNG);
+  }
+
+  @Test
+  void testFileUpload_PNG_AutoCrop() {
+    Resource resource = createSampleFileUpload("/filetype/sample.png");
+    buildAssertMedia_AutoCrop(resource, 50, 50,
         "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.png",
         ContentType.PNG);
   }
@@ -203,13 +251,21 @@ class MediaHandlerImplImageFileTypesTest {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_ContentDisposition(asset, 100, 50,
         "/content/dam/sample.tif/_jcr_content/renditions/original.media_file.download_attachment.file/sample.tif",
+        ContentType.TIFF);
+  }
+
+  @Test
+  void testAsset_TIFF_Rescale() {
+    Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
+    buildAssertMedia_Rescale(asset, 80, 40,
+        "/content/dam/sample.tif/_jcr_content/renditions/original.image_file.80.40.file/sample.jpg",
         ContentType.JPEG);
   }
 
   @Test
-  void testAsset_TIFF_Crop() {
+  void testAsset_TIFF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
-    buildCropAssertMedia(asset, 50, 50,
+    buildAssertMedia_AutoCrop(asset, 50, 50,
         "/content/dam/sample.tif/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
@@ -227,21 +283,90 @@ class MediaHandlerImplImageFileTypesTest {
     Resource resource = createSampleFileUpload("/filetype/sample.tif");
     buildAssertMedia_ContentDisposition(resource, 100, 50,
         "/content/upload/mediaInline.media_file.download_attachment.file/sample.tif",
+        ContentType.TIFF);
+  }
+
+  @Test
+  void testFileUpload_TIFF_Rescale() {
+    Resource resource = createSampleFileUpload("/filetype/sample.tif");
+    buildAssertMedia_Rescale(resource, 80, 40,
+        "/content/upload/mediaInline.image_file.80.40.file/sample.jpg",
         ContentType.JPEG);
   }
 
   @Test
-  void testFileUpload_TIFF_Crop() {
+  void testFileUpload_TIFF_AutoCrop() {
     Resource resource = createSampleFileUpload("/filetype/sample.tif");
-    buildCropAssertMedia(resource, 50, 50,
+    buildAssertMedia_AutoCrop(resource, 50, 50,
         "/content/upload/mediaInline.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
   }
 
+  @Test
+  void testAsset_SVG_Original() {
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia(asset, 100, 50,
+        "/content/dam/sample.svg/_jcr_content/renditions/original./sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testAsset_SVG_Original_ContentDisposition() {
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "/content/dam/sample.svg/_jcr_content/renditions/original.media_file.download_attachment.file/sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testAsset_SVG_Rescale() {
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia_Rescale(asset, 80, 40,
+        "/content/dam/sample.svg/_jcr_content/renditions/original./sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testAsset_SVG_AutoCrop() {
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertInvalidMedia_AutoCrop(asset);
+  }
+
+  @Test
+  void testFileUpload_SVG_Original() {
+    Resource resource = createSampleFileUpload("/filetype/sample.svg");
+    buildAssertMedia(resource, 100, 50,
+        "/content/upload/mediaInline./sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testFileUpload_SVG_Original_ContentDisposition() {
+    Resource resource = createSampleFileUpload("/filetype/sample.svg");
+    buildAssertMedia_ContentDisposition(resource, 100, 50,
+        "/content/upload/mediaInline.media_file.download_attachment.file/sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testFileUpload_SVG_Rescale() {
+    Resource resource = createSampleFileUpload("/filetype/sample.svg");
+    buildAssertMedia_Rescale(resource, 80, 40,
+        "/content/upload/mediaInline./sample.svg",
+        ContentType.SVG);
+  }
+
+  @Test
+  void testFileUpload_SVG_AutoCrop() {
+    Resource resource = createSampleFileUpload("/filetype/sample.svg");
+    buildAssertInvalidMedia_AutoCrop(resource);
+  }
+
   private Asset createSampleAsset(String classpathResource, String contentType) {
     String fileName = FilenameUtils.getName(classpathResource);
+    String fileExtension = FilenameUtils.getExtension(classpathResource);
     Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType);
-    context.create().assetRendition(asset, "cq5dam.web.sample.jpg", classpathResource, contentType);
+    context.create().assetRendition(asset, "cq5dam.web.sample." + fileExtension, classpathResource, contentType);
     return asset;
   }
 
@@ -260,12 +385,27 @@ class MediaHandlerImplImageFileTypesTest {
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildCropAssertMedia(Asset asset, int width, int height, String mediaUrl, String contentType) {
+  private void buildAssertMedia_Rescale(Asset asset, int width, int height, String mediaUrl, String contentType) {
+    Media media = mediaHandler.get(asset.getPath())
+        .fixedDimension(width, height)
+        .build();
+    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildAssertInvalidMedia_AutoCrop(Asset asset) {
+    Media media = mediaHandler.get(asset.getPath())
+        .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
+        .autoCrop(true)
+        .build();
+    assertFalse(media.isValid(), "media valid");
   }
 
   private void assertMedia(Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
@@ -276,12 +416,11 @@ class MediaHandlerImplImageFileTypesTest {
     assertEquals(width, layer.getWidth(), "rendition layer width");
     assertEquals(height, layer.getHeight(), "rendition layer height");
 
-    assertNotNull(media.getMarkup());
-    assertEquals(mediaUrl, media.getElement().getAttributeValue("src"));
-
-    Rendition rendition = media.getRendition();
-    assertEquals(FilenameUtils.getName(mediaUrl), rendition.getFileName());
-    assertEquals(FilenameUtils.getExtension(mediaUrl), rendition.getFileExtension());
+    if (!StringUtils.contains(mediaUrl, ".download_attachment.")) {
+      Rendition rendition = media.getRendition();
+      assertEquals(FilenameUtils.getName(mediaUrl), rendition.getFileName());
+      assertEquals(FilenameUtils.getExtension(mediaUrl), rendition.getFileExtension());
+    }
 
     if (StringUtils.contains(mediaUrl, ".image_file.")) {
       // extract selector string from media url
@@ -320,12 +459,27 @@ class MediaHandlerImplImageFileTypesTest {
     return resource;
   }
 
-  private void buildCropAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {
+  private void buildAssertMedia_Rescale(Resource resource, int width, int height, String mediaUrl, String contentType) {
+    Media media = mediaHandler.get(resource)
+        .fixedDimension(width, height)
+        .build();
+    assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildAssertMedia_AutoCrop(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
+  }
+
+  private void buildAssertInvalidMedia_AutoCrop(Resource resource) {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
+        .autoCrop(true)
+        .build();
+    assertFalse(media.isValid(), "media valid");
   }
 
   private void buildAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {
