@@ -121,7 +121,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
             // overwrite image dimension of {@link Rendition} instance with scaled dimensions
             dimension = scaledDimension;
             // extension may have to be changed because scaling case produce different file format
-            processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+            if (!isVectorImage) {
+              processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+            }
           }
           else if (mediaArgs.isAutoCrop() && this.cropDimension == null && !isVectorImage) {
             // scaling is required, but not match with inline media - try auto cropping (if enabled)
@@ -137,7 +139,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
                 dimension = scaledDimension;
                 cropDimension = autoCropDimension;
                 // extension may have to be changed because scaling case produce different file format
-                processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+                if (!isVectorImage) {
+                  processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+                }
                 break;
               }
             }
@@ -306,6 +310,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * @return Media URL
    */
   private String buildScaledMediaUrl(@NotNull Dimension dimension, @Nullable CropDimension mediaUrlCropDimension) {
+
+    if (isVectorImage()) {
+      // vector images are scaled in browser, so use native URL
+      return buildNativeMediaUrl();
+    }
+
     String resourcePath = this.resource.getPath();
 
     // if parent resource is a nt:file resource, use this one as path for scaled image
@@ -441,7 +451,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     if (this.url != null) {
       return FilenameUtils.getExtension(this.url);
     }
-    return this.fileExtension;
+    return StringUtils.defaultString(this.fileExtension, this.originalFileExtension);
   }
 
   @Override

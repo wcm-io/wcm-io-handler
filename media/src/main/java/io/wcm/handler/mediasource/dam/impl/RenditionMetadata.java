@@ -105,7 +105,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   public String getFileName(boolean contentDispositionAttachment) {
     if (MediaFileType.isBrowserImage(getFileExtension())
         || !MediaFileType.isImage(getFileExtension())
-        || contentDispositionAttachment) {
+        || contentDispositionAttachment
+        || isVectorImage()) {
       return this.fileName;
     }
     else {
