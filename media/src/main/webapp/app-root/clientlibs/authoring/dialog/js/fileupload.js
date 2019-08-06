@@ -124,12 +124,17 @@
    */
   channel.on("foundation-contentloaded", function (event) {
     $(event.target).find("coral-fileupload.cq-FileUpload").each(function() {
-      var pathfield = $(this).closest(".coral-Form-fieldwrapper")
+      var pathfield = $(this)
           .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
       if (!pathfield) {
-        // fallback for AEM 6.3 where the pathfield component is wrapped in an additionaly div
+        // fallback when fileupload has a field label and is thus wrapped in a fieldwrapper
         pathfield = $(this).closest(".coral-Form-fieldwrapper")
-          .next(".pathfield").find("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
+            .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
+      }
+      if (!pathfield) {
+        // fallback for AEM 6.3 where the pathfield component is wrapped in an additional div
+        pathfield = $(this).closest(".coral-Form-fieldwrapper")
+            .next(".pathfield").find("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
       }
       if (pathfield) {
         Coral.commons.ready(this, function (fileUpload) {
