@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.spi;
 
+import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +44,6 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
 
 /**
  * Via {@link MediaSource} OSGi services applications can define additional media sources supported by
@@ -266,7 +267,7 @@ public abstract class MediaSource {
       String stringValue = mediaRequest.getResource().getValueMap().get(rotationProperty, String.class);
       if (StringUtils.isNotEmpty(stringValue)) {
         int rotationValue = NumberUtils.toInt(stringValue);
-        if (TransformedRenditionHandler.isValidRotation(rotationValue)) {
+        if (isValidRotation(rotationValue)) {
           return rotationValue;
         }
       }

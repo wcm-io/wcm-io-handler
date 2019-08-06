@@ -46,6 +46,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.JcrBinary;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.url.UrlHandler;
@@ -66,6 +67,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final String fileName;
   private final Dimension imageDimension;
   private final String url;
+  private final Integer rotation;
   private MediaFormat resolvedMediaFormat;
 
   /**
@@ -84,6 +86,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.media = media;
     this.mediaArgs = mediaArgs;
     this.adaptable = adaptable;
+    this.rotation = media.getRotation();
 
     // detect image dimension
     String processedFileName = fileName;
@@ -210,8 +213,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       return buildScaledMediaUrl(scaledDimension, this.media.getCropDimension());
     }
 
-    // if no scaling but cropping required build scaled image URL
-    if (this.media.getCropDimension() != null) {
+    // if no scaling but cropping or rotation required build scaled image URL
+    if (this.media.getCropDimension() != null || this.rotation != null) {
       return buildScaledMediaUrl(this.media.getCropDimension(), this.media.getCropDimension());
     }
 
@@ -271,10 +274,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     }
 
     // URL to render scaled image via {@link InlineRenditionServlet}
-    String path = resourcePath + "." + ImageFileServlet.SELECTOR
-        + "." + dimension.getWidth() + "." + dimension.getHeight()
-        + (cropDimension != null ? "." + cropDimension.getCropString() : "")
-        + (this.mediaArgs.isContentDispositionAttachment() ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
+    String path = resourcePath
+        + "." + ImageFileServlet.buildSelectorString(dimension.getWidth(), dimension.getHeight(),
+            cropDimension, this.rotation, this.mediaArgs.isContentDispositionAttachment())
         + "." + MediaFileServlet.EXTENSION + "/"
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + ImageFileServlet.getImageFileName(getFileName());
@@ -436,8 +438,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public long getWidth() {
-    if (this.imageDimension != null) {
-      return this.imageDimension.getWidth();
+    if (imageDimension != null) {
+      return ImageTransformation.rotateMapWidth(imageDimension.getWidth(), imageDimension.getHeight(), rotation);
     }
     else {
       return 0;
@@ -446,8 +448,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public long getHeight() {
-    if (this.imageDimension != null) {
-      return this.imageDimension.getHeight();
+    if (imageDimension != null) {
+      return ImageTransformation.rotateMapHeight(imageDimension.getWidth(), imageDimension.getHeight(), rotation);
     }
     else {
       return 0;

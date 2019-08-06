@@ -39,6 +39,9 @@
       <action type="update" dev="sseifert">
         Media handler: Try to resolve media format-related component properties from content policies.
       </action>
+      <action type="update" dev="sseifert">
+        Inline Media Resource: Support rotation.
+      </action>
       <action type="fix" dev="sseifert">
         Media handler download media format validation: Accept any files as download when no download media format is defined in the project and no media format is given for resolution.
       </action>
