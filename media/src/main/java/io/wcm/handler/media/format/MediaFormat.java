@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaFileExtension;
+import io.wcm.handler.media.MediaFileType;
 
 /**
  * Media format.
@@ -348,7 +348,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    */
   public boolean isImage() {
     for (String extension : getExtensions()) {
-      if (MediaFileExtension.isImage(extension)) {
+      if (MediaFileType.isImage(extension)) {
         return true;
       }
     }

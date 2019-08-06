@@ -32,7 +32,7 @@ import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaFileExtension;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlHandler;
@@ -181,12 +181,12 @@ class DamRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public boolean isImage() {
-    return MediaFileExtension.isImage(getFileExtension());
+    return MediaFileType.isImage(getFileExtension());
   }
 
   @Override
   public boolean isFlash() {
-    return MediaFileExtension.isFlash(getFileExtension());
+    return MediaFileType.isFlash(getFileExtension());
   }
 
   @Override

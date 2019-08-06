@@ -55,7 +55,7 @@ import com.day.image.Layer;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaFileExtension;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
@@ -149,7 +149,7 @@ public final class RenditionMetadataGenerator {
 
     // ensure rendition is an image rendition for which metadata can be generated
     String fileExtension = FilenameUtils.getExtension(renditionPath);
-    if (!MediaFileExtension.isImage(fileExtension)) {
+    if (!MediaFileType.isImage(fileExtension)) {
       log.debug("Skip non-image rendition {}", renditionPath);
       return false;
     }

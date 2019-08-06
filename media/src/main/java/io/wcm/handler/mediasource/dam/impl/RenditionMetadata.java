@@ -34,7 +34,7 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaFileExtension;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
@@ -94,8 +94,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @return File name
    */
   public String getFileName(boolean contentDispositionAttachment) {
-    if (MediaFileExtension.isBrowserImage(getFileExtension())
-        || !MediaFileExtension.isImage(getFileExtension())
+    if (MediaFileType.isBrowserImage(getFileExtension())
+        || !MediaFileType.isImage(getFileExtension())
         || contentDispositionAttachment) {
       return this.fileName;
     }
@@ -164,7 +164,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
           + "." + MediaFileServlet.SELECTOR_DOWNLOAD
           + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
     }
-    else if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
+    else if (MediaFileType.isBrowserImage(getFileExtension()) || !MediaFileType.isImage(getFileExtension())) {
       // use "deep URL" to reference rendition directly
       // do not use Asset URL for original rendition because it creates conflicts for dispatcher cache (filename vs. directory for asset resource name)
       return RenditionMetadata.buildMediaPath(this.rendition.getPath() + ".", getFileName(contentDispositionAttachment));
@@ -292,7 +292,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
 
   @SuppressWarnings("null")
   protected Layer getLayer() {
-    if (MediaFileExtension.isImage(getFileExtension())) {
+    if (MediaFileType.isImage(getFileExtension())) {
       return this.rendition.adaptTo(Resource.class).adaptTo(Layer.class);
     }
     else {

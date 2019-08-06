@@ -19,13 +19,9 @@
  */
 package io.wcm.handler.media;
 
-import static io.wcm.wcm.commons.contenttype.FileExtension.GIF;
-import static io.wcm.wcm.commons.contenttype.FileExtension.JPEG;
-import static io.wcm.wcm.commons.contenttype.FileExtension.PNG;
-import static io.wcm.wcm.commons.contenttype.FileExtension.SWF;
-import static io.wcm.wcm.commons.contenttype.FileExtension.TIFF;
-
+import java.util.EnumSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -35,42 +31,71 @@ import org.osgi.annotation.versioning.ProviderType;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * File extensions supported by Media Handler.
+ * File types supported by Media Handler.
  */
 @ProviderType
-public final class MediaFileExtension {
+public enum MediaFileType {
 
-  private MediaFileExtension() {
-    // constants only
+  /**
+   * JPEG
+   */
+  JPEG("jpg", "jpeg"),
+
+  /**
+   * PNG
+   */
+  PNG("png"),
+
+  /**
+   * GIF
+   */
+  GIF("gif"),
+
+  /**
+   * TIFF
+   */
+  TIFF("tif", "tiff"),
+
+  /**
+   * Flash
+   */
+  SWF("swf");
+
+  private final Set<String> extensions;
+
+  MediaFileType(String... extensions) {
+    this.extensions = ImmutableSet.copyOf(extensions);
   }
 
   /**
-   * All file extension that are supported by the Media Handler for rendering as image.
+   * @return File extensions
    */
-  private static final Set<String> IMAGE_FILE_EXTENSIONS = ImmutableSet.of(
-      GIF,
-      JPEG,
-      "jpeg", // alternative JEPG extension
-      PNG,
-      TIFF,
-      "tiff" // alternative TIFF extension
-      );
+  public Set<String> getExtensions() {
+    return extensions;
+  }
 
   /**
-   * All file extension that are supported by the browser for direct display.
+   * All file types that are supported by the Media Handler for rendering as image.
    */
-  private static final Set<String> BROWSER_IMAGE_FILE_EXTENSIONS = ImmutableSet.of(
+  private static final EnumSet<MediaFileType> IMAGE_FILE_TYPES = EnumSet.of(
       GIF,
       JPEG,
-      "jpeg", // alternative JEPG extension
+      PNG,
+      TIFF);
+
+  /**
+   * All file types that are supported by the browser for direct display.
+   */
+  private static final EnumSet<MediaFileType> BROWSER_IMAGE_FILE_TYPES = EnumSet.of(
+      GIF,
+      JPEG,
       PNG);
 
   /**
-   * All file extensions that will be displayed as Flash.
+   * All file types that will be displayed as Flash.
    */
-  private static final Set<String> FLASH_FILE_EXTENSIONS = ImmutableSet.of(
-      SWF
-      );
+  private static final EnumSet<MediaFileType> FLASH_FILE_TYPES = EnumSet.of(
+      SWF);
 
   /**
    * Check if the given file extension is supported by the Media Handler for rendering as image.
@@ -79,17 +104,14 @@ public final class MediaFileExtension {
    */
   @SuppressWarnings("null")
   public static boolean isImage(@Nullable String fileExtension) {
-    if (StringUtils.isEmpty(fileExtension)) {
-      return false;
-    }
-    return IMAGE_FILE_EXTENSIONS.contains(fileExtension.toLowerCase());
+    return isExtension(IMAGE_FILE_TYPES, fileExtension);
   }
 
   /**
    * @return Image file extensions supported by the Media Handler for rendering as image.
    */
   public static @NotNull Set<String> getImageFileExtensions() {
-    return IMAGE_FILE_EXTENSIONS;
+    return getFileExtensions(IMAGE_FILE_TYPES);
   }
 
   /**
@@ -99,17 +121,14 @@ public final class MediaFileExtension {
    */
   @SuppressWarnings("null")
   public static boolean isBrowserImage(@Nullable String fileExtension) {
-    if (StringUtils.isEmpty(fileExtension)) {
-      return false;
-    }
-    return BROWSER_IMAGE_FILE_EXTENSIONS.contains(fileExtension.toLowerCase());
+    return isExtension(BROWSER_IMAGE_FILE_TYPES, fileExtension);
   }
 
   /**
    * @return Image file extensions supported for direct display in a browser.
    */
   public static @NotNull Set<String> getBrowserImageFileExtensions() {
-    return BROWSER_IMAGE_FILE_EXTENSIONS;
+    return getFileExtensions(BROWSER_IMAGE_FILE_TYPES);
   }
 
   /**
@@ -119,17 +138,29 @@ public final class MediaFileExtension {
    */
   @SuppressWarnings("null")
   public static boolean isFlash(@Nullable String fileExtension) {
-    if (StringUtils.isEmpty(fileExtension)) {
-      return false;
-    }
-    return FLASH_FILE_EXTENSIONS.contains(fileExtension.toLowerCase());
+    return isExtension(FLASH_FILE_TYPES, fileExtension);
   }
 
   /**
    * @return Flash file extensions
    */
   public static @NotNull Set<String> getFlashFileExtensions() {
-    return FLASH_FILE_EXTENSIONS;
+    return getFileExtensions(FLASH_FILE_TYPES);
+  }
+
+  private static boolean isExtension(@NotNull EnumSet<MediaFileType> fileTypes, @NotNull String fileExtension) {
+    if (StringUtils.isEmpty(fileExtension)) {
+      return false;
+    }
+    return fileTypes.stream()
+        .filter(type -> type.getExtensions().contains(fileExtension))
+        .findFirst().isPresent();
+  }
+
+  private static Set<String> getFileExtensions(@NotNull EnumSet<MediaFileType> fileTypes) {
+    return fileTypes.stream()
+        .flatMap(type -> type.getExtensions().stream())
+        .collect(Collectors.toSet());
   }
 
 }

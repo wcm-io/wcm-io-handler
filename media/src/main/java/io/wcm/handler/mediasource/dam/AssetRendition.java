@@ -51,7 +51,7 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaFileExtension;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
@@ -101,7 +101,7 @@ public final class AssetRendition {
       boolean suppressLogWarningNoRenditionsMetadata) {
 
     String fileExtension = FilenameUtils.getExtension(getFilename(rendition));
-    if (!MediaFileExtension.isImage(fileExtension)) {
+    if (!MediaFileType.isImage(fileExtension)) {
       // this is not a supported image file extension - skip further processing
       return null;
     }

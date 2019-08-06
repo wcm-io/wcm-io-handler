@@ -41,7 +41,7 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.MediaFileExtension;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
@@ -90,7 +90,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // check if scaling is possible
     String fileExtension = StringUtils.substringAfterLast(processedFileName, ".");
-    boolean isImage = MediaFileExtension.isImage(fileExtension);
+    boolean isImage = MediaFileType.isImage(fileExtension);
 
     Dimension dimension = null;
     Dimension scaledDimension = null;
@@ -219,7 +219,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       // if not scaling and no cropping required but special content disposition headers required build download url
       return buildDownloadMediaUrl();
     }
-    else if (MediaFileExtension.isBrowserImage(getFileExtension()) || !MediaFileExtension.isImage(getFileExtension())) {
+    else if (MediaFileType.isBrowserImage(getFileExtension()) || !MediaFileType.isImage(getFileExtension())) {
       // if no scaling and no cropping required build native media URL
       return buildNativeMediaUrl();
     }
@@ -360,8 +360,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public String getFileName() {
-    if (MediaFileExtension.isBrowserImage(getFileExtension())
-        || !MediaFileExtension.isImage(getFileExtension())
+    if (MediaFileType.isBrowserImage(getFileExtension())
+        || !MediaFileType.isImage(getFileExtension())
         || this.mediaArgs.isContentDispositionAttachment()) {
       return this.fileName;
     }
@@ -421,12 +421,12 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public boolean isImage() {
-    return MediaFileExtension.isImage(getFileExtension());
+    return MediaFileType.isImage(getFileExtension());
   }
 
   @Override
   public boolean isFlash() {
-    return MediaFileExtension.isFlash(getFileExtension());
+    return MediaFileType.isFlash(getFileExtension());
   }
 
   @Override
