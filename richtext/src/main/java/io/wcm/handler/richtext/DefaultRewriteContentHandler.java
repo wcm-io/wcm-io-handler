@@ -43,6 +43,7 @@ import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.Text;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,7 +181,13 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
    * @return Link metadata
    */
   private Link getAnchorLink(Element element) {
-    SyntheticLinkResource resource = new SyntheticLinkResource(resourceResolver);
+    Resource currentResource = getCurrentResource();
+    if (currentResource == null) {
+      return linkHandler.invalid();
+    }
+
+    SyntheticLinkResource resource = new SyntheticLinkResource(resourceResolver,
+        currentResource.getPath() + "/$link$");
     ValueMap resourceProps = resource.getValueMap();
 
     // get link metadata from data element
@@ -462,6 +469,16 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
   @Override
   public List<Content> rewriteText(@NotNull Text text) {
     // nothing to do with text element
+    return null;
+  }
+
+  private @Nullable Resource getCurrentResource() {
+    if (adaptable instanceof Resource) {
+      return (Resource)adaptable;
+    }
+    if (adaptable instanceof SlingHttpServletRequest) {
+      return ((SlingHttpServletRequest)adaptable).getResource();
+    }
     return null;
   }
 
