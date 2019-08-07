@@ -62,7 +62,6 @@ public abstract class LinkType {
    * @param linkRequest Link reference
    * @return true if this link type can handle the given link reference
    */
-  @SuppressWarnings("null")
   public boolean accepts(@NotNull LinkRequest linkRequest) {
     ValueMap props = linkRequest.getResourceProperties();
     // check for matching link type ID in link resource
@@ -71,9 +70,20 @@ public abstract class LinkType {
       return StringUtils.equals(linkTypeId, getId());
     }
     // if not link type is set at all check if link ref attribute contains a valid link
+    // or a link reference is given with auto-detection of it's type
     else {
-      String linkRef = props.get(getPrimaryLinkRefProperty(), String.class);
-      return accepts(linkRef);
+      String propertyName = getPrimaryLinkRefProperty();
+      String linkRef = null;
+      if (propertyName != null) {
+        linkRef = props.get(propertyName, String.class);
+      }
+      if (linkRef == null) {
+        linkRef = linkRequest.getReference();
+      }
+      if (linkRef != null) {
+        return accepts(linkRef);
+      }
+      return false;
     }
   }
 

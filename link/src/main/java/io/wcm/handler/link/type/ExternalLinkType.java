@@ -91,7 +91,7 @@ public final class ExternalLinkType extends LinkType {
     ValueMap props = link.getLinkRequest().getResourceProperties();
 
     // get external URL from link properties
-    String linkUrl = props.get(LinkNameConstants.PN_LINK_EXTERNAL_REF, String.class);
+    String linkUrl = props.get(LinkNameConstants.PN_LINK_EXTERNAL_REF, link.getLinkRequest().getReference());
 
     // check external link url
     if (StringUtils.isBlank(linkUrl)) {

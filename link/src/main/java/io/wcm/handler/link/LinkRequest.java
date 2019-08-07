@@ -41,6 +41,7 @@ public final class LinkRequest {
 
   private final Resource resource;
   private final Page page;
+  private final String reference;
   private final LinkArgs linkArgs;
 
   private ValueMap resourceProperties;
@@ -51,13 +52,27 @@ public final class LinkRequest {
    * @param linkArgs Link arguments
    */
   public LinkRequest(@Nullable Resource resource, @Nullable Page page, @Nullable LinkArgs linkArgs) {
+    this(resource, page, null, linkArgs);
+  }
+
+  /**
+   * @param resource Resource containing properties that define the link target
+   * @param page Target content page
+   * @param reference Link reference (internal or external).
+   * @param linkArgs Link arguments
+   */
+  public LinkRequest(@Nullable Resource resource, @Nullable Page page, @Nullable String reference, @Nullable LinkArgs linkArgs) {
     this.resource = resource;
     this.page = page;
+    this.reference = reference;
     this.linkArgs = linkArgs != null ? linkArgs : new LinkArgs();
 
     // validate parameters
-    if (this.resource != null && this.page != null) {
-      throw new IllegalArgumentException("Set resource or page, not both.");
+    int linkParamCount = (resource != null ? 1 : 0)
+        + (page != null ? 1 : 0)
+        + (reference != null ? 1 : 0);
+    if (linkParamCount > 1) {
+      throw new IllegalArgumentException("Set only one of resource, page, or reference.");
     }
   }
 
@@ -73,6 +88,13 @@ public final class LinkRequest {
    */
   public @Nullable Page getPage() {
     return this.page;
+  }
+
+  /**
+   * @return Link reference (internal or external).
+   */
+  public String getReference() {
+    return this.reference;
   }
 
   /**

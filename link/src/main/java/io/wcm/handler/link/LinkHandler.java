@@ -59,6 +59,14 @@ public interface LinkHandler {
   LinkBuilder get(Page page);
 
   /**
+   * Build link with auto-detecting the type from the given string.
+   * @param reference Link reference (internal or external).
+   * @return Link builder
+   */
+  @NotNull
+  LinkBuilder get(String reference);
+
+  /**
    * Build link for the given request holding all further request properties.
    * @param linkRequest Link handling request
    * @return Link builder

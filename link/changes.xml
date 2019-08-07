@@ -28,6 +28,9 @@
         Add Media Link File Upload Granite UI component.
       </action>
       <action type="add" dev="sseifert">
+        Add LinkHandler.get(&lt;String&gt;) method that supports auto-detection of link type.
+      </action>
+      <action type="add" dev="sseifert">
         Add LinkHandler.invalid() method.
       </action>
     </release>

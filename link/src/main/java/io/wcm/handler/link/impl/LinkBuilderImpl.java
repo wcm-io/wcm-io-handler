@@ -40,17 +40,27 @@ final class LinkBuilderImpl implements LinkBuilder {
 
   private final Resource resource;
   private final Page page;
+  private final String reference;
   private LinkArgs linkArgs = new LinkArgs();
 
   LinkBuilderImpl(Resource resource, LinkHandlerImpl linkHandler) {
     this.resource = resource;
     this.page = null;
+    this.reference = null;
     this.linkHandler = linkHandler;
   }
 
   LinkBuilderImpl(Page page, LinkHandlerImpl linkHandler) {
     this.resource = null;
     this.page = page;
+    this.reference = null;
+    this.linkHandler = linkHandler;
+  }
+
+  LinkBuilderImpl(String reference, LinkHandlerImpl linkHandler) {
+    this.resource = null;
+    this.page = null;
+    this.reference = reference;
     this.linkHandler = linkHandler;
   }
 
@@ -60,6 +70,7 @@ final class LinkBuilderImpl implements LinkBuilder {
     }
     this.resource = linkRequest.getResource();
     this.page = linkRequest.getPage();
+    this.reference = linkRequest.getReference();
     this.linkHandler = linkHandler;
     // clone link args to make sure the original object is not modified
     this.linkArgs = linkRequest.getLinkArgs().clone();
@@ -125,7 +136,7 @@ final class LinkBuilderImpl implements LinkBuilder {
 
   @Override
   public @NotNull Link build() {
-    LinkRequest request = new LinkRequest(this.resource, this.page, this.linkArgs);
+    LinkRequest request = new LinkRequest(this.resource, this.page, this.reference, this.linkArgs);
     return linkHandler.processRequest(request);
   }
 
