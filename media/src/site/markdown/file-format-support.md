@@ -5,13 +5,13 @@
 
 The following file formats are supported by wcm.io Media Handler:
 
-| File Extension | Mime Type       | Remarks
+| File Extension | Mime Type       | Remarks |
 |----------------|-----------------|----------
-| `jpg`, `jpeg`  | `image/jpeg`    | 
-| `png`          | `image/png`     | 
-| `gif`          | `image/gif`     | If rescaled or transformed, rendered as JPEG.
-| `tif`, `tiff`  | `image/tiff`    | Always rendered as JPEG.
-| `svg`          | `image/svg+xml` | Scaling of vector images is done in browsing. No support for transformations (no cropping, no rotation).
+| `jpg`, `jpeg`  | `image/jpeg`    |         |
+| `png`          | `image/png`     |         |
+| `gif`          | `image/gif`     | If rescaled or transformed, rendered as JPEG. |
+| `tif`, `tiff`  | `image/tiff`    | Always rendered as JPEG. |
+| `svg`          | `image/svg+xml` | Scaling of vector images is done by the browser.<br/>No support for transformations (no cropping, no rotation). |
 
 
 ### Unit Tests with AEM Mocks
