@@ -138,6 +138,9 @@ public final class InternalLinkResolver {
     // if no target page is set get internal path that points to target page
     if (targetPage == null) {
       String targetPath = props.get(options.getPrimaryLinkRefProperty(), String.class);
+      if (StringUtils.isEmpty(targetPath)) {
+        targetPath = link.getLinkRequest().getReference();
+      }
       if (StringUtils.isNotEmpty(targetPath)) {
         referenceSet = true;
       }

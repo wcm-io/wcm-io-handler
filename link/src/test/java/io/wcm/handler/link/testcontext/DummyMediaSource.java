@@ -46,7 +46,7 @@ public class DummyMediaSource extends MediaSource {
 
   @Override
   public boolean accepts(String mediaRef) {
-    return StringUtils.startsWith(mediaRef, "/content/dummymedia/");
+    return StringUtils.startsWith(mediaRef, "/content/dam/dummymedia/");
   }
 
   @Override
