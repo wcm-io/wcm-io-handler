@@ -12,6 +12,7 @@ Media resolving, processing and markup generation.
 * [Granite UI components][graniteui-components]
 * [Component properties][component-properties]
 * [System configuration][configuration]
+* [File format support][file-format-support]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -62,6 +63,7 @@ To use this module you have to deploy also:
 [graniteui-components]: graniteui-components.html
 [component-properties]: component-properties.html
 [configuration]: configuration.html
+[file-format-support]: file-format-support.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [url-handler]: ../url/
