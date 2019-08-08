@@ -57,6 +57,7 @@ import io.wcm.handler.commons.editcontext.DropTargetImpl;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
@@ -263,9 +264,9 @@ public final class DamMediaSource extends MediaSource {
       params.put(rotationProperty, "");
     }
 
-    DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(new String[] {
-        "image/.*" // allow all image mime types
-    }).setGroups(new String[] {
+    DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(
+        MediaFileType.getImageContentTypes().stream().toArray(size -> new String[size]) // allow all image mime types
+    ).setGroups(new String[] {
         "media" // allow drop from DAM contentfinder tab
     }).setParameters(params);
 

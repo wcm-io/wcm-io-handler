@@ -27,6 +27,8 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.wcm.commons.contenttype.ContentType;
+
 class MediaFileTypeTest {
 
   @Test
@@ -46,6 +48,12 @@ class MediaFileTypeTest {
   }
 
   @Test
+  void testGetImageContentTypes() {
+    assertEquals(ImmutableSet.of(ContentType.JPEG, ContentType.GIF, ContentType.PNG, ContentType.SVG, ContentType.TIFF),
+        MediaFileType.getImageContentTypes());
+  }
+
+  @Test
   void testIsBrowserImage() {
     assertTrue(MediaFileType.isBrowserImage("GIF"));
     assertTrue(MediaFileType.isBrowserImage("jpg"));
@@ -57,8 +65,14 @@ class MediaFileTypeTest {
   }
 
   @Test
-  void testGetVectorImageFileExtensions() {
-    assertEquals(ImmutableSet.of("svg"), MediaFileType.getVectorImageFileExtensions());
+  void testGetBrowserImageFileExtensions() {
+    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png", "svg"), MediaFileType.getBrowserImageFileExtensions());
+  }
+
+  @Test
+  void testGetBrowserImageContentTypes() {
+    assertEquals(ImmutableSet.of(ContentType.JPEG, ContentType.GIF, ContentType.PNG, ContentType.SVG),
+        MediaFileType.getBrowserImageContentTypes());
   }
 
   @Test
@@ -70,8 +84,13 @@ class MediaFileTypeTest {
   }
 
   @Test
-  void testGetBrowserImageFileExtensions() {
-    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png", "svg"), MediaFileType.getBrowserImageFileExtensions());
+  void testGetVectorImageFileExtensions() {
+    assertEquals(ImmutableSet.of("svg"), MediaFileType.getVectorImageFileExtensions());
+  }
+
+  @Test
+  void testGetVectorImageContentTypes() {
+    assertEquals(ImmutableSet.of(ContentType.SVG), MediaFileType.getVectorImageContentTypes());
   }
 
   @Test
@@ -86,6 +105,12 @@ class MediaFileTypeTest {
   @SuppressWarnings("deprecation")
   void testGetFlashFileExtensions() {
     assertEquals(ImmutableSet.of("swf"), MediaFileType.getFlashFileExtensions());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetFlashContentTypes() {
+    assertEquals(ImmutableSet.of(ContentType.SWF), MediaFileType.getFlashContentTypes());
   }
 
 }

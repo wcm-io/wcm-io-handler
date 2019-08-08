@@ -30,6 +30,9 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
+
 /**
  * File types supported by Media Handler.
  */
@@ -39,39 +42,48 @@ public enum MediaFileType {
   /**
    * JPEG
    */
-  JPEG("jpg", "jpeg"),
+  JPEG(new String[] { ContentType.JPEG }, new String[] { FileExtension.JPEG, "jpeg" }),
 
   /**
    * PNG
    */
-  PNG("png"),
+  PNG(new String[] { ContentType.PNG }, new String[] { FileExtension.PNG }),
 
   /**
    * GIF
    */
-  GIF("gif"),
+  GIF(new String[] { ContentType.GIF }, new String[] { FileExtension.GIF }),
 
   /**
    * TIFF
    */
-  TIFF("tif", "tiff"),
+  TIFF(new String[] { ContentType.TIFF }, new String[] { FileExtension.TIFF, "tiff" }),
 
   /**
    * SVG
    */
-  SVG("svg"),
+  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }),
 
   /**
    * Flash
    * @deprecated Flash support is deprecated
    */
   @Deprecated
-  SWF("swf");
+  SWF(new String[] { ContentType.SWF }, new String[] { FileExtension.SWF });
 
+  private final Set<String> contentTypes;
   private final Set<String> extensions;
 
-  MediaFileType(String... extensions) {
+  MediaFileType(@NotNull String @NotNull [] contentTypes, @NotNull String @NotNull [] extensions) {
+    this.contentTypes = ImmutableSet.copyOf(contentTypes);
     this.extensions = ImmutableSet.copyOf(extensions);
+  }
+
+  /**
+   * @return Content types
+   */
+  public Set<String> getContentTypes() {
+    return this.contentTypes;
   }
 
   /**
@@ -129,6 +141,13 @@ public enum MediaFileType {
   }
 
   /**
+   * @return Image content types supported by the Media Handler for rendering as image.
+   */
+  public static @NotNull Set<String> getImageContentTypes() {
+    return getContentTypes(IMAGE_FILE_TYPES);
+  }
+
+  /**
    * Check if the given file extension is supported for direct display in a browser.
    * @param fileExtension File extension
    * @return true if image is supported in browsers
@@ -145,6 +164,13 @@ public enum MediaFileType {
   }
 
   /**
+   * @return Image content types supported for direct display in a browser.
+   */
+  public static @NotNull Set<String> getBrowserImageContentTypes() {
+    return getContentTypes(BROWSER_IMAGE_FILE_TYPES);
+  }
+
+  /**
    * Check if the given file extension is a vector image file extension.
    * @param fileExtension File extension
    * @return true if image is a vector image.
@@ -158,6 +184,13 @@ public enum MediaFileType {
    */
   public static @NotNull Set<String> getVectorImageFileExtensions() {
     return getFileExtensions(VECTOR_IMAGE_FILE_TYPES);
+  }
+
+  /**
+   * @return Image content types that are vector images.
+   */
+  public static @NotNull Set<String> getVectorImageContentTypes() {
+    return getContentTypes(VECTOR_IMAGE_FILE_TYPES);
   }
 
   /**
@@ -178,6 +211,21 @@ public enum MediaFileType {
   @Deprecated
   public static @NotNull Set<String> getFlashFileExtensions() {
     return getFileExtensions(FLASH_FILE_TYPES);
+  }
+
+  /**
+   * @return Flash content types
+   * @deprecated Flash support is deprecated
+   */
+  @Deprecated
+  public static @NotNull Set<String> getFlashContentTypes() {
+    return getContentTypes(FLASH_FILE_TYPES);
+  }
+
+  private static Set<String> getContentTypes(@NotNull EnumSet<MediaFileType> fileTypes) {
+    return fileTypes.stream()
+        .flatMap(type -> type.getContentTypes().stream())
+        .collect(Collectors.toSet());
   }
 
   private static boolean isExtension(@NotNull EnumSet<MediaFileType> fileTypes, @Nullable String fileExtension) {
