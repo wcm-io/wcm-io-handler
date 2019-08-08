@@ -39,6 +39,7 @@ public final class Image extends HtmlElement<Image> {
   private static final String ATTRIBUTE_BORDER = "border";
   private static final String ATTRIBUTE_HSPACE = "hspace";
   private static final String ATTRIBUTE_VSPACE = "vspace";
+  private static final String ATTRIBUTE_USEMAP = "usemap";
 
   /**
    * Initializes html element.
@@ -254,6 +255,24 @@ public final class Image extends HtmlElement<Image> {
    */
   public Image setVSpace(int value) {
     setAttributeValueAsInteger(ATTRIBUTE_VSPACE, value);
+    return this;
+  }
+
+  /**
+   * Html "usemap" attribute.
+   * @return Value of attribute
+   */
+  public String getUseMap() {
+    return getAttributeValue(ATTRIBUTE_USEMAP);
+  }
+
+  /**
+   * Html "usemap" attribute.
+   * @param value Value of attribute
+   * @return Self reference
+   */
+  public Image setUseMap(String value) {
+    setAttribute(ATTRIBUTE_USEMAP, value);
     return this;
   }
 
