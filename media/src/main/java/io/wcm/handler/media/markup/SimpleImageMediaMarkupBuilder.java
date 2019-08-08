@@ -20,9 +20,11 @@
 package io.wcm.handler.media.markup;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
@@ -31,10 +33,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
+import com.google.common.collect.ImmutableList;
+
+import io.wcm.handler.commons.dom.Area;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
+import io.wcm.handler.commons.dom.Map;
 import io.wcm.handler.commons.dom.Picture;
 import io.wcm.handler.commons.dom.Source;
+import io.wcm.handler.commons.dom.Span;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
@@ -45,6 +52,7 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.media.imagemap.ImageMapArea;
 
 /**
  * Basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
@@ -127,7 +135,16 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     }
 
     if (foundAnySource) {
-      picture.add(image);
+      if (image instanceof Span) {
+        // if image was wrapped in span, add content of span element, not the span itself
+        for (Element element : ImmutableList.copyOf(image.getChildren())) {
+          element.detach();
+          picture.addContent(element);
+        }
+      }
+      else {
+        picture.addContent(image);
+      }
       return picture;
     }
     else {
@@ -194,7 +211,8 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     // set additional attributes
     setAdditionalAttributes(img, media);
 
-    return img;
+    // apply image map markup
+    return applyImageMap(img, media);
   }
 
   /**
@@ -279,6 +297,62 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     return null;
   }
 
+  /**
+   * If a image map was resolved apply map markup to given image element. As a result both image
+   * and map markup are wrapped in a span element.
+   * @param element Image Element
+   * @param media Media
+   * @return Unchanged element or wrapped element with map
+   */
+  protected final @Nullable HtmlElement<?> applyImageMap(@Nullable HtmlElement<?> element, @NotNull Media media) {
+    List<ImageMapArea> mapData = media.getMap();
+    if (!(element instanceof Image) || mapData == null) {
+      return element;
+    }
+
+    // build unique name for map
+    String mapName = buildImageMapName(mapData, media);
+
+    // build wrapper element that will contain both image and map element
+    Span span = new Span();
+    ((Image)element).setUseMap("#" + mapName);
+    span.addContent(element);
+
+    // build image map markup
+    Map map = new Map();
+    map.setMapName(mapName);
+    for (ImageMapArea areaData : mapData) {
+      Area area = new Area();
+      area.setShape(areaData.getShape());
+      area.setCoords(areaData.getCoordinates());
+      area.setHRef(areaData.getLinkUrl());
+      if (areaData.getLinkWindowTarget() != null) {
+        area.setTarget(areaData.getLinkWindowTarget());
+      }
+      if (areaData.getAltText() != null) {
+        area.setAlt(areaData.getAltText());
+      }
+      map.addContent(area);
+    }
+    span.addContent(map);
+
+    return span;
+  }
+
+  /**
+   * Builds an ID for the image map that is unique within the page.
+   * @param map Map data
+   * @param media Media
+   * @return Unique ID
+   */
+  protected final @NotNull String buildImageMapName(@NotNull List<ImageMapArea> map, @NotNull Media media) {
+    HashCodeBuilder builder = new HashCodeBuilder();
+    for (ImageMapArea area : map) {
+      builder.append(area);
+    }
+    return "map-" + builder.hashCode();
+  }
+
   @Override
   public final boolean isValidMedia(@NotNull HtmlElement<?> element) {
     if (element instanceof Image) {
@@ -292,6 +366,12 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
         Image img = (Image)imgChild;
         return StringUtils.isNotEmpty(img.getSrc())
             && !StringUtils.contains(element.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
+      }
+    }
+    if (element instanceof Span) {
+      Optional<Element> firstChild = element.getChildren().stream().findFirst();
+      if (firstChild.isPresent()) {
+        return isValidMedia((HtmlElement)firstChild.get());
       }
     }
     return false;

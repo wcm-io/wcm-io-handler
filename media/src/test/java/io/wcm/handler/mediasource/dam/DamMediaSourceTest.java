@@ -40,6 +40,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
@@ -832,6 +833,8 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     // assert map
     assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
+    assertTrue(StringUtils.startsWith(media.getMarkup(), "<img "));
+    assertTrue(StringUtils.endsWith(media.getMarkup(), "</map>"));
   }
 
   @Test
@@ -849,6 +852,8 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     // assert map
     assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
+    assertTrue(StringUtils.startsWith(media.getMarkup(), "<img "));
+    assertTrue(StringUtils.endsWith(media.getMarkup(), "</map>"));
   }
 
 }
