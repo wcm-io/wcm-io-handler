@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,21 @@
  * limitations under the License.
  * #L%
  */
-/**
- * SPI for configuring and tailoring media handler processing.
- */
-@org.osgi.annotation.versioning.Version("1.5")
-package io.wcm.handler.media.spi;
+package io.wcm.handler.commons.dom;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+class MapTest {
+
+  @Test
+  void testSimpleAttributes() throws Exception {
+    Map map = new Map();
+    assertEquals("map", map.getName());
+
+    map.setMapName("name1");
+    assertEquals("name1", map.getMapName());
+  }
+
+}

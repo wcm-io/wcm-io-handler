@@ -60,6 +60,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -127,9 +128,10 @@ public final class DamMediaSource extends MediaSource {
         mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
       }
 
-      // Check for crop dimensions
+      // Check for transformations
       media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
       media.setRotation(getMediaRotation(media.getMediaRequest(), mediaHandlerConfig));
+      media.setMap(getMediaMap(media.getMediaRequest(), mediaHandlerConfig));
 
       // get DAM Asset to check for available renditions
       com.day.cq.dam.api.Asset damAsset = null;
@@ -181,6 +183,7 @@ public final class DamMediaSource extends MediaSource {
       String refProperty = prependDotSlash(getMediaRefProperty(mediaRequest, mediaHandlerConfig));
       String cropProperty = prependDotSlash(getMediaCropProperty(mediaRequest, mediaHandlerConfig));
       String rotationProperty = prependDotSlash(getMediaRotationProperty(mediaRequest, mediaHandlerConfig));
+      String mapProperty = prependDotSlash(getMediaMapProperty(mediaRequest, mediaHandlerConfig));
 
       String name = refProperty;
       if (StringUtils.contains(name, "/")) {
@@ -191,7 +194,12 @@ public final class DamMediaSource extends MediaSource {
       Optional<String> dropTargetCssClass = getMediaDropTargetID();
       if (!dropTargetCssClass.isPresent()) {
         // otherwise add a new drop target and get it's id
-        dropTargetCssClass = addMediaDroptarget(refProperty, cropProperty, rotationProperty, name);
+        MediaPropertyNames mediaPropertyNames = new MediaPropertyNames()
+            .refProperty(refProperty)
+            .cropProperty(cropProperty)
+            .rotationProperty(rotationProperty)
+            .mapProperty(mapProperty);
+        dropTargetCssClass = addMediaDroptarget(refProperty, mediaPropertyNames, name);
       }
 
       if (element != null) {
@@ -251,7 +259,7 @@ public final class DamMediaSource extends MediaSource {
         .findFirst();
   }
 
-  private Optional<String> addMediaDroptarget(String refProperty, String cropProperty, String rotationProperty, String name) {
+  private Optional<String> addMediaDroptarget(String refProperty, MediaPropertyNames mediaPropertyNames, String name) {
     Component componentDefinition = WCMUtils.getComponent(resource);
 
     // set drop target - with path of current component as default resource type
@@ -260,8 +268,9 @@ public final class DamMediaSource extends MediaSource {
       params.put("./" + ResourceResolver.PROPERTY_RESOURCE_TYPE, componentDefinition.getPath());
 
       // clear cropping parameters if a new image is inserted via drag&drop
-      params.put(cropProperty, "");
-      params.put(rotationProperty, "");
+      params.put(mediaPropertyNames.getCropProperty(), "");
+      params.put(mediaPropertyNames.getRotationProperty(), "");
+      params.put(mediaPropertyNames.getMapProperty(), "");
     }
 
     DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(

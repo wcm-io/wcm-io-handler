@@ -42,6 +42,7 @@ These are the most common properties:
 | `mediaRef`                        | `fileReference`                   | Reference/path to the media asset
 | `mediaCrop`                       | `imageCrop`                       | Cropping parameters for image
 | `mediaRotation`                   | `imageRotation`                   | Rotation parameter for image
+| `mediaMap`                        | `imageMap`                        | Image map string
 | `mediaAltText`                    | `alt`                             | Alternative text for media
 | `mediaInline`                     | `file`                            | Node name for binary file uploaded to a page
 

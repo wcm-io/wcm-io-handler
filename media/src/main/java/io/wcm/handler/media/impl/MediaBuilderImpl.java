@@ -36,6 +36,7 @@ import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
@@ -53,9 +54,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private final String mediaRef;
 
   private MediaArgs mediaArgs = new MediaArgs();
-  private String refProperty;
-  private String cropProperty;
-  private String rotationProperty;
+  private MediaPropertyNames mediaPropertyNames = new MediaPropertyNames();
   private List<PictureSource> pictureSourceSets = new ArrayList<>();
 
   MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
@@ -107,9 +106,7 @@ final class MediaBuilderImpl implements MediaBuilder {
     this.mediaRef = mediaRequest.getMediaRef();
     // clone media args to make sure the original object is not modified
     this.mediaArgs = mediaRequest.getMediaArgs().clone();
-    this.refProperty = mediaRequest.getRefProperty();
-    this.cropProperty = mediaRequest.getCropProperty();
-    this.rotationProperty = mediaRequest.getRotationProperty();
+    this.mediaPropertyNames = mediaRequest.getMediaPropertyNames();
     this.mediaHandler = mediaHandler;
   }
 
@@ -289,19 +286,25 @@ final class MediaBuilderImpl implements MediaBuilder {
 
   @Override
   public @NotNull MediaBuilder refProperty(@NotNull String value) {
-    this.refProperty = value;
+    this.mediaPropertyNames.refProperty(value);
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder cropProperty(@NotNull String value) {
-    this.cropProperty = value;
+    this.mediaPropertyNames.cropProperty(value);
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder rotationProperty(@NotNull String value) {
-    this.rotationProperty = value;
+    this.mediaPropertyNames.rotationProperty(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder mapProperty(@NotNull String value) {
+    this.mediaPropertyNames.mapProperty(value);
     return this;
   }
 
@@ -313,8 +316,7 @@ final class MediaBuilderImpl implements MediaBuilder {
     if (this.mediaArgs.getImageSizes() != null && this.mediaArgs.getPictureSources() != null) {
       throw new IllegalArgumentException("Image sizes must not be used together with pictures source sets.");
     }
-    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
-        this.refProperty, this.cropProperty, this.rotationProperty);
+    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs, this.mediaPropertyNames);
     return mediaHandler.processRequest(request);
   }
 

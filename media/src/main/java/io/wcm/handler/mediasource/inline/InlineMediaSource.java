@@ -132,9 +132,10 @@ public final class InlineMediaSource extends MediaSource {
       mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
     }
 
-    // Check for crop dimensions
+    // Check for transformations
     media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
     media.setRotation(getMediaRotation(media.getMediaRequest(), mediaHandlerConfig));
+    media.setMap(getMediaMap(media.getMediaRequest(), mediaHandlerConfig));
 
     // detect and clean up file name
     String fileName = detectFileName(referencedResource, ntFileResource, ntResourceResource);
@@ -256,7 +257,8 @@ public final class InlineMediaSource extends MediaSource {
     }
 
     // check if child node exists which is a nt:file node
-    String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), mediaHandlerConfig.getMediaInlineNodeName());
+    String refProperty = StringUtils.defaultString(mediaRequest.getMediaPropertyNames().getRefProperty(),
+        mediaHandlerConfig.getMediaInlineNodeName());
     Resource mediaInlineResource = resource.getChild(refProperty);
     if (JcrBinary.isNtFileOrResource(mediaInlineResource)) {
       return mediaInlineResource;

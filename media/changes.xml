@@ -36,6 +36,9 @@
       <action type="add" dev="sseifert">
         Add MediaHandler.invalid() method.
       </action>
+      <action type="add" dev="sseifert">
+        Add support for image maps produced by AEM image editor.
+      </action>
       <action type="update" dev="sseifert">
         PathField and FileUpload Granite UI components: Support expression language for properties 'mediaFormats', 'mediaFormatsMandatory', 'mediaCropAuto', 'allowUpload'.
       </action>

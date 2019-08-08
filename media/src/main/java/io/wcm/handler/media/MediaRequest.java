@@ -40,9 +40,7 @@ public final class MediaRequest {
   private final Resource resource;
   private final String mediaRef;
   private final MediaArgs mediaArgs;
-  private final String refProperty;
-  private final String cropProperty;
-  private final String rotationProperty;
+  private final MediaPropertyNames mediaPropertyNames;
 
   private ValueMap resourceProperties;
 
@@ -66,32 +64,48 @@ public final class MediaRequest {
    * @param resource Resource containing reference to media asset
    * @param mediaRef Reference to media item
    * @param mediaArgs Additional arguments affection media resolving
-   * @param refProperty Name of the property from which the media request is read
+   * @param refProperty Name of the property from which the media reference is read
    * @param cropProperty Name of the property which contains the cropping parameters
-   * @deprecated Use {@link #MediaRequest(Resource, String, MediaArgs, String, String, String)}
+   * @deprecated Use {@link #MediaRequest(Resource, String, MediaArgs, MediaPropertyNames)}
    */
   @Deprecated
   public MediaRequest(@Nullable Resource resource, @Nullable String mediaRef, @Nullable MediaArgs mediaArgs,
       @Nullable String refProperty, @Nullable String cropProperty) {
-    this(resource, mediaRef, mediaArgs, refProperty, cropProperty, null);
+    this(resource, mediaRef, mediaArgs, new MediaPropertyNames()
+        .refProperty(refProperty)
+        .cropProperty(cropProperty));
   }
 
   /**
    * @param resource Resource containing reference to media asset
    * @param mediaRef Reference to media item
    * @param mediaArgs Additional arguments affection media resolving
-   * @param refProperty Name of the property from which the media request is read
+   * @param refProperty Name of the property from which the media reference is read
    * @param cropProperty Name of the property which contains the cropping parameters
    * @param rotationProperty Name of the property which contains the rotation parameter
+   * @deprecated Use {@link #MediaRequest(Resource, String, MediaArgs, MediaPropertyNames)}
    */
+  @Deprecated
   public MediaRequest(@Nullable Resource resource, @Nullable String mediaRef, @Nullable MediaArgs mediaArgs,
       @Nullable String refProperty, @Nullable String cropProperty, @Nullable String rotationProperty) {
+    this(resource, mediaRef, mediaArgs, new MediaPropertyNames()
+        .refProperty(refProperty)
+        .cropProperty(cropProperty)
+        .rotationProperty(rotationProperty));
+  }
+
+  /**
+   * @param resource Resource containing reference to media asset
+   * @param mediaRef Reference to media item
+   * @param mediaArgs Additional arguments affection media resolving
+   * @param mediaPropertyNames Defines property names to read media parameters from for this media request.
+   */
+  public MediaRequest(@Nullable Resource resource, @Nullable String mediaRef, @Nullable MediaArgs mediaArgs,
+      @Nullable MediaPropertyNames mediaPropertyNames) {
     this.resource = resource;
     this.mediaRef = mediaRef;
     this.mediaArgs = mediaArgs != null ? mediaArgs : new MediaArgs();
-    this.refProperty = refProperty;
-    this.cropProperty = cropProperty;
-    this.rotationProperty = rotationProperty;
+    this.mediaPropertyNames = mediaPropertyNames != null ? mediaPropertyNames : new MediaPropertyNames();
 
     // validate parameters
     if (this.resource != null && this.mediaRef != null) {
@@ -121,24 +135,37 @@ public final class MediaRequest {
   }
 
   /**
-   * @return Name of the property from which the media request is read
+   * @return Defines property names to read media parameters from for this media request.
    */
+  public @NotNull MediaPropertyNames getMediaPropertyNames() {
+    return this.mediaPropertyNames;
+  }
+
+  /**
+   * @return Name of the property from which the media reference is read
+   * @deprecated Please use {@link #getMediaPropertyNames()}.
+   */
+  @Deprecated
   public @Nullable String getRefProperty() {
-    return this.refProperty;
+    return this.mediaPropertyNames.getRefProperty();
   }
 
   /**
    * @return Name of the property which contains the cropping parameters
+   * @deprecated Please use {@link #getMediaPropertyNames()}.
    */
+  @Deprecated
   public @Nullable String getCropProperty() {
-    return this.cropProperty;
+    return this.mediaPropertyNames.getCropProperty();
   }
 
   /**
    * @return Name of the property which contains the rotation parameter
+   * @deprecated Please use {@link #getMediaPropertyNames()}.
    */
+  @Deprecated
   public @Nullable String getRotationProperty() {
-    return this.rotationProperty;
+    return this.mediaPropertyNames.getRotationProperty();
   }
 
   /**
@@ -159,6 +186,83 @@ public final class MediaRequest {
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+  }
+
+
+  /**
+   * Defines property names to read media parameters from for this media request.
+   */
+  public static final class MediaPropertyNames {
+
+    private String refProperty;
+    private String cropProperty;
+    private String rotationProperty;
+    private String mapProperty;
+
+    /**
+     * @param name Name of the property from which the media reference is read
+     * @return this
+     */
+    public MediaPropertyNames refProperty(@Nullable String name) {
+      this.refProperty = name;
+      return this;
+    }
+
+    /**
+     * @return Name of the property from which the media reference is read
+     */
+    public @Nullable String getRefProperty() {
+      return this.refProperty;
+    }
+
+    /**
+     * @param name Name of the property which contains the cropping parameters
+     * @return this
+     */
+    public MediaPropertyNames cropProperty(@Nullable String name) {
+      this.cropProperty = name;
+      return this;
+    }
+
+    /**
+     * @return Name of the property which contains the cropping parameters
+     */
+    public @Nullable String getCropProperty() {
+      return this.cropProperty;
+    }
+
+    /**
+     * @param name Name of the property which contains the rotation parameter
+     * @return this
+     */
+    public MediaPropertyNames rotationProperty(@Nullable String name) {
+      this.rotationProperty = name;
+      return this;
+    }
+
+    /**
+     * @return Name of the property which contains the rotation parameter
+     */
+    public @Nullable String getRotationProperty() {
+      return this.rotationProperty;
+    }
+
+    /**
+     * @param name Name of the property which contains the image map data
+     * @return this
+     */
+    public MediaPropertyNames mapProperty(@Nullable String name) {
+      this.mapProperty = name;
+      return this;
+    }
+
+    /**
+     * @return Name of the property which contains the image map data
+     */
+    public @Nullable String getMapProperty() {
+      return this.mapProperty;
+    }
+
   }
 
 }
