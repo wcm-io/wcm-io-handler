@@ -161,6 +161,18 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * @return Default property name for map parameter
+   */
+  public @NotNull String getMediaMapProperty() {
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_MAP_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_MAP;
+    }
+  }
+
+  /**
    * @return Default property name for media alt. text
    */
   public @NotNull String getMediaAltTextProperty() {

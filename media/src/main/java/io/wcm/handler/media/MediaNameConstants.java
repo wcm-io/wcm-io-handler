@@ -84,6 +84,16 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_ROTATION_STANDARD = "imageRotate";
 
   /**
+   * Default property name for map parameter (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String PN_MEDIA_MAP = "mediaMap";
+
+  /**
+   * Default property name for map parameter (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_MAP_STANDARD = "imageMap";
+
+  /**
    * Default property name for media alt. text (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_ALTTEXT = "mediaAltText";

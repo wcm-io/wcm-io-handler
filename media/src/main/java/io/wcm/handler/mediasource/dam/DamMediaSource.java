@@ -262,6 +262,7 @@ public final class DamMediaSource extends MediaSource {
       // clear cropping parameters if a new image is inserted via drag&drop
       params.put(cropProperty, "");
       params.put(rotationProperty, "");
+      // TODO: add image map property
     }
 
     DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(

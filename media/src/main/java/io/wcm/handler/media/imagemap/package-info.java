@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * SPI for configuring and tailoring media handler processing.
+ * Image Map parsing.
  */
-@org.osgi.annotation.versioning.Version("1.5")
-package io.wcm.handler.media.spi;
+@org.osgi.annotation.versioning.Version("1.0")
+package io.wcm.handler.media.imagemap;
