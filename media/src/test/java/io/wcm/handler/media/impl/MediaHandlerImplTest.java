@@ -298,10 +298,7 @@ class MediaHandlerImplTest {
           request.getResource(),
           mediaRef,
           mediaArgs,
-          request.getRefProperty(),
-          request.getCropProperty(),
-          request.getRotationProperty()
-          ));
+          request.getMediaPropertyNames()));
       return media;
     }
 

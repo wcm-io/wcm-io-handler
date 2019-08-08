@@ -79,7 +79,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
           media.getMediaSource().enableMediaDrop(mediaElement, media.getMediaRequest());
           // add diff decoration
           if (request != null) {
-            String refProperty = StringUtils.defaultString(media.getMediaRequest().getRefProperty(),
+            String refProperty = StringUtils.defaultString(media.getMediaRequest().getMediaPropertyNames().getRefProperty(),
                 mediaHandlerConfig.getMediaRefProperty());
             MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request, mediaHandlerConfig);
           }

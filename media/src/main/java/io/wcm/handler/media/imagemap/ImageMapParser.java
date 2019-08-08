@@ -21,7 +21,6 @@ package io.wcm.handler.media.imagemap;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -37,11 +36,11 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface ImageMapParser {
 
   /**
-   * Parses a map area string to {@link ImageArea} objects.
+   * Parses a map area string to {@link ImageMapArea} objects.
    * @param mapString Map string
-   * @return List of areas
+   * @return List of areas or null if none found
    */
-  @NotNull
-  List<ImageArea> parseMap(@Nullable String mapString);
+  @Nullable
+  List<ImageMapArea> parseMap(@Nullable String mapString);
 
 }

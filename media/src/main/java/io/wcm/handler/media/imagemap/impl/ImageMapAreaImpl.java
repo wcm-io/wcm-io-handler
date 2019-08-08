@@ -26,12 +26,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.wcm.handler.media.imagemap.ImageArea;
+import io.wcm.handler.media.imagemap.ImageMapArea;
 
 /**
- * Implementation of {@link ImageArea}.
+ * Implementation of {@link ImageMapArea}.
  */
-public class ImageAreaImpl implements ImageArea {
+public class ImageMapAreaImpl implements ImageMapArea {
 
   private final String shape;
   private final String coordinates;
@@ -48,7 +48,7 @@ public class ImageAreaImpl implements ImageArea {
    * @param linkWindowTarget Target
    * @param altText Alt. text
    */
-  public ImageAreaImpl(@NotNull String shape, @NotNull String coordinates, @Nullable String relativeCoordinates,
+  public ImageMapAreaImpl(@NotNull String shape, @NotNull String coordinates, @Nullable String relativeCoordinates,
       @NotNull String linkUrl, @Nullable String linkWindowTarget, @Nullable String altText) {
     this.shape = shape;
     this.coordinates = coordinates;

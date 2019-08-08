@@ -65,10 +65,14 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
+import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.spi.ImageMapLinkResolver;
+import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -836,6 +840,40 @@ class InlineMediaSourceTest {
     assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
     assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
     assertEquals(320, mediaFormat2.getWidth());
+  }
+
+  @Test
+  void testImageMap() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
+
+    // put map string in resource
+    ModifiableValueMap props = mediaInlineResource.adaptTo(ModifiableValueMap.class);
+    props.put(MediaNameConstants.PN_MEDIA_MAP, ImageMapParserImplTest.MAP_STRING);
+
+    Media media = mediaHandler.get(mediaInlineResource).build();
+    assertTrue(media.isValid(), "media valid");
+
+    // assert map
+    assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
+  }
+
+  @Test
+  void testImageMap_CustomProperty() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
+
+    // put map string in resource
+    ModifiableValueMap props = mediaInlineResource.adaptTo(ModifiableValueMap.class);
+    props.put("customMapProperty", ImageMapParserImplTest.MAP_STRING);
+
+    Media media = mediaHandler.get(mediaInlineResource)
+        .mapProperty("customMapProperty")
+        .build();
+    assertTrue(media.isValid(), "valid");
+
+    // assert map
+    assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
   }
 
 }

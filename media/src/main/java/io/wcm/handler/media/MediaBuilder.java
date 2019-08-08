@@ -312,6 +312,14 @@ public interface MediaBuilder {
   MediaBuilder rotationProperty(@NotNull String rotationProperty);
 
   /**
+   * Set the name of the property which contains the image map data.
+   * @param mapProperty Property name
+   * @return Media builder
+   */
+  @NotNull
+  MediaBuilder mapProperty(@NotNull String mapProperty);
+
+  /**
    * Resolve media and return metadata objects that contains all results.
    * @return Media metadata object. Never null, if the resolving failed the isValid() method returns false.
    */

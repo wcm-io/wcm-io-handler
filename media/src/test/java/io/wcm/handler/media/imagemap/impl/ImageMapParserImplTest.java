@@ -19,26 +19,23 @@
  */
 package io.wcm.handler.media.imagemap.impl;
 
+import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
-import org.apache.sling.api.resource.Resource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.google.common.collect.ImmutableList;
 
-import io.wcm.handler.media.imagemap.ImageArea;
+import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.imagemap.ImageMapParser;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -48,8 +45,8 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 public class ImageMapParserImplTest {
 
   private static final String EXTERNAL_REF = "http://myhost";
-  private static final String VALID_CONTENT_REF = "/content/valid";
-  private static final String INVALID_CONTENT_REF = "/content/invalid";
+  private static final String VALID_CONTENT_REF = ROOTPATH_CONTENT;
+  private static final String INVALID_CONTENT_REF = ROOTPATH_CONTENT + "/invalid";
 
   public static final String MAP_STRING = "[circle(256,256,256)\"" + EXTERNAL_REF + "\"|\"\"|\"\"|(0.2000,0.3001,0.2000)]"
       + "[rect(256,171,1023,682)\"" + VALID_CONTENT_REF + "\"|\"\"|\"altText\"|(0.1992,0.2005,0.7992,0.7995)]"
@@ -57,34 +54,22 @@ public class ImageMapParserImplTest {
       // this rect has an invalid content reference and thus should be removed during parsing
       + "[rect(256,171,1023,682)\"" + INVALID_CONTENT_REF + "\"|\"\"|\"altText\"|(0.1992,0.2005,0.7992,0.7995)]";
 
-  public static final List<ImageArea> EXPECTED_AREAS_RESOLVED = ImmutableList.of(
-      new ImageAreaImpl("circle", "256,256,256", "0.2000,0.3001,0.2000", EXTERNAL_REF, null, null),
-      new ImageAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", VALID_CONTENT_REF + ".html", null, "altText"),
-      new ImageAreaImpl("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988", EXTERNAL_REF, "_blank", null));
+  public static final List<ImageMapArea> EXPECTED_AREAS_RESOLVED = ImmutableList.of(
+      new ImageMapAreaImpl("circle", "256,256,256", "0.2000,0.3001,0.2000", EXTERNAL_REF, null, null),
+      new ImageMapAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", VALID_CONTENT_REF + ".html", null, "altText"),
+      new ImageMapAreaImpl("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988", EXTERNAL_REF, "_blank", null));
 
-  public static final List<ImageArea> EXPECTED_AREAS_UNRESOLVED = ImmutableList.of(
-      new ImageAreaImpl("circle", "256,256,256", "0.2000,0.3001,0.2000", EXTERNAL_REF, null, null),
-      new ImageAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", VALID_CONTENT_REF, null, "altText"),
-      new ImageAreaImpl("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988", EXTERNAL_REF, "_blank", null),
-      new ImageAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", INVALID_CONTENT_REF, null, "altText"));
+  public static final List<ImageMapArea> EXPECTED_AREAS_UNRESOLVED = ImmutableList.of(
+      new ImageMapAreaImpl("circle", "256,256,256", "0.2000,0.3001,0.2000", EXTERNAL_REF, null, null),
+      new ImageMapAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", VALID_CONTENT_REF, null, "altText"),
+      new ImageMapAreaImpl("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988", EXTERNAL_REF, "_blank", null),
+      new ImageMapAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", INVALID_CONTENT_REF, null, "altText"));
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  @Mock(lenient = true)
-  private ImageMapLinkResolver linkResolver;
-
-  @BeforeEach
-  void setUp() {
-    when(linkResolver.resolve(eq(EXTERNAL_REF), any(Resource.class))).thenReturn(EXTERNAL_REF);
-    when(linkResolver.resolve(eq(VALID_CONTENT_REF), any(Resource.class))).thenReturn(VALID_CONTENT_REF + ".html");
-    when(linkResolver.resolve(eq(INVALID_CONTENT_REF), any(Resource.class))).thenReturn(null);
-
-    context.currentResource(context.create().resource("/content/test/resource1"));
-  }
-
   @Test
   void testMap_WithLinkResolver() {
-    context.registerService(ImageMapLinkResolver.class, linkResolver);
+    context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
     ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
 
     assertEquals(EXPECTED_AREAS_RESOLVED, underTest.parseMap(MAP_STRING));
@@ -101,21 +86,21 @@ public class ImageMapParserImplTest {
   void testNull() {
     ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
 
-    assertEquals(0, underTest.parseMap(null).size());
+    assertNull(underTest.parseMap(null));
   }
 
   @Test
   void testEmptyString() {
     ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
 
-    assertEquals(0, underTest.parseMap("").size());
+    assertNull(underTest.parseMap(""));
   }
 
   @Test
   void testInvalidString() {
     ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
 
-    assertEquals(0, underTest.parseMap("[xyz][").size());
+    assertNull(underTest.parseMap("[xyz]["));
   }
 
 }

@@ -27,7 +27,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * Represents an image map area defined by the AEM image editor.
  */
 @ProviderType
-public interface ImageArea {
+public interface ImageMapArea {
 
   /**
    * Returns the value for the {@code shape} attribute of the image map area.

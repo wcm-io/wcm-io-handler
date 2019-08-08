@@ -20,7 +20,6 @@
 package io.wcm.handler.media.imagemap.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,15 +29,14 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.wcm.handler.media.imagemap.ImageArea;
+import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.imagemap.ImageMapParser;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
 
 /**
- * Creates {@link ImageArea} from strings.
+ * Creates {@link ImageMapArea} from strings.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -52,12 +50,12 @@ public class ImageMapParserImpl implements ImageMapParser {
   private ImageMapLinkResolver linkResolver;
 
   @Override
-  public @NotNull List<ImageArea> parseMap(@Nullable String mapString) {
+  public @Nullable List<ImageMapArea> parseMap(@Nullable String mapString) {
     if (StringUtils.isBlank(mapString)) {
-      return Collections.emptyList();
+      return null;
     }
 
-    List<ImageArea> areas = new ArrayList<>();
+    List<ImageMapArea> areas = new ArrayList<>();
     // Parse the image map areas as defined at {@code Image.PN_MAP}
     String[] areaStrings = StringUtils.split(mapString, "][");
     for (String areaString : areaStrings) {
@@ -90,7 +88,7 @@ public class ImageMapParserImpl implements ImageMapParser {
         String relativeCoordinates = remainingTokens.length > 3 ? remainingTokens[3] : "";
         relativeCoordinates = StringUtils.substringBetween(relativeCoordinates, "(", ")");
 
-        ImageArea area = new ImageAreaImpl(shape, coordinates,
+        ImageMapArea area = new ImageMapAreaImpl(shape, coordinates,
             StringUtils.trimToNull(relativeCoordinates),
             linkUrl,
             StringUtils.trimToNull(linkWindowTarget), StringUtils.trimToNull(altText));
@@ -98,7 +96,13 @@ public class ImageMapParserImpl implements ImageMapParser {
         areas.add(area);
       }
     }
-    return areas;
+
+    if (areas.isEmpty()) {
+      return null;
+    }
+    else {
+      return areas;
+    }
   }
 
 }
