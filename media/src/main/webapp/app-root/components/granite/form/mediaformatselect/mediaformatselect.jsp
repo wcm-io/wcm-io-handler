@@ -42,7 +42,7 @@ are overwritten or added.
 .. gnd:gnd::
 
   /**
-   * Media format select is always multiple
+   * Media format select is multiple by default
    */
   - multiple (Boolean) = 'true'
 
@@ -52,7 +52,7 @@ are overwritten or added.
 Config cfg = cmp.getConfig();
 
 Map<String,Object> selectProps = new HashMap<>();
-selectProps.put("multiple", true);
+selectProps.put("multiple", cfg.get("multiple", true));
 
 Resource select = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(selectProps));
 GraniteUiSyntheticResource.child(select, Config.DATASOURCE, JcrConstants.NT_UNSTRUCTURED,
