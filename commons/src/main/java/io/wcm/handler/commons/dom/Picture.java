@@ -25,7 +25,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * Html picture element.
  */
 @ProviderType
-public final class Picture extends HtmlElement<Picture> {
+public final class Picture extends AbstractNonSelfClosingHtmlElement<Picture> {
   private static final long serialVersionUID = 1L;
 
   private static final String ELEMENT_NAME = "picture";

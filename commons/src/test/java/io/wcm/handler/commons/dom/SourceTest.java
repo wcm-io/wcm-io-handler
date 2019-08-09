@@ -34,11 +34,13 @@ class SourceTest {
     source.setSrc("ref1");
     source.setType("type1");
     source.setSrcSet("srcset1");
+    source.setSizes("sizes");
 
     assertEquals("media1", source.getMedia());
     assertEquals("ref1", source.getSrc());
     assertEquals("type1", source.getType());
     assertEquals("srcset1", source.getSrcSet());
+    assertEquals("sizes1", source.getSizes());
   }
 
 }
