@@ -34,7 +34,7 @@ class SourceTest {
     source.setSrc("ref1");
     source.setType("type1");
     source.setSrcSet("srcset1");
-    source.setSizes("sizes");
+    source.setSizes("sizes1");
 
     assertEquals("media1", source.getMedia());
     assertEquals("ref1", source.getSrc());
