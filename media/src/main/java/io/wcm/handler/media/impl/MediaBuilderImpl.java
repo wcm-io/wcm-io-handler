@@ -34,14 +34,11 @@ import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
-import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
-import io.wcm.wcm.commons.component.ComponentPropertyResolution;
-import io.wcm.wcm.commons.component.ComponentPropertyResolver;
 
 /**
  * Default implementation or {@link MediaBuilder}.
@@ -62,33 +59,13 @@ final class MediaBuilderImpl implements MediaBuilder {
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
 
-    // resolve component properties
+    // resolve default settings from content policies and component properties
     if (resource != null) {
-      ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource)
-          .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
-          .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
-      mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
-
-      // media formats with optional mandatory flag(s)
-      String[] mediaFormatNames = resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class);
-      Boolean[] mediaFormatsMandatory = resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, Boolean[].class);
-      if (mediaFormatNames != null && mediaFormatNames.length > 0) {
-        MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[mediaFormatNames.length];
-        for (int i = 0; i < mediaFormatNames.length; i++) {
-          boolean mandatory = false;
-          if (mediaFormatsMandatory != null) {
-            if (mediaFormatsMandatory.length == 1) {
-              // backward compatibility: support a single flag for all media formats
-              mandatory = mediaFormatsMandatory[0];
-            }
-            else if (mediaFormatsMandatory.length > i) {
-              mandatory = mediaFormatsMandatory[i];
-            }
-          }
-          mediaFormatOptions[i] = new MediaFormatOption(mediaFormatNames[i], mandatory);
-        }
-        mediaArgs.mediaFormatOptions(mediaFormatOptions);
-      }
+      MediaComponentPropertyResolver resolver = new MediaComponentPropertyResolver(resource);
+      mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
+      mediaArgs.autoCrop(resolver.isAutoCrop());
+      mediaArgs.imageSizes(resolver.getImageSizes());
+      mediaArgs.pictureSources(resolver.getPictureSources());
     }
   }
 

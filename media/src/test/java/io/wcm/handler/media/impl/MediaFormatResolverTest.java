@@ -61,6 +61,8 @@ class MediaFormatResolverTest {
   void setUp() {
     when(mediaFormatHandler.getMediaFormat(EDITORIAL_1COL.getName())).thenReturn(EDITORIAL_1COL);
     when(mediaFormatHandler.getMediaFormat(EDITORIAL_2COL.getName())).thenReturn(EDITORIAL_2COL);
+    when(mediaFormatHandler.getMediaFormat(RATIO.getName())).thenReturn(RATIO);
+    when(mediaFormatHandler.getMediaFormat(RATIO2.getName())).thenReturn(RATIO2);
 
     underTest = new MediaFormatResolver(mediaFormatHandler);
   }
@@ -157,6 +159,26 @@ class MediaFormatResolverTest {
         .pictureSources(new PictureSource[] {
             new PictureSource(RATIO, "media1", 20, 30),
             new PictureSource(RATIO2, null, 10, 20)
+        });
+
+    assertTrue(underTest.resolve(mediaArgs));
+
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(5, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(RATIO, 30, true, mediaFormatOptions[2]);
+    assertResponsiveMediaFormat(RATIO2, 10, true, mediaFormatOptions[3]);
+    assertResponsiveMediaFormat(RATIO2, 20, true, mediaFormatOptions[4]);
+  }
+
+  @Test
+  void testPictureSources_DifferentRatio_MediaFormatNames() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(RATIO)
+        .pictureSources(new PictureSource[] {
+            new PictureSource("ratio", "media1", 20, 30),
+            new PictureSource("ratio2", null, 10, 20)
         });
 
     assertTrue(underTest.resolve(mediaArgs));

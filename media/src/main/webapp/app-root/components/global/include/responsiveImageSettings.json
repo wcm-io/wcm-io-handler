@@ -27,7 +27,7 @@
               "text": "Image with sizes attriubte"
             },
             "pictureSource": {
-              "value": "pictureSource",
+              "value": "pictureSources",
               "text": "Picture with sources elements"
             }
           }
@@ -90,11 +90,11 @@
           }
         },
 
-        "pictureSource": {
+        "pictureSources": {
           "sling:resourceType": "granite/ui/components/coral/foundation/well",
           "granite:class": "hide list-option-responsiveType-showhide-target foundation-layout-util-vmargin",
           "granite:data": {
-            "showhidetargetvalue": "pictureSource"
+            "showhidetargetvalue": "pictureSources"
           },
           "items": {
             "mediaRepsonsivePictureSources": {

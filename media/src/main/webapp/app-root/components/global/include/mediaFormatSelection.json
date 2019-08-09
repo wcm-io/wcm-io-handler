@@ -10,7 +10,7 @@
     },
     "mediaFormatsMandatory": {
       "sling:resourceType": "wcm-io/handler/media/components/granite/form/mediaformatselect",
-      "name": "./wcmio:mediaFormatsMandatory",
+      "name": "./wcmio:mediaFormatsMandatoryNames",
       "fieldLabel": "Mandatory Media Formats",
       "fieldDescription": "Displays rendition that matches with all of the media formats."
     },

@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,17 +60,18 @@ final class MediaFormatResolver {
    * @return true if resolution was successful.
    */
   public boolean resolve(MediaArgs mediaArgs) {
-    return resolveByNames(mediaArgs)
+    return resolveMediaFormatOptionsByNames(mediaArgs)
+        && resolvePictureSourcesByNames(mediaArgs)
         && addResponsiveImageMediaFormats(mediaArgs);
   }
 
   /**
-   * Resolve media format names to media formats so all downstream logic has only to handle the resolved media formats.
-   * If resolving fails an exception is thrown.
+   * Resolve media format names to media formats in media options so all downstream logic has only to handle the
+   * resolved media formats.
    * @param mediaArgs Media args
    * @return true if resolution was successful.
    */
-  private boolean resolveByNames(MediaArgs mediaArgs) {
+  private boolean resolveMediaFormatOptionsByNames(MediaArgs mediaArgs) {
     MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
     if (mediaFormatOptions == null) {
       return true;
@@ -89,6 +92,38 @@ final class MediaFormatResolver {
       }
     }
     mediaArgs.mediaFormatOptions(mediaFormatOptions);
+
+    return resolutionSuccessful;
+  }
+
+  /**
+   * Resolve media format names to media formats in picture sources so all downstream logic has only to handle the
+   * resolved media formats.
+   * @param mediaArgs Media args
+   * @return true if resolution was successful.
+   */
+  private boolean resolvePictureSourcesByNames(MediaArgs mediaArgs) {
+    PictureSource[] pictureSources = mediaArgs.getPictureSources();
+    if (pictureSources == null) {
+      return true;
+    }
+
+    // resolve media format options that have only a name set
+    boolean resolutionSuccessful = true;
+    for (int i = 0; i < pictureSources.length; i++) {
+      PictureSource pictureSource = pictureSources[i];
+      String mediaFormatName = pictureSource.getMediaFormatName();
+      if (pictureSource.getMediaFormat() == null && mediaFormatName != null) {
+        MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
+        if (mediaFormat == null) {
+          log.warn("Media format name '{}' is invalid.", pictureSource.getMediaFormatName());
+          resolutionSuccessful = false;
+        }
+        pictureSources[i] = new PictureSource(mediaFormat, pictureSource.getMedia(), pictureSource.getWidthOptions());
+      }
+    }
+    mediaArgs.pictureSources(pictureSources);
+
     return resolutionSuccessful;
   }
 
@@ -156,8 +191,11 @@ final class MediaFormatResolver {
     return true;
   }
 
-  private void generateMediaFormatsForWidths(Map<String, MediaFormatOption> additionalMediaFormats,
-      MediaFormat mediaFormat, WidthOption... widthOptions) {
+  private void generateMediaFormatsForWidths(@NotNull Map<String, MediaFormatOption> additionalMediaFormats,
+      @Nullable MediaFormat mediaFormat, @NotNull WidthOption @NotNull... widthOptions) {
+    if (mediaFormat == null) {
+      return;
+    }
     for (WidthOption widthOption : widthOptions) {
       MediaFormat widthMediaFormat = MediaFormatBuilder.create(
           mediaFormat.getName() + MEDIAFORMAT_NAME_SEPARATOR + widthOption.getWidth())
