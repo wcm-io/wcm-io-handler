@@ -728,7 +728,7 @@ public final class MediaArgs implements Cloneable {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
     }
 
     @NotNull
@@ -812,7 +812,7 @@ public final class MediaArgs implements Cloneable {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
     }
 
   }
@@ -823,9 +823,10 @@ public final class MediaArgs implements Cloneable {
   @ProviderType
   public static final class PictureSource {
 
-    private final @NotNull MediaFormat mediaFormat;
-    private final @Nullable String media;
-    private final @NotNull WidthOption @NotNull [] widthOptions;
+    private final MediaFormat mediaFormat;
+    private final String mediaFormatName;
+    private final String media;
+    private final @NotNull WidthOption[] widthOptions;
 
     /**
      * @param mediaFormat Media format
@@ -834,11 +835,10 @@ public final class MediaArgs implements Cloneable {
      * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
      */
     public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media, long @NotNull... widths) {
+      this.mediaFormatName = null;
       this.mediaFormat = mediaFormat;
       this.media = media;
-      this.widthOptions = Arrays.stream(widths)
-          .mapToObj(width -> new WidthOption(width, true))
-          .toArray(size -> new WidthOption[size]);
+      this.widthOptions = toWidthOptions(widths);
     }
 
     /**
@@ -847,18 +847,59 @@ public final class MediaArgs implements Cloneable {
      *          list</a>
      * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
      */
-    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media,
+    public PictureSource(@Nullable MediaFormat mediaFormat, @Nullable String media,
         @NotNull WidthOption @NotNull... widthOptions) {
+      this.mediaFormatName = null;
       this.mediaFormat = mediaFormat;
       this.media = media;
       this.widthOptions = widthOptions;
     }
 
     /**
+     * @param mediaFormatName Media format
+     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+     *          list</a>
+     * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
+     */
+    public PictureSource(@NotNull String mediaFormatName, @Nullable String media, long @NotNull... widths) {
+      this.mediaFormatName = mediaFormatName;
+      this.mediaFormat = null;
+      this.media = media;
+      this.widthOptions = toWidthOptions(widths);
+    }
+
+    /**
+     * @param mediaFormatName Media format
+     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+     *          list</a>
+     * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public PictureSource(@NotNull String mediaFormatName, @Nullable String media,
+        @NotNull WidthOption @NotNull... widthOptions) {
+      this.mediaFormatName = mediaFormatName;
+      this.mediaFormat = null;
+      this.media = media;
+      this.widthOptions = widthOptions;
+    }
+
+    private static @NotNull WidthOption @NotNull [] toWidthOptions(long @NotNull... widths) {
+      return Arrays.stream(widths)
+          .mapToObj(width -> new WidthOption(width, true))
+          .toArray(size -> new WidthOption[size]);
+    }
+
+    /**
      * @return Media format
      */
-    public @NotNull MediaFormat getMediaFormat() {
+    public @Nullable MediaFormat getMediaFormat() {
       return this.mediaFormat;
+    }
+
+    /**
+     * @return Media format
+     */
+    public @Nullable String getMediaFormatName() {
+      return this.mediaFormatName;
     }
 
     /**
@@ -899,7 +940,7 @@ public final class MediaArgs implements Cloneable {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
     }
 
   }
@@ -948,7 +989,7 @@ public final class MediaArgs implements Cloneable {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE);
+      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
     }
 
   }

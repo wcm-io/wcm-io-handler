@@ -1,0 +1,139 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "sling:resourceType": "granite/ui/components/coral/foundation/container",
+  "jcr:title": "Responsive Image",
+  "margin": true,
+  "items": {
+    "content": {
+      "sling:resourceType": "granite/ui/components/coral/foundation/container",
+      "margin": false,
+      "items": {
+        
+        "responsiveType": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/form/select",
+          "name": "./wcmio:mediaResponsiveType",
+          "fieldLabel": "Choose type",
+          "granite:class": "cq-dialog-dropdown-showhide",
+          "granite:data": {
+            "cq-dialog-dropdown-showhide-target": ".list-option-responsiveType-showhide-target"
+          },
+          "items": {
+            "none": {
+              "value": "none",
+              "text": "None"
+            },
+            "imageSizes": {
+              "value": "imageSizes",
+              "text": "Image with sizes attriubte"
+            },
+            "pictureSource": {
+              "value": "pictureSources",
+              "text": "Picture with sources elements"
+            }
+          }
+        },
+        "mediaFormatText": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/text",
+          "text": " "  /* no-break space to ensure a little spacing, so the dropdown is not cut off */
+        },
+
+        "none": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/well",
+          "granite:class": "hide list-option-responsiveType-showhide-target foundation-layout-util-vmargin",
+          "granite:data": {
+            "showhidetargetvalue": "none"
+          },
+          "items": {
+            "container": {
+              "sling:resourceType": "granite/ui/components/coral/foundation/container",
+              "margin": true,
+              "items": {
+                "chooseText": {
+                  "sling:resourceType": "granite/ui/components/coral/foundation/text",
+                  "text": "Choose the type of responsiveness which should be applied to images."
+                }
+              }
+            }
+          }
+        },
+
+        "imageSizes": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/well",
+          "granite:class": "hide list-option-responsiveType-showhide-target foundation-layout-util-vmargin",
+          "granite:data": {
+            "showhidetargetvalue": "imageSizes"
+          },
+          "items": {
+            "container": {
+              "sling:resourceType": "granite/ui/components/coral/foundation/container",
+              "margin": true,
+              "items": {
+                "mediaFormatInfo": {
+                  "sling:resourceType": "granite/ui/components/coral/foundation/text",
+                  "text": "The constraints of the primary media format apply (as selected on first tab) ."
+                }
+              }
+            },
+            "sizes": {
+              "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
+              "name": "./wcmio:mediaRepsonsiveImageSizes/sizes",
+              "fieldLabel": "Sizes String",
+              "fieldDescription": "A valid source size list, see http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Example: '(min-width: 1280px) 1200px, 100vw'."
+            },
+            "widths": {
+              "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
+              "name": "./wcmio:mediaRepsonsiveImageSizes/widths",
+              "fieldLabel": "Widths",
+              "fieldDescription": "Widths for the renditions in the srcset attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'.",
+              "validation": ["wcmio.handler.media.responsiveWidths"]
+            }
+          }
+        },
+
+        "pictureSources": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/well",
+          "granite:class": "hide list-option-responsiveType-showhide-target foundation-layout-util-vmargin",
+          "granite:data": {
+            "showhidetargetvalue": "pictureSources"
+          },
+          "items": {
+            "mediaRepsonsivePictureSources": {
+              "sling:resourceType": "granite/ui/components/coral/foundation/form/multifield",
+              "composite": true,
+              "field": {
+                "sling:resourceType": "granite/ui/components/coral/foundation/container",
+                "name": "./wcmio:mediaRepsonsivePictureSources",
+                "items": {
+                  "mediaFormat": {
+                    "sling:resourceType": "wcm-io/handler/media/components/granite/form/mediaformatselect",
+                    "name": "./mediaFormat",
+                    "fieldLabel": "Media Format",
+                    "fieldDescription": "Media format with ratio for the renditions of the source element.",
+                    "multiple": false,
+                    "emptyOption": true,
+                    "required": true
+                  },
+                  "media": {
+                    "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
+                    "name": "./media",
+                    "fieldDescription": "A valid media query list, see http://w3c.github.io/html/infrastructure.html#valid-media-query-list. Example: '(min-width: 1024px)'.",
+                    "fieldLabel": "Media String"
+                  },
+                  "widths": {
+                    "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
+                    "name": "./widths",
+                    "fieldLabel": "Widths",
+                    "fieldDescription": "Widths for the renditions in the srcset attribute. Separate widths by ','. Suffix optional widths with '?'.",
+                    "required": true,
+                    "validation": ["wcmio.handler.media.responsiveWidths"]
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+}
