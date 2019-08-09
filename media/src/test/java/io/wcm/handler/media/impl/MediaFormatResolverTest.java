@@ -157,8 +157,8 @@ class MediaFormatResolverTest {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
         .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO, "media1", 20, 30),
-            new PictureSource(RATIO2, null, 10, 20)
+            new PictureSource(RATIO).media("media1").widths(20, 30),
+            new PictureSource(RATIO2).widths(10, 20)
         });
 
     assertTrue(underTest.resolve(mediaArgs));
@@ -177,8 +177,8 @@ class MediaFormatResolverTest {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
         .pictureSources(new PictureSource[] {
-            new PictureSource("ratio", "media1", 20, 30),
-            new PictureSource("ratio2", null, 10, 20)
+            new PictureSource("ratio").media("media1").widths(20, 30),
+            new PictureSource("ratio2").widths(10, 20)
         });
 
     assertTrue(underTest.resolve(mediaArgs));
@@ -197,8 +197,8 @@ class MediaFormatResolverTest {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
         .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO, "media1", new WidthOption(20, true), new WidthOption(30, false)),
-            new PictureSource(RATIO2, null, new WidthOption(10, false), new WidthOption(20, true))
+            new PictureSource(RATIO).media("media1").widthOptions(new WidthOption(20, true), new WidthOption(30, false)),
+            new PictureSource(RATIO2).widthOptions(new WidthOption(10, false), new WidthOption(20, true))
         });
 
     assertTrue(underTest.resolve(mediaArgs));
@@ -217,8 +217,8 @@ class MediaFormatResolverTest {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
         .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO, "media1", 20, 30),
-            new PictureSource(RATIO, null, 10, 20)
+            new PictureSource(RATIO).media("media1").widths(20, 30),
+            new PictureSource(RATIO).widths(10, 20)
         });
 
     assertTrue(underTest.resolve(mediaArgs));

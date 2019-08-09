@@ -240,9 +240,9 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(RATIO);
     mediaRequest.getMediaArgs().pictureSources(new PictureSource[] {
-        new PictureSource(RATIO, "media1", 64, 32),
-        new PictureSource(EDITORIAL_1COL, "media2", 215),
-        new PictureSource(RATIO2, null, 40),
+        new PictureSource(RATIO).media("media1").sizes("sizes1").widths(64, 32),
+        new PictureSource(EDITORIAL_1COL).media("media2").widths(215),
+        new PictureSource(RATIO2).widths(40),
     });
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
@@ -257,6 +257,7 @@ class SimpleImageMediaMarkupBuilderTest {
     assertEquals(2, sources.size());
     HtmlElement<?> source1 = (HtmlElement<?>)sources.get(0);
     assertEquals("media1", source1.getAttributeValue("media"));
+    assertEquals("sizes1", source1.getAttributeValue("sizes"));
     assertEquals("/media/dummy.64.png 64w, /media/dummy.32.png 32w", source1.getAttributeValue("srcset"));
     HtmlElement<?> source2 = (HtmlElement<?>)sources.get(1);
     assertNull(source2.getAttributeValue("media"));
@@ -337,9 +338,9 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(RATIO);
     mediaRequest.getMediaArgs().pictureSources(new PictureSource[] {
-        new PictureSource(RATIO, "media1", 64, 32),
-        new PictureSource(EDITORIAL_1COL, "media2", 215),
-        new PictureSource(RATIO2, null, 40),
+        new PictureSource(RATIO).media("media1").widths(64, 32),
+        new PictureSource(EDITORIAL_1COL).media("media2").widths(215),
+        new PictureSource(RATIO2).widths(40),
     });
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);

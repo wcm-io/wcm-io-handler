@@ -119,6 +119,12 @@
                     "fieldDescription": "A valid media query list, see http://w3c.github.io/html/infrastructure.html#valid-media-query-list. Example: '(min-width: 1024px)'.",
                     "fieldLabel": "Media String"
                   },
+                  "sizes": {
+                    "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
+                    "name": "./sizes",
+                    "fieldLabel": "Sizes String",
+                    "fieldDescription": "A valid source size list, see http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Example: '(min-width: 1280px) 1200px, 100vw'."
+                  },
                   "widths": {
                     "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
                     "name": "./widths",

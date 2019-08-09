@@ -120,6 +120,9 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       if (pictureSource.getMedia() != null) {
         source.setMedia(pictureSource.getMedia());
       }
+      if (pictureSource.getSizes() != null) {
+        source.setSizes(pictureSource.getSizes());
+      }
       MediaFormat mediaFormat = pictureSource.getMediaFormat();
       if (mediaFormat != null) {
         String srcSet = getSrcSetRenditions(media, mediaFormat, pictureSource.getWidthOptions());

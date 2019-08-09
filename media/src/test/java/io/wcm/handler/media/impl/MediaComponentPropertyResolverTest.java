@@ -30,6 +30,7 @@ import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_IMAGES
 import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_IMAGES_SIZES_WIDTHS;
 import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_MEDIA;
 import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_MEDIAFORMAT;
+import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_SIZES;
 import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_WIDTHS;
 import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.RESPONSIVE_TYPE_IMAGE_SIZES;
 import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.RESPONSIVE_TYPE_PICTURE_SOURCES;
@@ -293,6 +294,7 @@ class MediaComponentPropertyResolverTest {
     context.create().resource(sources, "source1",
         PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
         PN_PICTURE_SOURCES_MEDIA, "media1",
+        PN_PICTURE_SOURCES_SIZES, "sizes1",
         PN_PICTURE_SOURCES_WIDTHS, "200,400?");
     context.create().resource(sources, "source2",
         PN_PICTURE_SOURCES_MEDIAFORMAT, "home_teaser",
@@ -302,11 +304,15 @@ class MediaComponentPropertyResolverTest {
 
     MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
     assertArrayEquals(new PictureSource[] {
-        new PictureSource("home_stage", "media1", new WidthOption[] {
-            new WidthOption(200, true),
-            new WidthOption(400, false)
-        }),
-        new PictureSource("home_teaser", null, 200, 300)
+        new PictureSource("home_stage")
+            .media("media1")
+            .sizes("sizes1")
+            .widthOptions(new WidthOption[] {
+                new WidthOption(200, true),
+                new WidthOption(400, false)
+            }),
+        new PictureSource("home_teaser")
+            .widths(200, 300)
     }, underTest.getPictureSources());
   }
 
@@ -340,7 +346,7 @@ class MediaComponentPropertyResolverTest {
 
     MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
     assertArrayEquals(new PictureSource[] {
-        new PictureSource("home_stage", null, 200, 400)
+        new PictureSource("home_stage").widths(200, 400)
     }, underTest.getPictureSources());
   }
 

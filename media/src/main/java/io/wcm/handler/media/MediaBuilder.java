@@ -25,6 +25,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
@@ -265,13 +266,25 @@ public interface MediaBuilder {
    * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.
    * This will add one <code>source</code> element with an <code>media</code> attribute set to the given media
    * string, and a <code>srcset</code> attribute with renditions for each width given based on the given media format.
+   * @param pictureSource Picture source element
+   * @return this
+   */
+  @NotNull
+  MediaBuilder pictureSource(@NotNull PictureSource pictureSource);
+
+  /**
+   * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.
+   * This will add one <code>source</code> element with an <code>media</code> attribute set to the given media
+   * string, and a <code>srcset</code> attribute with renditions for each width given based on the given media format.
    * @param mediaFormat Media format with ratio for the renditions of the <code>source</code> element
    * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
    *          list</a>
    * @param widths Widths for the renditions in the <code>srcset</code> attribute.
    *          All renditions will use the ratio of the given media format.
    * @return this
+   * @deprecated Use {@link #pictureSource(PictureSource)}
    */
+  @Deprecated
   @NotNull
   MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths);
 
@@ -283,7 +296,9 @@ public interface MediaBuilder {
    * @param widths Widths for the renditions in the <code>srcset</code> attribute.
    *          All renditions will use the ratio of the given media format.
    * @return this
+   * @deprecated Use {@link #pictureSource(PictureSource)}
    */
+  @Deprecated
   @NotNull
   MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths);
 

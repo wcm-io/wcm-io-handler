@@ -64,6 +64,7 @@ class MediaComponentPropertyResolver {
 
   static final String PN_PICTURE_SOURCES_MEDIAFORMAT = "mediaFormat";
   static final String PN_PICTURE_SOURCES_MEDIA = "media";
+  static final String PN_PICTURE_SOURCES_SIZES = "sizes";
   static final String PN_PICTURE_SOURCES_WIDTHS = "widths";
 
   private static final Pattern WIDTHS_PATTERN = Pattern.compile("^\\s*\\d+\\??\\s*(,\\s*\\d+\\??\\s*)*$");
@@ -159,9 +160,13 @@ class MediaComponentPropertyResolver {
       ValueMap props = sourceResource.getValueMap();
       String mediaFormatName = StringUtils.trimToNull(props.get(PN_PICTURE_SOURCES_MEDIAFORMAT, String.class));
       String media = StringUtils.trimToNull(props.get(PN_PICTURE_SOURCES_MEDIA, String.class));
+      String sizes = StringUtils.trimToNull(props.get(PN_PICTURE_SOURCES_SIZES, String.class));
       WidthOption[] widths = parseWidths(props.get(PN_PICTURE_SOURCES_WIDTHS, String.class));
       if (mediaFormatName != null && widths != null) {
-        sources.add(new PictureSource(mediaFormatName, media, widths));
+        sources.add(new PictureSource(mediaFormatName)
+            .media(media)
+            .sizes(sizes)
+            .widthOptions(widths));
       }
     }
 

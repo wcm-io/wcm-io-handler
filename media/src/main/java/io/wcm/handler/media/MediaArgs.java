@@ -823,19 +823,36 @@ public final class MediaArgs implements Cloneable {
   @ProviderType
   public static final class PictureSource {
 
-    private final MediaFormat mediaFormat;
-    private final String mediaFormatName;
-    private final String media;
-    private final @NotNull WidthOption[] widthOptions;
+    private MediaFormat mediaFormat;
+    private String mediaFormatName;
+    private String media;
+    private String sizes;
+    private @NotNull WidthOption[] widthOptions;
+
+    /**
+     * @param mediaFormat Media format
+     */
+    public PictureSource(@NotNull MediaFormat mediaFormat) {
+      this.mediaFormat = mediaFormat;
+    }
+
+    /**
+     * @param mediaFormatName Media format name
+     */
+    public PictureSource(@Nullable String mediaFormatName) {
+      this.mediaFormatName = mediaFormatName;
+    }
 
     /**
      * @param mediaFormat Media format
      * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
      *          list</a>
      * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
+     * @deprecated Use {@link #PictureSource(MediaFormat)} and {@link #media} and {@link #widths(long...)}.
      */
-    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media, long @NotNull... widths) {
-      this.mediaFormatName = null;
+    @Deprecated
+    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media,
+        long @NotNull... widths) {
       this.mediaFormat = mediaFormat;
       this.media = media;
       this.widthOptions = toWidthOptions(widths);
@@ -846,38 +863,12 @@ public final class MediaArgs implements Cloneable {
      * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
      *          list</a>
      * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
+     * @deprecated Use {@link #PictureSource(MediaFormat)} and {@link #media} and {@link #widthOptions}.
      */
+    @Deprecated
     public PictureSource(@Nullable MediaFormat mediaFormat, @Nullable String media,
         @NotNull WidthOption @NotNull... widthOptions) {
-      this.mediaFormatName = null;
       this.mediaFormat = mediaFormat;
-      this.media = media;
-      this.widthOptions = widthOptions;
-    }
-
-    /**
-     * @param mediaFormatName Media format
-     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
-     *          list</a>
-     * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
-     */
-    public PictureSource(@NotNull String mediaFormatName, @Nullable String media, long @NotNull... widths) {
-      this.mediaFormatName = mediaFormatName;
-      this.mediaFormat = null;
-      this.media = media;
-      this.widthOptions = toWidthOptions(widths);
-    }
-
-    /**
-     * @param mediaFormatName Media format
-     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
-     *          list</a>
-     * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
-     */
-    public PictureSource(@NotNull String mediaFormatName, @Nullable String media,
-        @NotNull WidthOption @NotNull... widthOptions) {
-      this.mediaFormatName = mediaFormatName;
-      this.mediaFormat = null;
       this.media = media;
       this.widthOptions = widthOptions;
     }
@@ -903,11 +894,28 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
-     * @return A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
-     *         list</a>
+     * @param value Widths for the renditions in the <code>srcset</code> attribute.
+     * @return this
      */
-    public @Nullable String getMedia() {
-      return this.media;
+    public PictureSource widthOptions(@NotNull WidthOption @NotNull... value) {
+      this.widthOptions = value;
+      return this;
+    }
+
+    /**
+     * @return Widths for the renditions in the <code>srcset</code> attribute.
+     */
+    public WidthOption[] getWidthOptions() {
+      return this.widthOptions;
+    }
+
+    /**
+     * @param value Widths for the renditions in the <code>srcset</code> attribute.
+     * @return this
+     */
+    public PictureSource widths(long @NotNull... value) {
+      this.widthOptions = toWidthOptions(value);
+      return this;
     }
 
     /**
@@ -922,10 +930,39 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
-     * @return Widths for the renditions in the <code>srcset</code> attribute.
+     * @param value A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
+     *          source size list</a>.
+     * @return this
      */
-    public WidthOption[] getWidthOptions() {
-      return this.widthOptions;
+    public PictureSource sizes(String value) {
+      this.sizes = value;
+      return this;
+    }
+
+    /**
+     * @return A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid source
+     *         size list</a>.
+     */
+    public String getSizes() {
+      return this.sizes;
+    }
+
+    /**
+     * @param value A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+     *          list</a>.
+     * @return this
+     */
+    public PictureSource media(String value) {
+      this.media = value;
+      return this;
+    }
+
+    /**
+     * @return A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
+     *         list</a>.
+     */
+    public @Nullable String getMedia() {
+      return this.media;
     }
 
     @Override

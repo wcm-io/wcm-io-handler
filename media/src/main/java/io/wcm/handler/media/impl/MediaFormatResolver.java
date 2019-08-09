@@ -119,7 +119,12 @@ final class MediaFormatResolver {
           log.warn("Media format name '{}' is invalid.", pictureSource.getMediaFormatName());
           resolutionSuccessful = false;
         }
-        pictureSources[i] = new PictureSource(mediaFormat, pictureSource.getMedia(), pictureSource.getWidthOptions());
+        else {
+          pictureSources[i] = new PictureSource(mediaFormat)
+              .media(pictureSource.getMedia())
+              .sizes(pictureSource.getSizes())
+              .widthOptions(pictureSource.getWidthOptions());
+        }
       }
     }
     mediaArgs.pictureSources(pictureSources);

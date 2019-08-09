@@ -46,6 +46,9 @@
         Support resolving media handler-related component properties from content policies and component properties.
         This includes media formats, auto cropping and responsive image settings.
       </action>
+      <action type="update" dev="sseifert" issue="WHAN-24">
+        Allow to specify "sizes" attribute for picture sources.
+      </action>
       <action type="update" dev="sseifert">
         PathField and FileUpload Granite UI components: Support expression language for properties 'mediaFormats', 'mediaFormatsMandatory', 'mediaCropAuto', 'allowUpload'.
       </action>

@@ -250,14 +250,20 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder pictureSource(@NotNull PictureSource pictureSource) {
+    this.pictureSourceSets.add(pictureSource);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths) {
-    this.pictureSourceSets.add(new PictureSource(mediaFormat, media, widths));
+    this.pictureSourceSets.add(new PictureSource(mediaFormat).media(media).widths(widths));
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths) {
-    this.pictureSourceSets.add(new PictureSource(mediaFormat, null, widths));
+    this.pictureSourceSets.add(new PictureSource(mediaFormat).widths(widths));
     return this;
   }
 

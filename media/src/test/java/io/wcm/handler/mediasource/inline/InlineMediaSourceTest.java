@@ -63,6 +63,7 @@ import com.google.common.collect.ImmutableList;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
@@ -797,8 +798,8 @@ class InlineMediaSourceTest {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10)
         .mediaFormat(RATIO)
-        .pictureSource(RATIO, "media1", 160)
-        .pictureSource(RATIO, "media2", 320)
+        .pictureSource(new PictureSource(RATIO).media("media1").widths(160))
+        .pictureSource(new PictureSource(RATIO).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");

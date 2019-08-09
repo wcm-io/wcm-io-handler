@@ -65,6 +65,7 @@ import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
@@ -735,8 +736,8 @@ class DamMediaSourceTest extends AbstractDamTest {
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
         .mediaFormat(RATIO)
-        .pictureSource(RATIO, "media1", 160)
-        .pictureSource(RATIO, "media2", 320)
+        .pictureSource(new PictureSource(RATIO).media("media1").widths(160))
+        .pictureSource(new PictureSource(RATIO).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
@@ -782,8 +783,8 @@ class DamMediaSourceTest extends AbstractDamTest {
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources_NoRatio() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
         .mediaFormat(FIXEDHEIGHT_UNCONSTRAINED)
-        .pictureSource(FIXEDHEIGHT_UNCONSTRAINED, "media1", 160)
-        .pictureSource(FIXEDHEIGHT_UNCONSTRAINED, "media2", 320)
+        .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media1").widths(160))
+        .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
