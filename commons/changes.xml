@@ -30,6 +30,9 @@
       <action type="fix" dev="sseifert" issue="WHAN-24">
         Eliminate stray 'source' element end tags.
       </action>
+      <action type="remove" dev="sseifert">
+        Remove component property resolver (superseded by same feature in WCM Commons).
+      </action>
     </release>
 
     <release version="1.2.0" date="2019-03-15">
