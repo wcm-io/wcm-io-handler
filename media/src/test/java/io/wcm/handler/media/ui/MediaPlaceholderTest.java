@@ -99,4 +99,15 @@ class MediaPlaceholderTest {
     assertNull(underTest.getMediaInvalidReason());
   }
 
+  @Test
+  void testInvalidMedia_MergeClassAppends() {
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+    Media media = mediaHandler.get(resource).build();
+    context.request().setAttribute("media", media);
+    context.request().setAttribute("classAppend", "class1 cq-dd-mediaRef class2");
+
+    MediaPlaceholder underTest = AdaptTo.notNull(context.request(), MediaPlaceholder.class);
+    assertEquals("cq-dd-mediaRef class1 class2", underTest.getClassAppend());
+  }
+
 }
