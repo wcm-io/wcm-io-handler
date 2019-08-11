@@ -27,6 +27,7 @@
     self._pathfield = config.pathfield;
     self._$pathfield = $(config.pathfield);
     self._bindEvents();
+    self._addClearTransformationButton();
 
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
@@ -46,6 +47,9 @@
     self._$element.find("[coral-fileupload-clear]").on("click", function (e) {
       self._$pathfield.val("");
       self._validate.validateMediaFormat(null);
+      if (self._clearTransformationButton) {
+        self._clearTransformationButton.remove();
+      }
     });
 
     self._$element.on("assetselected", function (event) {
@@ -80,7 +84,7 @@
   /**
    * Trigger 'assetselected' event on the fileupload widget.
    */
-  FileUploadExtension.prototype._triggerAssetSelected = function (assetPath)  {
+  FileUploadExtension.prototype._triggerAssetSelected = function (assetPath) {
     var self = this;
     var mimeType = self._detectMimeType(assetPath);
     var thumbnailObject;
@@ -100,7 +104,7 @@
   /**
    * Detect mime type from the file extension.
    */
-  FileUploadExtension.prototype._detectMimeType = function (assetPath)  {
+  FileUploadExtension.prototype._detectMimeType = function (assetPath) {
     var fileExtension = assetPath.substring(assetPath.lastIndexOf('.')+1, assetPath.length);
     if (!fileExtension) {
       return null;      
@@ -122,6 +126,34 @@
       return "image/svg+xml";
     }
     return null;
+  };
+
+  /**
+   * Adds "Clear Transformation" button after the "Clear" button to clear only the transformations.
+   */
+  FileUploadExtension.prototype._addClearTransformationButton = function () {
+    var self = this;
+
+    // check if current resource has transformations defined
+    var hasTransformation = self._$pathfield.data("wcmio-media-hastransformation");
+    if (!hasTransformation) {
+      return;
+    }
+    
+    self._clearTransformationButton = new Coral.Button();
+    self._clearTransformationButton.set({
+        label : {innerHTML: Granite.I18n.get("Clear Transformation")},
+        variant: "quiet"
+    });
+
+    // insert new button after the existing "Clear" button
+    self._clearTransformationButton.on("click", function() {
+      self._$element.find("[value].cq-ImageEditor-param").prop("disabled", false);
+      self._clearTransformationButton.remove();
+      return false;
+    });
+
+    self._$element.find("[coral-fileupload-clear]").after(self._clearTransformationButton);
   };
 
   /**

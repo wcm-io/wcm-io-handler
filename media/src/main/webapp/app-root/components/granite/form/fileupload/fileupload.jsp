@@ -21,6 +21,7 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
+<%@page import="org.apache.sling.api.resource.ValueMap"%>
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
@@ -113,11 +114,18 @@ String propFileNameDefault = "./fileName";
 String propFileReferenceDefault = "./fileReference";
 String damRootPath = getDamRootPath(slingRequest, "/content/dam");
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
+boolean hasTransformation = false;
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
   propNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName();
   propFileNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName() + "Name";
   propFileReferenceDefault = "./" + mediaHandlerConfig.getMediaRefProperty();
+  
+  // check if any transformations are defined
+  ValueMap contentProps = contentResource.getValueMap();
+  hasTransformation = (contentProps.get(mediaHandlerConfig.getMediaCropProperty(), String.class) != null)
+      || (contentProps.get(mediaHandlerConfig.getMediaRotationProperty(), String.class) != null)
+      || (contentProps.get(mediaHandlerConfig.getMediaMapProperty(), String.class) != null);
 }
 
 Map<String,Object> fileUploadProps = new HashMap<>();
@@ -172,13 +180,18 @@ pathFieldProps.put("rootPath", ex.getString(cfg.get("rootPath", damRootPath)));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
+Map<String,Object> dataProps = new HashMap<>();
 if (mediaFormats != null && mediaFormats.length > 0) {
-  Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
   if (mediaFormatsMandatory != null && mediaFormatsMandatory.length > 0) {
     dataProps.put("wcmio-mediaformats-mandatory", StringUtils.join(mediaFormatsMandatory, ","));
   }
   dataProps.put("wcmio-media-cropauto", mediaCropAuto);
+}
+if (hasTransformation) {
+  dataProps.put("wcmio-media-hastransformation", hasTransformation);
+}
+if (!dataProps.isEmpty()) {
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }
 

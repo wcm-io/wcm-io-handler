@@ -34,6 +34,9 @@
         Add Granite UI components: Media Formats Select field and Media Formats data source.
       </action>
       <action type="add" dev="sseifert">
+        Granite UI fileupload component: Add "Clear transformation" link to clear transformations without clearing the selected image.
+      </action>
+      <action type="add" dev="sseifert">
         Add MediaHandler.invalid() method.
       </action>
       <action type="add" dev="sseifert">
