@@ -787,7 +787,7 @@ public final class MediaArgs implements Cloneable {
      * @deprecated Use {@link #getWidthOptions()}
      */
     @Deprecated
-    public long @NotNull [] getWidths() {
+    public long @Nullable [] getWidths() {
       return Arrays.stream(this.widthOptions)
           .mapToLong(WidthOption::getWidth)
           .toArray();
@@ -796,7 +796,7 @@ public final class MediaArgs implements Cloneable {
     /**
      * @return Widths for the renditions in the <code>srcset</code> attribute.
      */
-    public WidthOption[] getWidthOptions() {
+    public @NotNull WidthOption @Nullable [] getWidthOptions() {
       return this.widthOptions;
     }
 
@@ -848,7 +848,7 @@ public final class MediaArgs implements Cloneable {
      * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
      *          list</a>
      * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
-     * @deprecated Use {@link #PictureSource(MediaFormat)} and {@link #media} and {@link #widths(long...)}.
+     * @deprecated Use constructor with {@link MediaFormat} and {@link #media} and {@link #widths(long...)}.
      */
     @Deprecated
     public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media,
@@ -863,7 +863,7 @@ public final class MediaArgs implements Cloneable {
      * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
      *          list</a>
      * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
-     * @deprecated Use {@link #PictureSource(MediaFormat)} and {@link #media} and {@link #widthOptions}.
+     * @deprecated Use constructor with {@link MediaFormat} and {@link #media} and {@link #widths(long...)}.
      */
     @Deprecated
     public PictureSource(@Nullable MediaFormat mediaFormat, @Nullable String media,
@@ -905,7 +905,7 @@ public final class MediaArgs implements Cloneable {
     /**
      * @return Widths for the renditions in the <code>srcset</code> attribute.
      */
-    public WidthOption[] getWidthOptions() {
+    public @NotNull WidthOption @Nullable [] getWidthOptions() {
       return this.widthOptions;
     }
 
@@ -923,7 +923,7 @@ public final class MediaArgs implements Cloneable {
      * @deprecated Use {@link #getWidthOptions()}
      */
     @Deprecated
-    public long @NotNull [] getWidths() {
+    public long @Nullable [] getWidths() {
       return Arrays.stream(this.widthOptions)
           .mapToLong(WidthOption::getWidth)
           .toArray();
@@ -934,7 +934,7 @@ public final class MediaArgs implements Cloneable {
      *          source size list</a>.
      * @return this
      */
-    public PictureSource sizes(String value) {
+    public PictureSource sizes(@Nullable String value) {
       this.sizes = value;
       return this;
     }
@@ -943,7 +943,7 @@ public final class MediaArgs implements Cloneable {
      * @return A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid source
      *         size list</a>.
      */
-    public String getSizes() {
+    public @Nullable String getSizes() {
       return this.sizes;
     }
 
@@ -952,7 +952,7 @@ public final class MediaArgs implements Cloneable {
      *          list</a>.
      * @return this
      */
-    public PictureSource media(String value) {
+    public PictureSource media(@Nullable String value) {
       this.media = value;
       return this;
     }

@@ -102,6 +102,7 @@ final class MediaFormatResolver {
    * @param mediaArgs Media args
    * @return true if resolution was successful.
    */
+  @SuppressWarnings("null")
   private boolean resolvePictureSourcesByNames(MediaArgs mediaArgs) {
     PictureSource[] pictureSources = mediaArgs.getPictureSources();
     if (pictureSources == null) {
@@ -197,8 +198,8 @@ final class MediaFormatResolver {
   }
 
   private void generateMediaFormatsForWidths(@NotNull Map<String, MediaFormatOption> additionalMediaFormats,
-      @Nullable MediaFormat mediaFormat, @NotNull WidthOption @NotNull... widthOptions) {
-    if (mediaFormat == null) {
+      @Nullable MediaFormat mediaFormat, @NotNull WidthOption @Nullable... widthOptions) {
+    if (mediaFormat == null || widthOptions == null) {
       return;
     }
     for (WidthOption widthOption : widthOptions) {

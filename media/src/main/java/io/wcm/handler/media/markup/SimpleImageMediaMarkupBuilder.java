@@ -230,7 +230,10 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @return srcset String or null if no matching renditions found
    */
   protected @Nullable String getSrcSetRenditions(@NotNull Media media, @NotNull MediaFormat mediaFormat,
-      @NotNull WidthOption @NotNull... widths) {
+      @NotNull WidthOption @Nullable... widths) {
+    if (widths == null) {
+      return null;
+    }
     return getSrcSetRenditions(media, mediaFormat, Arrays.stream(widths)
         .mapToLong(WidthOption::getWidth)
         .toArray());

@@ -282,7 +282,7 @@ public interface MediaBuilder {
    * @param widths Widths for the renditions in the <code>srcset</code> attribute.
    *          All renditions will use the ratio of the given media format.
    * @return this
-   * @deprecated Use {@link #pictureSource(PictureSource)}
+   * @deprecated Use {@link #pictureSource(io.wcm.handler.media.MediaArgs.PictureSource)}
    */
   @Deprecated
   @NotNull
@@ -296,7 +296,7 @@ public interface MediaBuilder {
    * @param widths Widths for the renditions in the <code>srcset</code> attribute.
    *          All renditions will use the ratio of the given media format.
    * @return this
-   * @deprecated Use {@link #pictureSource(PictureSource)}
+   * @deprecated Use {@link #pictureSource(io.wcm.handler.media.MediaArgs.PictureSource)}
    */
   @Deprecated
   @NotNull
