@@ -113,7 +113,7 @@ public final class AssetRendition {
       // get width/height from metadata for original renditions
       dimension = getDimensionFromOriginal(rendition);
     }
-    else {
+    if (dimension == null) {
       // otherwise get from rendition metadata written by {@link DamRenditionMetadataService}
       dimension = getDimensionFromRenditionMetadata(rendition);
     }

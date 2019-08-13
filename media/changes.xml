@@ -64,6 +64,9 @@
       <action type="update" dev="sseifert">
         Auto-generated IPE cropping ratios: Provide ratios from all image media formats if no media format defined for a media request.
       </action>
+      <action type="update" dev="sseifert">
+        Rendition metadata: Also create rendition metadata for SVG original rendition, as AEM itself is not storing width/height in the asset metadata for SVG.
+      </action>
       <action type="fix" dev="sseifert">
         Media handler download media format validation: Accept any files as download when no download media format is defined in the project and no media format is given for resolution.
       </action>

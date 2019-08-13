@@ -188,7 +188,10 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       }
 
       // set width/height
-      if (rendition != null && mediaArgs.getImageSizes() == null && mediaArgs.getPictureSources() == null) {
+      if (rendition != null
+          && !rendition.isVectorImage()
+          && mediaArgs.getImageSizes() == null
+          && mediaArgs.getPictureSources() == null) {
         long height = rendition.getHeight();
         if (height > 0) {
           img.setHeight(height);

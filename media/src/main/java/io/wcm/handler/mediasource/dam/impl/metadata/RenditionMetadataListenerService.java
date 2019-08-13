@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam.impl.metadata;
 
+import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
+
 import java.util.EnumSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,7 +50,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamEvent;
 import com.day.cq.dam.api.DamEvent.Type;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -149,6 +150,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
       return;
     }
     DamEvent damEvent = DamEvent.fromEvent(event);
+    // process only rendition-related events
     if (SUPPORTED_EVENT_TYPES.contains(damEvent.getType())) {
       handleDamEvent(damEvent);
     }
@@ -159,18 +161,12 @@ public final class RenditionMetadataListenerService implements EventHandler {
    * @param event DAM event
    */
   private void handleDamEvent(DamEvent event) {
-
-    // process only rendition-related events
-    if (event.getType() != DamEvent.Type.RENDITION_UPDATED
-        && event.getType() != DamEvent.Type.RENDITION_REMOVED) {
-      return;
-    }
-
     // make sure rendition file extension is an image extensions
     String renditionPath = event.getAdditionalInfo();
     String renditionNodeName = Text.getName(renditionPath);
+    boolean isOriginal = StringUtils.equals(renditionNodeName, ORIGINAL_FILE);
     String fileExtension = FilenameUtils.getExtension(renditionNodeName);
-    if (!MediaFileType.isImage(fileExtension)) {
+    if (!(isOriginal || MediaFileType.isImage(fileExtension))) {
       return;
     }
 
@@ -223,20 +219,19 @@ public final class RenditionMetadataListenerService implements EventHandler {
         // open service user session for reading/writing rendition metadata
         serviceResourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
 
-        // make sure asset exists
-        Asset asset = getAsset(serviceResourceResolver);
-        if (asset == null) {
+        // make sure asset resource exists
+        Resource assetResource = serviceResourceResolver.getResource(assetPath);
+        if (assetResource == null) {
           log.debug("Unable to read asset at {} with user {}", assetPath, serviceResourceResolver.getUserID());
           return;
         }
 
         if (eventType == DamEvent.Type.RENDITION_UPDATED) {
-          renditionAddedOrUpdated(asset, serviceResourceResolver);
+          renditionAddedOrUpdated(serviceResourceResolver);
         }
         else if (eventType == DamEvent.Type.RENDITION_REMOVED) {
-          renditionRemoved(asset, serviceResourceResolver);
+          renditionRemoved(serviceResourceResolver);
         }
-
       }
       catch (PersistenceException ex) {
         // in case of persistence exception retry execution some times later
@@ -264,38 +259,22 @@ public final class RenditionMetadataListenerService implements EventHandler {
 
     /**
      * Create or update rendition metadata if rendition is created or updated.
-     * @param asset Asset
      * @throws PersistenceException Persistence exception
      */
-    private void renditionAddedOrUpdated(Asset asset, ResourceResolver resolver) throws PersistenceException {
+    private void renditionAddedOrUpdated(ResourceResolver resolver) throws PersistenceException {
       log.trace("Process rendition added/updated event: {}", renditionPath);
       RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
-      generator.renditionAddedOrUpdated(asset, renditionPath);
+      generator.renditionAddedOrUpdated(renditionPath);
     }
 
     /**
      * Remove rendition metadata node if rendition is removed.
-     * @param asset Asset
      * @throws PersistenceException Persistence exception
      */
-    private void renditionRemoved(Asset asset, ResourceResolver resolver) throws PersistenceException {
+    private void renditionRemoved(ResourceResolver resolver) throws PersistenceException {
       log.trace("Process rendition removed event: {}", renditionPath);
       RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
-      generator.renditionRemoved(asset, renditionPath);
-    }
-
-    /**
-     * Get asset instance for given asset path.
-     * @return Asset or null if path is invalid
-     */
-    private Asset getAsset(ResourceResolver resolver) {
-      Resource assetResource = resolver.getResource(assetPath);
-      if (assetResource != null) {
-        return assetResource.adaptTo(Asset.class);
-      }
-      else {
-        return null;
-      }
+      generator.renditionRemoved(renditionPath);
     }
 
   }
