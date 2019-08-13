@@ -20,12 +20,10 @@
 package io.wcm.handler.mediasource.dam;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +59,8 @@ import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.impl.ipeconfig.CroppingRatios;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -89,6 +89,8 @@ public final class DamMediaSource extends MediaSource {
   private ComponentContext componentContext;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
+  @Self
+  private MediaFormatHandler mediaFormatHandler;
 
   private static final Logger log = LoggerFactory.getLogger(DamMediaSource.class);
 
@@ -215,12 +217,10 @@ public final class DamMediaSource extends MediaSource {
     }
 
     if (componentContext != null
-        && MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext)
-        && mediaRequest.getMediaArgs().getMediaFormats() != null) {
+        && MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext)) {
       // overlay IPE config with cropping ratios for each media format with a valid ratio
-      Set<String> mediaFormatNames = Arrays.stream(mediaRequest.getMediaArgs().getMediaFormats())
-          .map(mediaFormat -> mediaFormat.getName())
-          .collect(Collectors.toSet());
+      CroppingRatios croppingRatios = new CroppingRatios(mediaFormatHandler);
+      Set<String> mediaFormatNames = croppingRatios.getMediaFormatsForCropping(mediaRequest);
       if (!mediaFormatNames.isEmpty()) {
         // build custom IPE config path containing both the resource context path and the
         // configured media formats. The path is served by a custom resource provider, because
