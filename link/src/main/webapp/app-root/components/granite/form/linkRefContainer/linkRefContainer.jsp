@@ -113,14 +113,19 @@ if (contentResource != null) {
 }
 
 // check if a link target URL fallback property is defined and has a value
-String linkTargetUrlFallbackProperty = null;
+String[] linkTargetUrlFallbackProperty = null;
 String linkTargetUrlFallbackValue = null;
 String linkTargetUrlFallbackTypeId = null;
 if (contentResource != null && contentResource.getValueMap().get(LinkNameConstants.PN_LINK_TYPE, String.class) == null) {
   LinkComponentPropertyResolver propertyResolver = new LinkComponentPropertyResolver(contentResource);
   linkTargetUrlFallbackProperty = propertyResolver.getLinkTargetUrlFallbackProperty();
-  if (linkTargetUrlFallbackProperty != null) {
-    linkTargetUrlFallbackValue = contentResource.getValueMap().get(linkTargetUrlFallbackProperty, String.class);
+  if (linkTargetUrlFallbackProperty != null && linkTargetUrlFallbackProperty.length > 0) {
+    for (String propertyName : linkTargetUrlFallbackProperty) {
+      linkTargetUrlFallbackValue = contentResource.getValueMap().get(propertyName, String.class);
+      if (StringUtils.isNotBlank(linkTargetUrlFallbackValue)) {
+        break;
+      }
+    }
   }
   // detect link type
   if (StringUtils.isNotBlank(linkTargetUrlFallbackValue)) {
@@ -323,10 +328,12 @@ insertAdditionalComponents(items, cfg.getChild("allLinkTypeFields"));
 
 // clear link target URL fallback property on saving
 if (linkTargetUrlFallbackProperty != null) {
-  GraniteUiSyntheticResource.child(items, "linkTargetUrlFallbackProperty", "granite/ui/components/coral/foundation/form/hidden",
-      ImmutableValueMap.builder()
-      .put("name", "./" + linkTargetUrlFallbackProperty + "@Delete")
-      .build());
+  for (String propertyName : linkTargetUrlFallbackProperty) {
+    GraniteUiSyntheticResource.child(items, "linkTargetUrlFallbackProperty", "granite/ui/components/coral/foundation/form/hidden",
+        ImmutableValueMap.builder()
+        .put("name", "./" + propertyName + "@Delete")
+        .build());
+  }
 }
 
 

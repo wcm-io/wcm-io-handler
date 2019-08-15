@@ -22,6 +22,7 @@ package io.wcm.handler.link;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -49,7 +50,7 @@ public final class LinkArgs implements Cloneable {
   private String queryString;
   private String fragment;
   private ValueMap properties;
-  private String linkTargetUrlFallbackProperty;
+  private String[] linkTargetUrlFallbackProperty;
 
   /**
    * @return URL mode for externalizing the URL
@@ -225,18 +226,18 @@ public final class LinkArgs implements Cloneable {
    * instead of the link type + link type depending property name. This property is used for migration
    * from components that do not support Link Handler. It is only used for reading, and never written back to.
    * When opened and saved in the link dialog, the property is removed and instead the dedicated properties are used.
-   * @param propertyName Property name
+   * @param propertyNames Property name(s)
    * @return this
    */
-  public @NotNull LinkArgs linkTargetUrlFallbackProperty(@Nullable String propertyName) {
-    this.linkTargetUrlFallbackProperty = propertyName;
+  public @NotNull LinkArgs linkTargetUrlFallbackProperty(@NotNull String @Nullable... propertyNames) {
+    this.linkTargetUrlFallbackProperty = propertyNames;
     return this;
   }
 
   /**
-   * @return Property name
+   * @return Property name(s)
    */
-  public @Nullable String getLinkTargetUrlFallbackProperty() {
+  public @Nullable String[] getLinkTargetUrlFallbackProperty() {
     return this.linkTargetUrlFallbackProperty;
   }
 
@@ -274,7 +275,7 @@ public final class LinkArgs implements Cloneable {
     clone.suffix = this.suffix;
     clone.queryString = this.queryString;
     clone.fragment = this.fragment;
-    clone.linkTargetUrlFallbackProperty = this.linkTargetUrlFallbackProperty;
+    clone.linkTargetUrlFallbackProperty = ArrayUtils.clone(this.linkTargetUrlFallbackProperty);
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
     }

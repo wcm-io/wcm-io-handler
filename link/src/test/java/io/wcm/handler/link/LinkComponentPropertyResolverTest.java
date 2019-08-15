@@ -19,9 +19,11 @@
  */
 package io.wcm.handler.link;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
+import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.handler.link.LinkNameConstants.PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.sling.api.resource.Resource;
@@ -55,13 +57,13 @@ class LinkComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
 
     LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource);
-    assertEquals("property1", underTest.getLinkTargetUrlFallbackProperty());
+    assertArrayEquals(new String[] { "property1" }, underTest.getLinkTargetUrlFallbackProperty());
   }
 
   @Test
   void testGetLinkTargetUrlFallbackProperty_Component_Policy() {
     context.contentPolicyMapping(RESOURCE_TYPE,
-        PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, "property2");
+        PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, new String[] { "property2", "property3" });
 
     context.create().resource(RESOURCE_TYPE,
         PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, "property1");
@@ -69,7 +71,21 @@ class LinkComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
 
     LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource);
-    assertEquals("property2", underTest.getLinkTargetUrlFallbackProperty());
+    assertArrayEquals(new String[] { "property2", "property3" }, underTest.getLinkTargetUrlFallbackProperty());
+  }
+
+  @Test
+  void testGetLinkTargetUrlFallbackProperty_Component_SubResource() {
+    context.create().resource(RESOURCE_TYPE,
+        PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, "property1");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+    Resource subResource1 = context.create().resource(resource, "subResource1",
+        JCR_PRIMARYTYPE, NT_UNSTRUCTURED);
+    Resource subResource2 = context.create().resource(subResource1, "subResource2");
+
+    LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(subResource2);
+    assertArrayEquals(new String[] { "property1" }, underTest.getLinkTargetUrlFallbackProperty());
   }
 
 }

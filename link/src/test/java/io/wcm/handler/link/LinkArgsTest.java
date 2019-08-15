@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.link;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,13 +38,13 @@ class LinkArgsTest {
   @Test
   void testProperties() {
     LinkArgs linkArgs = new LinkArgs()
-    .urlMode(UrlModes.FULL_URL)
-    .dummyLink(true)
-    .dummyLinkUrl("/test/url")
-    .selectors("sel1")
-    .extension("ext1")
-    .suffix("suffix1")
-    .queryString("query1")
+        .urlMode(UrlModes.FULL_URL)
+        .dummyLink(true)
+        .dummyLinkUrl("/test/url")
+        .selectors("sel1")
+        .extension("ext1")
+        .suffix("suffix1")
+        .queryString("query1")
         .fragment("fragment1")
         .linkTargetUrlFallbackProperty("property1");
 
@@ -55,7 +56,7 @@ class LinkArgsTest {
     assertEquals("suffix1", linkArgs.getSuffix());
     assertEquals("query1", linkArgs.getQueryString());
     assertEquals("fragment1", linkArgs.getFragment());
-    assertEquals("property1", linkArgs.getLinkTargetUrlFallbackProperty());
+    assertArrayEquals(new String[] { "property1" }, linkArgs.getLinkTargetUrlFallbackProperty());
   }
 
   @Test
@@ -63,9 +64,9 @@ class LinkArgsTest {
     Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
 
     LinkArgs linkArgs = new LinkArgs()
-    .property("prop3", "value3")
-    .properties(props)
-    .property("prop2", "value2");
+        .property("prop3", "value3")
+        .properties(props)
+        .property("prop2", "value2");
 
     assertEquals(3, linkArgs.getProperties().size());
     assertEquals("value1", linkArgs.getProperties().get("prop1", String.class));
@@ -78,16 +79,16 @@ class LinkArgsTest {
     Map<String, Object> props = ImmutableValueMap.of("prop1", "value1", "prop2", "value2");
 
     LinkArgs linkArgs = new LinkArgs()
-    .urlMode(UrlModes.FULL_URL)
-    .dummyLink(true)
-    .dummyLinkUrl("/test/url")
-    .selectors("sel1")
-    .extension("ext1")
-    .suffix("suffix1")
-    .queryString("query1")
-    .fragment("fragment1")
+        .urlMode(UrlModes.FULL_URL)
+        .dummyLink(true)
+        .dummyLinkUrl("/test/url")
+        .selectors("sel1")
+        .extension("ext1")
+        .suffix("suffix1")
+        .queryString("query1")
+        .fragment("fragment1")
         .linkTargetUrlFallbackProperty("property1")
-    .properties(props);
+        .properties(props);
 
     LinkArgs clone = linkArgs.clone();
     assertNotSame(linkArgs, clone);
@@ -99,7 +100,7 @@ class LinkArgsTest {
     assertEquals(linkArgs.getSuffix(), clone.getSuffix());
     assertEquals(linkArgs.getQueryString(), clone.getQueryString());
     assertEquals(linkArgs.getFragment(), clone.getFragment());
-    assertEquals(linkArgs.getLinkTargetUrlFallbackProperty(), clone.getLinkTargetUrlFallbackProperty());
+    assertArrayEquals(linkArgs.getLinkTargetUrlFallbackProperty(), clone.getLinkTargetUrlFallbackProperty());
     assertEquals(ImmutableValueMap.copyOf(linkArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
 

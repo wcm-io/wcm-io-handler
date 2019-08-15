@@ -22,6 +22,7 @@ package io.wcm.handler.link;
 import static io.wcm.handler.link.LinkNameConstants.PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY;
 
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -40,9 +41,9 @@ public final class LinkComponentPropertyResolver {
   /**
    * @param resource Resource containing link properties
    */
-  public LinkComponentPropertyResolver(Resource resource) {
+  public LinkComponentPropertyResolver(@NotNull Resource resource) {
     // resolve media component properties 1. from policies and 2. from component definition
-    resolver = new ComponentPropertyResolver(resource)
+    resolver = new ComponentPropertyResolver(resource, true)
         .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
         .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
   }
@@ -50,9 +51,9 @@ public final class LinkComponentPropertyResolver {
   /**
    * @return Link target URL fallback property name
    */
-  @Nullable
-  public String getLinkTargetUrlFallbackProperty() {
-    return resolver.get(PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, String.class);
+
+  public @NotNull String @Nullable [] getLinkTargetUrlFallbackProperty() {
+    return resolver.get(PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, String[].class);
   }
 
 }

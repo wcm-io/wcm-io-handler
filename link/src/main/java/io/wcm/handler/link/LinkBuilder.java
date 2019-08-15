@@ -107,11 +107,11 @@ public interface LinkBuilder {
    * instead of the link type + link type depending property name. This property is used for migration
    * from components that do not support Link Handler. It is only used for reading, and never written back to.
    * When opened and saved in the link dialog, the property is removed and instead the dedicated properties are used.
-   * @param propertyName Property name
+   * @param propertyNames Property name(s)
    * @return this
    */
   @NotNull
-  LinkBuilder linkTargetUrlFallbackProperty(@Nullable String propertyName);
+  LinkBuilder linkTargetUrlFallbackProperty(@NotNull String @Nullable... propertyNames);
 
   /**
    * Resolve link and return metadata object that contains the results.

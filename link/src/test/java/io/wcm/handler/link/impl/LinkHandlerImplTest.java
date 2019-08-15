@@ -138,6 +138,26 @@ class LinkHandlerImplTest {
   }
 
   @Test
+  void testLinkTargetUrlFallbackProperty_MultipleProperties() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+
+    // build resource with fallbackproperty and component that has a fallback property name defined
+    Resource componentResource = context.create().resource("/apps/app1/components/comp1",
+        PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, new String[] { "fallbackProperty1", "fallbackProperty2" });
+    Resource linkResource = context.create().resource("/content/dummy-path",
+        ResourceResolver.PROPERTY_RESOURCE_TYPE, componentResource.getPath(),
+        "fallbackProperty2", "/fallbackpath1");
+
+    Link link = linkHandler.get(linkResource).build();
+
+    // check final link url and html element
+    assertEquals(true, link.isValid());
+    assertEquals("http://xyz/fallbackpath1/post1", link.getUrl());
+    assertNotNull(link.getAnchor());
+    assertEquals("http://xyz/fallbackpath1", link.getAnchor().getHRef());
+  }
+
+  @Test
   void testLinkTargetUrlFallbackProperty_IgnoreWhenValidLinkSet() {
     LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
 

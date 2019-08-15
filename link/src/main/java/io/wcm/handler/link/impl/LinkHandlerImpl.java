@@ -188,19 +188,27 @@ public final class LinkHandlerImpl implements LinkHandler {
     }
 
     // check if a fallback property name was given
-    String linkTargetUrlFallbackProperty = linkRequest.getLinkArgs().getLinkTargetUrlFallbackProperty();
-    if (linkTargetUrlFallbackProperty == null) {
+    String[] linkTargetUrlFallbackProperty = linkRequest.getLinkArgs().getLinkTargetUrlFallbackProperty();
+    if (linkTargetUrlFallbackProperty == null || linkTargetUrlFallbackProperty.length == 0) {
       return null;
     }
 
     // check if a link target URL is set in the fallback property
-    String linkTargetUrl = resource.getValueMap().get(linkTargetUrlFallbackProperty, String.class);
+    String linkTargetUrl = null;
+    for (String propertyName : linkTargetUrlFallbackProperty) {
+      linkTargetUrl = resource.getValueMap().get(propertyName, String.class);
+      if (StringUtils.isNotBlank(linkTargetUrl)) {
+        break;
+      }
+    }
     if (StringUtils.isBlank(linkTargetUrl)) {
       return null;
     }
 
     LinkArgs fallbackLinkArgs = linkRequest.getLinkArgs().clone();
-    fallbackLinkArgs.linkTargetUrlFallbackProperty(null);
+    @NotNull
+    String @Nullable [] nullArray = null;
+    fallbackLinkArgs.linkTargetUrlFallbackProperty(nullArray);
     return new LinkRequest(null, null, linkTargetUrl, fallbackLinkArgs);
   }
 

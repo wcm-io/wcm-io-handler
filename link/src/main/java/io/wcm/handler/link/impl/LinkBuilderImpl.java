@@ -144,8 +144,8 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
-  public @NotNull LinkBuilder linkTargetUrlFallbackProperty(@Nullable String propertyName) {
-    this.linkArgs.linkTargetUrlFallbackProperty(propertyName);
+  public @NotNull LinkBuilder linkTargetUrlFallbackProperty(@NotNull String @Nullable... propertyNames) {
+    this.linkArgs.linkTargetUrlFallbackProperty(propertyNames);
     return this;
   }
 
