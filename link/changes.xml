@@ -36,6 +36,9 @@
       <action type="add" dev="sseifert">
         Support resolving link URLs found by media handler in image map definitions.
       </action>
+      <action type="add" dev="sseifert">
+        Implement a "fallback" mode when migrating components to Link Handler to read link target information from a single property.
+      </action>
     </release>
 
     <release version="1.2.6" date="2019-07-22">

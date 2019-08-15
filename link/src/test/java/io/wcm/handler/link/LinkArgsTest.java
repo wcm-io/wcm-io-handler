@@ -44,7 +44,8 @@ class LinkArgsTest {
     .extension("ext1")
     .suffix("suffix1")
     .queryString("query1")
-    .fragment("fragment1");
+        .fragment("fragment1")
+        .linkTargetUrlFallbackProperty("property1");
 
     assertEquals(UrlModes.FULL_URL, linkArgs.getUrlMode());
     assertTrue(linkArgs.isDummyLink());
@@ -54,6 +55,7 @@ class LinkArgsTest {
     assertEquals("suffix1", linkArgs.getSuffix());
     assertEquals("query1", linkArgs.getQueryString());
     assertEquals("fragment1", linkArgs.getFragment());
+    assertEquals("property1", linkArgs.getLinkTargetUrlFallbackProperty());
   }
 
   @Test
@@ -84,6 +86,7 @@ class LinkArgsTest {
     .suffix("suffix1")
     .queryString("query1")
     .fragment("fragment1")
+        .linkTargetUrlFallbackProperty("property1")
     .properties(props);
 
     LinkArgs clone = linkArgs.clone();
@@ -96,6 +99,7 @@ class LinkArgsTest {
     assertEquals(linkArgs.getSuffix(), clone.getSuffix());
     assertEquals(linkArgs.getQueryString(), clone.getQueryString());
     assertEquals(linkArgs.getFragment(), clone.getFragment());
+    assertEquals(linkArgs.getLinkTargetUrlFallbackProperty(), clone.getLinkTargetUrlFallbackProperty());
     assertEquals(ImmutableValueMap.copyOf(linkArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
 

@@ -21,6 +21,7 @@ package io.wcm.handler.link.impl;
 
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
@@ -28,6 +29,7 @@ import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkBuilder;
+import io.wcm.handler.link.LinkComponentPropertyResolver;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.url.UrlMode;
 
@@ -48,6 +50,12 @@ final class LinkBuilderImpl implements LinkBuilder {
     this.page = null;
     this.reference = null;
     this.linkHandler = linkHandler;
+
+    // resolve default settings from content policies and component properties
+    if (resource != null) {
+      LinkComponentPropertyResolver resolver = new LinkComponentPropertyResolver(resource);
+      linkArgs.linkTargetUrlFallbackProperty(resolver.getLinkTargetUrlFallbackProperty());
+    }
   }
 
   LinkBuilderImpl(Page page, LinkHandlerImpl linkHandler) {
@@ -77,7 +85,8 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
-  public @NotNull LinkBuilder args(LinkArgs value) {
+  @SuppressWarnings({ "null", "unused" })
+  public @NotNull LinkBuilder args(@NotNull LinkArgs value) {
     if (value == null) {
       throw new IllegalArgumentException("LinkArgs is null.");
     }
@@ -87,7 +96,7 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
-  public @NotNull LinkBuilder urlMode(UrlMode value) {
+  public @NotNull LinkBuilder urlMode(@Nullable UrlMode value) {
     this.linkArgs.urlMode(value);
     return this;
   }
@@ -99,38 +108,44 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
-  public @NotNull LinkBuilder dummyLinkUrl(String value) {
+  public @NotNull LinkBuilder dummyLinkUrl(@Nullable String value) {
     this.linkArgs.dummyLinkUrl(value);
     return this;
   }
 
   @Override
-  public @NotNull LinkBuilder selectors(String value) {
+  public @NotNull LinkBuilder selectors(@Nullable String value) {
     this.linkArgs.selectors(value);
     return this;
   }
 
   @Override
-  public @NotNull LinkBuilder extension(String value) {
+  public @NotNull LinkBuilder extension(@Nullable String value) {
     this.linkArgs.extension(value);
     return this;
   }
 
   @Override
-  public @NotNull LinkBuilder suffix(String value) {
+  public @NotNull LinkBuilder suffix(@Nullable String value) {
     this.linkArgs.suffix(value);
     return this;
   }
 
   @Override
-  public @NotNull LinkBuilder queryString(String value) {
+  public @NotNull LinkBuilder queryString(@Nullable String value) {
     this.linkArgs.queryString(value);
     return this;
   }
 
   @Override
-  public @NotNull LinkBuilder fragment(String value) {
+  public @NotNull LinkBuilder fragment(@Nullable String value) {
     this.linkArgs.fragment(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull LinkBuilder linkTargetUrlFallbackProperty(@Nullable String propertyName) {
+    this.linkArgs.linkTargetUrlFallbackProperty(propertyName);
     return this;
   }
 
