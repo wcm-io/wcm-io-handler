@@ -30,8 +30,8 @@ import io.wcm.wcm.commons.component.ComponentPropertyResolution;
 import io.wcm.wcm.commons.component.ComponentPropertyResolver;
 
 /**
- * Resolves component properties for Link Handler for the component associated
- * with the given resources from content policies and properties defined in the component resource.
+ * Resolves Link Handler component properties for the component associated
+ * with the given resource from content policies and properties defined in the component resource.
  */
 @ProviderType
 public final class LinkComponentPropertyResolver {

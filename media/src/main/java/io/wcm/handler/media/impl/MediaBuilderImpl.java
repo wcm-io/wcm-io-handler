@@ -34,6 +34,7 @@ import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
+import io.wcm.handler.media.MediaComponentPropertyResolver;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;

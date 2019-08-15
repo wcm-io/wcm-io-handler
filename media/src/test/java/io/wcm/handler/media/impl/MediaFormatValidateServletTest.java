@@ -82,7 +82,7 @@ class MediaFormatValidateServletTest {
 
     context.request().setParameterMap(ImmutableMap.of(
         RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
-        RP_MEDIA_FORMATS_MANDATORY, "true,true",
+        RP_MEDIA_FORMATS_MANDATORY, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());
 
@@ -100,29 +100,11 @@ class MediaFormatValidateServletTest {
 
     context.request().setParameterMap(ImmutableMap.of(
         RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
-        RP_MEDIA_FORMATS_MANDATORY, "false,true",
+        RP_MEDIA_FORMATS_MANDATORY, EDITORIAL_1COL.getName(),
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());
 
     assertResponse("{'valid':true}");
-  }
-
-  @Test
-  void testValid_MultipleFormats_Legacy_SingleParam() throws Exception {
-    Asset asset = context.create().asset("/content/dam/sample.jpg",
-        (int)EDITORIAL_1COL.getWidth(),
-        (int)EDITORIAL_1COL.getHeight(),
-        ContentType.JPEG);
-
-    context.request().setParameterMap(ImmutableMap.of(
-        RP_MEDIA_FORMATS, EDITORIAL_1COL.getName() + "," + HOME_STAGE.getName(),
-        RP_MEDIA_FORMATS_MANDATORY, "true",
-        RP_MEDIA_REF, asset.getPath()));
-    underTest.service(context.request(), context.response());
-
-    assertResponse("{'valid':false,"
-        + "'reason':'" + MEDIA_INVALID_REASON_I18N_PREFIX + MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS.name() + "',"
-        + "'reasonTitle':'io.wcm.handler.media.assetInvalid'}");
   }
 
   @Test

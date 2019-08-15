@@ -20,7 +20,6 @@
 package io.wcm.handler.media.impl;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -29,7 +28,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -84,10 +83,7 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
 
     // read and validated request parameters
     String[] mediaFormats = StringUtils.split(RequestParam.get(request, RP_MEDIA_FORMATS), ",");
-    String[] mediaFormatsMandatoryStrings = StringUtils.split(RequestParam.get(request, RP_MEDIA_FORMATS_MANDATORY), ",");
-    Boolean[] mediaFormatsMandatory = mediaFormatsMandatoryStrings != null ? Arrays.stream(mediaFormatsMandatoryStrings)
-        .map(BooleanUtils::toBoolean)
-        .toArray(size -> new Boolean[size]) : null;
+    String[] mediaFormatsMandatory = StringUtils.split(RequestParam.get(request, RP_MEDIA_FORMATS_MANDATORY), ",");
     boolean mediaCropAuto = RequestParam.getBoolean(request, RP_MEDIA_CROPAUTO);
     String mediaRef = RequestParam.get(request, RP_MEDIA_REF);
 
@@ -101,13 +97,7 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
     for (int i = 0; i < mediaFormats.length; i++) {
       boolean mandatory = false;
       if (mediaFormatsMandatory != null) {
-        if (mediaFormatsMandatory.length == 1) {
-          // backward compatibility: support a single flag for all media formats
-          mandatory = mediaFormatsMandatory[0];
-        }
-        else if (mediaFormatsMandatory.length > i) {
-          mandatory = mediaFormatsMandatory[i];
-        }
+        mandatory = ArrayUtils.contains(mediaFormatsMandatory, mediaFormats[i]);
       }
       mediaFormatOptions[i] = new MediaFormatOption(mediaFormats[i], mandatory);
     }

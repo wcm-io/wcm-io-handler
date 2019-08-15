@@ -17,8 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.impl;
+package io.wcm.handler.media;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
+import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_IMAGES_SIZES_SIZES;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_IMAGES_SIZES_WIDTHS;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_MEDIA;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_MEDIAFORMAT;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_SIZES;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_WIDTHS;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYPE_IMAGE_SIZES;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYPE_PICTURE_SOURCES;
+import static io.wcm.handler.media.MediaComponentPropertyResolver.parseWidths;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP;
@@ -26,15 +37,6 @@ import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY_NAMES;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_RESPONSIVE_TYPE;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_IMAGES_SIZES_SIZES;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_IMAGES_SIZES_WIDTHS;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_MEDIA;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_MEDIAFORMAT;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_SIZES;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_WIDTHS;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.RESPONSIVE_TYPE_IMAGE_SIZES;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.RESPONSIVE_TYPE_PICTURE_SOURCES;
-import static io.wcm.handler.media.impl.MediaComponentPropertyResolver.parseWidths;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -81,6 +83,20 @@ class MediaComponentPropertyResolverTest {
   }
 
   @Test
+  void testIsAutoCrop_Component_Subresource() {
+    context.create().resource(RESOURCE_TYPE,
+        PN_COMPONENT_MEDIA_AUTOCROP, true);
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+    Resource subresource1 = context.create().resource(resource, "subresource1",
+        JCR_PRIMARYTYPE, NT_UNSTRUCTURED);
+    Resource subresource2 = context.create().resource(subresource1, "subresource2");
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(subresource2);
+    assertTrue(underTest.isAutoCrop());
+  }
+
+  @Test
   void testIsAutoCrop_Component_Policy() {
     context.contentPolicyMapping(RESOURCE_TYPE,
         PN_COMPONENT_MEDIA_AUTOCROP, false);
@@ -119,6 +135,12 @@ class MediaComponentPropertyResolverTest {
         new MediaFormatOption("home_stage", false),
         new MediaFormatOption("home_teaser", false)
     }, underTest.getMediaFormatOptions());
+
+    assertArrayEquals(new String[] {
+        "home_stage",
+        "home_teaser"
+    }, underTest.getMediaFormatNames());
+    assertNull(underTest.getMandatoryMediaFormatNames());
   }
 
   @Test
@@ -134,6 +156,15 @@ class MediaComponentPropertyResolverTest {
         new MediaFormatOption("home_stage", true),
         new MediaFormatOption("home_teaser", true)
     }, underTest.getMediaFormatOptions());
+
+    assertArrayEquals(new String[] {
+        "home_stage",
+        "home_teaser"
+    }, underTest.getMediaFormatNames());
+    assertArrayEquals(new String[] {
+        "home_stage",
+        "home_teaser"
+    }, underTest.getMandatoryMediaFormatNames());
   }
 
   @Test
@@ -149,6 +180,14 @@ class MediaComponentPropertyResolverTest {
         new MediaFormatOption("home_stage", true),
         new MediaFormatOption("home_teaser", false)
     }, underTest.getMediaFormatOptions());
+
+    assertArrayEquals(new String[] {
+        "home_stage",
+        "home_teaser"
+    }, underTest.getMediaFormatNames());
+    assertArrayEquals(new String[] {
+        "home_stage"
+    }, underTest.getMandatoryMediaFormatNames());
   }
 
   @Test
@@ -165,6 +204,16 @@ class MediaComponentPropertyResolverTest {
         new MediaFormatOption("home_teaser", false),
         new MediaFormatOption("product_banner", true)
     }, underTest.getMediaFormatOptions());
+
+    assertArrayEquals(new String[] {
+        "home_stage",
+        "home_teaser",
+        "product_banner"
+    }, underTest.getMediaFormatNames());
+    assertArrayEquals(new String[] {
+        "home_stage",
+        "product_banner"
+    }, underTest.getMandatoryMediaFormatNames());
   }
 
   @Test

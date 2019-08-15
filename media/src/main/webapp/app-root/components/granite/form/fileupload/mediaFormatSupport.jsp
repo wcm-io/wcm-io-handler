@@ -25,7 +25,6 @@
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="io.wcm.handler.media.format.MediaFormat"%>
 <%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
-<%@page import="io.wcm.wcm.commons.component.ComponentPropertyResolver"%>
 <%!
 
 static String buildMediaFormatsFieldDescription(String[] mediaFormats, Resource resource) {
@@ -57,7 +56,7 @@ static String buildMediaFormatsFieldDescription(String[] mediaFormats, Resource 
 }
 
 static String[] getStringArrayWithExpressionSupport(String propertyName, String componentPropertyName,
-    Config cfg, ExpressionHelper ex, ComponentPropertyResolver componentPropertyResolver) {
+    Config cfg, ExpressionHelper ex, String[] defaultValue) {
   String[] result = null;
 
   Object value = cfg.get(propertyName, (Object)null);
@@ -76,16 +75,16 @@ static String[] getStringArrayWithExpressionSupport(String propertyName, String 
     result = cfg.get(propertyName, String[].class);
   }
 
-  // fallback to component properties
+  // fallback to default value from component properties
   if (result == null) {
-    result = componentPropertyResolver.get(componentPropertyName, String[].class);
+    result = defaultValue;
   }
 
   return result;
 }
 
 static boolean getBooleanWithExpressionSupport(String propertyName, String componentPropertyName,
-    Config cfg, ExpressionHelper ex, ComponentPropertyResolver componentPropertyResolver) {
+    Config cfg, ExpressionHelper ex, boolean defaultValue) {
   String[] mediaFormats = null;
 
   Boolean result = null;
@@ -95,9 +94,9 @@ static boolean getBooleanWithExpressionSupport(String propertyName, String compo
     result = ex.get((String)value, Boolean.class);
   }  
 
-  // try to get directly from config, fallback to component properties
+  // try to get directly from config, fallback to default value from component properties
   if (result == null) {
-    result = cfg.get(propertyName, componentPropertyResolver.get(componentPropertyName, false));
+    result = cfg.get(propertyName, defaultValue);
   }
 
   return result;
