@@ -21,6 +21,7 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -33,8 +34,12 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import com.day.cq.commons.jcr.JcrConstants;
+import com.day.cq.dam.api.Rendition;
+import com.day.cq.dam.api.handler.AssetHandler;
+import com.day.cq.dam.api.handler.store.AssetStore;
 import com.day.image.Layer;
 import com.drew.lang.annotations.Nullable;
 
@@ -62,6 +67,9 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
    * Selector
    */
   public static final String SELECTOR = "image_file";
+
+  @Reference
+  private AssetStore assetStore;
 
   @Override
   protected byte[] getBinaryData(Resource resource, SlingHttpServletRequest request) throws IOException {
@@ -104,7 +112,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       }
     }
 
-    Layer layer = resource.adaptTo(Layer.class);
+    Layer layer = toLayer(resource);
     if (layer == null) {
       return null;
     }
@@ -130,6 +138,27 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     layer.write(contentType, config.getDefaultImageQuality(contentType), bos);
     bos.flush();
     return bos.toByteArray();
+  }
+
+  private Layer toLayer(Resource renditionResource) {
+    Layer layer = renditionResource.adaptTo(Layer.class);
+    if (layer == null) {
+      // if direct adaption to Layer was not possible, relay to AssetHandler
+      Rendition rendition = renditionResource.adaptTo(Rendition.class);
+      if (rendition != null) {
+        AssetHandler assetHandler = assetStore.getAssetHandler(rendition.getMimeType());
+        if (assetHandler != null) {
+          try {
+            BufferedImage bufferedImage = assetHandler.getImage(rendition);
+            layer = new Layer(bufferedImage);
+          }
+          catch (IOException ex) {
+            // ignore - not supported
+          }
+        }
+      }
+    }
+    return layer;
   }
 
   @Override

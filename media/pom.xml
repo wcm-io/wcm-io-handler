@@ -126,9 +126,11 @@
             </Sling-Model-Packages>
             <Sling-Namespaces>wcmio=http://wcm.io/ns</Sling-Namespaces>
 
-            <!-- For build compatibility with Java 11 -->
             <Import-Package>
+              <!-- For build compatibility with Java 11 -->
               javax.annotation;version="[0.0,2)",
+              <!-- Package version change between AEM 6.2 and AEM 6.3 -->
+              com.day.cq.dam.api.handler;version="[1.0,3)",
               *
             </Import-Package>
 
