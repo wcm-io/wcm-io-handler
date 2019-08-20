@@ -21,12 +21,18 @@ package io.wcm.handler.media.ui;
 
 import static io.wcm.handler.media.impl.MediaFormatValidateServlet.MEDIA_INVALID_REASON_I18N_PREFIX;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.RequestAttribute;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +49,8 @@ import io.wcm.handler.media.MediaInvalidReason;
  * <ul>
  * <li><code>media</code> (io.wcm.handler.media.Media):
  * The result object of the media handler (usually in invalid state)</li>
+ * <li><code>classAppend</code> (String):
+ * Additional CSS classes for placeholder element</li>
  * </ul>
  */
 @Model(adaptables = SlingHttpServletRequest.class)
@@ -50,8 +58,10 @@ public class MediaPlaceholder {
 
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Object media;
-
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String classAppend;
+
+  private String classAppendCombined;
   private String mediaInvalidReason;
 
   private static final Logger log = LoggerFactory.getLogger(MediaPlaceholder.class);
@@ -60,7 +70,7 @@ public class MediaPlaceholder {
   private void activate() {
     Media mediaMetadata = getMediaMetadata();
     if (mediaMetadata != null) {
-      this.classAppend = getMediaDropCssClass(mediaMetadata);
+      this.classAppendCombined = mergeClassAppend(getMediaDropCssClass(mediaMetadata), classAppend);
       this.mediaInvalidReason = getMediaInvalidReasonText(mediaMetadata);
     }
   }
@@ -99,12 +109,32 @@ public class MediaPlaceholder {
   }
 
   /**
+   * Merges multiple list of CSS Class appends and removes duplicate css classes.
+   * @param classAppends List of class appends (may be null or empty)
+   * @return Class append
+   */
+  private @Nullable String mergeClassAppend(@Nullable String @NotNull... classAppends) {
+    Set<String> result = new LinkedHashSet<>();
+    for (String classAppendItem : classAppends) {
+      if (StringUtils.isNotBlank(classAppendItem)) {
+        result.addAll(Arrays.asList(StringUtils.split(classAppendItem, " ")));
+      }
+    }
+    if (result.isEmpty()) {
+      return null;
+    }
+    else {
+      return StringUtils.join(result, " ");
+    }
+  }
+
+  /**
    * Gets additional CSS classes for the replacement placeholder to
    * allow drag&amp;drop of assets into an empty component.
    * @return CSS class or null
    */
   public @Nullable String getClassAppend() {
-    return this.classAppend;
+    return this.classAppendCombined;
   }
 
   /**

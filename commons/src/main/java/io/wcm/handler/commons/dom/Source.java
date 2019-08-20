@@ -25,7 +25,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * Html source (source) element.
  */
 @ProviderType
-public class Source extends AbstractNonSelfClosingHtmlElement<Source> {
+public class Source extends HtmlElement<Source> {
   private static final long serialVersionUID = 1L;
 
   private static final String ELEMENT_NAME = "source";
@@ -33,6 +33,7 @@ public class Source extends AbstractNonSelfClosingHtmlElement<Source> {
   private static final String ATTRIBUTE_MEDIA = "media";
   private static final String ATTRIBUTE_SRC = "src";
   private static final String ATTRIBUTE_SRCSET = "srcset";
+  private static final String ATTRIBUTE_SIZES = "sizes";
   private static final String ATTRIBUTE_TYPE = "type";
 
   /**
@@ -93,6 +94,24 @@ public class Source extends AbstractNonSelfClosingHtmlElement<Source> {
    */
   public Source setSrcSet(String value) {
     setAttribute(ATTRIBUTE_SRCSET, value);
+    return this;
+  }
+
+  /**
+   * Html "sizes" attribute.
+   * @return Value of attribute
+   */
+  public String getSizes() {
+    return getAttributeValue(ATTRIBUTE_SIZES);
+  }
+
+  /**
+   * Html "sizes" attribute.
+   * @param value Value of attribute
+   * @return Self reference
+   */
+  public Source setSizes(String value) {
+    setAttribute(ATTRIBUTE_SIZES, value);
     return this;
   }
 

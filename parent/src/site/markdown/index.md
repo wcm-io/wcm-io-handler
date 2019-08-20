@@ -13,6 +13,7 @@ The current version of wcm.io Handler is 1.x. Guideline for migration from [wcm.
 * [Media Handler][media-handler]: Media resolving, processing and markup generation.
 * [RichText Handler][richtext-handler]: Rich text processing and markup generation.
 * [Handler Commons][handler-commons]: Functionality shared by the handler implementations.
+* [System configuration][configuration]
 
 To see how this all works together have a look at the [sample application][wcmio-samples].
 
@@ -30,6 +31,7 @@ Sources: https://github.com/wcm-io/wcm-io-handler
 [media-handler]: media/
 [richtext-handler]: richtext/
 [handler-commons]: commons/
+[configuration]: configuration.html
 [wcmio-samples]: https://wcm.io/samples/
 [wcmio-handler-0x]: https://wcm.io/handler-0.x/
 [wcmio-handler-migration]: https://wcm-io.atlassian.net/wiki/x/dhn9Ag

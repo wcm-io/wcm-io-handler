@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.spi;
 
+import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +44,8 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.mediasource.dam.impl.TransformedRenditionHandler;
+import io.wcm.handler.media.imagemap.ImageMapArea;
+import io.wcm.handler.media.imagemap.ImageMapParser;
 
 /**
  * Via {@link MediaSource} OSGi services applications can define additional media sources supported by
@@ -84,7 +87,8 @@ public abstract class MediaSource {
     }
     // if no media source ID is set at all check if media ref attribute contains a valid reference
     else {
-      String refProperty = StringUtils.defaultString(mediaRequest.getRefProperty(), getPrimaryMediaRefProperty());
+      String refProperty = StringUtils.defaultString(mediaRequest.getMediaPropertyNames().getRefProperty(),
+          getPrimaryMediaRefProperty());
       String mediaRef = props.get(refProperty, String.class);
       return accepts(mediaRef);
     }
@@ -173,7 +177,7 @@ public abstract class MediaSource {
   @SuppressWarnings("null")
   protected final @NotNull String getMediaRefProperty(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
-    String refProperty = mediaRequest.getRefProperty();
+    String refProperty = mediaRequest.getMediaPropertyNames().getRefProperty();
     if (StringUtils.isEmpty(refProperty)) {
       if (mediaHandlerConfig != null) {
         refProperty = mediaHandlerConfig.getMediaRefProperty();
@@ -240,7 +244,7 @@ public abstract class MediaSource {
   @SuppressWarnings("null")
   protected final @NotNull String getMediaCropProperty(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
-    String cropProperty = mediaRequest.getCropProperty();
+    String cropProperty = mediaRequest.getMediaPropertyNames().getCropProperty();
     if (StringUtils.isEmpty(cropProperty)) {
       if (mediaHandlerConfig != null) {
         cropProperty = mediaHandlerConfig.getMediaCropProperty();
@@ -266,7 +270,7 @@ public abstract class MediaSource {
       String stringValue = mediaRequest.getResource().getValueMap().get(rotationProperty, String.class);
       if (StringUtils.isNotEmpty(stringValue)) {
         int rotationValue = NumberUtils.toInt(stringValue);
-        if (TransformedRenditionHandler.isValidRotation(rotationValue)) {
+        if (isValidRotation(rotationValue)) {
           return rotationValue;
         }
       }
@@ -283,11 +287,49 @@ public abstract class MediaSource {
   @SuppressWarnings("null")
   protected final @NotNull String getMediaRotationProperty(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
-    String rotationProperty = mediaRequest.getRotationProperty();
+    String rotationProperty = mediaRequest.getMediaPropertyNames().getRotationProperty();
     if (StringUtils.isEmpty(rotationProperty)) {
       rotationProperty = mediaHandlerConfig.getMediaRotationProperty();
     }
     return rotationProperty;
+  }
+
+  /**
+   * Get (optional) image map areas from resource
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config
+   * @return Rotation value or null if not set or invalid
+   */
+  @SuppressWarnings("null")
+  protected final @Nullable List<ImageMapArea> getMediaMap(@NotNull MediaRequest mediaRequest,
+      @NotNull MediaHandlerConfig mediaHandlerConfig) {
+    if (mediaRequest.getResource() != null) {
+      String mapProperty = getMediaMapProperty(mediaRequest, mediaHandlerConfig);
+      String stringValue = mediaRequest.getResource().getValueMap().get(mapProperty, String.class);
+      if (StringUtils.isNotEmpty(stringValue)) {
+        ImageMapParser imageMapParser = mediaRequest.getResource().adaptTo(ImageMapParser.class);
+        if (imageMapParser != null) {
+          return imageMapParser.parseMap(stringValue);
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get property name containing the image map parameter
+   * @param mediaRequest Media request
+   * @param mediaHandlerConfig Media handler config
+   * @return Property name
+   */
+  @SuppressWarnings("null")
+  protected final @NotNull String getMediaMapProperty(@NotNull MediaRequest mediaRequest,
+      @NotNull MediaHandlerConfig mediaHandlerConfig) {
+    String mapProperty = mediaRequest.getMediaPropertyNames().getMapProperty();
+    if (StringUtils.isEmpty(mapProperty)) {
+      mapProperty = mediaHandlerConfig.getMediaMapProperty();
+    }
+    return mapProperty;
   }
 
   /**

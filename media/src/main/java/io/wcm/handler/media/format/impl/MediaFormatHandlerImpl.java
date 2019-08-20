@@ -36,12 +36,13 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableSortedSet;
 
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.format.MediaFormatProviderManager;
 import io.wcm.handler.media.format.MediaFormatRankingComparator;
 import io.wcm.handler.media.format.MediaFormatSizeRankingComparator;
 import io.wcm.handler.media.format.Ratio;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Media format handling.
@@ -242,7 +243,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    */
   private boolean isRenditionMatchExtension(MediaFormat mediaFormat) {
     for (String extension : mediaFormat.getExtensions()) {
-      if (FileExtension.isImage(extension)) {
+      if (MediaFileType.isImage(extension)) {
         return true;
       }
     }

@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
-
-import io.wcm.handler.media.format.MediaFormat;
-
 /**
- * Interface for iterating over all valid media formats.
- * @param <T> Return type
+ * Image Map parsing.
  */
-interface MediaFormatVisitor<T> {
-
-  /**
-   * Visit media format
-   * @param mediaFormat Media format
-   * @return Return value - if not null the visit process is finished and the return value returned
-   */
-  T visit(MediaFormat mediaFormat);
-
-}
+@org.osgi.annotation.versioning.Version("1.0")
+package io.wcm.handler.media.imagemap;

@@ -40,7 +40,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.Test;
@@ -63,15 +65,19 @@ import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
+import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.DragDropSupport;
+import io.wcm.handler.media.spi.ImageMapLinkResolver;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
+import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -730,8 +736,8 @@ class DamMediaSourceTest extends AbstractDamTest {
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
         .mediaFormat(RATIO)
-        .pictureSource(RATIO, "media1", 160)
-        .pictureSource(RATIO, "media2", 320)
+        .pictureSource(new PictureSource(RATIO).media("media1").widths(160))
+        .pictureSource(new PictureSource(RATIO).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
@@ -777,8 +783,8 @@ class DamMediaSourceTest extends AbstractDamTest {
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources_NoRatio() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
         .mediaFormat(FIXEDHEIGHT_UNCONSTRAINED)
-        .pictureSource(FIXEDHEIGHT_UNCONSTRAINED, "media1", 160)
-        .pictureSource(FIXEDHEIGHT_UNCONSTRAINED, "media2", 320)
+        .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media1").widths(160))
+        .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
@@ -813,6 +819,42 @@ class DamMediaSourceTest extends AbstractDamTest {
     MediaFormat mediaFormat2 = rendition2.getMediaFormat();
     assertEquals(FIXEDHEIGHT_UNCONSTRAINED.getLabel(), mediaFormat2.getLabel());
     assertEquals(320, mediaFormat2.getWidth());
+  }
+
+  @Test
+  void testImageMap() {
+    context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
+
+    // put map string in resource
+    ModifiableValueMap props = parStandardMediaRef.adaptTo(ModifiableValueMap.class);
+    props.put(MediaNameConstants.PN_MEDIA_MAP, ImageMapParserImplTest.MAP_STRING);
+
+    Media media = mediaHandler().get(parStandardMediaRef).build();
+    assertTrue(media.isValid(), "valid");
+
+    // assert map
+    assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
+    assertTrue(StringUtils.startsWith(media.getMarkup(), "<img "));
+    assertTrue(StringUtils.endsWith(media.getMarkup(), "</map>"));
+  }
+
+  @Test
+  void testImageMap_CustomProperty() {
+    context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
+
+    // put map string in resource
+    ModifiableValueMap props = parStandardMediaRef.adaptTo(ModifiableValueMap.class);
+    props.put("customMapProperty", ImageMapParserImplTest.MAP_STRING);
+
+    Media media = mediaHandler().get(parStandardMediaRef)
+        .mapProperty("customMapProperty")
+        .build();
+    assertTrue(media.isValid(), "valid");
+
+    // assert map
+    assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
+    assertTrue(StringUtils.startsWith(media.getMarkup(), "<img "));
+    assertTrue(StringUtils.endsWith(media.getMarkup(), "</map>"));
   }
 
 }

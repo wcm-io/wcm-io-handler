@@ -128,7 +128,7 @@ class MediaLinkTypeTest {
   //      "/content/dummy-path",
   //      ImmutableValueMap.builder()
   //          .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
-  //          .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dummymedia/image1")
+  //          .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dam/dummymedia/image1")
   //          .build());
   //
   //  Link link = linkHandler.get(linkResource).build();
@@ -146,13 +146,13 @@ class MediaLinkTypeTest {
         "/content/dummy-path",
         ImmutableValueMap.builder()
             .put(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID)
-            .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dummymedia/pdf1")
+            .put(LinkNameConstants.PN_LINK_MEDIA_REF, "/content/dam/dummymedia/pdf1")
             .build());
 
     Link link = linkHandler.get(linkResource).build();
 
     assertTrue(link.isValid(), "link valid");
-    assertEquals("/content/dummymedia/pdf1.pdf", link.getUrl(), "link url");
+    assertEquals("/content/dam/dummymedia/pdf1.pdf", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
   }
 
@@ -174,6 +174,18 @@ class MediaLinkTypeTest {
     ValueMap expected = ImmutableValueMap.of(LinkNameConstants.PN_LINK_TYPE, MediaLinkType.ID,
         LinkNameConstants.PN_LINK_MEDIA_REF, "/media/ref");
     assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
+  }
+
+  @Test
+  void testReferenceAutoDetection() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+
+    Link link = linkHandler.get("/content/dam/dummymedia/pdf1").build();
+
+    assertEquals(MediaLinkType.ID, link.getLinkType().getId());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("/content/dam/dummymedia/pdf1.pdf", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
   }
 
 }

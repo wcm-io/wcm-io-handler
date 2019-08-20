@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl.ipeconfig;
 
+import static io.wcm.handler.media.impl.ipeconfig.CroppingRatios.MEDIAFORMAT_FREE_CROP;
 import static io.wcm.handler.media.impl.ipeconfig.PathParser.NN_ASPECT_RATIOS;
 import static io.wcm.handler.media.impl.ipeconfig.PathParser.NN_CONFIG;
 import static io.wcm.handler.media.impl.ipeconfig.PathParser.NN_MEDIA_FORMAT;
@@ -176,12 +177,21 @@ public class IPEConfigResourceProvider extends ResourceProvider {
     Resource componentContent = resolver.getResource(parser.getComponentContentPath());
     if (componentContent != null) {
       MediaFormatHandler mediaFormatHandler = AdaptTo.notNull(componentContent, MediaFormatHandler.class);
-      MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
+      MediaFormat mediaFormat = getMediaFormat(mediaFormatName, mediaFormatHandler);
       if (mediaFormat != null) {
         return new AspectRatioResource(resolver, mediaFormat, path);
       }
     }
     return null;
+  }
+
+  private MediaFormat getMediaFormat(String mediaFormatName, MediaFormatHandler mediaFormatHandler) {
+    if (StringUtils.equals(mediaFormatName, MEDIAFORMAT_FREE_CROP.getName())) {
+      return MEDIAFORMAT_FREE_CROP;
+    }
+    else {
+      return mediaFormatHandler.getMediaFormat(mediaFormatName);
+    }
   }
 
   /**

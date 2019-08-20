@@ -34,13 +34,12 @@ import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
-import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.MediaComponentPropertyResolver;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
-import io.wcm.wcm.commons.component.ComponentPropertyResolution;
-import io.wcm.wcm.commons.component.ComponentPropertyResolver;
 
 /**
  * Default implementation or {@link MediaBuilder}.
@@ -53,9 +52,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private final String mediaRef;
 
   private MediaArgs mediaArgs = new MediaArgs();
-  private String refProperty;
-  private String cropProperty;
-  private String rotationProperty;
+  private MediaPropertyNames mediaPropertyNames = new MediaPropertyNames();
   private List<PictureSource> pictureSourceSets = new ArrayList<>();
 
   MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
@@ -63,32 +60,13 @@ final class MediaBuilderImpl implements MediaBuilder {
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
 
-    // resolve component properties
+    // resolve default settings from content policies and component properties
     if (resource != null) {
-      ComponentPropertyResolver resolver = new ComponentPropertyResolver(resource)
-          .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
-      mediaArgs.autoCrop(resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, false));
-
-      // media formats with optional mandatory flag(s)
-      String[] mediaFormatNames = resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, String[].class);
-      Boolean[] mediaFormatsMandatory = resolver.get(MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, Boolean[].class);
-      if (mediaFormatNames != null && mediaFormatNames.length > 0) {
-        MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[mediaFormatNames.length];
-        for (int i = 0; i < mediaFormatNames.length; i++) {
-          boolean mandatory = false;
-          if (mediaFormatsMandatory != null) {
-            if (mediaFormatsMandatory.length == 1) {
-              // backward compatibility: support a single flag for all media formats
-              mandatory = mediaFormatsMandatory[0];
-            }
-            else if (mediaFormatsMandatory.length > i) {
-              mandatory = mediaFormatsMandatory[i];
-            }
-          }
-          mediaFormatOptions[i] = new MediaFormatOption(mediaFormatNames[i], mandatory);
-        }
-        mediaArgs.mediaFormatOptions(mediaFormatOptions);
-      }
+      MediaComponentPropertyResolver resolver = new MediaComponentPropertyResolver(resource);
+      mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
+      mediaArgs.autoCrop(resolver.isAutoCrop());
+      mediaArgs.imageSizes(resolver.getImageSizes());
+      mediaArgs.pictureSources(resolver.getPictureSources());
     }
   }
 
@@ -106,9 +84,7 @@ final class MediaBuilderImpl implements MediaBuilder {
     this.mediaRef = mediaRequest.getMediaRef();
     // clone media args to make sure the original object is not modified
     this.mediaArgs = mediaRequest.getMediaArgs().clone();
-    this.refProperty = mediaRequest.getRefProperty();
-    this.cropProperty = mediaRequest.getCropProperty();
-    this.rotationProperty = mediaRequest.getRotationProperty();
+    this.mediaPropertyNames = mediaRequest.getMediaPropertyNames();
     this.mediaHandler = mediaHandler;
   }
 
@@ -275,32 +251,44 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder pictureSource(@NotNull PictureSource pictureSource) {
+    this.pictureSourceSets.add(pictureSource);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths) {
-    this.pictureSourceSets.add(new PictureSource(mediaFormat, media, widths));
+    this.pictureSourceSets.add(new PictureSource(mediaFormat).media(media).widths(widths));
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths) {
-    this.pictureSourceSets.add(new PictureSource(mediaFormat, null, widths));
+    this.pictureSourceSets.add(new PictureSource(mediaFormat).widths(widths));
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder refProperty(@NotNull String value) {
-    this.refProperty = value;
+    this.mediaPropertyNames.refProperty(value);
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder cropProperty(@NotNull String value) {
-    this.cropProperty = value;
+    this.mediaPropertyNames.cropProperty(value);
     return this;
   }
 
   @Override
   public @NotNull MediaBuilder rotationProperty(@NotNull String value) {
-    this.rotationProperty = value;
+    this.mediaPropertyNames.rotationProperty(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder mapProperty(@NotNull String value) {
+    this.mediaPropertyNames.mapProperty(value);
     return this;
   }
 
@@ -312,8 +300,7 @@ final class MediaBuilderImpl implements MediaBuilder {
     if (this.mediaArgs.getImageSizes() != null && this.mediaArgs.getPictureSources() != null) {
       throw new IllegalArgumentException("Image sizes must not be used together with pictures source sets.");
     }
-    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
-        this.refProperty, this.cropProperty, this.rotationProperty);
+    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs, this.mediaPropertyNames);
     return mediaHandler.processRequest(request);
   }
 

@@ -19,12 +19,14 @@
  */
 package io.wcm.handler.media.markup;
 
+import static io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_RAW;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -45,9 +47,12 @@ import org.mockito.quality.Strictness;
 import com.day.cq.wcm.api.WCMMode;
 import com.google.common.collect.ImmutableList;
 
+import io.wcm.handler.commons.dom.Area;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
+import io.wcm.handler.commons.dom.Map;
 import io.wcm.handler.commons.dom.Picture;
+import io.wcm.handler.commons.dom.Span;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
@@ -58,6 +63,7 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.media.testcontext.AppAemContext;
@@ -108,6 +114,7 @@ class SimpleImageMediaMarkupBuilderTest {
 
     when(rendition.getFileName()).thenReturn("image.gif");
     when(rendition.isImage()).thenReturn(true);
+    when(rendition.isBrowserImage()).thenReturn(true);
 
     assertTrue(builder.accepts(media), "image rendition");
 
@@ -233,9 +240,9 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(RATIO);
     mediaRequest.getMediaArgs().pictureSources(new PictureSource[] {
-        new PictureSource(RATIO, "media1", 64, 32),
-        new PictureSource(EDITORIAL_1COL, "media2", 215),
-        new PictureSource(RATIO2, null, 40),
+        new PictureSource(RATIO).media("media1").sizes("sizes1").widths(64, 32),
+        new PictureSource(EDITORIAL_1COL).media("media2").widths(215),
+        new PictureSource(RATIO2).widths(40),
     });
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
@@ -250,6 +257,7 @@ class SimpleImageMediaMarkupBuilderTest {
     assertEquals(2, sources.size());
     HtmlElement<?> source1 = (HtmlElement<?>)sources.get(0);
     assertEquals("media1", source1.getAttributeValue("media"));
+    assertEquals("sizes1", source1.getAttributeValue("sizes"));
     assertEquals("/media/dummy.64.png 64w, /media/dummy.32.png 32w", source1.getAttributeValue("srcset"));
     HtmlElement<?> source2 = (HtmlElement<?>)sources.get(1);
     assertNull(source2.getAttributeValue("media"));
@@ -299,6 +307,77 @@ class SimpleImageMediaMarkupBuilderTest {
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     builder.build(media);
+  }
+
+  @Test
+  void testBuild_Image_Map() {
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
+    Media media = new Media(mediaSource, mediaRequest);
+    media.setAsset(asset);
+    media.setRenditions(ImmutableList.of(rendition));
+    media.setMap(EXPECTED_AREAS_RESOLVED);
+    when(rendition.getUrl()).thenReturn("/media/dummy.gif");
+
+    HtmlElement<?> element = builder.build(media);
+    assertTrue(element instanceof Span);
+
+    HtmlElement<?> img = (HtmlElement<?>)element.getChild("img");
+    assertTrue(img instanceof Image);
+    assertEquals("/media/dummy.gif", img.getAttributeValue("src"));
+
+    assertMap((HtmlElement<?>)element.getChild("map"));
+  }
+
+  @Test
+  void testBuild_Picture_Map() {
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    mediaRequest.getMediaArgs().mediaFormat(RATIO);
+    mediaRequest.getMediaArgs().pictureSources(new PictureSource[] {
+        new PictureSource(RATIO).media("media1").widths(64, 32),
+        new PictureSource(EDITORIAL_1COL).media("media2").widths(215),
+        new PictureSource(RATIO2).widths(40),
+    });
+    mediaRequest.getMediaArgs().property("custom-property", "value1");
+    Media media = new Media(mediaSource, mediaRequest);
+    media.setAsset(asset);
+    media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 32), rendition(RATIO, 16),
+        rendition(RATIO2, 40), rendition(RATIO2, 20)));
+    media.setMap(EXPECTED_AREAS_RESOLVED);
+
+    HtmlElement<?> picture = builder.build(media);
+    assertTrue(picture instanceof Picture);
+
+    List<Element> sources = picture.getChildren("source");
+    assertEquals(2, sources.size());
+
+    HtmlElement<?> img = (HtmlElement<?>)picture.getChild("img");
+    assertTrue(img instanceof Image);
+
+    assertMap((HtmlElement<?>)picture.getChild("map"));
+  }
+
+  @SuppressWarnings("unchecked")
+  private void assertMap(HtmlElement<?> element) {
+    assertNotNull(element, "has map element");
+    assertTrue(element instanceof Map, "is map");
+    assertNotNull(element.getAttributeValue("name"));
+
+    List<Area> areas = (List)element.getChildren("area");
+    assertEquals(EXPECTED_AREAS_RESOLVED.size(), areas.size());
+    for (int i = 0; i < areas.size(); i++) {
+      Area area = areas.get(i);
+      ImageMapArea areaData = EXPECTED_AREAS_RESOLVED.get(i);
+      assertEquals(areaData.getShape(), area.getShape());
+      assertEquals(areaData.getCoordinates(), area.getCoords());
+      assertEquals(areaData.getLinkUrl(), area.getHRef());
+      assertEquals(areaData.getLinkWindowTarget(), area.getTarget());
+      assertEquals(areaData.getAltText(), area.getAlt());
+    }
   }
 
   @Test

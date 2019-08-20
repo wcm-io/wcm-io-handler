@@ -19,6 +19,10 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
+import static io.wcm.handler.media.impl.ImageTransformation.rotateMapHeight;
+import static io.wcm.handler.media.impl.ImageTransformation.rotateMapWidth;
+
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -27,16 +31,12 @@ import java.util.stream.Collectors;
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.format.Ratio;
 
 /**
  * Extended rendition handler supporting cropping and rotating of images.
  */
 public class TransformedRenditionHandler extends DefaultRenditionHandler {
-
-  // supported rotation values
-  private static final int ROTATE_90 = 90;
-  private static final int ROTATE_180 = 180;
-  private static final int ROTATE_270 = 270;
 
   private final CropDimension cropDimension;
   private final Integer rotation;
@@ -61,7 +61,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
   protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
     NavigableSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);
     if (cropDimension != null) {
-      VirtualTransformedRenditionMetadata cropRendition = getCropRendition(processedCandidates);
+      VirtualTransformedRenditionMetadata cropRendition = getCropRendition();
       if (cropRendition != null) {
         // return only cropped rendition
         processedCandidates.clear();
@@ -82,21 +82,21 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
       return new TreeSet<>(candidates);
     }
     return candidates.stream()
+        .filter(rendition -> !rendition.isVectorImage())
         .map(rendition -> new VirtualTransformedRenditionMetadata(rendition.getRendition(),
-            rotateMapWidth(rendition.getWidth(), rendition.getHeight()),
-            rotateMapHeight(rendition.getWidth(), rendition.getHeight()),
+            rotateMapWidth(rendition.getWidth(), rendition.getHeight(), rotation),
+            rotateMapHeight(rendition.getWidth(), rendition.getHeight(), rotation),
             null, rotation))
         .collect(Collectors.toCollection(TreeSet::new));
   }
 
   /**
    * Searches for the biggest web-enabled rendition that matches the crop dimensions width and height or is bigger.
-   * @param candidates
    * @return Rendition or null if no match found
    */
-  private VirtualTransformedRenditionMetadata getCropRendition(NavigableSet<RenditionMetadata> candidates) {
+  private VirtualTransformedRenditionMetadata getCropRendition() {
     RenditionMetadata original = getOriginalRendition();
-    if (original == null) {
+    if (original == null || original.isVectorImage()) {
       return null;
     }
     Double scaleFactor = getCropScaleFactor();
@@ -106,8 +106,8 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
         Math.round(cropDimension.getWidth() * scaleFactor),
         Math.round(cropDimension.getHeight() * scaleFactor));
     return new VirtualTransformedRenditionMetadata(original.getRendition(),
-        rotateMapWidth(scaledCropDimension.getWidth(), scaledCropDimension.getHeight()),
-        rotateMapHeight(scaledCropDimension.getWidth(), scaledCropDimension.getHeight()),
+        rotateMapWidth(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
+        rotateMapHeight(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
         scaledCropDimension, rotation);
   }
 
@@ -118,51 +118,11 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
    */
   private double getCropScaleFactor() {
     RenditionMetadata original = getOriginalRendition();
-    RenditionMetadata webEnabled = AutoCropping.getWebRenditionForCropping(getAsset());
+    RenditionMetadata webEnabled = DamAutoCropping.getWebRenditionForCropping(getAsset());
     if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
       return 1d;
     }
-    return (double)original.getWidth() / (double)webEnabled.getWidth();
-  }
-
-  /**
-   * Swaps width with height if rotated 90° clock-wise or counter clock-wise
-   * @param width Rendition width
-   * @param height Rendition height
-   * @return Width
-   */
-  private long rotateMapWidth(long width, long height) {
-    if (rotation != null && (rotation == ROTATE_90 || rotation == ROTATE_270)) {
-      return height;
-    }
-    else {
-      return width;
-    }
-  }
-
-  /**
-   * Swaps height with width if rotated 90° clock-wise or counter clock-wise
-   * @param width Rendition width
-   * @param height Rendition height
-   * @return Height
-   */
-  private long rotateMapHeight(long width, long height) {
-    if (rotation != null && (rotation == ROTATE_90 || rotation == ROTATE_270)) {
-      return width;
-    }
-    else {
-      return height;
-    }
-  }
-
-  /**
-   * @param rotation Rotation value
-   * @return true if the value is a supported image rotation operation.
-   */
-  public static boolean isValidRotation(int rotation) {
-    return rotation == ROTATE_90
-        || rotation == ROTATE_180
-        || rotation == ROTATE_270;
+    return Ratio.get(original.getWidth(), webEnabled.getWidth());
   }
 
 }

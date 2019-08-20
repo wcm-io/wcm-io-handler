@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2019 wcm.io
+ * Copyright (C) 2014 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,25 @@
  * limitations under the License.
  * #L%
  */
+package io.wcm.handler.media.format.impl;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import io.wcm.handler.media.format.MediaFormat;
+
 /**
- * Helper classes for components.
+ * Interface for iterating over all valid media formats.
+ * @param <T> Return type
  */
-@org.osgi.annotation.versioning.Version("1.0.0")
-package io.wcm.handler.commons.component;
+public interface MediaFormatVisitor<T> {
+
+  /**
+   * Visit media format
+   * @param mediaFormat Media format
+   * @return Return value - if not null the visit process is finished and the return value returned
+   */
+  @Nullable
+  T visit(@NotNull MediaFormat mediaFormat);
+
+}

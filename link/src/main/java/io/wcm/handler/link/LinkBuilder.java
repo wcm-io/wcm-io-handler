@@ -38,7 +38,7 @@ public interface LinkBuilder {
    * @return Link builder
    */
   @NotNull
-  LinkBuilder args(LinkArgs linkArgs);
+  LinkBuilder args(@NotNull LinkArgs linkArgs);
 
   /**
    * Set selectors
@@ -46,7 +46,7 @@ public interface LinkBuilder {
    * @return Link builder
    */
   @NotNull
-  LinkBuilder selectors(String selectors);
+  LinkBuilder selectors(@Nullable String selectors);
 
   /**
    * Set file extension
@@ -54,7 +54,7 @@ public interface LinkBuilder {
    * @return Link builder
    */
   @NotNull
-  LinkBuilder extension(String extension);
+  LinkBuilder extension(@Nullable String extension);
 
   /**
    * Set suffix
@@ -62,7 +62,7 @@ public interface LinkBuilder {
    * @return Link builder
    */
   @NotNull
-  LinkBuilder suffix(String suffix);
+  LinkBuilder suffix (@Nullable String suffix);
 
   /**
    * Set query parameters string
@@ -70,7 +70,7 @@ public interface LinkBuilder {
    * @return Link builder
    */
   @NotNull
-  LinkBuilder queryString(String queryString);
+  LinkBuilder queryString(@Nullable String queryString);
 
   /**
    * Set fragment identifier
@@ -78,7 +78,7 @@ public interface LinkBuilder {
    * @return Link builder
    */
   @NotNull
-  LinkBuilder fragment(String fragment);
+  LinkBuilder fragment(@Nullable String fragment);
 
   /**
    * Set URL mode for externalizing the URL
@@ -86,7 +86,7 @@ public interface LinkBuilder {
    * @return Link builder
    */
   @NotNull
-  LinkBuilder urlMode(UrlMode urlMode);
+  LinkBuilder urlMode(@Nullable UrlMode urlMode);
 
   /**
    * @param value If set to true, link handler returns a dummy link in edit mode when link is invalid.
@@ -100,7 +100,18 @@ public interface LinkBuilder {
    * @return this
    */
   @NotNull
-  LinkBuilder dummyLinkUrl(String value);
+  LinkBuilder dummyLinkUrl(@Nullable String value);
+
+  /**
+   * Defines a "fallback" property name that is used to load link target information from a single property
+   * instead of the link type + link type depending property name. This property is used for migration
+   * from components that do not support Link Handler. It is only used for reading, and never written back to.
+   * When opened and saved in the link dialog, the property is removed and instead the dedicated properties are used.
+   * @param propertyNames Property name(s)
+   * @return this
+   */
+  @NotNull
+  LinkBuilder linkTargetUrlFallbackProperty(@NotNull String @Nullable... propertyNames);
 
   /**
    * Resolve link and return metadata object that contains the results.

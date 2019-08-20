@@ -19,24 +19,27 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import java.util.Collection;
-import java.util.HashSet;
+import static io.wcm.handler.media.format.impl.MediaFormatSupport.getRequestedFileExtensions;
+import static io.wcm.handler.media.format.impl.MediaFormatSupport.visitMediaFormats;
+
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.media.format.impl.MediaFormatVisitor;
 import io.wcm.handler.mediasource.dam.AssetRendition;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -187,55 +190,6 @@ class DefaultRenditionHandler implements RenditionHandler {
   }
 
   /**
-   * Get merged list of file extensions from both media formats and media args.
-   * @param mediaArgs Media args
-   * @return Array of file extensions.
-   *         Returns empty array if all file extensions are allowed.
-   *         Returns null if different file extensions are requested in media formats and media args
-   *         and the file extension filtering is not fulfillable.
-   */
-  private String[] getRequestedFileExtensions(MediaArgs mediaArgs) {
-    // get file extension defined in media args
-    Set<String> mediaArgsFileExtensions = new HashSet<String>();
-    if (mediaArgs.getFileExtensions() != null && mediaArgs.getFileExtensions().length > 0) {
-      mediaArgsFileExtensions.addAll(ImmutableList.copyOf(mediaArgs.getFileExtensions()));
-    }
-
-    // get file extensions from media formats
-    final Set<String> mediaFormatFileExtensions = new HashSet<String>();
-    visitMediaFormats(mediaArgs, new MediaFormatVisitor<Object>() {
-      @Override
-      public Object visit(MediaFormat mediaFormat) {
-        if (mediaFormat.getExtensions() != null && mediaFormat.getExtensions().length > 0) {
-          mediaFormatFileExtensions.addAll(ImmutableList.copyOf(mediaFormat.getExtensions()));
-        }
-        return null;
-      }
-    });
-
-    // if extensions are defined both in mediaargs and media formats use intersection of both
-    final String[] fileExtensions;
-    if (!mediaArgsFileExtensions.isEmpty() && !mediaFormatFileExtensions.isEmpty()) {
-      Collection<String> intersection = Sets.intersection(mediaArgsFileExtensions, mediaFormatFileExtensions);
-      if (intersection.isEmpty()) {
-        // not intersected file extensions - return null to singal no valid file extension request
-        return null;
-      }
-      else {
-        fileExtensions = intersection.toArray(new String[intersection.size()]);
-      }
-    }
-    else if (!mediaArgsFileExtensions.isEmpty()) {
-      fileExtensions = mediaArgsFileExtensions.toArray(new String[mediaArgsFileExtensions.size()]);
-    }
-    else {
-      fileExtensions = mediaFormatFileExtensions.toArray(new String[mediaFormatFileExtensions.size()]);
-    }
-
-    return fileExtensions;
-  }
-
-  /**
    * Checks if the media args contain any with/height restriction, that means a rendition matching
    * the given size constraints is requested. Additionally it is checked that at least one image file
    * extension is requested.
@@ -247,7 +201,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     // check that at least one image file extension is in the list of requested extensions
     boolean anyImageFileExtension = false;
     for (String fileExtension : requestedFileExtensions) {
-      if (FileExtension.isImage(fileExtension)) {
+      if (MediaFileType.isImage(fileExtension)) {
         anyImageFileExtension = true;
       }
     }
@@ -261,7 +215,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
     Boolean isSizeMatchingMediaFormat = visitMediaFormats(mediaArgs, new MediaFormatVisitor<Boolean>() {
       @Override
-      public Boolean visit(MediaFormat mediaFormat) {
+      public @Nullable Boolean visit(@NotNull MediaFormat mediaFormat) {
         if (mediaFormat.getEffectiveMinWidth() > 0
             || mediaFormat.getEffectiveMaxWidth() > 0
             || mediaFormat.getEffectiveMinHeight() > 0
@@ -295,7 +249,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     else if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
       return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
         @Override
-        public RenditionMetadata visit(MediaFormat mediaFormat) {
+        public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
           for (RenditionMetadata candidate : candidates) {
             if (candidate.matches((int)mediaFormat.getEffectiveMinWidth(),
                 (int)mediaFormat.getEffectiveMinHeight(),
@@ -353,7 +307,7 @@ class DefaultRenditionHandler implements RenditionHandler {
       long destHeight = mediaArgs.getFixedHeight();
       double destRatio = 0;
       if (destWidth > 0 && destHeight > 0) {
-        destRatio = (double)destWidth / (double)destHeight;
+        destRatio = Ratio.get(destWidth, destHeight);
       }
       return getVirtualRendition(candidates, destWidth, destHeight, destRatio);
     }
@@ -361,7 +315,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     // or from any media format
     return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
       @Override
-      public RenditionMetadata visit(MediaFormat mediaFormat) {
+      public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
         int destWidth = (int)mediaFormat.getEffectiveMinWidth();
         int destHeight = (int)mediaFormat.getEffectiveMinHeight();
         double destRatio = mediaFormat.getRatio();
@@ -424,7 +378,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if ratio is missing: calculate from given rendition
     if (ratio < MediaFormatHandler.RATIO_TOLERANCE) {
-      ratio = (double)rendition.getWidth() / (double)rendition.getHeight();
+      ratio = Ratio.get(rendition.getWidth(), rendition.getHeight());
     }
 
     // if height is missing - calculate from width
@@ -451,28 +405,6 @@ class DefaultRenditionHandler implements RenditionHandler {
     else {
       return null;
     }
-  }
-
-  /**
-   * Iterate over all media formats defined in media args. Ignores invalid media formats.
-   * If the media format visitor returns a value that is not null, iteration is stopped and the value is returned from
-   * this method.
-   * @param mediaArgs Media args
-   * @param mediaFormatVisitor Media format visitor
-   * @return Return value form media format visitor, if any returned a value that is not null
-   */
-  @SuppressWarnings("null")
-  private <T> T visitMediaFormats(MediaArgs mediaArgs, MediaFormatVisitor<T> mediaFormatVisitor) {
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    if (mediaFormats != null) {
-      for (MediaFormat mediaFormat : mediaFormats) {
-        T returnValue = mediaFormatVisitor.visit(mediaFormat);
-        if (returnValue != null) {
-          return returnValue;
-        }
-      }
-    }
-    return null;
   }
 
   protected Asset getAsset() {

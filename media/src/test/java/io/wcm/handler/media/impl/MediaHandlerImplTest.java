@@ -250,6 +250,14 @@ class MediaHandlerImplTest {
     assertTrue(metadata.getMediaRequest().getMediaArgs().isMediaFormatsMandatory());
   }
 
+  @Test
+  void testInvalid() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    Media media = mediaHandler.invalid();
+    assertFalse(media.isValid());
+  }
+
 
   public static class TestMediaHandlerConfig extends MediaHandlerConfig {
 
@@ -290,10 +298,7 @@ class MediaHandlerImplTest {
           request.getResource(),
           mediaRef,
           mediaArgs,
-          request.getRefProperty(),
-          request.getCropProperty(),
-          request.getRotationProperty()
-          ));
+          request.getMediaPropertyNames()));
       return media;
     }
 
@@ -366,14 +371,12 @@ class MediaHandlerImplTest {
       SlingHttpServletRequest.class, Resource.class
   })
   public static class TestPostProcessor implements MediaProcessor {
-
     @Override
     public Media process(Media media) {
       String mediaUrl = StringUtils.replace(media.getUrl(), "/dummymedia/", "/dummymedia.post1/");
       media.setUrl(mediaUrl);
       return media;
     }
-
   }
 
   public static final class TestMediaFormats {
@@ -402,11 +405,9 @@ class MediaHandlerImplTest {
   }
 
   public static class TestMediaFormatProvider extends MediaFormatProvider {
-
     TestMediaFormatProvider() {
       super(TestMediaFormats.class);
     }
-
   }
 
 }

@@ -112,6 +112,22 @@ Schematic flow of link handling process:
 6. Apply postprocessors on link request
 
 
+### Migrate components to Link Handler
+
+If you migrate existing components that did not use the wcm.io Link Handler before, it's likely you used only one single property which contained all types of links - internal, external, DAM asset. This storage as one single property is not compatible with the Link Handler, which uses at least two property (link type and link reference), and the second property depends on the link type.
+
+But you can configure a special "fallback mode" on the component resource by setting a property - example:
+
+```javascript
+{
+  "wcmio:linkTargetUrlFallbackProperty": "linkUrl"
+}
+```
+
+When this property is set, the component is also able to read link target information from the property "linkUrl" and tries to auto-detect it's type. When the component is edited using the Link Handler link dialog tab, it's read from this property as well. Once the dialog is saved the property is cleared and the new property names as used by the Link Handler are used.
+
+
+
 [link-handler]: apidocs/io/wcm/handler/link/LinkHandler.html
 [link-builder]: apidocs/io/wcm/handler/link/LinkBuilder.html
 [link-name-constants]: apidocs/io/wcm/handler/link/LinkNameConstants.html

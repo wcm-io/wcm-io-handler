@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>1.1.10</version>
+    <version>1.1.11-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -47,6 +47,10 @@
 
   <properties>
     <site.url.module.prefix>handler/commons</site.url.module.prefix>
+
+    <!-- temporary baseline skip due to small but (theoretically) incompatible change in io.wcm.handler.commons.dom -->
+    <baseline.skip>true</baseline.skip>
+
   </properties>
 
   <dependencies>

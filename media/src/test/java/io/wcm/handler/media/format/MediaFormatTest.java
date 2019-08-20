@@ -192,6 +192,12 @@ class MediaFormatTest {
 
     MediaFormat mf9 = create("mf9").label("MF9").ratio(16, 9).height(50).build();
     assertEquals("MF9 (?x50px; 16:9)", mf9.getCombinedTitle());
+
+    MediaFormat mf10 = create("mf10").label("MF10").ratio(16, 9).minWidth(500).maxHeight(200).build();
+    assertEquals("MF10 (500..x..200px; 16:9)", mf10.getCombinedTitle());
+
+    MediaFormat mf11 = create("mf11").label("MF11").ratio(16, 9).maxWidth(500).minHeight(200).build();
+    assertEquals("MF11 (..500x200..px; 16:9)", mf11.getCombinedTitle());
   }
 
   @Test

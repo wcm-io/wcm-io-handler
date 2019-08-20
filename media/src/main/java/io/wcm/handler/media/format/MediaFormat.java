@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.handler.media.MediaFileType;
 
 /**
  * Media format.
@@ -200,12 +200,12 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
     // get ratio from media format definition calculated from ratio sample/display values
     if (this.ratioWidth > 0 && this.ratioHeight > 0) {
-      return this.ratioWidth / this.ratioHeight;
+      return Ratio.get(this.ratioWidth, this.ratioHeight);
     }
 
     // otherwise calculate ratio
     if (isFixedDimension() && this.width > 0 && this.height > 0) {
-      return (double)this.width / (double)this.height;
+      return Ratio.get(this.width, this.height);
     }
 
     return 0d;
@@ -348,7 +348,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    */
   public boolean isImage() {
     for (String extension : getExtensions()) {
-      if (FileExtension.isImage(extension)) {
+      if (MediaFileType.isImage(extension)) {
         return true;
       }
     }
@@ -476,9 +476,13 @@ public final class MediaFormat implements Comparable<MediaFormat> {
           }
         }
         else {
-          sbRestrictions.append(widthMin);
+          if (widthMin > 0) {
+            sbRestrictions.append(widthMin);
+          }
           sbRestrictions.append("..");
-          sbRestrictions.append(widthMax);
+          if (widthMax > 0) {
+            sbRestrictions.append(widthMax);
+          }
         }
         sbRestrictions.append('x');
         if (heightMin == heightMax) {
@@ -490,9 +494,13 @@ public final class MediaFormat implements Comparable<MediaFormat> {
           }
         }
         else {
-          sbRestrictions.append(heightMin);
+          if (heightMin > 0) {
+            sbRestrictions.append(heightMin);
+          }
           sbRestrictions.append("..");
-          sbRestrictions.append(heightMax);
+          if (heightMax > 0) {
+            sbRestrictions.append(heightMax);
+          }
         }
         sbRestrictions.append("px");
         extParts.add(sbRestrictions.toString());

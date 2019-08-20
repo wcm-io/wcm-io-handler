@@ -525,4 +525,17 @@ class InternalLinkTypeTest {
     assertEquals(expected, ImmutableValueMap.copyOf(resource.getValueMap()));
   }
 
+  @Test
+  void testReferenceAutoDetection() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+
+    Link link = linkHandler.get(targetPage.getPath()).build();
+
+    assertEquals(InternalLinkType.ID, link.getLinkType().getId());
+    assertTrue(link.isValid(), "link valid");
+    assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
+    assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
+  }
+
 }

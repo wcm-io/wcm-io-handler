@@ -21,6 +21,7 @@ package io.wcm.handler.link.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -28,10 +29,12 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
 import io.wcm.handler.link.Link;
+import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkBuilder;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkRequest;
@@ -65,6 +68,11 @@ public final class LinkHandlerImpl implements LinkHandler {
   @Override
   public @NotNull LinkBuilder get(Page page) {
     return new LinkBuilderImpl(page, this);
+  }
+
+  @Override
+  public @NotNull LinkBuilder get(String reference) {
+    return new LinkBuilderImpl(reference, this);
   }
 
   @Override
@@ -116,6 +124,17 @@ public final class LinkHandlerImpl implements LinkHandler {
       }
     }
 
+    // if link is invalid - check if a fallback link property is set and try resolution with it
+    if (!link.isValid()) {
+      LinkRequest fallbackLinkRequest = getFallbackLinkRequest(linkRequest);
+      if (fallbackLinkRequest != null) {
+        Link fallbackLink = processRequest(fallbackLinkRequest);
+        if (fallbackLink.isValid()) {
+          return fallbackLink;
+        }
+      }
+    }
+
     // generate markup (if markup builder is available) - first accepting wins
     List<Class<? extends LinkMarkupBuilder>> linkMarkupBuilders = linkHandlerConfig.getMarkupBuilders();
     if (linkMarkupBuilders != null) {
@@ -141,6 +160,56 @@ public final class LinkHandlerImpl implements LinkHandler {
     }
 
     return link;
+  }
+
+  @Override
+  public Link invalid() {
+    // build invalid link with first link type
+    Class<? extends LinkType> linkTypeClass = linkHandlerConfig.getLinkTypes().stream().findFirst().orElse(null);
+    if (linkTypeClass == null) {
+      throw new RuntimeException("No link types defined.");
+    }
+    LinkType linkType = AdaptTo.notNull(adaptable, linkTypeClass);
+    return new Link(linkType, new LinkRequest(null, null, null));
+  }
+
+  /**
+   * Checks if a link target URL is defined in a fallback property and prepare a link request
+   * to try to resolve this as link instead.
+   * @param linkRequest Original link request
+   * @return Fallback link request or null
+   */
+  private @Nullable LinkRequest getFallbackLinkRequest(@NotNull LinkRequest linkRequest) {
+    Resource resource = linkRequest.getResource();
+
+    // works only when resolution based on a resource
+    if (resource == null) {
+      return null;
+    }
+
+    // check if a fallback property name was given
+    String[] linkTargetUrlFallbackProperty = linkRequest.getLinkArgs().getLinkTargetUrlFallbackProperty();
+    if (linkTargetUrlFallbackProperty == null || linkTargetUrlFallbackProperty.length == 0) {
+      return null;
+    }
+
+    // check if a link target URL is set in the fallback property
+    String linkTargetUrl = null;
+    for (String propertyName : linkTargetUrlFallbackProperty) {
+      linkTargetUrl = resource.getValueMap().get(propertyName, String.class);
+      if (StringUtils.isNotBlank(linkTargetUrl)) {
+        break;
+      }
+    }
+    if (StringUtils.isBlank(linkTargetUrl)) {
+      return null;
+    }
+
+    LinkArgs fallbackLinkArgs = linkRequest.getLinkArgs().clone();
+    @NotNull
+    String @Nullable [] nullArray = null;
+    fallbackLinkArgs.linkTargetUrlFallbackProperty(nullArray);
+    return new LinkRequest(null, null, linkTargetUrl, fallbackLinkArgs);
   }
 
 }

@@ -35,8 +35,8 @@
 <%@include file="../../global/global.jsp" %>
 <%@include file="../../global/linkRootPathDetection.jsp" %><%--###
 
-wcm.io URL Handler Site Root PathField
-======================================
+wcm.io Media Handler PathField for selecting a download link reference
+======================================================================
 
 A field that allows the user to enter path.
 
@@ -62,7 +62,7 @@ are overwritten or added.
    * List of media formats for assets that can be linked upon.
    * If not set the property value is set to the list of all media formats with "download" flag.
    */
-  - mediaFormats (String[]) = {download media format names}
+  - mediaFormats (StringEL[]) = {download media format names}
 
 
 ###--%><%
@@ -91,7 +91,9 @@ String[] mediaFormats = cfg.get("mediaFormats", mediaFormatNames.toArray(new Str
 ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of(
     "name", name,
     "rootPath", rootPath,
-    "mediaFormats", mediaFormats));
+    "mediaFormats", mediaFormats,
+    "mediaFormatsMandatory", new String[0],
+    "mediaCropAuto", false));
 
 // simulate resource for dialog field def with new rootPath instead of configured one
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);

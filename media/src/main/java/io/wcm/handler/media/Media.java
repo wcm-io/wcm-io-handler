@@ -20,14 +20,19 @@
 package io.wcm.handler.media;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jdom2.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
+import io.wcm.handler.commons.dom.Span;
+import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
@@ -45,7 +50,9 @@ public final class Media {
   private Collection<Rendition> renditions;
   private CropDimension cropDimension;
   private Integer rotation;
+  private List<ImageMapArea> map;
   private MediaInvalidReason mediaInvalidReason;
+  private String markup;
 
   /**
    * @param mediaSource Media source
@@ -88,10 +95,20 @@ public final class Media {
    * @return Media HTML element serialized to string. Returns null if media element is null.
    */
   public String getMarkup() {
-    if (this.element == null) {
-      return null;
+    if (markup == null && this.element != null) {
+      if (this.element instanceof Span) {
+        // in case of span get inner HTML markup, do not include span element itself
+        StringBuilder result = new StringBuilder();
+        for (Element child : this.element.getChildren()) {
+          result.append(child.toString());
+        }
+        markup = result.toString();
+      }
+      else {
+        markup = this.element.toString();
+      }
     }
-    return this.element.toString();
+    return markup;
   }
 
   /**
@@ -99,6 +116,7 @@ public final class Media {
    */
   public void setElement(HtmlElement<?> value) {
     this.element = value;
+    this.markup = null;
   }
 
   /**
@@ -166,29 +184,43 @@ public final class Media {
   /**
    * @return Crop dimensions (optional)
    */
-  public CropDimension getCropDimension() {
+  public @Nullable CropDimension getCropDimension() {
     return this.cropDimension;
   }
 
   /**
    * @param cropDimension Crop dimensions (optional)
    */
-  public void setCropDimension(CropDimension cropDimension) {
+  public void setCropDimension(@Nullable CropDimension cropDimension) {
     this.cropDimension = cropDimension;
   }
 
   /**
    * @return Image rotation (optional)
    */
-  public Integer getRotation() {
+  public @Nullable Integer getRotation() {
     return this.rotation;
   }
 
   /**
    * @param rotation Image Rotation (optional)
    */
-  public void setRotation(Integer rotation) {
+  public void setRotation(@Nullable Integer rotation) {
     this.rotation = rotation;
+  }
+
+  /**
+   * @return Image map (optional)
+   */
+  public @Nullable List<ImageMapArea> getMap() {
+    return this.map;
+  }
+
+  /**
+   * @param map Image map (optional)
+   */
+  public void setMap(@Nullable List<ImageMapArea> map) {
+    this.map = map;
   }
 
   /**

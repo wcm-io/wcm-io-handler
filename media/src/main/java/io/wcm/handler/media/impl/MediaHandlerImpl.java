@@ -216,8 +216,11 @@ public final class MediaHandlerImpl implements MediaHandler {
 
   /**
    * If a set of media formats is given it is filtered to contain only download media formats.
-   * If no is given a new set of allowed media formats is created by getting from all media formats those marked as "download".
-   * If the result is an empty set of media formats (but downloads are requests) resolution is not successful.
+   * If no is given a new set of allowed media formats is created by getting from all media formats those marked as
+   * "download".
+   * If the result is an empty set of media formats (but downloads are requested) resolution is not successful.
+   * If the result is an empty set because no media format requests and no download format at all defined, it is
+   * successful.
    * @param mediaArgs Media args
    * @return true if resolving was successful
    */
@@ -227,11 +230,13 @@ public final class MediaHandlerImpl implements MediaHandler {
       return true;
     }
     List<MediaFormat> candidates = new ArrayList<>();
+    boolean fallbackToAllMediaFormats = false;
     if (mediaArgs.getMediaFormats() != null) {
       candidates.addAll(ImmutableList.copyOf(mediaArgs.getMediaFormats()));
     }
     else {
       candidates.addAll(mediaFormatHandler.getMediaFormats());
+      fallbackToAllMediaFormats = true;
     }
     MediaFormat[] result = candidates.stream()
         .filter(MediaFormat::isDownload)
@@ -241,8 +246,24 @@ public final class MediaHandlerImpl implements MediaHandler {
       return true;
     }
     else {
-      return false;
+      // not successful when an explicit list of media formats was given, and this did not contain any download format
+      // successful when no media format was given, and the global list of all formats does not contain any download format
+      return fallbackToAllMediaFormats;
     }
+  }
+
+  @Override
+  @SuppressWarnings("null")
+  public Media invalid() {
+    // build invalid media with first media source
+    Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().stream().findFirst().orElse(null);
+    if (mediaSourceClass == null) {
+      throw new RuntimeException("No media sources defined.");
+    }
+    MediaSource mediaSource = AdaptTo.notNull(adaptable, mediaSourceClass);
+    Media media = new Media(mediaSource, new MediaRequest((String)null, null));
+    media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_MISSING);
+    return media;
   }
 
 }

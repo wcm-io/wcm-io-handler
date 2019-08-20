@@ -26,8 +26,8 @@
  * @param isEmpty Set to true if placeholder should be displayed
  * @param media Reference to io.wcm.handler.media.Media object returned by media handler
  */-->
-<sly data-sly-template.placeholder="${@ isEmpty, media}"
-    data-sly-use.mediaPlaceholder="${'io.wcm.handler.media.ui.MediaPlaceholder' @ media=media}">
+<sly data-sly-template.placeholder="${@ isEmpty, classAppend, media}"
+    data-sly-use.mediaPlaceholder="${'io.wcm.handler.media.ui.MediaPlaceholder' @ media=media, classAppend=classAppend}">
   <div data-sly-test="${(wcmmode.edit || wcmmode.preview) && isEmpty}"
        class="cq-placeholder ${mediaPlaceholder.classAppend}"
        data-emptytext="${component.properties.jcr:title}

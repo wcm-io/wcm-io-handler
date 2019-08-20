@@ -42,6 +42,7 @@ These are the most common properties:
 | `mediaRef`                        | `fileReference`                   | Reference/path to the media asset
 | `mediaCrop`                       | `imageCrop`                       | Cropping parameters for image
 | `mediaRotation`                   | `imageRotation`                   | Rotation parameter for image
+| `mediaMap`                        | `imageMap`                        | Image map string
 | `mediaAltText`                    | `alt`                             | Alternative text for media
 | `mediaInline`                     | `file`                            | Node name for binary file uploaded to a page
 
@@ -242,8 +243,8 @@ Alternatively you can generate a picture element with sources if you need differ
 ```java
 Media media = mediaHandler.get(resource)
     .mediaFormat(MF_16_9)
-    .pictureSource(MF_16_9, "(min-width: 1024px)", 1600, 1200, 800)
-    .pictureSource(MF_4_3, 800, 400)
+    .pictureSource(new PictureSource(MF_16_9).media("(min-width: 1024px)").widths(1600, 1200, 800))
+    .pictureSource(new PictureSource(MF_4_3).widths(800, 400))
     .build();
 ```
 

@@ -27,6 +27,7 @@
     self._pathfield = config.pathfield;
     self._$pathfield = $(config.pathfield);
     self._bindEvents();
+    self._addClearTransformationButton();
 
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
@@ -46,6 +47,9 @@
     self._$element.find("[coral-fileupload-clear]").on("click", function (e) {
       self._$pathfield.val("");
       self._validate.validateMediaFormat(null);
+      if (self._clearTransformationButton) {
+        self._clearTransformationButton.remove();
+      }
     });
 
     self._$element.on("assetselected", function (event) {
@@ -80,23 +84,32 @@
   /**
    * Trigger 'assetselected' event on the fileupload widget.
    */
-  FileUploadExtension.prototype._triggerAssetSelected = function (assetPath)  {
+  FileUploadExtension.prototype._triggerAssetSelected = function (assetPath) {
     var self = this;
-    var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
+    var mimeType = self._detectMimeType(assetPath);
+    var thumbnailObject;
+    if (mimeType) {
+      var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
+      thumbnailObject = $("<img src='" + thumbnailUrl + "'>");
+    }
     self._$element.trigger($.Event("assetselected", {
       path: assetPath,
       group: "media",
-      mimetype: self._detectMimeType(assetPath),
+      mimetype: mimeType,
       param: {},
-      thumbnail: $("<img src='" + thumbnailUrl + "'>")
+      thumbnail: thumbnailObject
     }));
   };
 
   /**
    * Detect mime type from the file extension.
    */
-  FileUploadExtension.prototype._detectMimeType = function (assetPath)  {
+  FileUploadExtension.prototype._detectMimeType = function (assetPath) {
     var fileExtension = assetPath.substring(assetPath.lastIndexOf('.')+1, assetPath.length);
+    if (!fileExtension) {
+      return null;      
+    }
+    fileExtension = fileExtension.toLowerCase();
     if (fileExtension == "jpg" || fileExtension == "jpeg") {
       return "image/jpeg";
     }
@@ -106,7 +119,41 @@
     if (fileExtension == "gif") {
       return "image/gif";
     }
+    if (fileExtension == "tif" || fileExtension == "tiff") {
+      return "image/tiff";
+    }
+    if (fileExtension == "svg") {
+      return "image/svg+xml";
+    }
     return null;
+  };
+
+  /**
+   * Adds "Clear Transformation" button after the "Clear" button to clear only the transformations.
+   */
+  FileUploadExtension.prototype._addClearTransformationButton = function () {
+    var self = this;
+
+    // check if current resource has transformations defined
+    var hasTransformation = self._$pathfield.data("wcmio-media-hastransformation");
+    if (!hasTransformation) {
+      return;
+    }
+    
+    self._clearTransformationButton = new Coral.Button();
+    self._clearTransformationButton.set({
+        label : {innerHTML: Granite.I18n.get("Clear Transformation")},
+        variant: "quiet"
+    });
+
+    // insert new button after the existing "Clear" button
+    self._clearTransformationButton.on("click", function() {
+      self._$element.find("[value].cq-ImageEditor-param").prop("disabled", false);
+      self._clearTransformationButton.remove();
+      return false;
+    });
+
+    self._$element.find("[coral-fileupload-clear]").after(self._clearTransformationButton);
   };
 
   /**
@@ -114,12 +161,17 @@
    */
   channel.on("foundation-contentloaded", function (event) {
     $(event.target).find("coral-fileupload.cq-FileUpload").each(function() {
-      var pathfield = $(this).closest(".coral-Form-fieldwrapper")
+      var pathfield = $(this)
           .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
       if (!pathfield) {
-        // fallback for AEM 6.3 where the pathfield component is wrapped in an additionaly div
+        // fallback when fileupload has a field label and is thus wrapped in a fieldwrapper
         pathfield = $(this).closest(".coral-Form-fieldwrapper")
-          .next(".pathfield").find("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
+            .next("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
+      }
+      if (!pathfield) {
+        // fallback for AEM 6.3 where the pathfield component is wrapped in an additional div
+        pathfield = $(this).closest(".coral-Form-fieldwrapper")
+            .next(".pathfield").find("foundation-autocomplete.cq-FileUpload.wcm-io-handler-media-fileupload-pathfield").get(0);
       }
       if (pathfield) {
         Coral.commons.ready(this, function (fileUpload) {

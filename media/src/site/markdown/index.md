@@ -12,6 +12,7 @@ Media resolving, processing and markup generation.
 * [Granite UI components][graniteui-components]
 * [Component properties][component-properties]
 * [System configuration][configuration]
+* [File format support][file-format-support]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -27,6 +28,7 @@ The Media Handler provides:
 * Rendering virtual renditions to match the expected output format
 * Supports manual and automatic cropping and rotation of images
 * Support for responsive images by rendering multiple renditions at once for each breakpoint
+* Define media handling via Java API, content policies or component properties
 * Pluggable media pre- and postprocessing to further tailoring the media handling process
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic HTL Placeholder template
@@ -62,6 +64,7 @@ To use this module you have to deploy also:
 [graniteui-components]: graniteui-components.html
 [component-properties]: component-properties.html
 [configuration]: configuration.html
+[file-format-support]: file-format-support.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [url-handler]: ../url/

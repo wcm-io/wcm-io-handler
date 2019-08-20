@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2019 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,27 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media.format.impl;
-
-import java.util.SortedSet;
+package io.wcm.handler.media.spi;
 
 import org.apache.sling.api.resource.Resource;
-
-import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.media.spi.MediaFormatProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.osgi.annotation.versioning.ConsumerType;
 
 /**
- * Collects all media format definitions provided by applications via {@link MediaFormatProvider} interface.
+ * Resolves link URLs found in Image Map definitions.
+ * To be implemented by an OSGi services provided by wcm.io Link Handler.
  */
-public interface MediaFormatProviderManager {
+@ConsumerType
+public interface ImageMapLinkResolver {
 
   /**
-   * Get all media format definitions for application.
-   * @param contextResource Context resource to get media formats for
-   * @return Media format definitions
+   * Resolver link URL.
+   * @param linkUrl Link URL.
+   * @param context Context resource where the image map is defined.
+   * @return Resolved link URL or null.
    */
-  SortedSet<MediaFormat> getMediaFormats(Resource contextResource);
+  @Nullable
+  String resolve(@NotNull String linkUrl, @NotNull Resource context);
 
 }

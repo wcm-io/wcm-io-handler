@@ -58,6 +58,7 @@ class ImageTest {
     img.setVSpace(4);
     img.setSrcSet("srcset1");
     img.setSizes("sizes1");
+    img.setUseMap("#map123");
 
     assertEquals("img", img.getName());
     assertEquals("src1", img.getSrc());
@@ -69,6 +70,7 @@ class ImageTest {
     assertEquals(4, img.getVSpace());
     assertEquals("srcset1", img.getSrcSet());
     assertEquals("sizes1", img.getSizes());
+    assertEquals("#map123", img.getUseMap());
 
   }
 

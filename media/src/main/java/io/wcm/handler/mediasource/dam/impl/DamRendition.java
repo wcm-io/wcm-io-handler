@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
@@ -32,12 +33,12 @@ import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.caching.ModificationDate;
-import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * {@link Rendition} implementation for DAM asset renditions.
@@ -69,7 +70,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
     // if auto-cropping is enabled, and no cropping or rotation parameters set, try to build a
     // transformed rendition with automatically devised cropping parameters
     if (resolvedRendition == null && mediaArgs.isAutoCrop() && !(renditionHandler instanceof TransformedRenditionHandler)) {
-      AutoCropping autoCropping = new AutoCropping(asset, mediaArgs);
+      DamAutoCropping autoCropping = new DamAutoCropping(asset, mediaArgs);
       List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
       for (CropDimension autoCropDimension : autoCropDimensions) {
         renditionHandler = new TransformedRenditionHandler(asset, autoCropDimension, null);
@@ -111,7 +112,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
   @Override
   public String getFileName() {
     if (this.rendition != null) {
-      return this.rendition.getFileName();
+      return this.rendition.getFileName(this.mediaArgs.isContentDispositionAttachment());
     }
     else {
       return null;
@@ -120,12 +121,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public String getFileExtension() {
-    if (this.rendition != null) {
-      return this.rendition.getFileExtension();
-    }
-    else {
-      return null;
-    }
+    return FilenameUtils.getExtension(getFileName());
   }
 
   @Override
@@ -181,12 +177,23 @@ class DamRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public boolean isImage() {
-    return FileExtension.isImage(getFileExtension());
+    return MediaFileType.isImage(getFileExtension());
   }
 
   @Override
+  public boolean isBrowserImage() {
+    return MediaFileType.isBrowserImage(getFileExtension());
+  }
+
+  @Override
+  public boolean isVectorImage() {
+    return MediaFileType.isVectorImage(getFileExtension());
+  }
+
+  @Override
+  @SuppressWarnings("deprecation")
   public boolean isFlash() {
-    return FileExtension.isFlash(getFileExtension());
+    return MediaFileType.isFlash(getFileExtension());
   }
 
   @Override

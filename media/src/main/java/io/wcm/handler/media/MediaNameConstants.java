@@ -84,6 +84,16 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_ROTATION_STANDARD = "imageRotate";
 
   /**
+   * Default property name for map parameter (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String PN_MEDIA_MAP = "mediaMap";
+
+  /**
+   * Default property name for map parameter (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_MAP_STANDARD = "imageMap";
+
+  /**
    * Default property name for media alt. text (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String PN_MEDIA_ALTTEXT = "mediaAltText";
@@ -143,18 +153,66 @@ public final class MediaNameConstants {
   public static final @NotNull String PROP_CSS_CLASS = "cssClass";
 
   /**
-   * Enable "auto-cropping" mode for this component by setting to true. Property is to be set on component or in policy.
+   * Enable "auto-cropping" mode for this component by setting to true.
+   * <p>
+   * Property is to be set on component or in policy.
+   * </p>
    */
   public static final @NotNull String PN_COMPONENT_MEDIA_AUTOCROP = "wcmio:mediaCropAuto";
 
   /**
-   * List of media formats accepted by this component. Property is to be set on component or in policy.
+   * List of media format names accepted by this component.
+   * <p>
+   * Property is to be set on component or in policy.
+   * </p>
    */
   public static final @NotNull String PN_COMPONENT_MEDIA_FORMATS = "wcmio:mediaFormats";
 
   /**
-   * Resolving of all media formats is mandatory. Property is to be set on component or in policy.
+   * Resolving of all media formats is mandatory. This can be a single boolean, or a boolean array
+   * where each entry matches with the media format name defined in {@link #PN_COMPONENT_MEDIA_FORMATS}.
+   * <p>
+   * Property is to be set on component or in policy.
+   * </p>
    */
   public static final @NotNull String PN_COMPONENT_MEDIA_FORMATS_MANDATORY = "wcmio:mediaFormatsMandatory";
+
+  /**
+   * List of media format names that are mandatory. The list of names is merged with the list
+   * of names defined in {@link #PN_COMPONENT_MEDIA_FORMATS}, but all formats defined in
+   * this property ad defined as mandatory.
+   * <p>
+   * Property is to be set on component or in policy.
+   * </p>
+   */
+  public static final @NotNull String PN_COMPONENT_MEDIA_FORMATS_MANDATORY_NAMES = "wcmio:mediaFormatsMandatoryNames";
+
+  /**
+   * If multiple responsive image settings are defined, this property defines which gets active.
+   * Possible values: <code>none</code>, <code>imageSizes</code>, <code>pictureSources</code>
+   * <p>
+   * Property is to be set on component or in policy.
+   * </p>
+   */
+  public static final @NotNull String PN_COMPONENT_MEDIA_RESPONSIVE_TYPE = "wcmio:mediaResponsiveType";
+
+  /**
+   * Defines "image sizes" responsive image setting.
+   * Contains properties <code>sizes</code>, <code>widths</code>.
+   * <p>
+   * Child node is to be defined on component or in policy.
+   * </p>
+   */
+  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES = "wcmio:mediaRepsonsiveImageSizes";
+
+  /**
+   * Defines "picture sources" responsive image setting.
+   * Contains child nodes for each source definition with properties <code>mediaFormat</code>, <code>media</code>,
+   * <code>widths</code>.
+   * <p>
+   * Child node is to be defined on component or in policy.
+   * </p>
+   */
+  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES = "wcmio:mediaRepsonsivePictureSources";
 
 }

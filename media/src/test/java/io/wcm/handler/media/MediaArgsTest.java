@@ -164,8 +164,8 @@ class MediaArgsTest {
 
     ImageSizes imageSizes = new ImageSizes("sizes1", new long[] { 1, 2, 3 });
     PictureSource[] pictureSourceSets = new PictureSource[] {
-        new PictureSource(EDITORIAL_1COL, "media1", new long[] { 1,2,3}),
-        new PictureSource(EDITORIAL_2COL, null, new long[] { 4})
+        new PictureSource(EDITORIAL_1COL).media("media1").widths(1,2,3),
+        new PictureSource(EDITORIAL_2COL).widths(4)
     };
 
     MediaArgs mediaArgs = new MediaArgs();

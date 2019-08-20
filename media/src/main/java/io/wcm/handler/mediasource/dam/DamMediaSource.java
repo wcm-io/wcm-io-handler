@@ -20,12 +20,10 @@
 package io.wcm.handler.mediasource.dam;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,8 +55,12 @@ import io.wcm.handler.commons.editcontext.DropTargetImpl;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.impl.ipeconfig.CroppingRatios;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -87,6 +89,8 @@ public final class DamMediaSource extends MediaSource {
   private ComponentContext componentContext;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
+  @Self
+  private MediaFormatHandler mediaFormatHandler;
 
   private static final Logger log = LoggerFactory.getLogger(DamMediaSource.class);
 
@@ -126,9 +130,10 @@ public final class DamMediaSource extends MediaSource {
         mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
       }
 
-      // Check for crop dimensions
+      // Check for transformations
       media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
       media.setRotation(getMediaRotation(media.getMediaRequest(), mediaHandlerConfig));
+      media.setMap(getMediaMap(media.getMediaRequest(), mediaHandlerConfig));
 
       // get DAM Asset to check for available renditions
       com.day.cq.dam.api.Asset damAsset = null;
@@ -180,6 +185,7 @@ public final class DamMediaSource extends MediaSource {
       String refProperty = prependDotSlash(getMediaRefProperty(mediaRequest, mediaHandlerConfig));
       String cropProperty = prependDotSlash(getMediaCropProperty(mediaRequest, mediaHandlerConfig));
       String rotationProperty = prependDotSlash(getMediaRotationProperty(mediaRequest, mediaHandlerConfig));
+      String mapProperty = prependDotSlash(getMediaMapProperty(mediaRequest, mediaHandlerConfig));
 
       String name = refProperty;
       if (StringUtils.contains(name, "/")) {
@@ -190,7 +196,12 @@ public final class DamMediaSource extends MediaSource {
       Optional<String> dropTargetCssClass = getMediaDropTargetID();
       if (!dropTargetCssClass.isPresent()) {
         // otherwise add a new drop target and get it's id
-        dropTargetCssClass = addMediaDroptarget(refProperty, cropProperty, rotationProperty, name);
+        MediaPropertyNames mediaPropertyNames = new MediaPropertyNames()
+            .refProperty(refProperty)
+            .cropProperty(cropProperty)
+            .rotationProperty(rotationProperty)
+            .mapProperty(mapProperty);
+        dropTargetCssClass = addMediaDroptarget(refProperty, mediaPropertyNames, name);
       }
 
       if (element != null) {
@@ -206,12 +217,10 @@ public final class DamMediaSource extends MediaSource {
     }
 
     if (componentContext != null
-        && MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext)
-        && mediaRequest.getMediaArgs().getMediaFormats() != null) {
+        && MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext)) {
       // overlay IPE config with cropping ratios for each media format with a valid ratio
-      Set<String> mediaFormatNames = Arrays.stream(mediaRequest.getMediaArgs().getMediaFormats())
-          .map(mediaFormat -> mediaFormat.getName())
-          .collect(Collectors.toSet());
+      CroppingRatios croppingRatios = new CroppingRatios(mediaFormatHandler);
+      Set<String> mediaFormatNames = croppingRatios.getMediaFormatsForCropping(mediaRequest);
       if (!mediaFormatNames.isEmpty()) {
         // build custom IPE config path containing both the resource context path and the
         // configured media formats. The path is served by a custom resource provider, because
@@ -250,7 +259,7 @@ public final class DamMediaSource extends MediaSource {
         .findFirst();
   }
 
-  private Optional<String> addMediaDroptarget(String refProperty, String cropProperty, String rotationProperty, String name) {
+  private Optional<String> addMediaDroptarget(String refProperty, MediaPropertyNames mediaPropertyNames, String name) {
     Component componentDefinition = WCMUtils.getComponent(resource);
 
     // set drop target - with path of current component as default resource type
@@ -259,13 +268,14 @@ public final class DamMediaSource extends MediaSource {
       params.put("./" + ResourceResolver.PROPERTY_RESOURCE_TYPE, componentDefinition.getPath());
 
       // clear cropping parameters if a new image is inserted via drag&drop
-      params.put(cropProperty, "");
-      params.put(rotationProperty, "");
+      params.put(mediaPropertyNames.getCropProperty(), "");
+      params.put(mediaPropertyNames.getRotationProperty(), "");
+      params.put(mediaPropertyNames.getMapProperty(), "");
     }
 
-    DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(new String[] {
-        "image/.*" // allow all image mime types
-    }).setGroups(new String[] {
+    DropTarget dropTarget = new DropTargetImpl(name, refProperty).setAccept(
+        MediaFileType.getImageContentTypes().stream().toArray(size -> new String[size]) // allow all image mime types
+    ).setGroups(new String[] {
         "media" // allow drop from DAM contentfinder tab
     }).setParameters(params);
 

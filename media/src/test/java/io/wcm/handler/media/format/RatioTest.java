@@ -19,11 +19,13 @@
  */
 package io.wcm.handler.media.format;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 
 class RatioTest {
@@ -41,6 +43,20 @@ class RatioTest {
     assertFalse(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.RATIO2));
     assertFalse(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.DOWNLOAD));
     assertFalse(Ratio.matches(DummyMediaFormats.DOWNLOAD, DummyMediaFormats.DOWNLOAD));
+  }
+
+  @Test
+  void testGet() {
+    assertEquals(2, Ratio.get(100, 50), 0.001d);
+    assertEquals(0, Ratio.get(0, 50), 0.001d);
+    assertEquals(0, Ratio.get(100, 0), 0.001d);
+  }
+
+  @Test
+  void testGet_Dimension() {
+    assertEquals(2, Ratio.get(new Dimension(100, 50)), 0.001d);
+    assertEquals(0, Ratio.get(new Dimension(0, 50)), 0.001d);
+    assertEquals(0, Ratio.get(new Dimension(100, 0)), 0.001d);
   }
 
 }

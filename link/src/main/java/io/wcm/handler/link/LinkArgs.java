@@ -22,12 +22,14 @@ package io.wcm.handler.link;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.url.UrlMode;
@@ -48,11 +50,12 @@ public final class LinkArgs implements Cloneable {
   private String queryString;
   private String fragment;
   private ValueMap properties;
+  private String[] linkTargetUrlFallbackProperty;
 
   /**
    * @return URL mode for externalizing the URL
    */
-  public UrlMode getUrlMode() {
+  public @Nullable UrlMode getUrlMode() {
     return this.urlMode;
   }
 
@@ -60,7 +63,7 @@ public final class LinkArgs implements Cloneable {
    * @param value URL mode for externalizing the URL
    * @return this
    */
-  public LinkArgs urlMode(UrlMode value) {
+  public @NotNull LinkArgs urlMode(@Nullable UrlMode value) {
     this.urlMode = value;
     return this;
   }
@@ -84,7 +87,7 @@ public final class LinkArgs implements Cloneable {
   /**
    * @return Custom dummy link url. If null default dummy url is used.
    */
-  public String getDummyLinkUrl() {
+  public @Nullable String getDummyLinkUrl() {
     return this.dummyLinkUrl;
   }
 
@@ -92,7 +95,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Custom dummy link url. If null default dummy url is used.
    * @return this
    */
-  public @NotNull LinkArgs dummyLinkUrl(String value) {
+  public @NotNull LinkArgs dummyLinkUrl(@Nullable String value) {
     this.dummyLinkUrl = value;
     return this;
   }
@@ -100,7 +103,7 @@ public final class LinkArgs implements Cloneable {
   /**
    * @return Selector string
    */
-  public String getSelectors() {
+  public @Nullable String getSelectors() {
     return this.selectors;
   }
 
@@ -108,7 +111,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Selector string
    * @return this
    */
-  public @NotNull LinkArgs selectors(String value) {
+  public @NotNull LinkArgs selectors(@Nullable String value) {
     this.selectors = value;
     return this;
   }
@@ -116,7 +119,7 @@ public final class LinkArgs implements Cloneable {
   /**
    * @return File extension
    */
-  public String getExtension() {
+  public @Nullable String getExtension() {
     return this.extension;
   }
 
@@ -124,7 +127,7 @@ public final class LinkArgs implements Cloneable {
    * @param value File extension
    * @return this
    */
-  public @NotNull LinkArgs extension(String value) {
+  public @NotNull LinkArgs extension(@Nullable String value) {
     this.extension = value;
     return this;
   }
@@ -132,7 +135,7 @@ public final class LinkArgs implements Cloneable {
   /**
    * @return Suffix string
    */
-  public String getSuffix() {
+  public @Nullable String getSuffix() {
     return this.suffix;
   }
 
@@ -140,7 +143,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Suffix string
    * @return this
    */
-  public @NotNull LinkArgs suffix(String value) {
+  public @NotNull LinkArgs suffix(@Nullable String value) {
     this.suffix = value;
     return this;
   }
@@ -148,7 +151,7 @@ public final class LinkArgs implements Cloneable {
   /**
    * @return Query parameters string (properly url-encoded)
    */
-  public String getQueryString() {
+  public @Nullable String getQueryString() {
     return this.queryString;
   }
 
@@ -156,7 +159,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Query parameters string (properly url-encoded)
    * @return this
    */
-  public @NotNull LinkArgs queryString(String value) {
+  public @NotNull LinkArgs queryString(@Nullable String value) {
     this.queryString = value;
     return this;
   }
@@ -164,7 +167,7 @@ public final class LinkArgs implements Cloneable {
   /**
    * @return Fragment identifier
    */
-  public String getFragment() {
+  public @Nullable String getFragment() {
     return this.fragment;
   }
 
@@ -172,7 +175,7 @@ public final class LinkArgs implements Cloneable {
    * @param value Fragment identifier
    * @return this
    */
-  public @NotNull LinkArgs fragment(String value) {
+  public @NotNull LinkArgs fragment(@Nullable String value) {
     this.fragment = value;
     return this;
   }
@@ -182,7 +185,8 @@ public final class LinkArgs implements Cloneable {
    * @param map Property map. Is merged with properties already set.
    * @return this
    */
-  public @NotNull LinkArgs properties(Map<String, Object> map) {
+  @SuppressWarnings({ "null", "unused" })
+  public @NotNull LinkArgs properties(@NotNull Map<String, Object> map) {
     if (map == null) {
       throw new IllegalArgumentException("Map argument must not be null.");
     }
@@ -196,7 +200,8 @@ public final class LinkArgs implements Cloneable {
    * @param value Property value
    * @return this
    */
-  public @NotNull LinkArgs property(String key, Object value) {
+  @SuppressWarnings({ "null", "unused" })
+  public @NotNull LinkArgs property(@NotNull String key, @Nullable Object value) {
     if (key == null) {
       throw new IllegalArgumentException("Key argument must not be null.");
     }
@@ -208,12 +213,34 @@ public final class LinkArgs implements Cloneable {
    * Custom properties that my be used by application-specific markup builders or processors.
    * @return Value map
    */
-  public ValueMap getProperties() {
+  public @NotNull ValueMap getProperties() {
     if (this.properties == null) {
       this.properties = new ValueMapDecorator(new HashMap<String, Object>());
     }
     return this.properties;
   }
+
+
+  /**
+   * Defines a "fallback" property name that is used to load link target information from a single property
+   * instead of the link type + link type depending property name. This property is used for migration
+   * from components that do not support Link Handler. It is only used for reading, and never written back to.
+   * When opened and saved in the link dialog, the property is removed and instead the dedicated properties are used.
+   * @param propertyNames Property name(s)
+   * @return this
+   */
+  public @NotNull LinkArgs linkTargetUrlFallbackProperty(@NotNull String @Nullable... propertyNames) {
+    this.linkTargetUrlFallbackProperty = propertyNames;
+    return this;
+  }
+
+  /**
+   * @return Property name(s)
+   */
+  public @Nullable String[] getLinkTargetUrlFallbackProperty() {
+    return this.linkTargetUrlFallbackProperty;
+  }
+
 
   @Override
   public int hashCode() {
@@ -248,6 +275,7 @@ public final class LinkArgs implements Cloneable {
     clone.suffix = this.suffix;
     clone.queryString = this.queryString;
     clone.fragment = this.fragment;
+    clone.linkTargetUrlFallbackProperty = ArrayUtils.clone(this.linkTargetUrlFallbackProperty);
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
     }

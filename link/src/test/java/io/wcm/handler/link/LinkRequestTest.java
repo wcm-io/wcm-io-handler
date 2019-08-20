@@ -28,7 +28,7 @@ import io.wcm.handler.url.UrlModes;
 class LinkRequestTest {
 
   @Test
-  void testToString() throws Exception {
+  void testToString() {
     LinkRequest request = new LinkRequest(null, null, new LinkArgs().urlMode(UrlModes.DEFAULT));
     assertEquals("LinkRequest[linkArgs=LinkArgs[urlMode=DEFAULT,dummyLink=false]]", request.toString());
   }

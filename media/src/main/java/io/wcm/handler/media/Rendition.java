@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.wcm.commons.caching.ModificationDateProvider;
 
 /**
@@ -87,9 +88,19 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   ValueMap getProperties();
 
   /**
-   * @return true if the rendition is a web image file format that can be displayed and resized.
+   * @return true if the rendition is an image format supported by the media handler.
    */
   boolean isImage();
+
+  /**
+   * @return true if the rendition is a web image file that can be displayed in a browser.
+   */
+  boolean isBrowserImage();
+
+  /**
+   * @return true if the rendition is a vector image that can be displayed in a browser.
+   */
+  boolean isVectorImage();
 
   /**
    * @return true if the rendition has a flash movie.
@@ -123,7 +134,7 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
     long width = getWidth();
     long height = getHeight();
     if (width > 0 && height > 0) {
-      return (double)width / (double)height;
+      return Ratio.get(width, height);
     }
     return 0d;
   }

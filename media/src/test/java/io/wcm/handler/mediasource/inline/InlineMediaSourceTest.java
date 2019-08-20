@@ -19,6 +19,11 @@
  */
 package io.wcm.handler.mediasource.inline;
 
+import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
+import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ALTTEXT;
+import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_CROP;
+import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ROTATION;
+import static io.wcm.handler.media.MediaNameConstants.PROP_BREAKPOINT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
@@ -52,18 +57,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
+import com.day.image.Layer;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.spi.ImageMapLinkResolver;
+import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -114,34 +124,34 @@ class InlineMediaSourceTest {
     // prepare inline media object: node with mediaInline subnode (only nt:resource) and with filename
     Resource unstructuredNodeMediaInline = context.resourceResolver().create(contentNode, "resourceMediaInline",
         ImmutableValueMap.builder()
-        .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "mediainlinedata.bin")
-        .put(MediaNameConstants.PN_MEDIA_ALTTEXT, "Inline Media Alt. Text")
+            .put(NN_MEDIA_INLINE + "Name", "mediainlinedata.bin")
+            .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text")
         .build());
-    context.load().binaryResource(new ByteArrayInputStream(DUMMY_BINARY), unstructuredNodeMediaInline, MediaNameConstants.NN_MEDIA_INLINE);
+    context.load().binaryResource(new ByteArrayInputStream(DUMMY_BINARY), unstructuredNodeMediaInline, NN_MEDIA_INLINE);
 
     // prepare inline media object: node with mediaInline subnode (nt:file and nt:resource) and with filename
     Resource unstructuredNodeMediaInlineWithFile = context.resourceResolver().create(contentNode, "resourceMediaInlineWithFile",
         ImmutableValueMap.builder()
-        .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "mediainlinedata2.bin")
-        .put(MediaNameConstants.PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 2")
+            .put(NN_MEDIA_INLINE + "Name", "mediainlinedata2.bin")
+            .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 2")
         .build());
-    context.load().binaryFile(new ByteArrayInputStream(DUMMY_BINARY), unstructuredNodeMediaInlineWithFile, MediaNameConstants.NN_MEDIA_INLINE);
+    context.load().binaryFile(new ByteArrayInputStream(DUMMY_BINARY), unstructuredNodeMediaInlineWithFile, NN_MEDIA_INLINE);
 
     // prepare inline media object with real image binary data to test scaling
     Resource unstructuredNodeMediaInlineSampleImage = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage",
         ImmutableValueMap.builder()
-        .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "sample_image_215x102.jpg")
+            .put(NN_MEDIA_INLINE + "Name", "sample_image_215x102.jpg")
         .build());
     context.load().binaryResource("/sample_image_215x102.jpg",
-        unstructuredNodeMediaInlineSampleImage.getPath() + "/" + MediaNameConstants.NN_MEDIA_INLINE, ContentType.JPEG);
+        unstructuredNodeMediaInlineSampleImage.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
 
     // prepare inline media object with real image binary data to test scaling in 16:10 format
     Resource unstructuredNodeMediaInlineSampleImage_16_10 = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage16_10",
         ImmutableValueMap.builder()
-        .put(MediaNameConstants.NN_MEDIA_INLINE + "Name", "sample_image_400x250.jpg")
+            .put(NN_MEDIA_INLINE + "Name", "sample_image_400x250.jpg")
         .build());
     context.load().binaryResource("/sample_image_400x250.jpg",
-        unstructuredNodeMediaInlineSampleImage_16_10.getPath() + "/" + MediaNameConstants.NN_MEDIA_INLINE, ContentType.JPEG);
+        unstructuredNodeMediaInlineSampleImage_16_10.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
 
     // prepare invalid resource
     Resource emptyNode = context.resourceResolver().create(contentNode, "emptyNode", ValueMap.EMPTY);
@@ -315,6 +325,10 @@ class InlineMediaSourceTest {
     assertNotNull(media.getAsset().getImageRendition(new MediaArgs()));
     assertNull(media.getAsset().getFlashRendition(new MediaArgs()));
     assertNull(media.getAsset().getDownloadRendition(new MediaArgs()));
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(215, layer.getWidth());
+    assertEquals(102, layer.getHeight());
   }
 
   @Test
@@ -404,6 +418,10 @@ class InlineMediaSourceTest {
     assertEquals(108, rendition.getWidth(), "width");
     assertEquals(51, rendition.getHeight(), "height");
     assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".108.51.file/sample_image_215x102.jpg", rendition.getUrl(), "url");
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(108, layer.getWidth());
+    assertEquals(51, layer.getHeight());
 
     rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(42, 20)).refProperty("mediaInline").build().getRendition();
     assertEquals(42, rendition.getWidth(), "width");
@@ -500,6 +518,10 @@ class InlineMediaSourceTest {
     assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".64.30.file/sample_image_215x102.jpg", rendition.getUrl(), "url");
     assertEquals(SHOWROOM_CONTROLS_SCALE1, rendition.getMediaFormat());
 
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(64, layer.getWidth());
+    assertEquals(30, layer.getHeight());
+
     // test image resource with dimensions only width
     media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH)).refProperty("mediaInline")
         .build();
@@ -561,7 +583,7 @@ class InlineMediaSourceTest {
   void testWithCroppping() {
     // set cropping parameters
     ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
-    props.put(MediaNameConstants.PN_MEDIA_CROP, "10,10,74,40");
+    props.put(PN_MEDIA_CROP, "5,10,69,40");
 
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
@@ -570,16 +592,100 @@ class InlineMediaSourceTest {
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(1, media.getRenditions().size(), "renditions");
     assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.10,10,74,40.file/sample_image_215x102.jpg",
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.5,10,69,40.file/sample_image_215x102.jpg",
         media.getUrl(), "rendition.mediaUrl");
+
+    Rendition rendition = media.getRendition();
+    assertEquals(64, rendition.getWidth());
+    assertEquals(30, rendition.getHeight());
     assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(64, layer.getWidth());
+    assertEquals(30, layer.getHeight());
+  }
+
+  @Test
+  void testWithAutoCroppping() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2)
+        .autoCrop(true);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(1, media.getRenditions().size(), "renditions");
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.64.57,0,159,102.file/sample_image_215x102.jpg",
+        media.getUrl(), "rendition.mediaUrl");
+
+    Rendition rendition = media.getRendition();
+    assertEquals(64, rendition.getWidth());
+    assertEquals(64, rendition.getHeight());
+    assertEquals(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2, media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(64, layer.getWidth());
+    assertEquals(64, layer.getHeight());
+  }
+
+  @Test
+  void testWithRotation() {
+    // set rotation parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
+    props.put(PN_MEDIA_ROTATION, "90");
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs();
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(1, media.getRenditions().size(), "renditions");
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.215.102.-.90.file/sample_image_215x102.jpg",
+        media.getUrl(), "rendition.mediaUrl");
+
+    Rendition rendition = media.getRendition();
+    assertEquals(102, rendition.getWidth());
+    assertEquals(215, rendition.getHeight());
+    assertNull(media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(102, layer.getWidth());
+    assertEquals(215, layer.getHeight());
+  }
+
+  @Test
+  void testWithCroppingAndRotation() {
+    // set rotation parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
+    props.put(PN_MEDIA_CROP, "5,10,69,40");
+    props.put(PN_MEDIA_ROTATION, "270");
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(1, media.getRenditions().size(), "renditions");
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.5,10,69,40.270.file/sample_image_215x102.jpg",
+        media.getUrl(), "rendition.mediaUrl");
+
+    Rendition rendition = media.getRendition();
+    assertEquals(30, rendition.getWidth());
+    assertEquals(64, rendition.getHeight());
+    assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
+
+    Layer layer = AdaptTo.notNull(rendition, Layer.class);
+    assertEquals(30, layer.getWidth());
+    assertEquals(64, layer.getHeight());
   }
 
   @Test
   void testWithCropppingInvalid() {
     // set cropping parameters
     ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
-    props.put(MediaNameConstants.PN_MEDIA_CROP, "10,10,20,20");
+    props.put(PN_MEDIA_CROP, "10,10,20,20");
 
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
@@ -670,7 +776,7 @@ class InlineMediaSourceTest {
     assertEquals(RATIO.getRatio(), mediaFormat0.getRatio(), 0.001d);
     assertEquals(160, mediaFormat0.getWidth());
     assertEquals(100, mediaFormat0.getHeight());
-    assertEquals("B1", mediaFormat0.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
+    assertEquals("B1", mediaFormat0.getProperties().get(PROP_BREAKPOINT));
 
     Rendition rendition1 = renditions.get(1);
     assertEquals(
@@ -684,7 +790,7 @@ class InlineMediaSourceTest {
     assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(320, mediaFormat1.getWidth());
     assertEquals(200, mediaFormat1.getHeight());
-    assertEquals("B2", mediaFormat1.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
+    assertEquals("B2", mediaFormat1.getProperties().get(PROP_BREAKPOINT));
   }
 
   @Test
@@ -692,8 +798,8 @@ class InlineMediaSourceTest {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10)
         .mediaFormat(RATIO)
-        .pictureSource(RATIO, "media1", 160)
-        .pictureSource(RATIO, "media2", 320)
+        .pictureSource(new PictureSource(RATIO).media("media1").widths(160))
+        .pictureSource(new PictureSource(RATIO).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
@@ -735,6 +841,40 @@ class InlineMediaSourceTest {
     assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
     assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
     assertEquals(320, mediaFormat2.getWidth());
+  }
+
+  @Test
+  void testImageMap() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
+
+    // put map string in resource
+    ModifiableValueMap props = mediaInlineResource.adaptTo(ModifiableValueMap.class);
+    props.put(MediaNameConstants.PN_MEDIA_MAP, ImageMapParserImplTest.MAP_STRING);
+
+    Media media = mediaHandler.get(mediaInlineResource).build();
+    assertTrue(media.isValid(), "media valid");
+
+    // assert map
+    assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
+  }
+
+  @Test
+  void testImageMap_CustomProperty() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
+
+    // put map string in resource
+    ModifiableValueMap props = mediaInlineResource.adaptTo(ModifiableValueMap.class);
+    props.put("customMapProperty", ImageMapParserImplTest.MAP_STRING);
+
+    Media media = mediaHandler.get(mediaInlineResource)
+        .mapProperty("customMapProperty")
+        .build();
+    assertTrue(media.isValid(), "valid");
+
+    // assert map
+    assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
   }
 
 }

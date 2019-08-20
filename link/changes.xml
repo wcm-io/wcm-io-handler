@@ -23,6 +23,28 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.3.0" date="not released">
+      <action type="add">See <![CDATA[<a href="https://wcm-io.atlassian.net/wiki/x/AYCKS">What's new in Media Handler 1.7.0 and Link Handler 1.3.0</a>]]> for an overview of the new features.</action>
+      <action type="add" dev="sseifert">
+        Add Media Link File Upload Granite UI component.
+      </action>
+      <action type="add" dev="sseifert">
+        Add LinkHandler.get(&lt;String&gt;) method that supports auto-detection of link type.
+      </action>
+      <action type="add" dev="sseifert">
+        Add LinkHandler.invalid() method.
+      </action>
+      <action type="add" dev="sseifert">
+        Support resolving link URLs found by media handler in image map definitions.
+      </action>
+      <action type="add" dev="sseifert">
+        Implement a "fallback" mode when migrating components to Link Handler to read link target information from a single property.
+      </action>
+      <action type="update" dev="sseifert">
+        Do not set a resource type for SyntheticLinkResource.
+      </action>
+    </release>
+
     <release version="1.2.6" date="2019-07-22">
       <action type="update" dev="sseifert">
         Synthetic link resources: Allow to specify a path for the synthetic resource, and deprecate the signatures without path.

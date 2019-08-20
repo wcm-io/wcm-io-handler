@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.Dimension;
@@ -42,6 +44,7 @@ import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerSer
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
 class AssetRenditionTest {
@@ -60,9 +63,9 @@ class AssetRenditionTest {
         "threadPoolSize", 0,
         "allowedRunMode", new String[0]);
 
-    asset = context.create().asset("/content/dam/asset1.jpg", 16, 9, "image/jpeg");
+    asset = context.create().asset("/content/dam/asset1.jpg", 16, 9, ContentType.JPEG);
     original = asset.getOriginal();
-    rendition = context.create().assetRendition(asset, "rendition1.png", 10, 5, "image/png");
+    rendition = context.create().assetRendition(asset, "rendition1.png", 10, 5, ContentType.PNG);
   }
 
   @Test
@@ -81,6 +84,22 @@ class AssetRenditionTest {
   void testGetDimension() {
     assertEquals(new Dimension(16, 9), AssetRendition.getDimension(original));
     assertEquals(new Dimension(10, 5), AssetRendition.getDimension(rendition));
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testGetDimension_SVG() {
+    Asset svgAsset = context.create().asset("/content/dam/sample.svg", "/filetype/sample.svg", ContentType.SVG);
+    Rendition svgImageRendition = context.create().assetRendition(svgAsset, "sample.png", "/filetype/sample.png", ContentType.PNG);
+
+    // remove asset metadata for width/height as they are not created by AEM for SVG, too (as of AEM 6.5)
+    Resource metadataResource = AdaptTo.notNull(svgAsset, Resource.class).getChild(JCR_CONTENT + "/" + DamConstants.METADATA_FOLDER);
+    ModifiableValueMap metadataProps = AdaptTo.notNull(metadataResource, ModifiableValueMap.class);
+    metadataProps.remove(DamConstants.TIFF_IMAGEWIDTH);
+    metadataProps.remove(DamConstants.TIFF_IMAGELENGTH);
+
+    assertEquals(new Dimension(100, 50), AssetRendition.getDimension(svgAsset.getOriginal()));
+    assertEquals(new Dimension(100, 50), AssetRendition.getDimension(svgImageRendition));
   }
 
   @Test

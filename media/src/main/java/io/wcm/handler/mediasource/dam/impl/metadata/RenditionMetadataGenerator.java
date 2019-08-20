@@ -23,6 +23,7 @@ import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CREATED;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_LASTMODIFIED;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_LAST_MODIFIED_BY;
+import static com.day.cq.commons.jcr.JcrConstants.JCR_MIMETYPE;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
@@ -45,6 +46,7 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +57,9 @@ import com.day.image.Layer;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Generates metadata (widht/height) for renditions in DAM assets.
@@ -88,10 +91,6 @@ public final class RenditionMetadataGenerator {
 
     // get existing rendition names and paths
     for (Rendition rendition : asset.getRenditions()) {
-      // skip original rendition
-      if (StringUtils.equals(rendition.getName(), ORIGINAL_FILE)) {
-        continue;
-      }
       existingRenditionNames.add(rendition.getName());
       renditionPaths.add(rendition.getPath());
     }
@@ -108,7 +107,7 @@ public final class RenditionMetadataGenerator {
     // generate metadata for all existing renditions
     for (String renditionPath : renditionPaths) {
       try {
-        if (renditionAddedOrUpdated(asset, renditionPath)) {
+        if (renditionAddedOrUpdated(renditionPath)) {
           addUpdateCount++;
         }
       }
@@ -124,7 +123,7 @@ public final class RenditionMetadataGenerator {
       String nonexistingRenditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
           + "/" + obsoleteRenditionName;
       try {
-        if (renditionRemoved(asset, nonexistingRenditionPath)) {
+        if (renditionRemoved(nonexistingRenditionPath)) {
           removeCount++;
         }
       }
@@ -140,31 +139,41 @@ public final class RenditionMetadataGenerator {
 
   /**
    * Create or update rendition metadata if rendition is created or updated.
-   * @param asset Asset
    * @param renditionPath Rendition path
    * @throws PersistenceException Persistence exception
    * @return true if rendition data was added or updated
    */
-  public boolean renditionAddedOrUpdated(Asset asset, String renditionPath) throws PersistenceException {
-
-    // ensure rendition is an image rendition for which metadata can be generated
-    String fileExtension = FilenameUtils.getExtension(renditionPath);
-    if (!FileExtension.isImage(fileExtension)) {
-      log.debug("Skip non-image rendition {}", renditionPath);
-      return false;
-    }
+  public boolean renditionAddedOrUpdated(String renditionPath) throws PersistenceException {
 
     // check for resource existence and try to get layer from image
-    // (record duration of converting resource to layer for debugging)
     Resource renditionResource = resourceResolver.getResource(renditionPath);
     if (renditionResource == null) {
       log.debug("Skip generation of metadata for non-existing rendition {}", renditionPath);
       return false;
     }
 
+    // check if rendition is original
+    boolean isOriginal = StringUtils.equals(ResourceUtil.getName(renditionPath), ORIGINAL_FILE);
+    if (isOriginal) {
+      // skip original unless it is an SVG file (for which AEM does not generated width/height metadata properties)
+      boolean isSVG = StringUtils.equals(getContentType(renditionResource), ContentType.SVG);
+      if (!isSVG) {
+        log.debug("Skip original rendition {}", renditionPath);
+        return false;
+      }
+    }
+    else {
+      // ensure rendition is an image rendition for which metadata can be generated
+      String fileExtension = FilenameUtils.getExtension(renditionPath);
+      if (!MediaFileType.isImage(fileExtension)) {
+        log.debug("Skip non-image rendition {}", renditionPath);
+        return false;
+      }
+    }
+
     // Compare timestamps of rendition and rendition metadata
     Calendar renditionTimestamp = getLastModified(renditionResource);
-    String metdataResourcePath = getRenditionMetadataResourcePath(asset, renditionPath);
+    String metdataResourcePath = getRenditionMetadataResourcePath(renditionPath);
     Resource metadataResource = resourceResolver.getResource(metdataResourcePath);
     Calendar renditionsMetadataTimestamp = getLastModified(metadataResource);
     boolean metadataOutdated = (renditionTimestamp == null)
@@ -176,6 +185,7 @@ public final class RenditionMetadataGenerator {
     }
 
     // calculate rendition dimension
+    // (record duration of converting resource to layer for debugging)
     long startTime = System.currentTimeMillis();
     Dimension dimension = getRenditionDimension(renditionResource);
     long conversionDuration = System.currentTimeMillis() - startTime;
@@ -209,6 +219,10 @@ public final class RenditionMetadataGenerator {
     }
   }
 
+  private @Nullable String getContentType(@NotNull Resource renditionResource) {
+    return renditionResource.getValueMap().get(JCR_CONTENT + "/" + JCR_MIMETYPE, String.class);
+  }
+
   private Calendar getLastModified(@Nullable Resource resource) {
     Calendar lastModified = null;
     if (resource != null) {
@@ -229,12 +243,11 @@ public final class RenditionMetadataGenerator {
 
   /**
    * Remove rendition metadata node if rendition is removed.
-   * @param asset Asset
    * @param renditionPath Rendition path
    * @throws PersistenceException Persistence exception
    * @return true if rendition data was removed
    */
-  public boolean renditionRemoved(Asset asset, String renditionPath) throws PersistenceException {
+  public boolean renditionRemoved(String renditionPath) throws PersistenceException {
 
     // check if rendition still exist (or exists again) - in this case skip removing of renditions metadata
     Resource renditionResource = resourceResolver.getResource(renditionPath);
@@ -244,7 +257,7 @@ public final class RenditionMetadataGenerator {
     }
 
     // remove rendition metadata for non-existing rendition
-    String metdataResourcePath = getRenditionMetadataResourcePath(asset, renditionPath);
+    String metdataResourcePath = getRenditionMetadataResourcePath(renditionPath);
     Resource metadataResource = resourceResolver.getResource(metdataResourcePath);
     if (metadataResource == null) {
       return false;
@@ -275,13 +288,13 @@ public final class RenditionMetadataGenerator {
 
   /**
    * Get resource path for metadata for given rendition.
-   * @param asset Asset
    * @param renditionPath Rendition path
    * @return Metadata resource or null if none exist
    */
-  private String getRenditionMetadataResourcePath(Asset asset, String renditionPath) {
+  private String getRenditionMetadataResourcePath(String renditionPath) {
+    String assetPath = StringUtils.substringBefore(renditionPath, "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER + "/");
     String renditionName = Text.getName(renditionPath);
-    return asset.getPath() + "/" + JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/" + renditionName;
+    return assetPath + "/" + JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/" + renditionName;
   }
 
 }

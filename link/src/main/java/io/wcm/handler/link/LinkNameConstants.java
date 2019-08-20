@@ -107,4 +107,15 @@ public final class LinkNameConstants {
    */
   public static final @NotNull String PN_LINK_MEDIA_DOWNLOAD = "linkMediaDownload";
 
+  /**
+   * Defines a "fallback" property name that is used to load link target information from a single property
+   * instead of the link type + link type depending property name. This property is used for migration
+   * from components that do not support Link Handler. It is only used for reading, and never written back to.
+   * When opened and saved in the link dialog, the property is removed and instead the dedicated properties are used.
+   * <p>
+   * Property is to be set on component or in policy.
+   * </p>
+   */
+  public static final @NotNull String PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY = "wcmio:linkTargetUrlFallbackProperty";
+
 }
