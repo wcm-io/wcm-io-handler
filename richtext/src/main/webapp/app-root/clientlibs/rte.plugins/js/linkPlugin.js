@@ -58,6 +58,8 @@
 
     initializeUI: function (tbGenerator) {
       // register icon for this plugins toolbar actions
+      tbGenerator.registerIcon("wcmio-links#modifylink", "link");
+      tbGenerator.registerIcon("wcmio-links#unlink", "linkOff");
       tbGenerator.registerIcon("wcmio.handler.richtext.links#modifylink", "link");
       tbGenerator.registerIcon("wcmio.handler.richtext.links#unlink", "linkOff");
       // call the "super" method
@@ -69,4 +71,6 @@
 })(window.jQuery);
 
 // register plugin
+CUI.rte.plugins.PluginRegistry.register("wcmio-links", wcmio.handler.richtext.rte.plugins.LinkPlugin);
+// also register old plugin name - deprecated because policy editor seems to have problems with "." in resource names
 CUI.rte.plugins.PluginRegistry.register("wcmio.handler.richtext.links", wcmio.handler.richtext.rte.plugins.LinkPlugin);
