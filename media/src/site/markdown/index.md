@@ -26,7 +26,7 @@ The Media Handler provides:
 * Pluggable markup builders for different media types (e.g. images, DAM video)
 * Media format concept that allows to define expected output formats (with constraints for dimension, ratio, file type and others)
 * Rendering virtual renditions to match the expected output format
-* Supports manual and automatic cropping and rotation of images
+* Supports manual and automatic cropping and rotation of images and image maps
 * Support for responsive images by rendering multiple renditions at once for each breakpoint
 * Define media handling via Java API, content policies or component properties
 * Pluggable media pre- and postprocessing to further tailoring the media handling process
