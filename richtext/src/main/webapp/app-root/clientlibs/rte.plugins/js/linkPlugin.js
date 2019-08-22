@@ -30,11 +30,11 @@
       dialogProperties.linkTypes = dialogProperties.linkTypes || {
         "internal": {
           value: "internal",
-          value: "Internal"
+          text: "Internal"
         },
         "external": {
           value: "external",
-          value: "External"
+          text: "External"
         }
       };
       dialogProperties.linkWindowTargetItems = dialogProperties.linkWindowTargetItems || {
