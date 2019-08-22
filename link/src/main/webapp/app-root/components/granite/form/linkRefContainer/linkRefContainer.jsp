@@ -259,7 +259,7 @@ if (linkTypes.containsKey(ExternalLinkType.ID)) {
       .put("name", namePrefix + LinkNameConstants.PN_LINK_EXTERNAL_REF)
       .put("fieldLabel", "URL")
       .put("fieldDescription", "Link to external destination")
-      .put("validation", new String[] { "wcmio.url" });
+      .put("validation", new String[] { "wcmio.handler.link.url" });
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, ExternalLinkType.ID)) {
     linkExternalRefProps
         .put("value", linkTargetUrlFallbackValue)

@@ -41,6 +41,9 @@
         Implement a "fallback" mode when migrating components to Link Handler to read link target information from a single property.
       </action>
       <action type="update" dev="sseifert">
+        External link type: Also accept anchor links starting with "#".
+      </action>
+      <action type="update" dev="sseifert">
         Do not set a resource type for SyntheticLinkResource.
       </action>
     </release>
