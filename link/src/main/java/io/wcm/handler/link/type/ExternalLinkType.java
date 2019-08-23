@@ -52,10 +52,11 @@ public final class ExternalLinkType extends LinkType {
    */
   public static final @NotNull String ID = "external";
 
-  /**
+  /*
    * Matches all strings that seem to have a proper URL scheme - e.g. starting with http://, https://, mailto:, tel:
+   * It also allows anchor links staring with #
    */
-  private static final Pattern EXTERNALIZED_PATTERN = Pattern.compile("^([^/]+:|//).*$");
+  private static final Pattern EXTERNALIZED_PATTERN = Pattern.compile("^(([^/]+:|//)|#).*$");
 
   /**
    * @return Link type ID (is stored as identifier in repository)

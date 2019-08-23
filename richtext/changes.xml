@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Always specify a path for link resources.
       </action>
+      <action type="update" dev="sseifert">
+        Rename RTE link plugin to "wcmio-links". The old name "wcmio.handler.richtext.links" is deprecated, but still supported.
+      </action>
     </release>
 
     <release version="1.3.0" date="2019-03-15">

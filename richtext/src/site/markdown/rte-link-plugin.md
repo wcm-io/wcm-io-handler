@@ -9,7 +9,7 @@ The wcm.io RichText Handler includes a plugin for the [AEM Rich Text Editor (RTE
 
 ### Enable the RTE link plugin
 
-To enable plugin you have to disable the AEM built-in link (`links`) plugin and instead enable the wcm.io RichText Handler link plugin (`wcmio.handler.richtext.links`):
+To enable plugin you have to disable the AEM built-in link (`links`) plugin and instead enable the wcm.io RichText Handler link plugin (`wcmio-links`):
 
 ```json
 // Configure rich text plugins
@@ -17,7 +17,7 @@ To enable plugin you have to disable the AEM built-in link (`links`) plugin and 
   "links": {
     "features": "-"
   },
-  "wcmio.handler.richtext.links": {
+  "wcmio-links": {
     "features": [
       "modifylink",
       "unlink"
@@ -27,7 +27,7 @@ To enable plugin you have to disable the AEM built-in link (`links`) plugin and 
 }
 ```
 
-Within the UI section RTE configuration where the RTE toolbars are defined you have to replace the references to the `links` plugin with `wcmio.handler.richtext.links`:
+Within the UI section RTE configuration where the RTE toolbars are defined you have to replace the references to the `links` plugin with `wcmio-links`:
 
 ```json
 "uiSettings": {
@@ -35,8 +35,8 @@ Within the UI section RTE configuration where the RTE toolbars are defined you h
     "inline": {
       "toolbar": [
         // ...
-        "wcmio.handler.richtext.links#modifylink",
-        "wcmio.handler.richtext.links#unlink",
+        "wcmio-links#modifylink",
+        "wcmio-links#unlink",
         // ...
         ]
       }
@@ -44,8 +44,8 @@ Within the UI section RTE configuration where the RTE toolbars are defined you h
     "fullscreen": {
       "toolbar": [
         // ...
-        "wcmio.handler.richtext.links#modifylink",
-        "wcmio.handler.richtext.links#unlink",
+        "wcmio-links#modifylink",
+        "wcmio-links#unlink",
         // ...
       ],
     }

@@ -118,6 +118,7 @@ class ExternalLinkTypeTest {
     assertTrue(underTest.accepts("https://hostname"));
     assertTrue(underTest.accepts("mailto:abc@xx.yy"));
     assertTrue(underTest.accepts("tel:+49 123 45678"));
+    assertTrue(underTest.accepts("#anchor-link"));
     assertFalse(underTest.accepts("/relative/path"));
     assertFalse(underTest.accepts("anystring"));
   }
@@ -131,6 +132,18 @@ class ExternalLinkTypeTest {
     assertEquals(ExternalLinkType.ID, link.getLinkType().getId());
     assertTrue(link.isValid(), "link valid");
     assertEquals("http://xyz/abc", link.getUrl(), "link url");
+    assertNotNull(link.getAnchor(), "anchor");
+  }
+
+  @Test
+  void testReferenceAutoDetection_Anchor() {
+    LinkHandler linkHandler = AdaptTo.notNull(adaptable(), LinkHandler.class);
+
+    Link link = linkHandler.get("#anchor1").build();
+
+    assertEquals(ExternalLinkType.ID, link.getLinkType().getId());
+    assertTrue(link.isValid(), "link valid");
+    assertEquals("#anchor1", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
   }
 

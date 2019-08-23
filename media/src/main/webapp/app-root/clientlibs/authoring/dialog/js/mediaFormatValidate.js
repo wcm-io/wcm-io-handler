@@ -56,7 +56,8 @@
         mediaFormats: mediaFormats,
         mediaFormatsMandatory: mediaFormatsMandatory,
         mediaCropAuto: mediaCropAuto,
-        mediaRef: assetPath
+        mediaRef: assetPath,
+        "_charset_": "UTF-8"
     };
     $.get(validateUrl, params, function(result) {
       if (!result.valid) {
