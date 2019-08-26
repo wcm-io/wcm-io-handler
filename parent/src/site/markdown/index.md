@@ -25,6 +25,13 @@ To set up a new AEM project with wcm.io Handler support use the [wcm.io Maven Ar
 Sources: https://github.com/wcm-io/wcm-io-handler
 
 
+### Further Resources
+
+* [adaptTo() 2019 Talk: Assets and Links in AEM Projects][adaptto-talk-2019-assets-links-in-aem-projects]
+
+
+
+
 [general-concepts]: general-concepts.html
 [url-handler]: url/
 [link-handler]: link/
@@ -36,3 +43,4 @@ Sources: https://github.com/wcm-io/wcm-io-handler
 [wcmio-handler-0x]: https://wcm.io/handler-0.x/
 [wcmio-handler-migration]: https://wcm-io.atlassian.net/wiki/x/dhn9Ag
 [wcmio-maven-archetype-aem]: https://wcm.io/tooling/maven/archetypes/aem/
+[adaptto-talk-2019-assets-links-in-aem-projects]: https://adapt.to/2019/en/schedule/assets-and-links-in-aem-projects.html
