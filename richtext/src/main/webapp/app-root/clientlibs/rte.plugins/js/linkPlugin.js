@@ -15,7 +15,9 @@
       var dialogProperties = config.linkDialogConfig.dialogProperties;
 
       // get link plugin configuration for current content page
-      var currentPagePath = Granite.author.ContentFrame.getContentPath();
+      // (either from Granite author context or the item URL parameter when used in the page properties)
+      var currentPagePath = Granite && Granite.author && Granite.author.ContentFrame ?
+          Granite.author.ContentFrame.getContentPath() : this.getParameterByName("item");
       var pluginConfigUrl = currentPagePath + ".wcmio-handler-richtext-rte-plugins-links-config.json";
       $.get({
         url: pluginConfigUrl,
@@ -64,6 +66,18 @@
       tbGenerator.registerIcon("wcmio.handler.richtext.links#unlink", "linkOff");
       // call the "super" method
       this.inherited(arguments);
+    },
+
+    getParameterByName: function(name) {
+      name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+      var regexS = "[?&]" + name + "=([^&#]*)";
+      var regex = new RegExp(regexS, "g");
+      var match = regex.exec(window.location.search);
+      var result = null;
+      if (match) {
+        result = decodeURIComponent(match[1].replace(/\+/g, " "));
+      }
+      return result;
     }
 
   });
