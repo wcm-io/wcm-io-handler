@@ -1,4 +1,6 @@
 {
-  "io.wcm.handler.link.redirectInfo": "Weiterleitung nach",
-  "io.wcm.handler.link.redirectMissing": "Bitte geben Sie ein Linkziel in den Seiteneigenschaften an."
+  "io.wcm.handler.link": {
+    "redirectInfo": "Weiterleitung nach",
+    "redirectMissing": "Bitte geben Sie ein Linkziel in den Seiteneigenschaften an."
+  }
 }
