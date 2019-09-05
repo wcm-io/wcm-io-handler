@@ -1,18 +1,18 @@
 {
   "jcr:primaryType": "nt:unstructured",
   "sling:resourceType": "granite/ui/components/coral/foundation/container",
-  "jcr:title": "Responsive Image",
+  "jcr:title": "io.wcm.handler.media.components.global.include.responsiveImageSettings.title",
   "margin": true,
   "items": {
     "content": {
       "sling:resourceType": "granite/ui/components/coral/foundation/container",
       "margin": false,
       "items": {
-        
+
         "responsiveType": {
           "sling:resourceType": "granite/ui/components/coral/foundation/form/select",
           "name": "./wcmio:mediaResponsiveType",
-          "fieldLabel": "Choose type",
+          "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.responsiveType.fieldLabel",
           "granite:class": "cq-dialog-dropdown-showhide",
           "granite:data": {
             "cq-dialog-dropdown-showhide-target": ".list-option-responsiveType-showhide-target"
@@ -20,15 +20,15 @@
           "items": {
             "none": {
               "value": "none",
-              "text": "None"
+              "text": "io.wcm.handler.media.components.global.include.responsiveImageSettings.responsiveType.none"
             },
             "imageSizes": {
               "value": "imageSizes",
-              "text": "Image with sizes attribute"
+              "text": "io.wcm.handler.media.components.global.include.responsiveImageSettings.responsiveType.imageSizes"
             },
             "pictureSource": {
               "value": "pictureSources",
-              "text": "Picture with sources elements"
+              "text": "io.wcm.handler.media.components.global.include.responsiveImageSettings.responsiveType.pictureSource"
             }
           }
         },
@@ -50,7 +50,7 @@
               "items": {
                 "chooseText": {
                   "sling:resourceType": "granite/ui/components/coral/foundation/text",
-                  "text": "Choose the type of responsiveness which should be applied to images."
+                  "text": "io.wcm.handler.media.components.global.include.responsiveImageSettings.noTypeSelectedText"
                 }
               }
             }
@@ -70,21 +70,21 @@
               "items": {
                 "mediaFormatInfo": {
                   "sling:resourceType": "granite/ui/components/coral/foundation/text",
-                  "text": "The constraints of the primary media format apply (as selected on first tab) ."
+                  "text": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.mediaFormatInfoText"
                 }
               }
             },
             "sizes": {
               "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
               "name": "./wcmio:mediaRepsonsiveImageSizes/sizes",
-              "fieldLabel": "Sizes String",
-              "fieldDescription": "A valid source size list, see http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Example: '(min-width: 1280px) 1200px, 100vw'."
+              "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.sizes.fieldLabel",
+              "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.sizes.fieldDescription"
             },
             "widths": {
               "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
               "name": "./wcmio:mediaRepsonsiveImageSizes/widths",
-              "fieldLabel": "Widths",
-              "fieldDescription": "Widths for the renditions in the srcset attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'.",
+              "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.widths.fieldLabel",
+              "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.widths.fieldDescription",
               "validation": ["wcmio.handler.media.responsiveWidths"]
             }
           }
@@ -107,8 +107,8 @@
                   "mediaFormat": {
                     "sling:resourceType": "wcm-io/handler/media/components/granite/form/mediaformatselect",
                     "name": "./mediaFormat",
-                    "fieldLabel": "Media Format",
-                    "fieldDescription": "Media format with ratio for the renditions of the source element.",
+                    "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.mediaFormat.fieldLabel",
+                    "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.mediaFormat.fieldDescription",
                     "multiple": false,
                     "emptyOption": true,
                     "required": true
@@ -116,20 +116,20 @@
                   "media": {
                     "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
                     "name": "./media",
-                    "fieldDescription": "A valid media query list, see http://w3c.github.io/html/infrastructure.html#valid-media-query-list. Example: '(min-width: 1024px)'.",
-                    "fieldLabel": "Media String"
+                    "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.media.fieldLabel",
+                    "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.media.fieldDescription"
                   },
                   "sizes": {
                     "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
                     "name": "./sizes",
-                    "fieldLabel": "Sizes String",
-                    "fieldDescription": "A valid source size list, see http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Example: '(min-width: 1280px) 1200px, 100vw'."
+                    "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.sizes.fieldLabel",
+                    "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.sizes.fieldDescription"
                   },
                   "widths": {
                     "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
                     "name": "./widths",
-                    "fieldLabel": "Widths",
-                    "fieldDescription": "Widths for the renditions in the srcset attribute. Separate widths by ','. Suffix optional widths with '?'.",
+                    "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.widths.fieldLabel",
+                    "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.pictureSources.widths.fieldDescription",
                     "required": true,
                     "validation": ["wcmio.handler.media.responsiveWidths"]
                   }

@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.7.2" date="not released">
+      <action type="update" dev="sseifert">
+        Add i18n translations for Granite UI dialog snippets.
+      </action>
+    </release>
+    
     <release version="1.7.0" date="2019-08-23">
       <action type="add">See <![CDATA[<a href="https://wcm-io.atlassian.net/wiki/x/AYCKS">What's new in Media Handler 1.7.0 and Link Handler 1.3.0</a>]]> for an overview of the new features.</action>
       <action type="add" dev="sseifert">

@@ -7,6 +7,48 @@
       "NO_MATCHING_RENDITION": "Passt nicht zum Medien-Format",
       "NOT_ENOUGH_MATCHING_RENDITIONS": "Nicht genügend zum Medien-Format passende Renditions",
       "INVALID_MEDIA_FORMAT": "Ungültiges Medien-Format"
+    },
+
+    "components.global.include": {
+      "mediaFormatSelection": {
+        "mediaFormats.fieldLabel": "Medien-Formate",
+        "mediaFormats.fieldDescription": "Wählt Ausgabeformate die mit irgendeinem Medien-Format übereinstimmen.",
+        "mediaFormatsMandatory.fieldLabel": "Medien-Formate (Pflicht)",
+        "mediaFormatsMandatory.fieldDescription": "Wählt Ausgabeformate die mit allen Medien-Formaten übereinstimmen.",
+        "mediaCropAuto.fieldLabel": "Automatisch Beschneiden",
+        "mediaCropAuto.fieldDescription": "Wenn kein passendes Ausgabeformat gefunden wurde, wird das Bild automatisch beschnitten um dem gewählten Medien-Format zu entsprechen."
+      },
+      "responsiveImageSettings": {
+        "title": "Reponsives Bild",
+        "responsiveType.fieldLabel": "Typ wählen",
+        "responsiveType.none": "Keiner",
+        "responsiveType.imageSizes": "'img' mit 'sizes'-Attribut",
+        "responsiveType.pictureSource": "'picture' mit 'source'-Elementen",
+        "noTypeSelectedText": "Bitte auswählen auf Welche Art und Weise die Bilder responsive dargestellt werden sollen.",
+        "imageSizes": {
+          "mediaFormatInfoText": "Die Einschränkungen des primären Medien-Formats (wie auf dem ersten Tab ausgewählt) werden angewendet.",
+          "sizes.fieldLabel": "'sizes'-Ausdruck",
+          "sizes.fieldDescription": "Ein gültiger Ausdruck für die 'source size list', siehe http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Beispiel: '(min-width: 1280px) 1200px, 100vw'.",
+          "widths.fieldLabel": "Breiten (px)",
+          "widths.fieldDescription": "Breiten für die Ausgabeformate im 'srcset'-Attribut, basierend auf dem primären Medien-Format. Breiten durch ',' trennen. Optionale Breiten können mit einem '?' ergänzt werden."
+        },
+        "pictureSources": {
+          "mediaFormat.fieldLabel": "Medien-Format",
+          "mediaFormat.fieldDescription": "Medien-Format mit einem Seitenverhältnis für die Ausgabeformate dieses 'source'-Elements.",
+          "media.fieldLabel": "'media'-Ausdruck",
+          "media.fieldDescription": "Ein gültiger 'media query'-Ausdruck, siehe http://w3c.github.io/html/infrastructure.html#valid-media-query-list. Beispiel: '(min-width: 1024px)'.",
+          "sizes.fieldLabel": "'sizes'-Ausdruck",
+          "sizes.fieldDescription": "Ein gültiger Ausdruck für die 'source size list', siehe http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Beispiel: '(min-width: 1280px) 1200px, 100vw'.",
+          "widths.fieldLabel": "Breiten (px)",
+          "widths.fieldDescription": "Breiten für die Ausgabeformate im 'srcset'-Attribut, basierend auf dem primären Medien-Format. Breiten durch ',' trennen. Optionale Breiten können mit einem '?' ergänzt werden."
+        }
+      }
+    },
+
+    "components.granite.form.fileupload": {
+      "mediaFormat": "Medien-Format",
+      "mediaFormats": "Medien-Formate"
     }
+
   }
 }

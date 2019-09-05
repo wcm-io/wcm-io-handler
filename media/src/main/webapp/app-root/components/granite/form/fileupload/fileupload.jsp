@@ -151,7 +151,7 @@ if (contentResource != null) {
       MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, cfg, ex, componentPropertyResolver.isAutoCrop());
 
   // add info about media formats in field description
-  String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
+  String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource, i18n);
   if (mediaFormatsFieldDescription != null) {
    String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
    if (StringUtils.isBlank(fieldDescription)) {
