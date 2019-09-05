@@ -1,4 +1,56 @@
 {
-  "io.wcm.handler.link.redirectInfo": "Weiterleitung nach",
-  "io.wcm.handler.link.redirectMissing": "Bitte geben Sie ein Linkziel in den Seiteneigenschaften an."
+  "io.wcm.handler.link": {
+    "redirectInfo": "Weiterleitung nach",
+    "redirectMissing": "Bitte geben Sie ein Linkziel in den Seiteneigenschaften an.",
+    
+    "components.global.include": {
+      "linkRefContainer": {
+        "linkRefTab": {
+          "title": "Verknüpfung"
+        },
+        "linkRefNoTitleTab": {
+          "title": "Verknüpfung"
+        },
+        "redirectStatus": {
+          "title": "Weiterleitungs-Status",
+          "redirectStatus.fieldLabel": "Weiterleitungs-Status",
+          "redirectStatus.fieldDescription": "HTTP response code der für die Weiterleitung verwendet wird.",
+          "redirectStatus.301": "Moved Permanently (301, Standard)",
+          "redirectStatus.302": "Moved Temporarily (302)"
+        }
+      }
+    },
+
+    "components.granite.form": {
+      "linkRefContainer": {
+        "linkTitle.fieldLabel": "Verknüpfungs-Titel",
+        "linkType.fieldLabel": "Verknüpfungs-Typ",
+        "linkWindowTarget.fieldLabel": "Ziel-Fenster",
+        "linkWindowTarget._self": "Gleiches Fenster",
+        "linkWindowTarget._blank": "Neues Fenster",
+        "internal": {
+          "type": "Intern (gleiche Website)",
+          "linkContentRef.fieldLabel": "Interne Seite",
+          "linkContentRef.fieldDescription": "Link auf eine Seite im CMS (gleiche Website)"
+        },
+        "internalCrossContext": {
+          "type": "Intern (andere Website)",
+          "linkCrossContextContentRef.fieldLabel": "Interne Seite (andere Website)",
+          "linkCrossContextContentRef.fieldDescription": "Link auf eine Seite im CMS (andere Website)"
+        },
+        "external": {
+          "type": "Extern",
+          "linkExternalRef.fieldLabel": "URL",
+          "linkExternalRef.fieldDescription": "Link auf ein externes Ziel"
+        },
+        "media": {
+          "type": "Asset",
+          "linkMediaRef.fieldLabel": "Asset-Referenz",
+          "linkMediaDownload.fieldLabel": "Herunterladen",
+          "linkMediaDownload.fieldDescription": "Asset mit Herunterladen-Dialog im Browser öffnen."
+        }
+      }
+    }
+
+  }
 }

@@ -1,7 +1,7 @@
 {
   "jcr:primaryType": "nt:unstructured",
   "sling:resourceType": "granite/ui/components/coral/foundation/fixedcolumns",
-  "jcr:title": "Redirect Status",
+  "jcr:title": "io.wcm.handler.link.components.global.include.linkRefContainer.redirectStatus.title",
   "margin": true,
   "cq:showOnCreate": false,
   "items": {
@@ -11,17 +11,17 @@
         "redirectStatus": {
           "sling:resourceType": "granite/ui/components/coral/foundation/form/select",
           "name": "./redirectStatus",
-          "fieldLabel": "Redirect Status",
-          "fieldDescription": "HTTP response code used for the redirect.",
+          "fieldLabel": "io.wcm.handler.link.components.global.include.linkRefContainer.redirectStatus.redirectStatus.fieldLabel",
+          "fieldDescription": "io.wcm.handler.link.components.global.include.linkRefContainer.redirectStatus.redirectStatus.fieldDescription",
           "defaultValue": "301",
           "items": {
             "301": {
               "value": "301",
-              "text": "Moved Permanently (301, default)"
+              "text": "io.wcm.handler.link.components.global.include.linkRefContainer.redirectStatus.redirectStatus.301"
             },
             "302": {
               "value": "302",
-              "text": "Moved Temporarily (302)"
+              "text": "io.wcm.handler.link.components.global.include.linkRefContainer.redirectStatus.redirectStatus.302"
             }
           }
         }

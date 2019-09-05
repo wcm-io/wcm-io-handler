@@ -56,7 +56,7 @@
         name: "linkContentRef",
         linkType: "internal",
         fn: this.createPathField,
-        placeholder: "Internal page",
+        placeholder: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldLabel"),
         rootPath: config.rootPaths.internal || "/content"
       }));
     },
@@ -69,7 +69,7 @@
         name: "linkCrossContextContentRef",
         linkType: "internalCrossContext",
         fn: this.createPathField,
-        placeholder: "Internal page (other site)",
+        placeholder: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldLabel"),
         rootPath: config.rootPaths.internalCrossContext || "/content"
       }));
     },
@@ -83,7 +83,7 @@
         linkType: "external",
         fn: this.createTextField,
         dataType: "url",
-        placeholder: "URL"
+        placeholder: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldLabel")
       }));
     },
 
@@ -95,14 +95,14 @@
         name: "linkMediaRef",
         linkType: "media",
         fn: this.createPathField,
-        placeholder: "Asset reference",
+        placeholder: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaRef.fieldLabel"),
         rootPath: config.rootPaths.media || "/content/dam"
       }));
       frag.appendChild(this.createColumnItem({
         name: "linkMediaDownload",
         linkType: "media",
         fn: this.createCheckbox,
-        label: "Download"
+        label: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaDownload.fieldLabel")
       }));
     },
 
