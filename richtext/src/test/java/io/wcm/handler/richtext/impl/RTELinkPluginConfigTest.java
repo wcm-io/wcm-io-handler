@@ -45,9 +45,9 @@ class RTELinkPluginConfigTest {
     underTest.doGet(context.request(), context.response());
 
     String expectedJson = "{linkTypes: {"
-        + "internal: {value:'internal',text:'Internal (same site)'},"
-        + "external: {value:'external',text:'External'},"
-        + "media:{value:'media',text:'Asset'}},"
+        + "internal: {value:'internal',text:'io.wcm.handler.link.components.granite.form.linkRefContainer.internal.type'},"
+        + "external: {value:'external',text:'io.wcm.handler.link.components.granite.form.linkRefContainer.external.type'},"
+        + "media:{value:'media',text:'io.wcm.handler.link.components.granite.form.linkRefContainer.media.type'}},"
         + "rootPaths:{"
         + "internal:'/content/unittest/de_test/brand/de',"
         + "media:'/content/dam'}}";

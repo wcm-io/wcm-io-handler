@@ -31,21 +31,21 @@
       dialogProperties.linkTypes = dialogProperties.linkTypes || {
         "internal": {
           value: "internal",
-          text: "Internal"
+          text: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.internal.type")
         },
         "external": {
           value: "external",
-          text: "External"
+          text: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.external.type")
         }
       };
       dialogProperties.linkWindowTargetItems = dialogProperties.linkWindowTargetItems || {
         "_self": {
           value: "_self",
-          text: "Same window"
+          text: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.linkWindowTarget._self")
         },
         "_blank": {
           value: "_blank",
-          text: "New window"
+          text: Granite.I18n.get("io.wcm.handler.link.components.granite.form.linkRefContainer.linkWindowTarget._blank")
         }
       };
 

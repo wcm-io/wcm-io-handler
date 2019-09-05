@@ -21,6 +21,7 @@ package io.wcm.handler.richtext.impl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.MissingResourceException;
 import java.util.stream.Collectors;
 
 import javax.servlet.Servlet;
@@ -37,6 +38,7 @@ import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 
+import com.day.cq.i18n.I18n;
 import com.day.cq.wcm.api.NameConstants;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
@@ -67,6 +69,7 @@ public class RTELinkPluginConfig extends SlingSafeMethodsServlet {
     Resource resource = request.getResource();
     PageManager pageManager = AdaptTo.notNull(request.getResourceResolver(), PageManager.class);
     Page page = pageManager.getContainingPage(resource);
+    I18n i18n = new I18n(request);
 
     LinkHandlerConfig linkHandlerConfig = AdaptTo.notNull(resource, LinkHandlerConfig.class);
     List<LinkType> linkTypes = linkHandlerConfig.getLinkTypes().stream()
@@ -80,7 +83,7 @@ public class RTELinkPluginConfig extends SlingSafeMethodsServlet {
       for (LinkType linkType : linkTypes) {
         JSONObject linkTypeConfig = new JSONObject();
         linkTypeConfig.put("value", linkType.getId());
-        linkTypeConfig.put("text", linkType.getLabel());
+        linkTypeConfig.put("text", getI18nText("io.wcm.handler.link.components.granite.form.linkRefContainer." + linkType.getId() + ".type", i18n));
         linkTypesConfigs.put(linkType.getId(), linkTypeConfig);
       }
       result.put("linkTypes", linkTypesConfigs);
@@ -100,6 +103,15 @@ public class RTELinkPluginConfig extends SlingSafeMethodsServlet {
     }
     catch (JSONException ex) {
       throw new ServletException(ex);
+    }
+  }
+
+  private String getI18nText(String key, I18n i18n) {
+    try {
+      return i18n.get(key);
+    }
+    catch (MissingResourceException ex) {
+      return key;
     }
   }
 
