@@ -158,7 +158,7 @@ if (showLinkTitle) {
   GraniteUiSyntheticResource.child(items, "linkTitle", "granite/ui/components/coral/foundation/form/textfield",
       ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_TITLE)
-      .put("fieldLabel", "Link title")
+      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkTitle.fieldLabel")
       .build());
 }
 
@@ -166,7 +166,7 @@ if (showLinkTitle) {
 // Link type
 ImmutableValueMap.Builder linkTypeSelectProps = ImmutableValueMap.builder()
     .put("name", namePrefix + LinkNameConstants.PN_LINK_TYPE)
-    .put("fieldLabel", "Link type")
+    .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkType.fieldLabel")
     .put("granite:class", "cq-dialog-dropdown-showhide");
 if (linkTargetUrlFallbackTypeId != null) {
   linkTypeSelectProps.put("ignoreData", true);
@@ -183,7 +183,7 @@ for (LinkType linkType : linkTypes.values()) {
   GraniteUiSyntheticResource.child(linkTypeItems, linkType.getId(), JcrConstants.NT_UNSTRUCTURED,
       ImmutableValueMap.builder()
       .put("value", linkType.getId())
-      .put("text", linkType.getLabel())
+      .put("text", "io.wcm.handler.link.components.granite.form.linkRefContainer." + linkType.getId() + ".type")
       .put("selected", selected)
       .build());
 }
@@ -203,8 +203,8 @@ if (linkTypes.containsKey(InternalLinkType.ID)) {
   
   ImmutableValueMap.Builder linkContentRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_CONTENT_REF)
-      .put("fieldLabel", "Internal page")
-      .put("fieldDescription", "Link to target page in CMS (same site)");
+      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldLabel")
+      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldDescription");
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, InternalLinkType.ID)) {
     linkContentRefProps
         .put("value", linkTargetUrlFallbackValue)
@@ -230,8 +230,8 @@ if (linkTypes.containsKey(InternalCrossContextLinkType.ID)) {
   
   ImmutableValueMap.Builder linkCrossContextContentRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF)
-      .put("fieldLabel", "Internal page (other site)")
-      .put("fieldDescription", "Link to target page in CMS (other site)");
+      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldLabel")
+      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldDescription");
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, InternalCrossContextLinkType.ID)) {
     linkCrossContextContentRefProps
         .put("value", linkTargetUrlFallbackValue)
@@ -257,8 +257,8 @@ if (linkTypes.containsKey(ExternalLinkType.ID)) {
   
   ImmutableValueMap.Builder linkExternalRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_EXTERNAL_REF)
-      .put("fieldLabel", "URL")
-      .put("fieldDescription", "Link to external destination")
+      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldLabel")
+      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldDescription")
       .put("validation", new String[] { "wcmio.handler.link.url" });
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, ExternalLinkType.ID)) {
     linkExternalRefProps
@@ -285,7 +285,7 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
   
   ImmutableValueMap.Builder linkMediaRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_REF)
-      .put("fieldLabel", "Asset reference");
+      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaRef.fieldLabel");
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, MediaLinkType.ID)) {
     linkMediaRefProps
         .put("value", linkTargetUrlFallbackValue)
@@ -297,8 +297,8 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
   GraniteUiSyntheticResource.child(mediaWellItems, "linkMediaDownload", "wcm-io/wcm/ui/granite/components/form/checkbox",
       ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD)
-      .put("text", "Download")
-      .put("fieldDescription", "Open DAM asset item with download dialog")
+      .put("text", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaDownload.fieldLabel")
+      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaDownload.fieldDescription")
       .build());
 
   insertAdditionalComponents(mediaWellItems, cfg.getChild("mediaLinkFields"));
@@ -308,19 +308,19 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
 Resource linkWindowTarget = GraniteUiSyntheticResource.child(items, "linkWindowTarget", "granite/ui/components/coral/foundation/form/select",
     ImmutableValueMap.builder()
     .put("name", namePrefix + LinkNameConstants.PN_LINK_WINDOW_TARGET)
-    .put("fieldLabel", "Window target")
+    .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkWindowTarget.fieldLabel")
     .build());
 Resource linkWindowTargetItems = GraniteUiSyntheticResource.child(linkWindowTarget, "items", JcrConstants.NT_UNSTRUCTURED);
 GraniteUiSyntheticResource.child(linkWindowTargetItems, "_self", JcrConstants.NT_UNSTRUCTURED,
     ImmutableValueMap.builder()
     .put("value", "_self")
-    .put("text", "Same window")
+    .put("text", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkWindowTarget._self")
     .put("selected", true)
     .build());
 GraniteUiSyntheticResource.child(linkWindowTargetItems, "_blank", JcrConstants.NT_UNSTRUCTURED,
     ImmutableValueMap.builder()
     .put("value", "_blank")
-    .put("text", "New window")
+    .put("text", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkWindowTarget._blank")
     .build());
 
 insertAdditionalComponents(items, cfg.getChild("allLinkTypeFields"));

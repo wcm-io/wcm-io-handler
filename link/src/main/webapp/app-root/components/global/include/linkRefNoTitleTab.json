@@ -1,7 +1,7 @@
 {
   "jcr:primaryType": "nt:unstructured",
   "sling:resourceType": "granite/ui/components/coral/foundation/fixedcolumns",
-  "jcr:title": "Link",
+  "jcr:title": "io.wcm.handler.link.components.global.include.linkRefContainer.linkRefNoTitleTab.title",
   "margin": true,
   "cq:showOnCreate": false,
   "items": {
