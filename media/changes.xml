@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.7.2" date="not released">
+      <action type="update" dev="sseifert" issue="WHAN-25">
+        Granite UI components for file upload and path field: Support "appendPath" parameter.
+      </action>
       <action type="update" dev="sseifert" issue="WHAN-27">
         Add i18n translations for Granite UI dialog snippets.
       </action>
