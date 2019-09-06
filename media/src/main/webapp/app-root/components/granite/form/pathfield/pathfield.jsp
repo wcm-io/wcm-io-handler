@@ -54,7 +54,18 @@ are overwritten or added.
   /**
    * The path of the root of the pathfield.
    */
-  - rootPath (StringEL) = '/content/dam', depending on media handler configuration
+  - rootPath (StringEL) = {root path from media handler config}
+
+  /**
+   * The root path that is used as fallback when no root path could be detected dynamically,
+   * e.g. because outside any site or within experience fragments.
+   */
+  - fallbackRootPath (StringEL) = "/content/dam"
+
+  /**
+   * Appendix path added to the (usually auto-detected) root path.
+   */
+  - appendPath (StringEL) = {path appendix}
 
   /**
    * When the field description is not set, it is set automatically with an information about the
@@ -88,7 +99,6 @@ ExpressionHelper ex = cmp.getExpressionHelper();
 
 // get default values for media ref properties as configured for media handler
 String propNameDefault = "./fileReference";
-String damRootPath = getDamRootPath(slingRequest, "/content/dam");
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
@@ -97,8 +107,10 @@ if (contentResource != null) {
 
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", cfg.get("name", propNameDefault));
-pathFieldProps.put("rootPath", ex.getString(cfg.get("rootPath", damRootPath)));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-pathfield");
+
+// detect root path
+pathFieldProps.putAll(getDamRootPathProperties(cmp, slingRequest, "/content/dam"));
 
 // media format properties for validation of associated media reference
 String[] mediaFormats = null;

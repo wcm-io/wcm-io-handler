@@ -17,27 +17,33 @@
   limitations under the License.
   #L%
   --%>
-<%@page import="com.day.cq.wcm.api.PageManager"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.day.cq.wcm.api.Page"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
+<%@page import="io.wcm.wcm.ui.granite.util.RootPathDetector"%>
+<%@page import="io.wcm.wcm.ui.granite.util.RootPathResolver"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="org.apache.sling.api.SlingHttpServletRequest"%><%!
 
-static String getDamRootPath(SlingHttpServletRequest request, String fallbackRootPath) {
-  String rootPath = null;
-
-  Page contentPage = GraniteUi.getContentPage(request);
-  if (contentPage != null) {
-    MediaHandlerConfig mediaHandlerConfig = contentPage.getContentResource().adaptTo(MediaHandlerConfig.class);
-    rootPath = mediaHandlerConfig.getDamRootPath(contentPage);
-  }
-
-  if (rootPath == null) {
-    rootPath = fallbackRootPath;
-  }
-
-  return rootPath;
+static Map<String,Object> getDamRootPathProperties(ComponentHelper cmp, SlingHttpServletRequest request,
+    String fallbackRootPath) {
+  RootPathResolver rootPathResolver = new RootPathResolver(cmp, request);
+  rootPathResolver.setFallbackRootPath(fallbackRootPath);
+  
+  rootPathResolver.setRootPathDetector(new RootPathDetector() {
+    public String detectRootPath(ComponentHelper cmp, SlingHttpServletRequest request) {
+      String rootPath = null;
+      Page contentPage = GraniteUi.getContentPage(request);
+      if (contentPage != null) {
+        MediaHandlerConfig mediaHandlerConfig = contentPage.getContentResource().adaptTo(MediaHandlerConfig.class);
+        rootPath = mediaHandlerConfig.getDamRootPath(contentPage);
+      }
+      return rootPath;
+    }
+  });
+  
+  return rootPathResolver.getOverrideProperties();
 }
 
 %>

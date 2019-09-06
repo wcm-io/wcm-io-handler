@@ -17,6 +17,8 @@
   limitations under the License.
   #L%
   --%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="java.util.Set"%>
 <%@page import="java.util.TreeSet"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
@@ -29,7 +31,6 @@
 <%@page import="io.wcm.handler.link.LinkNameConstants"%>
 <%@page import="io.wcm.handler.link.spi.LinkHandlerConfig"%>
 <%@page import="io.wcm.handler.link.type.MediaLinkType"%>
-<%@page import="io.wcm.sling.commons.resource.ImmutableValueMap"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
 <%@include file="../../global/global.jsp" %>
@@ -59,21 +60,31 @@ are overwritten or added.
   - rootPath (StringEL) = {link type-dependent root path}
 
   /**
+   * The root path that is used as fallback when no root path could be detected dynamically.
+   */
+  - fallbackRootPath (StringEL) = "/content/dam"
+
+  /**
+   * Appendix path added to the (usually auto-detected) root path.
+   */
+  - appendPath (StringEL) = {path appendix}
+
+  /**
    * List of media formats for assets that can be linked upon.
    * If not set the property value is set to the list of all media formats with "download" flag.
    */
-  - mediaFormats (StringEL[]) = {download media format names}
-
+  - mediaFormats (String[]) = {download media format names}
 
 ###--%><%
 
-// detect root path
 Config cfg = cmp.getConfig();
-String name = cfg.get("name", "./" + LinkNameConstants.PN_LINK_MEDIA_REF);
-String rootPath = cfg.get("rootPath", String.class);
-if (rootPath == null) {
-  rootPath = getRootPath(slingRequest, MediaLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_MEDIA);
-}
+
+Map<String,Object> overwriteProperties = new HashMap<>();
+overwriteProperties.put("name", cfg.get("name", "./" + LinkNameConstants.PN_LINK_MEDIA_REF));
+
+// detect root path
+overwriteProperties.putAll(getRootPathProperties(cmp, slingRequest,
+    MediaLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_MEDIA));
 
 // get all media formats with "download" flag
 Set<String> mediaFormatNames = new TreeSet<String>();
@@ -88,15 +99,12 @@ if (contentResource != null) {
 }
 String[] mediaFormats = cfg.get("mediaFormats", mediaFormatNames.toArray(new String[mediaFormatNames.size()]));
 
-ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of(
-    "name", name,
-    "rootPath", rootPath,
-    "mediaFormats", mediaFormats,
-    "mediaFormatsMandatory", new String[0],
-    "mediaCropAuto", false));
+overwriteProperties.put("mediaFormats", mediaFormats);
+overwriteProperties.put("mediaFormatsMandatory", new String[0]);
+overwriteProperties.put("mediaCropAuto", false);
 
 // simulate resource for dialog field def with new rootPath instead of configured one
-Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
+Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(overwriteProperties));
 
 RequestDispatcherOptions options = new RequestDispatcherOptions();
 options.setForceResourceType("wcm-io/handler/media/components/granite/form/fileupload");

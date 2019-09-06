@@ -17,6 +17,8 @@
   limitations under the License.
   #L%
   --%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="org.apache.sling.api.resource.ValueMap"%>
@@ -25,7 +27,6 @@
 <%@page import="io.wcm.handler.link.LinkNameConstants"%>
 <%@page import="io.wcm.handler.link.spi.LinkHandlerConfig"%>
 <%@page import="io.wcm.handler.link.type.InternalLinkType"%>
-<%@page import="io.wcm.sling.commons.resource.ImmutableValueMap"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@include file="../../global/global.jsp" %>
 <%@include file="../../global/linkRootPathDetection.jsp" %><%--###
@@ -53,23 +54,30 @@ are overwritten or added.
    */
   - rootPath (StringEL) = {link type-dependent root path}
 
+  /**
+   * The root path that is used as fallback when no root path could be detected dynamically,
+   * e.g. because outside any site or within experience fragments.
+   */
+  - fallbackRootPath (StringEL) = "/content"
+
+  /**
+   * Appendix path added to the (usually auto-detected) root path.
+   */
+  - appendPath (StringEL) = {path appendix}
 
 ###--%><%
 
-// detect root path
 Config cfg = cmp.getConfig();
-String name = cfg.get("name", "./" + LinkNameConstants.PN_LINK_CONTENT_REF);
-String rootPath = cfg.get("rootPath", String.class);
-if (rootPath == null) {
-  rootPath = getRootPath(slingRequest, InternalLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_CONTENT);
-}
 
-ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of(
-    "name", name,
-    "rootPath", rootPath));
+Map<String,Object> overwriteProperties = new HashMap<>();
+overwriteProperties.put("name", cfg.get("name", "./" + LinkNameConstants.PN_LINK_CONTENT_REF));
+
+// detect root path
+overwriteProperties.putAll(getRootPathProperties(cmp, slingRequest,
+    InternalLinkType.ID, LinkHandlerConfig.DEFAULT_ROOT_PATH_CONTENT));
 
 // simulate resource for dialog field def with new rootPath instead of configured one
-Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
+Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(overwriteProperties));
 
 RequestDispatcherOptions options = new RequestDispatcherOptions();
 options.setForceResourceType("wcm-io/wcm/ui/granite/components/form/pathfield");
