@@ -85,6 +85,9 @@ class RichTextHandlerImplTest {
       + "<A href=\"http://www.jodelkaiser.de\" target=\"_blank\">ötztal</A> "
       + "ist wieder daheim.</P>";
 
+  private static final String RICHTEXT_FRAGMENT_NAMED_ANCHOR = "<p><a name=\"anchor1\" id=\"anchor1\"></a>Der Jodelkaiser</p>";
+  private static final String RICHTEXT_FRAGMENT_NAMED_ANCHOR_REWRITTEN = "<p><a name=\"anchor1\" id=\"anchor1\"></a>Der Jodelkaiser</p>";
+
   private static final String PLAINTEXT_FRAGMENT = "Der Jodelkaiser\naus dem Ötztal\nist wieder daheim.";
   private static final String PLAINTEXT_FRAGMENT_REWRITTEN = "Der Jodelkaiser<br />aus dem Ötztal<br />ist wieder daheim.";
 
@@ -125,6 +128,13 @@ class RichTextHandlerImplTest {
     RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
     RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT_LEGACY_REL).build();
     assertEquals(RICHTEXT_FRAGMENT_REWRITTEN, richText.getMarkup());
+  }
+
+  @Test
+  void testContent_NamedAnchor() {
+    RichTextHandler richTextHandler = AdaptTo.notNull(adaptable(), RichTextHandler.class);
+    RichText richText = richTextHandler.get(RICHTEXT_FRAGMENT_NAMED_ANCHOR).build();
+    assertEquals(RICHTEXT_FRAGMENT_NAMED_ANCHOR_REWRITTEN, richText.getMarkup());
   }
 
   @Test

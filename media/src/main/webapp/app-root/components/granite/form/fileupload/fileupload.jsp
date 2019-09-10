@@ -81,7 +81,18 @@ are overwritten or added.
   /**
    * The path of the root of the pathfield.
    */
-  - rootPath (StringEL) = '/content/dam', depending on media handler configuration
+  - rootPath (StringEL) = {root path from media handler config}
+
+  /**
+   * The root path that is used as fallback when no root path could be detected dynamically,
+   * e.g. because outside any site or within experience fragments.
+   */
+  - fallbackRootPath (StringEL) = "/content/dam"
+
+  /**
+   * Appendix path added to the (usually auto-detected) root path.
+   */
+  - appendPath (StringEL) = {path appendix}
 
   /**
    * List of media formats required by this component.
@@ -111,7 +122,6 @@ ExpressionHelper ex = cmp.getExpressionHelper();
 String propNameDefault = "./file";
 String propFileNameDefault = "./fileName";
 String propFileReferenceDefault = "./fileReference";
-String damRootPath = getDamRootPath(slingRequest, "/content/dam");
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 boolean hasTransformation = false;
 if (contentResource != null) {
@@ -151,7 +161,7 @@ if (contentResource != null) {
       MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, cfg, ex, componentPropertyResolver.isAutoCrop());
 
   // add info about media formats in field description
-  String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource);
+  String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource, i18n);
   if (mediaFormatsFieldDescription != null) {
    String fieldDescription = cfg.get("fieldDescription", mediaFormatsFieldDescription);
    if (StringUtils.isBlank(fieldDescription)) {
@@ -173,8 +183,11 @@ dispatcher.include(slingRequest, slingResponse);
 // add pathfield widget
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
-pathFieldProps.put("rootPath", ex.getString(cfg.get("rootPath", damRootPath)));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
+
+// detect root path
+pathFieldProps.putAll(getDamRootPathProperties(cmp, slingRequest, "/content/dam"));
+
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
 Map<String,Object> dataProps = new HashMap<>();

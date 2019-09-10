@@ -131,15 +131,17 @@ HTL template example:
 ```html
 <sly data-sly-use.media="${'io.wcm.handler.media.ui.ResourceMedia' @ mediaFormat='content'}"
     data-sly-test="${media.valid}">
-  ${media.markup @ context='html'}
+  ${media.markup @ context='unsafe'}
 </sly>
 <sly data-sly-use.template="wcm-io/handler/media/components/placeholder/mediaPlaceholder.html"
     data-sly-call="${template.placeholder @ isEmpty=!media.valid, media=media.metadata}"></sly>
 ```
 
-In this case the `${media.markup ...}` is replaced with the media markup of the media handler, which is not necessarily is an `img` element, but may be any markup (e.g. a `video` or `audio` or `div` element with custom markup).
+In this case the `${media.markup ...}` is replaced with the media markup of the media handler, which is not necessarily is an `img` element, but may be any markup (e.g. a `picture` or `video` or `div` element with custom markup).
 
 The HTL template library `wcm-io/handler/media/components/placeholder/mediaPlaceholder.html` provides a "Media Handler-aware" version placeholder that is displayed for an image component when no or no valid asset is referenced. If an asset is referenced that does not match with the expected media formats an additional message is displayed in the placeholder.
+
+A word on the `unsafe` context, which normally should  by avoided in HTL: Any HTML element that is unknown (unconfigured) in the AEM/Sling default XSS settings is stripped out when using the `html` context. Unfortunately this affects also modern HTML5 responsive image markup like `sizes` and `srcset` attributes, or the `picture` and `source` elements. So you either have to reconfigure the XSS setting of your AEM instance, or us the `unsafe` mode. In this case `unsafe` can be considered safe, because the media handler does not return any markup that can be entered by a user or injected in other ways, but only the markup it produces itself.
 
 
 ### Cropping and Image Rotation

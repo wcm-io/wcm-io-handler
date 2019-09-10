@@ -212,7 +212,16 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
    * @return Anchor element or null if link is invalid
    */
   private Element buildAnchorElement(Link link, Element element) {
-    return link.getAnchor();
+    if (link.isValid()) {
+      return link.getAnchor();
+    }
+    else if (element.getAttributeValue("name") != null && element.getAttributeValue("src") == null) {
+      // not a valid link, but it seems to be a named anchor - keep it
+      return element;
+    }
+    else {
+      return null;
+    }
   }
 
   /**

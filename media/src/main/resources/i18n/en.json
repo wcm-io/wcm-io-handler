@@ -1,8 +1,54 @@
 {
-  "io.wcm.handler.media.assetInvalid": "Asset invalid",
-  "io.wcm.handler.media.invalidReason.MEDIA_REFERENCE_MISSING": "No reference",
-  "io.wcm.handler.media.invalidReason.MEDIA_REFERENCE_INVALID": "Invalid reference",
-  "io.wcm.handler.media.invalidReason.NO_MATCHING_RENDITION": "No matching media format",
-  "io.wcm.handler.media.invalidReason.NOT_ENOUGH_MATCHING_RENDITIONS": "Not enough renditions matching media formats",
-  "io.wcm.handler.media.invalidReason.INVALID_MEDIA_FORMAT": "Invalid media format"
+  "io.wcm.handler.media": {
+    "assetInvalid": "Asset invalid",
+    "invalidReason": {
+      "MEDIA_REFERENCE_MISSING": "No reference",
+      "MEDIA_REFERENCE_INVALID": "Invalid reference",
+      "NO_MATCHING_RENDITION": "No matching media format",
+      "NOT_ENOUGH_MATCHING_RENDITIONS": "Not enough renditions matching media formats",
+      "INVALID_MEDIA_FORMAT": "Invalid media format"
+    },
+
+    "components.global.include": {
+      "mediaFormatSelection": {
+        "mediaFormats.fieldLabel": "Media Formats",
+        "mediaFormats.fieldDescription": "Displays rendition that matches with any of the media formats.",
+        "mediaFormatsMandatory.fieldLabel": "Mandatory Media Formats",
+        "mediaFormatsMandatory.fieldDescription": "Displays rendition that matches with all of the media formats.",
+        "mediaCropAuto.fieldLabel": "Auto Cropping",
+        "mediaCropAuto.fieldDescription": "If no rendition is found matching the media formats, auto-cropping is applied to match the media format."
+      },
+      "responsiveImageSettings": {
+        "title": "Responsive Image",
+        "responsiveType.fieldLabel": "Choose type",
+        "responsiveType.none": "None",
+        "responsiveType.imageSizes": "Image with sizes attribute",
+        "responsiveType.pictureSource": "Picture with source elements",
+        "noTypeSelectedText": "Choose the type of responsiveness which should be applied to images.",
+        "imageSizes": {
+          "mediaFormatInfoText": "The constraints of the primary media format apply (as selected on first tab).",
+          "sizes.fieldLabel": "Sizes String",
+          "sizes.fieldDescription": "A valid source size list, see http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Example: '(min-width: 1280px) 1200px, 100vw'.",
+          "widths.fieldLabel": "Widths (px)",
+          "widths.fieldDescription": "Widths for the renditions in the srcset attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'."
+        },
+        "pictureSources": {
+          "mediaFormat.fieldLabel": "Media Format",
+          "mediaFormat.fieldDescription": "Media format with ratio for the renditions of the source element.",
+          "media.fieldLabel": "Media String",
+          "media.fieldDescription": "A valid media query list, see http://w3c.github.io/html/infrastructure.html#valid-media-query-list. Example: '(min-width: 1024px)'.",
+          "sizes.fieldLabel": "Sizes String",
+          "sizes.fieldDescription": "A valid source size list, see http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list. Example: '(min-width: 1280px) 1200px, 100vw'.",
+          "widths.fieldLabel": "Widths (px)",
+          "widths.fieldDescription": "Widths for the renditions in the srcset attribute. Separate widths by ','. Suffix optional widths with '?'."
+        }
+      }
+    },
+
+    "components.granite.form.fileupload": {
+      "mediaFormat": "Media format",
+      "mediaFormats": "Media formats"
+    }
+
+  }
 }

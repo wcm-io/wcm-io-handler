@@ -17,34 +17,43 @@
   limitations under the License.
   #L%
   --%>
+<%@page import="java.util.Map"%>
+<%@page import="com.adobe.granite.ui.components.ComponentHelper"%>
 <%@page import="io.wcm.handler.url.spi.UrlHandlerConfig"%>
 <%@page import="io.wcm.wcm.commons.util.Path"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
+<%@page import="io.wcm.wcm.ui.granite.util.RootPathResolver"%>
+<%@page import="io.wcm.wcm.ui.granite.util.RootPathDetector"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
+<%@page import="org.apache.sling.api.resource.ValueMap"%>
+<%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
 <%@page import="org.apache.sling.api.SlingHttpServletRequest"%><%!
 
-static String getRootPath(SlingHttpServletRequest request, String fallbackRootPath) {
-  String rootPath = fallbackRootPath;
-
-  Resource contentResource = GraniteUi.getContentResourceOrParent(request);
-  if (contentResource != null) {
-    // inside an experience fragment it does not make sense to use a site root path
-    if (!Path.isExperienceFragmentPath(contentResource.getPath())) {
-      UrlHandlerConfig urlHandlerConfig = contentResource.adaptTo(UrlHandlerConfig.class);
-      if (urlHandlerConfig != null) {
-        int siteRootLevel = urlHandlerConfig.getSiteRootLevel(contentResource);
-        if (siteRootLevel >= 0) {
-          rootPath = Path.getAbsoluteParent(contentResource.getPath(), siteRootLevel, request.getResourceResolver());
+static ValueMap getRootPathProperties(ComponentHelper cmp, SlingHttpServletRequest request) {
+  RootPathResolver rootPathResolver = new RootPathResolver(cmp, request);
+  rootPathResolver.setFallbackRootPath("/content");
+  
+  rootPathResolver.setRootPathDetector(new RootPathDetector() {
+    public String detectRootPath(ComponentHelper cmp, SlingHttpServletRequest request) {
+      String rootPath = null;
+      Resource contentResource = GraniteUi.getContentResourceOrParent(request);
+      if (contentResource != null) {
+        // inside an experience fragment it does not make sense to use a site root path
+        if (!Path.isExperienceFragmentPath(contentResource.getPath())) {
+          UrlHandlerConfig urlHandlerConfig = contentResource.adaptTo(UrlHandlerConfig.class);
+          if (urlHandlerConfig != null) {
+            int siteRootLevel = urlHandlerConfig.getSiteRootLevel(contentResource);
+            if (siteRootLevel >= 0) {
+              rootPath = Path.getAbsoluteParent(contentResource.getPath(), siteRootLevel, request.getResourceResolver());
+            }
+          }
         }
       }
+      return rootPath;
     }
-  }
-
-  if (rootPath == null) {
-    rootPath = fallbackRootPath;
-  }
-
-  return rootPath;
+  });
+  
+  return new ValueMapDecorator(rootPathResolver.getOverrideProperties());
 }
 
 %>

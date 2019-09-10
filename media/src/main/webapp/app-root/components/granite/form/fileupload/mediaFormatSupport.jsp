@@ -19,6 +19,7 @@
 --%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="com.adobe.granite.ui.components.ExpressionHelper"%>
+<%@page import="com.day.cq.i18n.I18n"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
@@ -27,7 +28,7 @@
 <%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
 <%!
 
-static String buildMediaFormatsFieldDescription(String[] mediaFormats, Resource resource) {
+static String buildMediaFormatsFieldDescription(String[] mediaFormats, Resource resource, I18n i18n) {
   if (mediaFormats == null || mediaFormats.length == 0) {
     return null;
   }
@@ -46,10 +47,10 @@ static String buildMediaFormatsFieldDescription(String[] mediaFormats, Resource 
 
   String fieldDescription;
   if (mediaFormatDescriptions.size() == 1) {
-    fieldDescription = "Media format: ";
+    fieldDescription = i18n.get("io.wcm.handler.media.components.granite.form.fileupload.mediaFormat") + ": ";
   }
   else {
-    fieldDescription = "Media formats: ";
+    fieldDescription = i18n.get("io.wcm.handler.media.components.granite.form.fileupload.mediaFormats") + ": ";
   }
   fieldDescription += StringUtils.join(mediaFormatDescriptions, ", ");
   return fieldDescription;

@@ -17,12 +17,9 @@
   limitations under the License.
   #L%
   --%>
-<%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="org.apache.sling.api.resource.ValueMap"%>
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
-<%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
-<%@page import="io.wcm.sling.commons.resource.ImmutableValueMap"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@include file="../../global/global.jsp" %>
 <%@include file="../siteRootPathField/pathDetection.jsp" %><%--###
@@ -40,7 +37,7 @@ are overwritten or added.
 .. gnd:gnd::
 
   /**
-   * The path of the root of the pathfield. If not set, it's value is set automatically
+   * The root path of the path browser. If not set, it's value is set automatically
    * to the "Site Root" of the current site as configured via the URL Handler configuration.
    */
   - rootPath (StringEL) = {site root}
@@ -51,18 +48,15 @@ are overwritten or added.
    */
   - fallbackRootPath (StringEL) = "/content"
 
+  /**
+   * Appendix path added to the (usually auto-detected) root path.
+   */
+  - appendPath (StringEL) = {path appendix}
 
 ###--%><%
 
 // detect root path
-Config cfg = cmp.getConfig();
-String rootPath = cfg.get("rootPath", String.class);
-String fallbackRootPath = cfg.get("fallbackRootPath", "/content");
-if (rootPath == null) {
-  rootPath = getRootPath(slingRequest, fallbackRootPath);
-}
-
-ValueMap overwriteProperties = new ValueMapDecorator(ImmutableValueMap.of("rootPath", rootPath));
+ValueMap overwriteProperties = getRootPathProperties(cmp, slingRequest);
 
 // simulate resource for dialog field def with new rootPath instead of configured one
 Resource resourceWrapper = GraniteUiSyntheticResource.wrapMerge(resource, overwriteProperties);
