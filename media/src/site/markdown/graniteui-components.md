@@ -39,7 +39,7 @@ This is a customized Path Field component that allows to reference AEM assets wi
 }
 ```
 
-Enhancements over AEM version:
+This component extends the [wcm.io Granite UI components Path Field][wcmio-wcm-ui-granite-pathfield]. Enhancements over this version:
 
 * The referenced asset is checked automatically against the configured set of media formats. A warning is displayed in the edit dialog when the selected asset does not match with the media formats. The media formats are taken from the [component properties][component-properties], or can be set directly for the edit dialog using the properties `mediaFormats`, `mediaFormatsMandatory` and `mediaCropAuto`.
 * The property `rootPath` is automatically set to the default DAM root path in the Media Handler configuration, and defaults to `/content/dam`.
@@ -64,3 +64,4 @@ Multi-select field that allows to select one or multiple media formats.
 
 
 [component-properties]: component-properties.html
+[wcmio-wcm-ui-granite-pathfield]: https://wcm.io/wcm/ui/granite/components.html#Path_Field
