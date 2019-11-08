@@ -40,7 +40,7 @@ This is a customized Path Field that always sets the root path to the link root 
 }
 ```
 
-Enhancements over AEM version:
+This component extends the [wcm.io Granite UI components Path Field][wcmio-wcm-ui-granite-pathfield]. Enhancements over this version:
 
 * Dynamically sets `rootPath` to the link root path as returned by the Link Handler configuration
 * Dynamically sets `name` to the default property name for internal links
@@ -57,7 +57,7 @@ This is a customized Path Field that always sets the root path to the link root 
 }
 ```
 
-Enhancements over AEM version:
+This component extends the [wcm.io Granite UI components Path Field][wcmio-wcm-ui-granite-pathfield]. Enhancements over this version:
 
 * Dynamically sets `rootPath` to the link root path as returned by the Link Handler configuration
 * Dynamically sets `name` to the default property name for internal cross-context links
@@ -74,9 +74,12 @@ This is a customized Path Field that always sets the root path to the link root 
 }
 ```
 
-This component extends the "Media Handler-aware Path Field". Enhancements over this version:
+This component extends the [Media Handler-aware Path Field][wcmio-handler-media-pathfield]. Enhancements over this version:
 
 * Dynamically sets `rootPath` to the link root path as returned by the Link Handler configuration
 * Dynamically sets `name` to the default property name for media links
 * Dynamically sets `mediaFormats` to a list of all media formats with "download" flag
 
+
+[wcmio-handler-media-pathfield]: https://wcm.io/handler/media/graniteui-components.html#Media_Handler-aware_Path_Field
+[wcmio-wcm-ui-granite-pathfield]: https://wcm.io/wcm/ui/granite/components.html#Path_Field

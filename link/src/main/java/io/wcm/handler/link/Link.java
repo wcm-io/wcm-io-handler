@@ -20,6 +20,8 @@
 package io.wcm.handler.link;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
+import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.spi.LinkType;
@@ -50,6 +53,7 @@ public final class Link {
   private Page targetPage;
   private Asset targetAsset;
   private Rendition targetRendition;
+  private List<Page> redirectPages;
 
   /**
    * @param linkType Link type
@@ -190,6 +194,32 @@ public final class Link {
    */
   public void setTargetRendition(Rendition targetRendition) {
     this.targetRendition = targetRendition;
+  }
+
+  /**
+   * During link resolution one or multiple redirect pages may get resolved and replaced by the referenced
+   * link target. This page list gives access to all redirect pages that where visited and resolved
+   * during the link resolution process.
+   * @return List of links in the "resolve history".
+   */
+  public @NotNull List<Page> getRedirectPages() {
+    if (redirectPages == null) {
+      return ImmutableList.of();
+    }
+    else {
+      return ImmutableList.copyOf(redirectPages);
+    }
+  }
+
+  /**
+   * Add page to list of redirect pages (at first position of the list).
+   * @param redirectPage Redirect page
+   */
+  public void addRedirectPage(@NotNull Page redirectPage) {
+    if (redirectPages == null) {
+      redirectPages = new LinkedList<>();
+    }
+    redirectPages.add(0, redirectPage);
   }
 
   /**

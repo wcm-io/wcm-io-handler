@@ -231,7 +231,9 @@ public final class InternalLinkResolver {
       }
 
       // resolve link by recursive call to link handler, track recursion count
-      return linkHandler.get(redirectLinkRequest).build();
+      Link resolvedLink = linkHandler.get(redirectLinkRequest).build();
+      resolvedLink.addRedirectPage(redirectPage);
+      return resolvedLink;
     }
     finally {
       linkResolveCounter.decreaseCount();

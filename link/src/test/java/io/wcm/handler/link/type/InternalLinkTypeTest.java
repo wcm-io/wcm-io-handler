@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -115,6 +117,7 @@ class InternalLinkTypeTest {
     assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
     assertNull(link.getUrl(), "link url");
     assertNull(link.getAnchor(), "anchor");
+    assertTrue(link.getRedirectPages().isEmpty());
   }
 
   @Test
@@ -134,6 +137,7 @@ class InternalLinkTypeTest {
     assertTrue(link.isLinkReferenceInvalid(), "link ref invalid");
     assertNull(link.getUrl(), "link url");
     assertNull(link.getAnchor(), "anchor");
+    assertTrue(link.getRedirectPages().isEmpty());
   }
 
   @Test
@@ -179,6 +183,7 @@ class InternalLinkTypeTest {
     assertFalse(link.isLinkReferenceInvalid(), "link ref invalid");
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
+    assertTrue(link.getRedirectPages().isEmpty());
   }
 
   @Test
@@ -224,6 +229,10 @@ class InternalLinkTypeTest {
     assertTrue(link.isValid(), "link valid");
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
+
+    List<Page> redirectPages = link.getRedirectPages();
+    assertEquals(1, redirectPages.size());
+    assertEquals(redirectInternalPage, redirectPages.get(0));
   }
 
   @Test
@@ -269,6 +278,11 @@ class InternalLinkTypeTest {
     assertTrue(link.isValid(), "link valid");
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
+
+    List<Page> redirectPages = link.getRedirectPages();
+    assertEquals(2, redirectPages.size());
+    assertEquals(redirectRedirectInternalPage, redirectPages.get(0));
+    assertEquals(redirectInternalPage, redirectPages.get(1));
   }
 
   @Test
