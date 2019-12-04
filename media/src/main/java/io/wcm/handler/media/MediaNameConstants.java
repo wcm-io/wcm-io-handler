@@ -203,7 +203,7 @@ public final class MediaNameConstants {
    * Child node is to be defined on component or in policy.
    * </p>
    */
-  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES = "wcmio:mediaRepsonsiveImageSizes";
+  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES = "wcmio:mediaResponsiveImageSizes";
 
   /**
    * Defines "picture sources" responsive image setting.
@@ -213,6 +213,6 @@ public final class MediaNameConstants {
    * Child node is to be defined on component or in policy.
    * </p>
    */
-  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES = "wcmio:mediaRepsonsivePictureSources";
+  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES = "wcmio:mediaResponsivePictureSources";
 
 }
