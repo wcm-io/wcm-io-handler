@@ -203,7 +203,7 @@ public final class MediaNameConstants {
    * Child node is to be defined on component or in policy.
    * </p>
    */
-  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES = "wcmio:mediaRepsonsiveImageSizes";
+  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES = "wcmio:mediaResponsiveImageSizes";
 
   /**
    * Defines "picture sources" responsive image setting.
@@ -213,6 +213,29 @@ public final class MediaNameConstants {
    * Child node is to be defined on component or in policy.
    * </p>
    */
+  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES = "wcmio:mediaResponsivePictureSources";
+
+  /**
+   * Defines "image sizes" responsive image setting.
+   * Contains properties <code>sizes</code>, <code>widths</code>.
+   * <p>
+   * Child node is to be defined on component or in policy.
+   * </p>
+   * @deprecated Please use {@link #NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES}
+   */
+  @Deprecated
+  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES = "wcmio:mediaRepsonsiveImageSizes";
+
+  /**
+   * Defines "picture sources" responsive image setting.
+   * Contains child nodes for each source definition with properties <code>mediaFormat</code>, <code>media</code>,
+   * <code>widths</code>.
+   * <p>
+   * Child node is to be defined on component or in policy.
+   * </p>
+   * @deprecated Please use {@link #NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES}
+   */
+  @Deprecated
   public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES = "wcmio:mediaRepsonsivePictureSources";
 
 }
