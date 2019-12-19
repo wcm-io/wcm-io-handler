@@ -142,7 +142,7 @@ public final class AssetRendition {
 
   private static long getAssetMetadataValueAsLong(Asset asset, String... propertyNames) {
     for (String propertyName : propertyNames) {
-      long value = NumberUtils.toLong(StringUtils.defaultString(asset.getMetadataValue(propertyName), "0"));
+      long value = NumberUtils.toLong(StringUtils.defaultString(asset.getMetadataValueFromJcr(propertyName), "0"));
       if (value > 0L) {
         return value;
       }

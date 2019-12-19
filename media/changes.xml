@@ -25,6 +25,9 @@
 
     <release version="1.7.4" date="not released">
       <action type="fix" dev="sseifert">
+        AssetRendition: Use getMetadataValueFromJcr instead of getMetadataValue.
+      </action>
+      <action type="fix" dev="sseifert">
         Rendition metadata: Fix generation of rendition metadata for SVG assets in AEM 6.4 and below.
       </action>
       <action type="fix" dev="mrozati">
