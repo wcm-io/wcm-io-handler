@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.DamEvent;
 import com.day.cq.dam.api.DamEvent.Type;
+import com.day.cq.dam.api.handler.store.AssetStore;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.wcm.handler.media.MediaFileType;
@@ -104,6 +105,8 @@ public final class RenditionMetadataListenerService implements EventHandler {
   private SlingSettingsService slingSettings;
   @Reference
   private AssetSynchonizationService assetSynchronizationService;
+  @Reference
+  private AssetStore assetStore;
 
   private ScheduledExecutorService executorService;
 
@@ -263,7 +266,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
      */
     private void renditionAddedOrUpdated(ResourceResolver resolver) throws PersistenceException {
       log.trace("Process rendition added/updated event: {}", renditionPath);
-      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
+      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver, assetStore);
       generator.renditionAddedOrUpdated(renditionPath);
     }
 
@@ -273,7 +276,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
      */
     private void renditionRemoved(ResourceResolver resolver) throws PersistenceException {
       log.trace("Process rendition removed event: {}", renditionPath);
-      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver);
+      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resolver, assetStore);
       generator.renditionRemoved(renditionPath);
     }
 

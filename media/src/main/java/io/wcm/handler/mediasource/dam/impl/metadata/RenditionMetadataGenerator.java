@@ -53,11 +53,13 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
+import com.day.cq.dam.api.handler.store.AssetStore;
 import com.day.image.Layer;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaFileType;
+import io.wcm.handler.media.impl.ResourceLayerUtil;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -67,14 +69,16 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 public final class RenditionMetadataGenerator {
 
   private final ResourceResolver resourceResolver;
+  private final AssetStore assetStore;
 
   private static final Logger log = LoggerFactory.getLogger(RenditionMetadataGenerator.class);
 
   /**
    * @param resourceResolver Resource resolver
    */
-  public RenditionMetadataGenerator(ResourceResolver resourceResolver) {
+  public RenditionMetadataGenerator(ResourceResolver resourceResolver, AssetStore assetStore) {
     this.resourceResolver = resourceResolver;
+    this.assetStore = assetStore;
   }
 
   /**
@@ -279,7 +283,7 @@ public final class RenditionMetadataGenerator {
    * @return Dimension or null if it could not be detected
    */
   private Dimension getRenditionDimension(Resource renditionResource) {
-    Layer layer = renditionResource.adaptTo(Layer.class);
+    Layer layer = ResourceLayerUtil.toLayer(renditionResource, assetStore);
     if (layer == null) {
       return null;
     }
