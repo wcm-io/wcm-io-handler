@@ -19,7 +19,9 @@
  */
 package io.wcm.handler.richtext.ui;
 
+import static io.wcm.handler.richtext.RichTextNameConstants.PN_TEXT;
 import static io.wcm.handler.richtext.testcontext.AppAemContext.ROOTPATH_CONTENT;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -30,9 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
@@ -52,23 +52,19 @@ class ResourceMultilineTextTest {
     context.create().page(ROOTPATH_CONTENT + "/page1");
 
     simpleTextResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/simpleText",
-        ImmutableValueMap.builder()
-        .put(RichTextNameConstants.PN_TEXT, "Simple Text")
-        .build());
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_TEXT, "Simple Text");
 
     textWithLineBreaksResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/textWithLineBreaks",
-        ImmutableValueMap.builder()
-        .put(RichTextNameConstants.PN_TEXT, "Simple Text\nwith\nLine Breaks")
-        .build());
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_TEXT, "Simple Text\nwith\nLine Breaks");
 
     textWithMarkupResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/textWithMarkup",
-        ImmutableValueMap.builder()
-        .put(RichTextNameConstants.PN_TEXT, "<p>Text with <strong>Markup</strong></p>")
-        .build());
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_TEXT, "<p>Text with <strong>Markup</strong></p>");
 
     invalidTextResource = context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/invalidText",
-        ImmutableValueMap.builder()
-        .build());
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype");
   }
 
   @Test

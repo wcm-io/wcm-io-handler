@@ -41,9 +41,10 @@ Read the [general concepts][general-concepts] to get an overview of the function
 
 |Media Handler version |AEM version supported
 |----------------------|----------------------
-|1.2.x or higher       |AEM 6.2 and up
-|1.0.x, 1.1.x          |AEM 6.1 and up
-|0.x                   |AEM 6.0 and up
+|1.8.x or higher       |AEM 6.3+
+|1.2.x - 1.7.x         |AEM 6.2+
+|1.0.x - 1.1.x         |AEM 6.1+
+|0.x                   |AEM 6.0+
 
 
 ### Dependencies

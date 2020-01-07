@@ -19,10 +19,12 @@
  */
 package io.wcm.handler.media.ui;
 
+import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CAMPAIGN;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,9 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 
-import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -55,7 +55,8 @@ class ResourceMediaTest {
         (int)EDITORIAL_2COL.getWidth(), (int)EDITORIAL_2COL.getHeight(), ContentType.JPEG);
 
     Resource resource = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media",
-        ImmutableValueMap.of(MediaNameConstants.PN_MEDIA_REF, asset.getPath()));
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_MEDIA_REF, asset.getPath());
 
     context.currentResource(resource);
   }
@@ -102,7 +103,8 @@ class ResourceMediaTest {
     context.request().setAttribute("cropProperty", "myCropProp");
 
     Resource resource2 = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media2",
-        ImmutableValueMap.of("myRefProp", asset.getPath()));
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        "myRefProp", asset.getPath());
     context.currentResource(resource2);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);

@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.link.type.helpers;
 
+import static io.wcm.handler.link.LinkNameConstants.PN_LINK_CONTENT_REF;
+import static io.wcm.handler.link.LinkNameConstants.PN_LINK_TYPE;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,7 +34,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.wcm.api.Page;
 
 import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.link.SyntheticLinkResource;
 import io.wcm.handler.link.testcontext.AppAemContext;
@@ -74,8 +76,8 @@ class InternalLinkResolverTest {
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         "/content/dummy-path",
         ImmutableValueMap.builder()
-            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+            .put(PN_LINK_TYPE, InternalLinkType.ID)
+            .put(PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
             .build());
 
     LinkRequest linkRequest = new LinkRequest(linkResource, null, null);
@@ -96,8 +98,8 @@ class InternalLinkResolverTest {
     SyntheticLinkResource linkResource = new SyntheticLinkResource(context.resourceResolver(),
         "/content/dummy-path",
         ImmutableValueMap.builder()
-            .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
-            .put(LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
+            .put(PN_LINK_TYPE, InternalLinkType.ID)
+            .put(PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content")
             .build());
 
     LinkRequest linkRequest = new LinkRequest(linkResource, null, null);
@@ -115,8 +117,9 @@ class InternalLinkResolverTest {
   void testTargetPage_RewritePathToContext_ExperienceFragment() {
     Page xfPage = context.create().page("/content/experience-fragments/level1/level2/level3/level4/xf1");
     Resource linkResource = context.create().resource(xfPage, "link",
-        LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
-        LinkNameConstants.PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content");
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_LINK_TYPE, InternalLinkType.ID,
+        PN_LINK_CONTENT_REF, "/content/unittest/en_test/brand/en/section/content");
 
     context.currentPage(xfPage);
     context.currentResource(linkResource);
