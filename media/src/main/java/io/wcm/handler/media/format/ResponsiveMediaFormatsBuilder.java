@@ -77,7 +77,7 @@ public final class ResponsiveMediaFormatsBuilder {
    * @return Array of on-the-fly media formats
    */
   public MediaFormat[] build() {
-    return mediaFormats.toArray(new MediaFormat[mediaFormats.size()]);
+    return mediaFormats.toArray(new MediaFormat[0]);
   }
 
   static @NotNull String buildCombinedName(MediaFormat mediaFormat, String breakpoint, int width, int height) {

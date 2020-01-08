@@ -41,7 +41,7 @@ public final class MediaFormatRankingComparator implements Comparator<MediaForma
       return obj1.toString().compareTo(obj2.toString());
     }
     else {
-      return ((Long)ranking1).compareTo(ranking2);
+      return Long.compare(ranking1, ranking2);
     }
   }
 

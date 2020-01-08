@@ -175,6 +175,7 @@ public final class AssetRendition {
    *          renditions metadata containing the with/height of the rendition does not exist (yet).
    * @return Dimension or null
    */
+  @SuppressWarnings("PMD.GuardLogStatement")
   private static @Nullable Dimension getDimensionFromImageBinary(@NotNull Rendition rendition,
       boolean suppressLogWarningNoRenditionsMetadata) {
     try (InputStream is = rendition.getStream()) {

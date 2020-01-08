@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import com.day.cq.wcm.api.components.DropTarget;
 import com.google.common.collect.ImmutableMap;
 
+@SuppressWarnings("deprecation")
 class DropTargetImplTest {
 
   @Test

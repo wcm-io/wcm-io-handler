@@ -54,6 +54,7 @@ class UrlExternalizerTransformer extends AbstractSAXPipe implements Transformer 
   }
 
   @Override
+  @SuppressWarnings("PMD.UseStringBufferForStringAppends")
   public void startElement(String nsUri, String name, String raw, Attributes attrs) throws SAXException {
 
     // check if for this element an attribute for rewriting is configured

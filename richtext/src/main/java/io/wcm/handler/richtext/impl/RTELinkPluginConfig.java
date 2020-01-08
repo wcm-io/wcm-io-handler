@@ -58,6 +58,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     selectors = RTELinkPluginConfig.SELECTOR,
     extensions = FileExtension.JSON,
     methods = HttpConstants.METHOD_GET)
+@SuppressWarnings("deprecation")
 public class RTELinkPluginConfig extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

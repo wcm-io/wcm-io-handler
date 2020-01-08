@@ -77,14 +77,14 @@ public final class MediaFormatSupport {
         fileExtensions = null;
       }
       else {
-        fileExtensions = intersection.toArray(new String[intersection.size()]);
+        fileExtensions = intersection.toArray(new String[0]);
       }
     }
     else if (!mediaArgsFileExtensions.isEmpty()) {
-      fileExtensions = mediaArgsFileExtensions.toArray(new String[mediaArgsFileExtensions.size()]);
+      fileExtensions = mediaArgsFileExtensions.toArray(new String[0]);
     }
     else {
-      fileExtensions = mediaFormatFileExtensions.toArray(new String[mediaFormatFileExtensions.size()]);
+      fileExtensions = mediaFormatFileExtensions.toArray(new String[0]);
     }
 
     return fileExtensions;

@@ -59,7 +59,7 @@ public class ImageMapParserImpl implements ImageMapParser {
     // Parse the image map areas as defined at {@code Image.PN_MAP}
     String[] areaStrings = StringUtils.split(mapString, "][");
     for (String areaString : areaStrings) {
-      int coordinatesEndIndex = areaString.indexOf(")");
+      int coordinatesEndIndex = areaString.indexOf(')');
       if (coordinatesEndIndex < 0) {
         break;
       }

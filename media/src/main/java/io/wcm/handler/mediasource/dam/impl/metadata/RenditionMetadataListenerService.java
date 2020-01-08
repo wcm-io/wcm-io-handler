@@ -212,6 +212,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     }
 
     @Override
+    @SuppressWarnings("PMD.GuardLogStatement")
     public void run() {
       // process event synchronized per asset path
       Lock lock = assetSynchronizationService.getLock(assetPath);

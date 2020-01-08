@@ -160,7 +160,7 @@ class ClientlibPathCache implements EventListener, AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     if (this.listenerServiceResourceResolver != null) {
       log.debug("End observation for client libraries.");
       this.listenerServiceResourceResolver.close();

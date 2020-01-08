@@ -284,7 +284,7 @@ public final class SuffixBuilder {
         return page.adaptTo(Resource.class);
       }
     });
-    return resources(resources, suffixBasePage.adaptTo(Resource.class));
+    return resources(resources, AdaptTo.notNull(suffixBasePage, Resource.class));
   }
 
   /**
