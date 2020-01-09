@@ -38,6 +38,7 @@ import com.adobe.granite.workflow.exec.WorkItem;
 import com.adobe.granite.workflow.exec.WorkflowProcess;
 import com.adobe.granite.workflow.metadata.MetaDataMap;
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.handler.store.AssetStore;
 import com.day.cq.dam.commons.util.DamUtil;
 
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -59,12 +60,14 @@ public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
   private ResourceCollectionManager resourceCollectionManager;
   @Reference
   private AssetSynchonizationService assetSynchronizationService;
+  @Reference
+  private AssetStore assetStore;
 
   @Override
   public void execute(WorkItem item, WorkflowSession workflowSession, MetaDataMap args) {
     String payloadPath = WorkflowProcessUtil.getPayloadResourcePath(item);
     if (payloadPath == null) {
-      log.warn("Invalid payload: " + item.getWorkflowData().getPayloadType());
+      log.warn("Invalid payload: {}", item.getWorkflowData().getPayloadType());
       return;
     }
 
@@ -110,7 +113,7 @@ public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
       resourceResolver.refresh();
 
       // process asset renditions
-      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resourceResolver);
+      RenditionMetadataGenerator generator = new RenditionMetadataGenerator(resourceResolver, assetStore);
       generator.processAllRenditions(asset);
     }
     finally {

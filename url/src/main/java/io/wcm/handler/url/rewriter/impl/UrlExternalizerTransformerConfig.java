@@ -54,10 +54,10 @@ class UrlExternalizerTransformerConfig {
       String elementName = StringUtils.trim(StringUtils.substringBefore(item, ELEMENT_ATTRIBUTE_SEPARATOR));
       String attributeName = StringUtils.trim(StringUtils.substringAfter(item, ELEMENT_ATTRIBUTE_SEPARATOR));
       if (StringUtils.isBlank(elementName) || StringUtils.isBlank(attributeName)) {
-        log.info("Invalid URL externalizier transformer configuration - skipping invalid element entry: " + item);
+        log.info("Invalid URL externalizier transformer configuration - skipping invalid element entry: {}", item);
       }
       else if (map.containsKey(elementName)) {
-        log.info("Invalid URL externalizier transformer configuration - skipping duplicate element name: " + item);
+        log.info("Invalid URL externalizier transformer configuration - skipping duplicate element name: {}", item);
       }
       else {
         map.put(elementName, attributeName);

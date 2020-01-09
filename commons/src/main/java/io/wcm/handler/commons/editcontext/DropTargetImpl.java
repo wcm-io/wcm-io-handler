@@ -32,6 +32,7 @@ import com.google.common.collect.ImmutableMap;
  * {@link DropTarget} implementation.
  */
 @ProviderType
+@SuppressWarnings("deprecation")
 public final class DropTargetImpl implements DropTarget {
 
   private final String name;

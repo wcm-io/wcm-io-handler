@@ -23,6 +23,21 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.8.0" date="not released">
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.3 as minimum version.
+      </action>
+      <action type="fix" dev="sseifert">
+        AssetRendition: Use getMetadataValueFromJcr instead of getMetadataValue.
+      </action>
+      <action type="fix" dev="sseifert">
+        Rendition metadata: Fix generation of rendition metadata for SVG assets in AEM 6.4 and below.
+      </action>
+      <action type="fix" dev="mrozati">
+        MediaNameConstants: Fix typo in wcmio:mediaRepsonsive* node names (still support old node names for backward compatibility).
+      </action>
+    </release>
+
     <release version="1.7.2" date="2019-09-10">
       <action type="update" dev="sseifert" issue="WHAN-25">
         Granite UI components for file upload and path field: Support "appendPath" parameter.

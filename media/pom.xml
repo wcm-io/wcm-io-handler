@@ -25,14 +25,14 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>1.1.14</version>
+    <version>1.2.0-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>1.7.3-SNAPSHOT</version>
-  <packaging>bundle</packaging>
+  <version>1.8.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
   <name>Media Handler</name>
   <description>Media resolving, processing and markup generation.</description>
@@ -104,37 +104,35 @@
     <plugins>
 
       <plugin>
-        <groupId>io.wcm.devops.maven.plugins</groupId>
-        <artifactId>eclipse-maven-plugin</artifactId>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
         <configuration>
-          <addVersionToProjectName>false</addVersionToProjectName>
+          <bnd>
+            Sling-Initial-Content: \
+              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media
+
+            Sling-Namespaces: wcmio=http://wcm.io/ns
+
+            Import-Package: \
+              <!-- For build compatibility with Java 11 -->\
+              javax.annotation;version="[0.0,2)",\
+              <!-- Package version change between AEM 6.2 and AEM 6.3 -->\
+              com.day.cq.dam.api.handler;version="[1.0,3)",\
+              *
+          </bnd>
         </configuration>
       </plugin>
-
       <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-baseline-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <instructions>
-            <Sling-Initial-Content>
-              SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media
-            </Sling-Initial-Content>
-            <Sling-Model-Packages>
-              io.wcm.handler.media,
-              io.wcm.handler.mediasource.dam,
-              io.wcm.handler.mediasource.inline
-            </Sling-Model-Packages>
-            <Sling-Namespaces>wcmio=http://wcm.io/ns</Sling-Namespaces>
-
-            <Import-Package>
-              <!-- For build compatibility with Java 11 -->
-              javax.annotation;version="[0.0,2)",
-              <!-- Package version change between AEM 6.2 and AEM 6.3 -->
-              com.day.cq.dam.api.handler;version="[1.0,3)",
-              *
-            </Import-Package>
-
-          </instructions>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
         </configuration>
       </plugin>
 

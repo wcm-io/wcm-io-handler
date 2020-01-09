@@ -235,7 +235,7 @@ public final class DamMediaSource extends MediaSource {
           configPathField.set(customIpeConfig, ipeConfigPath);
         }
         catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-          log.warn("Unable to set custom IPE config via reflection for " + componentContext.getResource().getPath(), ex);
+          log.warn("Unable to set custom IPE config via reflection for {}", componentContext.getResource().getPath(), ex);
         }
         componentContext.getEditContext().getEditConfig().setInplaceEditingConfig(customIpeConfig);
       }

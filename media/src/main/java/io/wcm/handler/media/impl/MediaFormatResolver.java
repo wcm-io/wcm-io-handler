@@ -157,7 +157,7 @@ final class MediaFormatResolver {
         allMediaFormats.addAll(Arrays.asList(mediaArgs.getMediaFormatOptions()));
       }
       allMediaFormats.addAll(additionalMediaFormats.values());
-      mediaArgs.mediaFormatOptions(allMediaFormats.toArray(new MediaFormatOption[allMediaFormats.size()]));
+      mediaArgs.mediaFormatOptions(allMediaFormats.toArray(new MediaFormatOption[0]));
     }
 
     return true;

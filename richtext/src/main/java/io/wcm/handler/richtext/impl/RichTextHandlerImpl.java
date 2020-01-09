@@ -139,8 +139,10 @@ public final class RichTextHandlerImpl implements RichTextHandler {
       return ImmutableList.copyOf(contentParent.cloneContent());
     }
     catch (JDOMException ex) {
-      log.debug("Unable to parse XHTML text."
-          + (currentPage != null ? " Current page is " + currentPage.getPath() + "." : ""), ex);
+      if (log.isDebugEnabled()) {
+        log.debug("Unable to parse XHTML text."
+            + (currentPage != null ? " Current page is " + currentPage.getPath() + "." : ""), ex);
+      }
       return ImmutableList.of();
     }
   }
@@ -167,18 +169,19 @@ public final class RichTextHandlerImpl implements RichTextHandler {
     return RichTextUtil.isEmpty(text);
   }
 
-  @SuppressWarnings("null")
   private List<RewriteContentHandler> getRewriterContentHandlers() {
     if (rewriteContentHandlers == null) {
       RichTextHandlerConfig config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
-      rewriteContentHandlers = new ArrayList<>();
-      for (Class<? extends RewriteContentHandler> clazz : config.getRewriteContentHandlers()) {
-        RewriteContentHandler rewriter = adaptable.adaptTo(clazz);
-        if (rewriter == null) {
-          throw new RuntimeException("Unable to adapt " + adaptable.getClass() + " to " + clazz.getName() + ". "
-              + "Make sure the class is a Sling Model and adaptable from Resource and SlingHttpServletRequest.");
+      if (config != null) {
+        rewriteContentHandlers = new ArrayList<>();
+        for (Class<? extends RewriteContentHandler> clazz : config.getRewriteContentHandlers()) {
+          RewriteContentHandler rewriter = adaptable.adaptTo(clazz);
+          if (rewriter == null) {
+            throw new RuntimeException("Unable to adapt " + adaptable.getClass() + " to " + clazz.getName() + ". "
+                + "Make sure the class is a Sling Model and adaptable from Resource and SlingHttpServletRequest.");
+          }
+          rewriteContentHandlers.add(rewriter);
         }
-        rewriteContentHandlers.add(rewriter);
       }
     }
     return rewriteContentHandlers;

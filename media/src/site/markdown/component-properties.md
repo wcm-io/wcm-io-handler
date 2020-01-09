@@ -26,9 +26,9 @@ The following component properties are supported:
 | `wcmio:mediaResponsiveType`           | Set responsive image handling type explicitly by setting to `imageSizes` or `pictureSources`.
 
 
-#### Child resource `wcmio:mediaRepsonsiveImageSizes`
+#### Child resource `wcmio:mediaResponsiveImageSizes`
 
-By defining a child resource named `wcmio:mediaRepsonsiveImageSizes` the responsive image mode with setting `sizes` and `srcset` attributes on the `img` element is enabled. The child resource has these properties:
+By defining a child resource named `wcmio:mediaResponsiveImageSizes` the responsive image mode with setting `sizes` and `srcset` attributes on the `img` element is enabled. The child resource has these properties:
 
 | Property name | Description
 |---------------|---------------------------------------------------------------------
@@ -36,9 +36,9 @@ By defining a child resource named `wcmio:mediaRepsonsiveImageSizes` the respons
 | `widths`      | Widths for the renditions in the `srcset` attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'.",
 
 
-#### Child resource `wcmio:mediaRepsonsivePictureSources`
+#### Child resource `wcmio:mediaResponsivePictureSources`
 
-By defining a child resource named `wcmio:mediaRepsonsivePictureSources` the responsive image mode with setting `picture` and `source` elements enabled. The child resource has a list of additional child resources, with the following properties for each of them:
+By defining a child resource named `wcmio:mediaResponsivePictureSources` the responsive image mode with setting `picture` and `source` elements enabled. The child resource has a list of additional child resources, with the following properties for each of them:
 
 | Property name | Description
 |---------------|---------------------------------------------------------------------

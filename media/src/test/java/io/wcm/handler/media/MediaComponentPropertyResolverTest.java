@@ -30,6 +30,8 @@ import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_PICTURE_SOU
 import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYPE_IMAGE_SIZES;
 import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYPE_PICTURE_SOURCES;
 import static io.wcm.handler.media.MediaComponentPropertyResolver.parseWidths;
+import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES;
+import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP;
@@ -248,7 +250,7 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetImageSizes_Empty() {
     Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES);
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
 
@@ -259,7 +261,7 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetImageSizes_Valid() {
     Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES,
         PN_IMAGES_SIZES_SIZES, "sizes1",
         PN_IMAGES_SIZES_WIDTHS, "200,400,600?");
     Resource resource = context.create().resource("/content/r1",
@@ -276,7 +278,7 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetImageSizes_Invalid() {
     Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES,
         PN_IMAGES_SIZES_SIZES, "sizes1",
         PN_IMAGES_SIZES_WIDTHS, "wurst?");
     Resource resource = context.create().resource("/content/r1",
@@ -290,7 +292,7 @@ class MediaComponentPropertyResolverTest {
   void testGetImageSizes_Valid_Active() {
     Resource component = context.create().resource(RESOURCE_TYPE,
         PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_IMAGE_SIZES);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES,
         PN_IMAGES_SIZES_SIZES, "sizes1",
         PN_IMAGES_SIZES_WIDTHS, "200,400");
     Resource resource = context.create().resource("/content/r1",
@@ -302,6 +304,80 @@ class MediaComponentPropertyResolverTest {
 
   @Test
   void testGetImageSizes_Valid_NotActive() {
+    Resource component = context.create().resource(RESOURCE_TYPE,
+        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_PICTURE_SOURCES);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES,
+        PN_IMAGES_SIZES_SIZES, "sizes1",
+        PN_IMAGES_SIZES_WIDTHS, "200,400");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertNull(underTest.getImageSizes());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetImageSizes_Empty_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES);
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertNull(underTest.getImageSizes());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetImageSizes_Valid_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
+        PN_IMAGES_SIZES_SIZES, "sizes1",
+        PN_IMAGES_SIZES_WIDTHS, "200,400,600?");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertEquals(new ImageSizes("sizes1", new WidthOption[] {
+        new WidthOption(200, true),
+        new WidthOption(400, true),
+        new WidthOption(600, false),
+    }), underTest.getImageSizes());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetImageSizes_Invalid_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
+        PN_IMAGES_SIZES_SIZES, "sizes1",
+        PN_IMAGES_SIZES_WIDTHS, "wurst?");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertNull(underTest.getImageSizes());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetImageSizes_Valid_Active_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE,
+        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_IMAGE_SIZES);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
+        PN_IMAGES_SIZES_SIZES, "sizes1",
+        PN_IMAGES_SIZES_WIDTHS, "200,400");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetImageSizes_Valid_NotActive_Deprecated() {
     Resource component = context.create().resource(RESOURCE_TYPE,
         PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_PICTURE_SOURCES);
     context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
@@ -328,7 +404,7 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetPictureSources_Empty() {
     Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES);
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
 
@@ -339,7 +415,7 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetPictureSources_Valid() {
     Resource component = context.create().resource(RESOURCE_TYPE);
-    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES);
     context.create().resource(sources, "source1",
         PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
         PN_PICTURE_SOURCES_MEDIA, "media1",
@@ -368,7 +444,7 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetPictureSources_Invalid() {
     Resource component = context.create().resource(RESOURCE_TYPE);
-    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES);
     context.create().resource(sources, "source1",
         PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
         PN_PICTURE_SOURCES_MEDIA, "media1",
@@ -386,7 +462,7 @@ class MediaComponentPropertyResolverTest {
   void testGetPictureSources_Valid_Active() {
     Resource component = context.create().resource(RESOURCE_TYPE,
         PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_PICTURE_SOURCES);
-    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES);
     context.create().resource(sources, "source1",
         PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
         PN_PICTURE_SOURCES_WIDTHS, "200,400");
@@ -401,6 +477,100 @@ class MediaComponentPropertyResolverTest {
 
   @Test
   void testGetPictureSources_Valid_Inactive() {
+    Resource component = context.create().resource(RESOURCE_TYPE,
+        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_IMAGE_SIZES);
+    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES);
+    context.create().resource(sources, "source1",
+        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
+        PN_PICTURE_SOURCES_WIDTHS, "200,400");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertNull(underTest.getPictureSources());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetPictureSources_Empty_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE);
+    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertNull(underTest.getImageSizes());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetPictureSources_Valid_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE);
+    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    context.create().resource(sources, "source1",
+        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
+        PN_PICTURE_SOURCES_MEDIA, "media1",
+        PN_PICTURE_SOURCES_SIZES, "sizes1",
+        PN_PICTURE_SOURCES_WIDTHS, "200,400?");
+    context.create().resource(sources, "source2",
+        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_teaser",
+        PN_PICTURE_SOURCES_WIDTHS, "200,300");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertArrayEquals(new PictureSource[] {
+        new PictureSource("home_stage")
+            .media("media1")
+            .sizes("sizes1")
+            .widthOptions(new WidthOption[] {
+                new WidthOption(200, true),
+                new WidthOption(400, false)
+            }),
+        new PictureSource("home_teaser")
+            .widths(200, 300)
+    }, underTest.getPictureSources());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetPictureSources_Invalid_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE);
+    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    context.create().resource(sources, "source1",
+        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
+        PN_PICTURE_SOURCES_MEDIA, "media1",
+        PN_PICTURE_SOURCES_WIDTHS, "jodel,kaiser");
+    context.create().resource(sources, "source2",
+        PN_PICTURE_SOURCES_WIDTHS, "200,300");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertNull(underTest.getPictureSources());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetPictureSources_Valid_Active_Deprecated() {
+    Resource component = context.create().resource(RESOURCE_TYPE,
+        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_PICTURE_SOURCES);
+    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    context.create().resource(sources, "source1",
+        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
+        PN_PICTURE_SOURCES_WIDTHS, "200,400");
+    Resource resource = context.create().resource("/content/r1",
+        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
+
+    MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource);
+    assertArrayEquals(new PictureSource[] {
+        new PictureSource("home_stage").widths(200, 400)
+    }, underTest.getPictureSources());
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  void testGetPictureSources_Valid_Inactive_Deprecated() {
     Resource component = context.create().resource(RESOURCE_TYPE,
         PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_IMAGE_SIZES);
     Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);

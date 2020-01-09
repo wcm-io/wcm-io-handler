@@ -121,7 +121,7 @@ public final class AssetRenditionContentDispositionFilter implements Filter {
 
   /**
    * This filter only processes GET requests that targets a nt:file resource.
-   * @param request
+   * @param request Request
    * @return true if the filter accepts the given request
    */
   @SuppressWarnings("null")

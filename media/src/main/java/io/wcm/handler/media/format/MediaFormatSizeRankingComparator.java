@@ -45,11 +45,11 @@ public final class MediaFormatSizeRankingComparator implements Comparator<MediaF
         return obj1.toString().compareTo(obj2.toString());
       }
       else {
-        return ((Long)ranking1).compareTo(ranking2);
+        return Long.compare(ranking1, ranking2);
       }
     }
     else {
-      return ((Long)totalSize2).compareTo(totalSize1);
+      return Long.compare(totalSize2, totalSize1);
     }
   }
 

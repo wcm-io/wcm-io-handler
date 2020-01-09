@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorNameConstants;
@@ -150,6 +151,7 @@ public final class IntegratorHandlerImpl implements IntegratorHandler {
    * @return Integrator mode
    */
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NONNULL_RETURN_VIOLATION")
   private @NotNull IntegratorMode getIntegratorMode(ValueMap properties) {
     IntegratorMode mode = null;
     Collection<IntegratorMode> integratorModes = urlHandlerConfig.getIntegratorModes();

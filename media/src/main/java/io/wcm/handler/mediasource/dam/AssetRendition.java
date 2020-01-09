@@ -142,7 +142,7 @@ public final class AssetRendition {
 
   private static long getAssetMetadataValueAsLong(Asset asset, String... propertyNames) {
     for (String propertyName : propertyNames) {
-      long value = NumberUtils.toLong(StringUtils.defaultString(asset.getMetadataValue(propertyName), "0"));
+      long value = NumberUtils.toLong(StringUtils.defaultString(asset.getMetadataValueFromJcr(propertyName), "0"));
       if (value > 0L) {
         return value;
       }
@@ -175,6 +175,7 @@ public final class AssetRendition {
    *          renditions metadata containing the with/height of the rendition does not exist (yet).
    * @return Dimension or null
    */
+  @SuppressWarnings("PMD.GuardLogStatement")
   private static @Nullable Dimension getDimensionFromImageBinary(@NotNull Rendition rendition,
       boolean suppressLogWarningNoRenditionsMetadata) {
     try (InputStream is = rendition.getStream()) {

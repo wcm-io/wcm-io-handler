@@ -76,13 +76,13 @@
             },
             "sizes": {
               "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
-              "name": "./wcmio:mediaRepsonsiveImageSizes/sizes",
+              "name": "./wcmio:mediaResponsiveImageSizes/sizes",
               "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.sizes.fieldLabel",
               "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.sizes.fieldDescription"
             },
             "widths": {
               "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
-              "name": "./wcmio:mediaRepsonsiveImageSizes/widths",
+              "name": "./wcmio:mediaResponsiveImageSizes/widths",
               "fieldLabel": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.widths.fieldLabel",
               "fieldDescription": "io.wcm.handler.media.components.global.include.responsiveImageSettings.imageSizes.widths.fieldDescription",
               "validation": ["wcmio.handler.media.responsiveWidths"]
@@ -97,12 +97,12 @@
             "showhidetargetvalue": "pictureSources"
           },
           "items": {
-            "mediaRepsonsivePictureSources": {
+            "mediaResponsivePictureSources": {
               "sling:resourceType": "granite/ui/components/coral/foundation/form/multifield",
               "composite": true,
               "field": {
                 "sling:resourceType": "granite/ui/components/coral/foundation/container",
-                "name": "./wcmio:mediaRepsonsivePictureSources",
+                "name": "./wcmio:mediaResponsivePictureSources",
                 "items": {
                   "mediaFormat": {
                     "sling:resourceType": "wcm-io/handler/media/components/granite/form/mediaformatselect",

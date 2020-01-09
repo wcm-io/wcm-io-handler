@@ -62,6 +62,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     selectors = MediaFormatValidateServlet.SELECTOR,
     resourceTypes = "sling/servlet/default",
     methods = HttpConstants.METHOD_GET)
+@SuppressWarnings("deprecation")
 public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

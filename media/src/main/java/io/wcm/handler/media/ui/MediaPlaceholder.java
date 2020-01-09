@@ -75,6 +75,7 @@ public class MediaPlaceholder {
     }
   }
 
+  @SuppressWarnings("PMD.GuardLogStatement")
   private Media getMediaMetadata() {
     if (media == null) {
       log.warn("No 'media' parameter passed to MediaPlaceholder model.");

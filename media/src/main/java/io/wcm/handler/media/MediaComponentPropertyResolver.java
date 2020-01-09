@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media;
 
+import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES;
+import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP;
@@ -138,6 +140,7 @@ public final class MediaComponentPropertyResolver {
   /**
    * @return List of media formats with and without mandatory setting.
    */
+  @SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
   public @NotNull String @Nullable [] getMediaFormatNames() {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {
@@ -155,6 +158,7 @@ public final class MediaComponentPropertyResolver {
   /**
    * @return List of media formats with and without mandatory setting.
    */
+  @SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
   public @NotNull String @Nullable [] getMandatoryMediaFormatNames() {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {
@@ -173,32 +177,46 @@ public final class MediaComponentPropertyResolver {
   /**
    * @return Image sizes
    */
+  @SuppressWarnings("deprecation")
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
       return null;
     }
 
-    String sizes = StringUtils.trimToNull(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
-    WidthOption[] widths = parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
+    String sizes = StringUtils.trimToNull(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
+    WidthOption[] widths = parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
     if (sizes != null && widths != null) {
       return new ImageSizes(sizes, widths);
     }
+
+    // try to fallback to deprecated constant with node names with typo (backward compatibility)
+    sizes = StringUtils.trimToNull(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
+    widths = parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
+    if (sizes != null && widths != null) {
+      return new ImageSizes(sizes, widths);
+    }
+
     return null;
   }
 
   /**
    * @return List of picture sources
    */
+  @SuppressWarnings("deprecation")
   public @NotNull PictureSource @Nullable [] getPictureSources() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
       return null;
     }
 
-    Collection<Resource> sourceResources = resolver.getResources(NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+    Collection<Resource> sourceResources = resolver.getResources(NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES);
     if (sourceResources == null) {
-      return null;
+      // try to fallback to deprecated constant with node names with typo (backward compatibility)
+      sourceResources = resolver.getResources(NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
+      if (sourceResources == null) {
+        return null;
+      }
     }
 
     List<PictureSource> sources = new ArrayList<>();

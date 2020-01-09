@@ -21,7 +21,6 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -37,8 +36,6 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.day.cq.commons.jcr.JcrConstants;
-import com.day.cq.dam.api.Rendition;
-import com.day.cq.dam.api.handler.AssetHandler;
 import com.day.cq.dam.api.handler.store.AssetStore;
 import com.day.image.Layer;
 import com.drew.lang.annotations.Nullable;
@@ -112,7 +109,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       }
     }
 
-    Layer layer = toLayer(resource);
+    Layer layer = ResourceLayerUtil.toLayer(resource, assetStore);
     if (layer == null) {
       return null;
     }
@@ -138,27 +135,6 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     layer.write(contentType, config.getDefaultImageQuality(contentType), bos);
     bos.flush();
     return bos.toByteArray();
-  }
-
-  private Layer toLayer(Resource renditionResource) {
-    Layer layer = renditionResource.adaptTo(Layer.class);
-    if (layer == null) {
-      // if direct adaption to Layer was not possible, relay to AssetHandler
-      Rendition rendition = renditionResource.adaptTo(Rendition.class);
-      if (rendition != null) {
-        AssetHandler assetHandler = assetStore.getAssetHandler(rendition.getMimeType());
-        if (assetHandler != null) {
-          try {
-            BufferedImage bufferedImage = assetHandler.getImage(rendition);
-            layer = new Layer(bufferedImage);
-          }
-          catch (IOException ex) {
-            // ignore - not supported
-          }
-        }
-      }
-    }
-    return layer;
   }
 
   @Override
@@ -210,10 +186,10 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   public static @NotNull String buildSelectorString(long width, long height,
       @Nullable CropDimension cropDimension, @Nullable Integer rotation,
       boolean contentDispositionAttachment) {
-    StringBuffer result = new StringBuffer();
-    result.append(SELECTOR);
-    result.append(".").append(Long.toString(width));
-    result.append(".").append(Long.toString(height));
+    StringBuffer result = new StringBuffer()
+        .append(SELECTOR)
+        .append(".").append(Long.toString(width))
+        .append(".").append(Long.toString(height));
 
     if (cropDimension != null) {
       result.append(".").append(cropDimension.getCropString());

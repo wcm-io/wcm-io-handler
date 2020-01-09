@@ -31,9 +31,6 @@ public final class FilterOperators {
   }
 
   /**
-   * @param <T>
-   * @param filter1
-   * @param filter2
    * @return a filter that includes those elements that are included by *both* specified filters
    */
   public static <T> Predicate<T> and(final Predicate<T> filter1, final Predicate<T> filter2) {
@@ -46,9 +43,6 @@ public final class FilterOperators {
   }
 
   /**
-   * @param <T>
-   * @param filter1
-   * @param filter2
    * @return a filter that includes those elements that are included by *one* of the specified filters
    */
   public static <T> Predicate<T> or(final Predicate<T> filter1, final Predicate<T> filter2) {
