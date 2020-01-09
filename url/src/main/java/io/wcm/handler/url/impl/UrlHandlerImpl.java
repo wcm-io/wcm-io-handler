@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.wcm.api.Page;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.url.UrlBuilder;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.UrlMode;
@@ -88,6 +89,7 @@ public final class UrlHandlerImpl implements UrlHandler {
 
   @Override
   @SuppressWarnings({ "null", "unused" })
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public String rewritePathToContext(@NotNull final Resource resource) {
     if (resource == null) {
       return null;

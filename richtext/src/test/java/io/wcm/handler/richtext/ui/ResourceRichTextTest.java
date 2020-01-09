@@ -19,7 +19,9 @@
  */
 package io.wcm.handler.richtext.ui;
 
+import static io.wcm.handler.richtext.RichTextNameConstants.PN_TEXT;
 import static io.wcm.handler.richtext.testcontext.AppAemContext.ROOTPATH_CONTENT;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -31,7 +33,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
-import io.wcm.handler.richtext.RichTextNameConstants;
 import io.wcm.handler.richtext.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -52,7 +53,8 @@ class ResourceRichTextTest {
   @Test
   void testRichText() {
     context.currentResource(context.create().resource(page, "richtext",
-        RichTextNameConstants.PN_TEXT, "<p>my <strong>rich</strong> text</p>"));
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_TEXT, "<p>my <strong>rich</strong> text</p>"));
 
     ResourceRichText underTest = context.request().adaptTo(ResourceRichText.class);
     assertTrue(underTest.isValid());
@@ -61,7 +63,8 @@ class ResourceRichTextTest {
 
   @Test
   void testMissingRichText() {
-    context.currentResource(context.create().resource(page, "richtext"));
+    context.currentResource(context.create().resource(page, "richtext",
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype"));
 
     ResourceRichText underTest = context.request().adaptTo(ResourceRichText.class);
     assertFalse(underTest.isValid());
@@ -71,6 +74,7 @@ class ResourceRichTextTest {
   @Test
   void testPlainText() {
     context.currentResource(context.create().resource(page, "richtext",
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
         "customTextProp", "Line 1\nLine 2"));
 
     context.request().setAttribute("propertyName", "customTextProp");

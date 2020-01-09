@@ -140,6 +140,7 @@ public final class MediaComponentPropertyResolver {
   /**
    * @return List of media formats with and without mandatory setting.
    */
+  @SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
   public @NotNull String @Nullable [] getMediaFormatNames() {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {
@@ -157,6 +158,7 @@ public final class MediaComponentPropertyResolver {
   /**
    * @return List of media formats with and without mandatory setting.
    */
+  @SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
   public @NotNull String @Nullable [] getMandatoryMediaFormatNames() {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {

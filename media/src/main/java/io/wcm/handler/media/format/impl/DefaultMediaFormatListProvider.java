@@ -51,6 +51,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     "sling.servlet.resourceTypes=sling/servlet/default",
     "sling.servlet.methods=" + HttpConstants.METHOD_GET
 })
+@SuppressWarnings("deprecation")
 public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 

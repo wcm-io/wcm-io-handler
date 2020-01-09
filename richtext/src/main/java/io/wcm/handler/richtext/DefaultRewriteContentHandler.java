@@ -69,6 +69,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Default implementation of {@link RewriteContentHandler}.
  */
 @Model(adaptables = { SlingHttpServletRequest.class, Resource.class })
+@SuppressWarnings("deprecation")
 public final class DefaultRewriteContentHandler implements RewriteContentHandler {
 
   @Self
@@ -282,7 +283,7 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
           metadata = new JSONObject(metadataString);
         }
         catch (JSONException ex) {
-          log.debug("Invalid link metadata: " + metadataString, ex);
+          log.debug("Invalid link metadata: {}", metadataString, ex);
         }
       }
     }
@@ -319,7 +320,7 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
         metadata = new JSONObject(metadataString);
       }
       catch (JSONException ex) {
-        log.debug("Invalid link metadata: " + metadataString, ex);
+        log.debug("Invalid link metadata: {}", metadataString, ex);
       }
     }
     if (metadata == null) {
@@ -340,7 +341,7 @@ public final class DefaultRewriteContentHandler implements RewriteContentHandler
           for (int j = 0; j < valueArray.length(); j++) {
             values.add(valueArray.optString(j));
           }
-          resourceProps.put(metadataPropertyName, values.toArray(new String[values.size()]));
+          resourceProps.put(metadataPropertyName, values.toArray(new String[0]));
         }
         else {
           // store simple value

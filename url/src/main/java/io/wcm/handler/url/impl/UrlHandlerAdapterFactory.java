@@ -142,9 +142,12 @@ public class UrlHandlerAdapterFactory implements AdapterFactory {
     };
   }
 
-  @SuppressWarnings("null")
   private SiteConfig getSiteConfigForResource(Resource contextResource) {
-    return contextResource.adaptTo(ConfigurationBuilder.class).as(SiteConfig.class);
+    ConfigurationBuilder configurationBuilder = contextResource.adaptTo(ConfigurationBuilder.class);
+    if (configurationBuilder == null) {
+      throw new RuntimeException("No configuration builder.");
+    }
+    return configurationBuilder.as(SiteConfig.class);
   }
 
 }

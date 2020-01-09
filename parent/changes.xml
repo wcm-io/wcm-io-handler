@@ -28,6 +28,9 @@
         Update to io.wcm.parent_toplevel 1.4.0.
         Switch from maven-bundle-plugin to bnd Maven plugins.
       </action>
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.3 as minimum version.
+      </action>
     </release>
 
     <release version="1.1.14" date="2019-09-10">

@@ -19,7 +19,11 @@
  */
 package io.wcm.handler.link.ui;
 
+import static io.wcm.handler.link.LinkNameConstants.PN_LINK_CONTENT_REF;
+import static io.wcm.handler.link.LinkNameConstants.PN_LINK_EXTERNAL_REF;
+import static io.wcm.handler.link.LinkNameConstants.PN_LINK_TYPE;
 import static io.wcm.handler.link.testcontext.AppAemContext.ROOTPATH_CONTENT;
+import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +32,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.link.type.ExternalLinkType;
 import io.wcm.handler.link.type.InternalLinkType;
@@ -49,8 +52,9 @@ class ResourceLinkTest {
   @Test
   void testValidLink() {
     context.currentResource(context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/validLink",
-        LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID,
-        LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://www.dummysite.org"));
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_LINK_TYPE, ExternalLinkType.ID,
+        PN_LINK_EXTERNAL_REF, "http://www.dummysite.org"));
 
     ResourceLink underTest = context.request().adaptTo(ResourceLink.class);
     assertTrue(underTest.isValid());
@@ -61,8 +65,9 @@ class ResourceLinkTest {
   @Test
   void testInvalidLink() {
     context.currentResource(context.create().resource(ROOTPATH_CONTENT + "/page1/jcr:content/invalidLink",
-        LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID,
-        LinkNameConstants.PN_LINK_CONTENT_REF, "/invalid/link"));
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_LINK_TYPE, InternalLinkType.ID,
+        PN_LINK_CONTENT_REF, "/invalid/link"));
 
     ResourceLink underTest = context.request().adaptTo(ResourceLink.class);
     assertFalse(underTest.isValid());

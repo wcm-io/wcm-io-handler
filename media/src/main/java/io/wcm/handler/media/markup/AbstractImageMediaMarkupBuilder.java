@@ -89,6 +89,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
 
         default:
           // do nothing
+          break;
       }
 
     }

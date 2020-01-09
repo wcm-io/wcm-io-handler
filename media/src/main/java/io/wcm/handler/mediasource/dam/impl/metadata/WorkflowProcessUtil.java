@@ -111,7 +111,7 @@ final class WorkflowProcessUtil {
       }
     }
     catch (RepositoryException ex) {
-      log.warn("Unable to resolve resource paths from workflow payload: " + payloadPath, ex);
+      log.warn("Unable to resolve resource paths from workflow payload: {}", payloadPath, ex);
     }
     return assetPaths;
   }

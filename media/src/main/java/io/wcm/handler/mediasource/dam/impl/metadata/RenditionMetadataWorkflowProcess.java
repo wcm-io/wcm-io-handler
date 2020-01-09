@@ -67,7 +67,7 @@ public final class RenditionMetadataWorkflowProcess implements WorkflowProcess {
   public void execute(WorkItem item, WorkflowSession workflowSession, MetaDataMap args) {
     String payloadPath = WorkflowProcessUtil.getPayloadResourcePath(item);
     if (payloadPath == null) {
-      log.warn("Invalid payload: " + item.getWorkflowData().getPayloadType());
+      log.warn("Invalid payload: {}", item.getWorkflowData().getPayloadType());
       return;
     }
 

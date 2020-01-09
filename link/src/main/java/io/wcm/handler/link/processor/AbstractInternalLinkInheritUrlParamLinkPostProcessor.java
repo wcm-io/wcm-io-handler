@@ -56,6 +56,7 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
   }
 
   @Override
+  @SuppressWarnings("PMD.UseStringBufferForStringAppends")
   public final @NotNull Link process(@NotNull Link link) {
 
     if (link.isValid()
@@ -78,7 +79,7 @@ public abstract class AbstractInternalLinkInheritUrlParamLinkPostProcessor imple
         }
       }
       catch (URISyntaxException ex) {
-        log.warn("Skipping post-processing or URL: " + url, ex);
+        log.warn("Skipping post-processing or URL: {}", url, ex);
       }
     }
 

@@ -42,6 +42,7 @@ import com.day.cq.wcm.api.PageManager;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
@@ -257,13 +258,15 @@ public final class SuffixParser {
    * @param baseResource the suffix path is relative to this resource path (null for current page's jcr:content node)
    * @return a list containing the Resources
    */
-  @SuppressWarnings("null")
   public @NotNull List<Resource> getResources(@Nullable Predicate<Resource> filter, @Nullable Resource baseResource) {
 
     // resolve base path or fallback to current page's content if not specified
     Resource baseResourceToUse = baseResource;
     if (baseResourceToUse == null) {
       PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);
+      if (pageManager == null) {
+        throw new RuntimeException("No page manager.");
+      }
       Page currentPage = pageManager.getContainingPage(request.getResource());
       if (currentPage != null) {
         baseResourceToUse = currentPage.getContentResource();
@@ -379,6 +382,7 @@ public final class SuffixParser {
     return Lists.transform(resources, new Function<Resource, Page>() {
       @Override
       @SuppressWarnings("null")
+      @SuppressFBWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
       public Page apply(@Nullable Resource resource) {
         return resource.adaptTo(Page.class);
       }

@@ -827,7 +827,7 @@ public final class MediaArgs implements Cloneable {
     private String mediaFormatName;
     private String media;
     private String sizes;
-    private @NotNull WidthOption[] widthOptions;
+    private WidthOption[] widthOptions;
 
     /**
      * @param mediaFormat Media format

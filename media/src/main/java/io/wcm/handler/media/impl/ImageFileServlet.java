@@ -186,10 +186,10 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   public static @NotNull String buildSelectorString(long width, long height,
       @Nullable CropDimension cropDimension, @Nullable Integer rotation,
       boolean contentDispositionAttachment) {
-    StringBuffer result = new StringBuffer();
-    result.append(SELECTOR);
-    result.append(".").append(Long.toString(width));
-    result.append(".").append(Long.toString(height));
+    StringBuffer result = new StringBuffer()
+        .append(SELECTOR)
+        .append(".").append(Long.toString(width))
+        .append(".").append(Long.toString(height));
 
     if (cropDimension != null) {
       result.append(".").append(cropDimension.getCropString());

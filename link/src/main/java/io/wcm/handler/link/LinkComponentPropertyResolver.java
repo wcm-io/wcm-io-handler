@@ -51,7 +51,6 @@ public final class LinkComponentPropertyResolver {
   /**
    * @return Link target URL fallback property name
    */
-
   public @NotNull String @Nullable [] getLinkTargetUrlFallbackProperty() {
     return resolver.get(PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, String[].class);
   }
