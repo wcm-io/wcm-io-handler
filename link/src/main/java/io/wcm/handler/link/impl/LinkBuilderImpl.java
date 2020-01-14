@@ -22,6 +22,8 @@ package io.wcm.handler.link.impl;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.Page;
 
@@ -32,6 +34,7 @@ import io.wcm.handler.link.LinkBuilder;
 import io.wcm.handler.link.LinkComponentPropertyResolver;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Default implementation or {@link LinkBuilder}.
@@ -45,7 +48,10 @@ final class LinkBuilderImpl implements LinkBuilder {
   private final String reference;
   private LinkArgs linkArgs = new LinkArgs();
 
-  LinkBuilderImpl(Resource resource, LinkHandlerImpl linkHandler) {
+  private static final Logger log = LoggerFactory.getLogger(LinkBuilderImpl.class);
+
+  LinkBuilderImpl(@Nullable Resource resource, @NotNull LinkHandlerImpl linkHandler,
+      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     this.resource = resource;
     this.page = null;
     this.reference = null;
@@ -53,8 +59,12 @@ final class LinkBuilderImpl implements LinkBuilder {
 
     // resolve default settings from content policies and component properties
     if (resource != null) {
-      LinkComponentPropertyResolver resolver = new LinkComponentPropertyResolver(resource);
-      linkArgs.linkTargetUrlFallbackProperty(resolver.getLinkTargetUrlFallbackProperty());
+      try (LinkComponentPropertyResolver resolver = new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+        linkArgs.linkTargetUrlFallbackProperty(resolver.getLinkTargetUrlFallbackProperty());
+      }
+      catch (Exception ex) {
+        log.warn("Error closing component property resolver.", ex);
+      }
     }
   }
 

@@ -27,6 +27,7 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +45,7 @@ import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Default implementation of a {@link LinkHandler}
@@ -59,10 +61,12 @@ public final class LinkHandlerImpl implements LinkHandler {
   private LinkHandlerConfig linkHandlerConfig;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
+  @OSGiService
+  private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   @Override
   public @NotNull LinkBuilder get(Resource resource) {
-    return new LinkBuilderImpl(resource, this);
+    return new LinkBuilderImpl(resource, this, componentPropertyResolverFactory);
   }
 
   @Override
