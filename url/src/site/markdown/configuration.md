@@ -2,7 +2,7 @@
 
 ### Service user configuration
 
-The URL handler required a service user mapping for detecting client libraries located at `/apps` or `/libs` with "allowProxy" mode, to rewrite resource URLs pointing to them to `/etc.clientlibs`.
+The URL handler requires a service user mapping for detecting client libraries located at `/apps` or `/libs` with "allowProxy" mode, to rewrite resource URLs pointing to them to `/etc.clientlibs`.
 
 Create a service user mapping for the factory configuration `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended` with an entry like this:
 

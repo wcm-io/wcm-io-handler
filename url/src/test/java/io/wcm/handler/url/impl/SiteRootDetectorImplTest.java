@@ -21,6 +21,7 @@ package io.wcm.handler.url.impl;
 
 import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
+import static io.wcm.testing.mock.wcmio.wcm.ContextPlugins.WCMIO_WCM;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -41,7 +42,7 @@ class SiteRootDetectorImplTest {
 
   private final AemContext context = new AemContextBuilder()
       .plugin(CACONFIG)
-      .plugin(WCMIO_SLING, WCMIO_CACONFIG)
+      .plugin(WCMIO_SLING, WCMIO_WCM, WCMIO_CACONFIG)
       .build();
 
   private SiteRootDetector underTest;
