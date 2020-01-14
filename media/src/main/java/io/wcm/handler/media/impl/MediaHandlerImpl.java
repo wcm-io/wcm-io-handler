@@ -26,6 +26,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +46,7 @@ import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Default Implementation of a {@link MediaHandler}.
@@ -60,10 +62,12 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
+  @OSGiService
+  private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   @Override
   public @NotNull MediaBuilder get(Resource resource) {
-    return new MediaBuilderImpl(resource, this);
+    return new MediaBuilderImpl(resource, this, componentPropertyResolverFactory);
   }
 
   @Override

@@ -21,6 +21,7 @@ package io.wcm.handler.media.testcontext;
 
 import static io.wcm.testing.mock.wcmio.caconfig.ContextPlugins.WCMIO_CACONFIG;
 import static io.wcm.testing.mock.wcmio.sling.ContextPlugins.WCMIO_SLING;
+import static io.wcm.testing.mock.wcmio.wcm.ContextPlugins.WCMIO_WCM;
 import static org.apache.sling.testing.mock.caconfig.ContextPlugins.CACONFIG;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ public final class MediaSourceInlineAppAemContext {
   public static AemContext newAemContext() {
     return new AemContextBuilder()
         .plugin(CACONFIG)
-        .plugin(WCMIO_SLING, WCMIO_CACONFIG)
+        .plugin(WCMIO_SLING, WCMIO_WCM, WCMIO_CACONFIG)
         .afterSetUp(SETUP_CALLBACK)
         // TODO: add support for multiple resource resolver types?
         //.resourceResolverType(ResourceResolverType.RESOURCERESOLVER_MOCK, ResourceResolverType.JCR_MOCK)
