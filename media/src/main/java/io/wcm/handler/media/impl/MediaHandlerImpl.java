@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
@@ -107,6 +108,7 @@ public final class MediaHandlerImpl implements MediaHandler {
    * @return Media metadata (never null)
    */
   @SuppressWarnings({ "null", "unused" })
+  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   @NotNull
   Media processRequest(@NotNull final MediaRequest mediaRequest) {
 
@@ -259,6 +261,7 @@ public final class MediaHandlerImpl implements MediaHandler {
 
   @Override
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
   public Media invalid() {
     // build invalid media with first media source
     Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().stream().findFirst().orElse(null);

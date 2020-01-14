@@ -31,6 +31,7 @@ import org.apache.sling.models.annotations.Model;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Asset;
@@ -129,6 +130,7 @@ public class ResponsiveImageMediaMarkupBuilder extends AbstractImageMediaMarkupB
    * @return JSON metadata
    */
   @SuppressWarnings("null")
+  @SuppressFBWarnings("STYLE")
   protected JSONObject toReponsiveImageSource(Media media, Rendition rendition) {
     try {
       JSONObject source = new JSONObject();

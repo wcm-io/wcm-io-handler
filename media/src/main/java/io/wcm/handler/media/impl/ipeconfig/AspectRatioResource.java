@@ -37,6 +37,8 @@ import io.wcm.handler.media.format.MediaFormat;
  */
 class AspectRatioResource extends AbstractResource {
 
+  private static final String RESOURCE_TYPE = "wcm-io/handler/media/synthetic/resource/aspectRatio";
+
   private final ResourceResolver resolver;
   private final String path;
   private final ResourceMetadata resourceMetadata;
@@ -94,9 +96,8 @@ class AspectRatioResource extends AbstractResource {
   }
 
   @Override
-  @SuppressWarnings("null")
   public @NotNull String getResourceType() {
-    return null;
+    return RESOURCE_TYPE;
   }
 
   @Override

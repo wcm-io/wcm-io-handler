@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.Page;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
@@ -166,6 +167,7 @@ final class LinkBuilderImpl implements LinkBuilder {
   }
 
   @Override
+  @SuppressFBWarnings("NP_METHOD_PARAMETER_TIGHTENS_ANNOTATION")
   public @NotNull LinkBuilder linkTargetUrlFallbackProperty(@NotNull String @Nullable... propertyNames) {
     this.linkArgs.linkTargetUrlFallbackProperty(propertyNames);
     return this;

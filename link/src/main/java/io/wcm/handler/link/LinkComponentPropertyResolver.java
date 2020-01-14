@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.wcm.commons.component.ComponentPropertyResolution;
 import io.wcm.wcm.commons.component.ComponentPropertyResolver;
 import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
@@ -68,6 +69,7 @@ public final class LinkComponentPropertyResolver implements AutoCloseable {
   /**
    * @return Link target URL fallback property name
    */
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public @NotNull String @Nullable [] getLinkTargetUrlFallbackProperty() {
     return resolver.get(PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, String[].class);
   }

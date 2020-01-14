@@ -33,6 +33,7 @@ import org.apache.sling.api.resource.Resource;
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
@@ -301,6 +302,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected Layer getLayer() {
     if (MediaFileType.isImage(getFileExtension())) {
       return this.rendition.adaptTo(Resource.class).adaptTo(Layer.class);
@@ -311,6 +313,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected InputStream getInputStream() {
     return this.rendition.adaptTo(Resource.class).adaptTo(InputStream.class);
   }

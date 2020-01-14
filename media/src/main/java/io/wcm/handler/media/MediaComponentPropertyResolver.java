@@ -46,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
@@ -60,6 +61,7 @@ import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
  * Please make sure to {@link #close()} instances of this class after usage.
  */
 @ProviderType
+@SuppressFBWarnings("NP_NONNULL_RETURN_VIOLATION")
 public final class MediaComponentPropertyResolver implements AutoCloseable {
 
   static final String RESPONSIVE_TYPE_IMAGE_SIZES = "imageSizes";

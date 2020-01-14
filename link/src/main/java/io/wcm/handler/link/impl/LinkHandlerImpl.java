@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkBuilder;
@@ -91,6 +92,7 @@ public final class LinkHandlerImpl implements LinkHandler {
    */
   @NotNull
   @SuppressWarnings({ "null", "unused" })
+  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   Link processRequest(@NotNull LinkRequest linkRequest) {
 
     // detect link type - first accepting wins

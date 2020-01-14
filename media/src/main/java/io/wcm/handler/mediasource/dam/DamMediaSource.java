@@ -50,6 +50,7 @@ import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
 import com.day.cq.wcm.commons.WCMUtils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.editcontext.DropTargetImpl;
 import io.wcm.handler.media.Asset;
@@ -116,6 +117,7 @@ public final class DamMediaSource extends MediaSource {
 
   @Override
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public @NotNull Media resolveMedia(@NotNull Media media) {
     String mediaRef = getMediaRef(media.getMediaRequest(), mediaHandlerConfig);
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
