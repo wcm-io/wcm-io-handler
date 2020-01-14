@@ -61,14 +61,14 @@ final class MediaBuilderImpl implements MediaBuilder {
   private static final Logger log = LoggerFactory.getLogger(MediaBuilderImpl.class);
 
   MediaBuilderImpl(@Nullable Resource resource, @NotNull MediaHandlerImpl mediaHandler,
-      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     this.resource = resource;
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
 
     // resolve default settings from content policies and component properties
     if (resource != null) {
-      try (MediaComponentPropertyResolver resolver = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+      try (MediaComponentPropertyResolver resolver = getMediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
         mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
         mediaArgs.autoCrop(resolver.isAutoCrop());
         mediaArgs.imageSizes(resolver.getImageSizes());
@@ -77,6 +77,18 @@ final class MediaBuilderImpl implements MediaBuilder {
       catch (Exception ex) {
         log.warn("Error closing component property resolver.", ex);
       }
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private static MediaComponentPropertyResolver getMediaComponentPropertyResolver(@NotNull Resource resource,
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    if (componentPropertyResolverFactory != null) {
+      return new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory);
+    }
+    else {
+      // fallback mode if ComponentPropertyResolverFactory is not available
+      return new MediaComponentPropertyResolver(resource);
     }
   }
 

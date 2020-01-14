@@ -51,7 +51,7 @@ final class LinkBuilderImpl implements LinkBuilder {
   private static final Logger log = LoggerFactory.getLogger(LinkBuilderImpl.class);
 
   LinkBuilderImpl(@Nullable Resource resource, @NotNull LinkHandlerImpl linkHandler,
-      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     this.resource = resource;
     this.page = null;
     this.reference = null;
@@ -59,12 +59,24 @@ final class LinkBuilderImpl implements LinkBuilder {
 
     // resolve default settings from content policies and component properties
     if (resource != null) {
-      try (LinkComponentPropertyResolver resolver = new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+      try (LinkComponentPropertyResolver resolver = getLinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
         linkArgs.linkTargetUrlFallbackProperty(resolver.getLinkTargetUrlFallbackProperty());
       }
       catch (Exception ex) {
         log.warn("Error closing component property resolver.", ex);
       }
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private static LinkComponentPropertyResolver getLinkComponentPropertyResolver(@NotNull Resource resource,
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    if (componentPropertyResolverFactory != null) {
+      return new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory);
+    }
+    else {
+      // fallback mode if ComponentPropertyResolverFactory is not available
+      return new LinkComponentPropertyResolver(resource);
     }
   }
 

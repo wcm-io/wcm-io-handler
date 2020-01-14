@@ -61,7 +61,7 @@ public final class LinkHandlerImpl implements LinkHandler {
   private LinkHandlerConfig linkHandlerConfig;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
-  @OSGiService
+  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   @Override
