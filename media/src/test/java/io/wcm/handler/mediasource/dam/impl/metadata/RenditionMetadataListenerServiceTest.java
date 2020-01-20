@@ -253,7 +253,6 @@ class RenditionMetadataListenerServiceTest {
     assertNull(metadata);
   }
 
-  @SuppressWarnings("null")
   private Calendar getRenditionMetadataLastModified(String renditionName) {
     String path = RENDITIONS_METADATA_PATH + "/" + renditionName;
     Resource metadata = context.resourceResolver().getResource(path);

@@ -100,28 +100,28 @@ public final class AssetRendition {
   public static @Nullable Dimension getDimension(@NotNull Rendition rendition,
       boolean suppressLogWarningNoRenditionsMetadata) {
 
+    boolean isOriginal = isOriginal(rendition);
     String fileExtension = FilenameUtils.getExtension(getFilename(rendition));
-    if (!MediaFileType.isImage(fileExtension)) {
-      // this is not a supported image file extension - skip further processing
-      return null;
-    }
 
     // get image width/height
     Dimension dimension = null;
-    boolean isOriginal = isOriginal(rendition);
     if (isOriginal) {
       // get width/height from metadata for original renditions
       dimension = getDimensionFromOriginal(rendition);
     }
-    if (dimension == null) {
-      // otherwise get from rendition metadata written by {@link DamRenditionMetadataService}
-      dimension = getDimensionFromRenditionMetadata(rendition);
-    }
 
-    // fallback: if width/height could not be read from either asset or rendition metadata load the image
-    // into memory and get width/height from there - but log an warning because this is inefficient
-    if (dimension == null) {
-      dimension = getDimensionFromImageBinary(rendition, suppressLogWarningNoRenditionsMetadata);
+    // dimensions for non-original renditions only supported for image binaries
+    if (MediaFileType.isImage(fileExtension)) {
+      if (dimension == null) {
+        // otherwise get from rendition metadata written by {@link DamRenditionMetadataService}
+        dimension = getDimensionFromRenditionMetadata(rendition);
+      }
+
+      // fallback: if width/height could not be read from either asset or rendition metadata load the image
+      // into memory and get width/height from there - but log an warning because this is inefficient
+      if (dimension == null) {
+        dimension = getDimensionFromImageBinary(rendition, suppressLogWarningNoRenditionsMetadata);
+      }
     }
 
     return dimension;

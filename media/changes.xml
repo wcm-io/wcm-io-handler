@@ -25,6 +25,9 @@
 
     <release version="1.8.2" date="not released">
       <action type="update" dev="sseifert">
+        Detect media dimensions for original renditions for non-image binaries (from asset metadata).
+      </action>
+      <action type="update" dev="sseifert">
         Make use of ComponentPropertyResolverFactory to ensure component properties can be read properly on publish instances.
       </action>
     </release>
