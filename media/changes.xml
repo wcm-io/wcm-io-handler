@@ -30,6 +30,12 @@
       <action type="update" dev="sseifert">
         Make use of ComponentPropertyResolverFactory to ensure component properties can be read properly on publish instances.
       </action>
+      <action type="update" dev="sseifert" issue="WHAN-32">
+        DamVideoMediaMarkupBuilder: Use new default video profile names format_aac and format_ogg to support AEM 6.4+.
+      </action>
+      <action type="remove" dev="sseifert">
+        DamVideoMediaMarkupBuilder: Do not generate flash player as fallback.
+      </action>
     </release>
 
     <release version="1.8.0" date="2020-01-09">

@@ -22,7 +22,6 @@ package io.wcm.handler.mediasource.dam.markup;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -39,9 +38,8 @@ import io.wcm.handler.commons.dom.Video;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
-import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.sling.commons.adapter.AdaptTo;
 
-@SuppressWarnings("null")
 class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
 
   private Media video;
@@ -55,7 +53,7 @@ class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
 
     video = mediaHandler().get(MEDIAITEM_VIDEO, VIDEO_2COL).build();
     assertTrue(video.isValid());
-    underTest = context.request().adaptTo(DamVideoMediaMarkupBuilder.class);
+    underTest = AdaptTo.notNull(context.request(), DamVideoMediaMarkupBuilder.class);
   }
 
   @Test
@@ -88,10 +86,6 @@ class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
     Source source2 = (Source)sources.get(1);
     assertTrue(StringUtils.startsWith(source2.getType(), "video/ogg"));
     assertEquals(MEDIAITEM_VIDEO + "/_jcr_content/renditions/cq5dam.video.firefoxhq.ogg", source2.getSrc());
-
-    Element flashObject = videoElement.getChild("object");
-    assertNotNull(flashObject);
-    assertEquals(ContentType.SWF, flashObject.getAttributeValue("type"));
   }
 
   @Test
