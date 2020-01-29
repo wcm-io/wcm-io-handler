@@ -370,10 +370,9 @@ class SuffixBuilderTest {
    * tests escaping/unescaping functionality by constructing complex suffix with
    * {@link SuffixBuilder#resources(List, Resource)} and then decomposing it using
    * {@link SuffixParser#get(String, String)} and {@link SuffixParser#getResource(Predicate)}
-   * @throws UnsupportedEncodingException
    */
   @Test
-  void testEscapingNastyCharacters() throws UnsupportedEncodingException {
+  void testEscapingNastyCharacters() {
     // both key and value may contain url-unsafe characters, and / = which are used as delimiters
     String nastyKey1 = NASTY_STRING_VALUE + "1";
     String nastyValue1 = NASTY_STRING_VALUE + "1";
@@ -427,10 +426,9 @@ class SuffixBuilderTest {
   /**
    * tests escaping/unescaping functionality with keys/values/resources suffixes with slashed.
    * The slashes have to be double-escaped as well to void filtered out/misinterpreded by webserver/dispatcher-
-   * @throws UnsupportedEncodingException
    */
   @Test
-  void testEscapingWithSlashes() throws UnsupportedEncodingException {
+  void testEscapingWithSlashes() {
     // both key and value may contain url-unsafe characters, and / = which are used as delimiters
     String slashKey1 = "my/key1";
     String slashValue1 = "my/value1";

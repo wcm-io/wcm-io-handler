@@ -54,7 +54,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
   /**
    * Searches for the biggest web enabled rendition and, if exists,
    * adds a {@link VirtualTransformedRenditionMetadata} to the list.
-   * @param candidates
+   * @param candidates Candidates
    * @return {@link Set} of {@link RenditionMetadata}
    */
   @Override

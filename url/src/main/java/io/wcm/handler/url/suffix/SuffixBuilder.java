@@ -119,7 +119,7 @@ public final class SuffixBuilder {
    * @return a {@link SuffixBuilder} that keeps only the named key/value-parts defined by pKeysToKeep
    */
   public static @NotNull SuffixBuilder thatKeepsNamedParts(@NotNull SlingHttpServletRequest request,
-      @NotNull String @NotNull ... keysToKeep) {
+      @NotNull String @NotNull... keysToKeep) {
     Predicate<String> filter = new IncludeNamedPartsFilter(keysToKeep);
     return new SuffixBuilder(request, filter);
   }
