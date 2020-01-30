@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.2</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>1.9.0-SNAPSHOT</version>
+  <version>1.8.2</version>
   <packaging>jar</packaging>
 
   <name>Media Handler</name>
@@ -122,10 +122,12 @@
           </bnd>
         </configuration>
       </plugin>
+      <!--
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-baseline-maven-plugin</artifactId>
       </plugin>
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
