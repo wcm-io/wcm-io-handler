@@ -37,7 +37,7 @@
         DamVideoMediaMarkupBuilder: Do not generate flash player as fallback.
       </action>
       <action type="update" dev="mrozati" issue="WHAN-33">
-        ResourceMedia supports request attributes 'widths' (array of responsive widths) and 'sizes' (image sizes string, optional)
+        ResourceMedia supports request attributes for responsive image sizes. This can be either `imageSizes` and `widthOptions` (width + required flag), or `pictureSourceMediaFormat`, `pictureSourceMedia` and `pictureSourceWidths`
       </action>
     </release>
 
