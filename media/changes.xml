@@ -36,6 +36,9 @@
       <action type="remove" dev="sseifert">
         DamVideoMediaMarkupBuilder: Do not generate flash player as fallback.
       </action>
+      <action type="update" dev="mrozati" issue="WHAN-33">
+        ResourceMedia supports request attributes 'widths' (array of responsive widths) and 'sizes' (image sizes string, optional)
+      </action>
     </release>
 
     <release version="1.8.0" date="2020-01-09">

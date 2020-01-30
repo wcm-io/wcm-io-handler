@@ -19,15 +19,22 @@
  */
 package io.wcm.handler.media.ui;
 
+import static io.wcm.handler.media.MediaArgs.*;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CAMPAIGN;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER_1024_768;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +43,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -111,6 +119,63 @@ class ResourceMediaTest {
     assertTrue(underTest.isValid());
     assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg",
         underTest.getMetadata().getUrl());
+  }
+
+  @Test
+  void testWithSizesProperty() {
+    final long[] widths = { 100, 200, 300, 400 };
+
+    // HTL converts the array of widths to an Integer[]
+    final Integer[] widthsRequestAttribute = Arrays.stream(widths)
+        .mapToInt(w -> (int)w)
+        .boxed()
+        .toArray(Integer[]::new);
+
+    context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
+    context.request().setAttribute("widths", widthsRequestAttribute);
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertTrue(underTest.isValid());
+
+    final ImageSizes imageSizes = underTest.getMetadata().getMediaRequest().getMediaArgs().getImageSizes();
+    assertNotNull(imageSizes);
+    assertNotNull(imageSizes.getWidthOptions());
+    assertNotNull(imageSizes.getSizes());
+
+    long[] imageWidths = Arrays.stream(imageSizes.getWidthOptions())
+        .mapToLong(WidthOption::getWidth)
+        .toArray();
+    assertArrayEquals(widths, imageWidths);
+    assertEquals("100vw", imageSizes.getSizes());
+  }
+
+  @Test
+  void testWithWithsAndSizesProperty() {
+    final long[] widths = { 100, 200, 300, 400 };
+    final String sizes = "99w 199w 299w 100vw";
+
+    final Integer[] widthsRequestAttribute = Arrays.stream(widths)
+        .mapToInt(w -> (int)w)
+        .boxed()
+        .toArray(Integer[]::new);
+
+    context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
+    context.request().setAttribute("widths", widthsRequestAttribute);
+    context.request().setAttribute("sizes", sizes);
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertTrue(underTest.isValid());
+
+    final ImageSizes imageSizes = underTest.getMetadata().getMediaRequest().getMediaArgs().getImageSizes();
+    assertNotNull(imageSizes);
+    assertNotNull(imageSizes.getWidthOptions());
+    assertNotNull(imageSizes.getSizes());
+
+    long[] imageWidths = Arrays.stream(imageSizes.getWidthOptions())
+        .mapToLong(WidthOption::getWidth)
+        .toArray();
+    assertArrayEquals(widths, imageWidths);
+    assertEquals(sizes, imageSizes.getSizes());
   }
 
 }

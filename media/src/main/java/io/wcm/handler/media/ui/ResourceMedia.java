@@ -21,8 +21,11 @@ package io.wcm.handler.media.ui;
 
 import static io.wcm.handler.media.MediaNameConstants.PROP_CSS_CLASS;
 
+import java.util.Arrays;
+
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -70,6 +73,12 @@ public class ResourceMedia {
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String cssClass;
 
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private Object[] widths;
+
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private String sizes = "100vw";
+
   @Self
   private MediaHandler mediaHandler;
   @SlingObject
@@ -96,8 +105,19 @@ public class ResourceMedia {
     if (StringUtils.isNotEmpty(cssClass)) {
       builder.property(PROP_CSS_CLASS, cssClass);
     }
+    final long[] imageWiths = getWidths();
+    if (ArrayUtils.isNotEmpty(imageWiths) && StringUtils.isNotEmpty(sizes)) {
+      builder.imageSizes(sizes, imageWiths);
+    }
 
     media = builder.build();
+  }
+
+  private long[] getWidths() {
+    return Arrays.stream(ArrayUtils.nullToEmpty(widths))
+        .filter(Number.class::isInstance)
+        .mapToLong(i -> ((Number)i).longValue())
+        .toArray();
   }
 
   /**
