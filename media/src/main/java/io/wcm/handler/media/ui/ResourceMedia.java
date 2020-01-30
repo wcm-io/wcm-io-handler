@@ -25,7 +25,6 @@ import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -38,8 +37,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.util.ImageUtils;
 
 /**
  * Generic resource-based media model.
@@ -58,6 +60,14 @@ import io.wcm.handler.media.MediaHandler;
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceMedia {
 
+  /**
+   * Optional: Media format to be used.
+   * By default the media formats are read from the component properties of the component and this
+   * parameter should not be set. But for components that allow to choose one from the allowed media
+   * formats via their edit dialog the format can be set here.
+   * To be used together with 'imageSizes' and 'widths'.<br>
+   * Cannot be used together with the picture source parameters.
+   */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String mediaFormat;
 
@@ -73,14 +83,51 @@ public class ResourceMedia {
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String cssClass;
 
+  /**
+   * Defines responsive rendition widths for image.
+   * To be used together with 'imageSizes' property. <br>
+   * Example: "{@literal 2560:false,1920:false,1280:false,640:false,320:false}" <br>
+   * The boolean flag indicates whether the with is required.<br>
+   * Cannot be used together with the picture source parameters.
+   */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
-  private Object[] widths;
+  private String widthOptions;
 
+  /**
+   * "Sizes" string for img element.
+   * Cannot be used together with the picture source parameters.
+   */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
-  private String sizes = "100vw";
+  private String imageSizes;
+
+  /**
+   * List of media formats for the picture source elements.
+   * You have to define the same number of array items in all pictureSource* properties.
+   * Cannot be used together with image sizes.
+   */
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private Object[] pictureSourceMediaFormat;
+
+  /**
+   * List of media expressions for the picture source elements.
+   * You have to define the same number of array items in all pictureSource* properties.
+   * Cannot be used together with image sizes.
+   */
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private Object[] pictureSourceMedia;
+
+  /**
+   * List of widths for the picture source elements.
+   * You have to define the same number of array items in all pictureSource* properties.
+   * Cannot be used together with image sizes.
+   */
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private Object[] pictureSourceWidths;
 
   @Self
   private MediaHandler mediaHandler;
+  @Self
+  private MediaFormatHandler mediaFormatHandler;
   @SlingObject
   private Resource resource;
 
@@ -105,19 +152,33 @@ public class ResourceMedia {
     if (StringUtils.isNotEmpty(cssClass)) {
       builder.property(PROP_CSS_CLASS, cssClass);
     }
-    final long[] imageWiths = getWidths();
-    if (ArrayUtils.isNotEmpty(imageWiths) && StringUtils.isNotEmpty(sizes)) {
-      builder.imageSizes(sizes, imageWiths);
+
+    // apply responsive image handling - either via image sizes or picture sources
+    if (StringUtils.isNotEmpty(imageSizes)) {
+      WidthOption[] widthOptionsArray = ImageUtils.toWidthOptionArray(widthOptions);
+      builder.imageSizes(imageSizes, widthOptionsArray);
+    }
+    else if (pictureSourceMediaFormat != null && pictureSourceMedia != null && pictureSourceWidths != null) {
+      ImageUtils.applyPictureSources(mediaFormatHandler, builder,
+          toStringArray(pictureSourceMediaFormat),
+          toStringArray(pictureSourceMedia),
+          toStringArray(pictureSourceWidths));
     }
 
     media = builder.build();
   }
 
-  private long[] getWidths() {
-    return Arrays.stream(ArrayUtils.nullToEmpty(widths))
-        .filter(Number.class::isInstance)
-        .mapToLong(i -> ((Number)i).longValue())
-        .toArray();
+  /**
+   * For some reason passing in arrays from HTL works only with Object[], not with String[].
+   * Thus, convert it here to String[].
+   *
+   * @param objectArray Array of objects
+   * @return Array with objects converted to strings
+   */
+  private static String[] toStringArray(Object... objectArray) {
+    return Arrays.stream(objectArray)
+        .map(obj -> obj == null ? "" : obj.toString())
+        .toArray(String[]::new);
   }
 
   /**

@@ -19,31 +19,33 @@
  */
 package io.wcm.handler.media.ui;
 
-import static io.wcm.handler.media.MediaArgs.*;
+import static io.wcm.handler.media.MediaArgs.ImageSizes;
+import static io.wcm.handler.media.MediaArgs.WidthOption;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CAMPAIGN;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER_1024_768;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
+import org.jdom2.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 
-import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -122,60 +124,78 @@ class ResourceMediaTest {
   }
 
   @Test
-  void testWithSizesProperty() {
-    final long[] widths = { 100, 200, 300, 400 };
-
-    // HTL converts the array of widths to an Integer[]
-    final Integer[] widthsRequestAttribute = Arrays.stream(widths)
-        .mapToInt(w -> (int)w)
-        .boxed()
-        .toArray(Integer[]::new);
+  void testWithImageSizeAndWidthOptions_ValidCase_AllMandatoryWidthsAreAvailable() {
+    final String sizes = "sizes string";
 
     context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
-    context.request().setAttribute("widths", widthsRequestAttribute);
+    context.request().setAttribute("widthOptions", "50:true,100:true,150:true,200:true,3000:false");
+    context.request().setAttribute("imageSizes", sizes);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
     assertTrue(underTest.isValid());
 
-    final ImageSizes imageSizes = underTest.getMetadata().getMediaRequest().getMediaArgs().getImageSizes();
-    assertNotNull(imageSizes);
-    assertNotNull(imageSizes.getWidthOptions());
-    assertNotNull(imageSizes.getSizes());
-
-    long[] imageWidths = Arrays.stream(imageSizes.getWidthOptions())
-        .mapToLong(WidthOption::getWidth)
-        .toArray();
-    assertArrayEquals(widths, imageWidths);
-    assertEquals("100vw", imageSizes.getSizes());
+    HtmlElement<?> img = underTest.getMetadata().getElement();
+    assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.200.95.file/asset1.jpg 200w, "+
+            "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.150.71.file/asset1.jpg 150w, "+
+            "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg 100w, "+
+            "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.50.24.file/asset1.jpg 50w",
+        img.getAttributeValue("srcset"));
+    assertEquals(sizes, img.getAttributeValue("sizes"));
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg", img.getAttributeValue("src"));
   }
 
   @Test
-  void testWithWithsAndSizesProperty() {
-    final long[] widths = { 100, 200, 300, 400 };
-    final String sizes = "99w 199w 299w 100vw";
-
-    final Integer[] widthsRequestAttribute = Arrays.stream(widths)
-        .mapToInt(w -> (int)w)
-        .boxed()
-        .toArray(Integer[]::new);
+  void testWithImageSizeAndWidthOptions_InvalidCase_MandatoryWithIsUnavailable() {
+    final String sizes = "sizes string";
 
     context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
-    context.request().setAttribute("widths", widthsRequestAttribute);
-    context.request().setAttribute("sizes", sizes);
+    context.request().setAttribute("widthOptions", "50:true,100:true,150:true,200:true,3000:true"); // 3000px is larger than the mediaformat width
+    context.request().setAttribute("imageSizes", sizes);
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertFalse(underTest.isValid());
+  }
+
+  @Test
+  void testWithPictureSourceProperties() {
+    context.request().setAttribute("pictureSourceMediaFormat", new String[] {
+        EDITORIAL_2COL.getName(), EDITORIAL_1COL.getName()
+    });
+    context.request().setAttribute("pictureSourceMedia", new String[] {
+        "media1", ""
+    });
+    context.request().setAttribute("pictureSourceWidths", new String[] {
+        "150,100", "90,40"
+    });
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
     assertTrue(underTest.isValid());
 
-    final ImageSizes imageSizes = underTest.getMetadata().getMediaRequest().getMediaArgs().getImageSizes();
-    assertNotNull(imageSizes);
-    assertNotNull(imageSizes.getWidthOptions());
-    assertNotNull(imageSizes.getSizes());
+    // validate picture and sources
+    HtmlElement<?> picture = underTest.getMetadata().getElement();
+    assertTrue(picture instanceof io.wcm.handler.commons.dom.Picture);
 
-    long[] imageWidths = Arrays.stream(imageSizes.getWidthOptions())
-        .mapToLong(WidthOption::getWidth)
-        .toArray();
-    assertArrayEquals(widths, imageWidths);
-    assertEquals(sizes, imageSizes.getSizes());
+    List<Element> sources = picture.getChildren("source");
+    assertEquals(2, sources.size());
+
+    HtmlElement<?> source1 = (HtmlElement<?>)sources.get(0);
+    assertEquals("media1", source1.getAttributeValue("media"));
+    assertEquals(
+        "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.150.71.file/asset1.jpg 150w, "
+            + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg 100w",
+        source1.getAttributeValue("srcset"));
+
+    HtmlElement<?> source2 = (HtmlElement<?>)sources.get(1);
+    assertNull(source2.getAttributeValue("media"));
+    assertEquals(
+        "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.90.43.file/asset1.jpg 90w, "
+            + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.40.19.file/asset1.jpg 40w",
+        source2.getAttributeValue("srcset"));
+
+    // validate img
+    HtmlElement<?> img = (HtmlElement<?>)picture.getChild("img");
+    assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
   }
 
 }
