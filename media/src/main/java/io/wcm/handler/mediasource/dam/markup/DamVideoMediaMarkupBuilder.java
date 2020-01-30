@@ -20,6 +20,8 @@
 package io.wcm.handler.mediasource.dam.markup;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.caconfig.resource.ConfigurationResourceResolver;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
@@ -65,9 +69,13 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ConsumerType
 public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
-  private static final String H264_PROFILE = "hq";
-  private static final String OGG_PROFILE = "firefoxhq";
-  private static final List<String> VIDEO_PROFILE_NAMES = ImmutableList.of(H264_PROFILE, OGG_PROFILE);
+  private static final String H264_PROFILE = "format_aac";
+  private static final String OGG_PROFILE = "format_ogg";
+  // TODO: remove legacy video profiles when migrating to AEM 6.4
+  private static final String LEGACY_H264_PROFILE = "hq"; // for AEM 6.3
+  private static final String LEGACY_OGG_PROFILE = "firefoxhq"; // for AEM 6.3
+  private static final List<String> VIDEO_PROFILE_NAMES = ImmutableList.of(H264_PROFILE, OGG_PROFILE,
+      LEGACY_H264_PROFILE, LEGACY_OGG_PROFILE);
 
   private static final Logger log = LoggerFactory.getLogger(DamVideoMediaMarkupBuilder.class);
 
@@ -75,6 +83,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   private ResourceResolver resourceResolver;
   @Self
   private UrlHandler urlHandler;
+  @OSGiService
+  private ConfigurationResourceResolver configurationResourceResolver;
 
   @Override
   public final boolean accepts(@NotNull Media media) {
@@ -105,15 +115,28 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   protected List<VideoProfile> getVideoProfiles() {
     List<VideoProfile> profiles = new ArrayList<VideoProfile>();
     for (String profileName : getVideoProfileNames()) {
-      VideoProfile profile = VideoProfile.get(resourceResolver, profileName);
+      VideoProfile profile = getVideoProfile(profileName);
       if (profile != null) {
         profiles.add(profile);
       }
       else {
-        log.warn("DAM video profile with name '{}' does not exist.", profileName);
+        log.debug("DAM video profile with name '{}' does not exist.", profileName);
       }
     }
     return profiles;
+  }
+
+  private VideoProfile getVideoProfile(String profileName) {
+    // try to get new get signature from AEM 6.4+ via reflection
+    // TODO: switch to new method signature without reflection when migration to AEM 6.4 API
+    try {
+      Method getMethod = VideoProfile.class.getMethod("get", ResourceResolver.class, ConfigurationResourceResolver.class, String.class);
+      return (VideoProfile)getMethod.invoke(null, resourceResolver, configurationResourceResolver, profileName);
+    }
+    catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+      // fallback to AEM 6.3 method
+      return VideoProfile.get(resourceResolver, profileName);
+    }
   }
 
   /**
@@ -145,9 +168,6 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     // add video sources for each video profile
     addSources(video, media);
 
-    // add flash player as fallback
-    video.addContent(getFlashPlayerElement(media, dimension));
-
     return video;
   }
 
@@ -177,7 +197,9 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @param media Media metadata
    * @param dimension Dimension
    * @return Media element
+   * @deprecated Usage of flash for video player fallback is deprecated
    */
+  @Deprecated
   protected HtmlElement getFlashPlayerElement(Media media, Dimension dimension) {
     Asset asset = getDamAsset(media);
     if (asset == null) {
@@ -186,7 +208,10 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
     com.day.cq.dam.api.Rendition rendition = asset.getRendition(new PrefixRenditionPicker(VideoConstants.RENDITION_PREFIX + H264_PROFILE));
     if (rendition == null) {
-      return null;
+      rendition = asset.getRendition(new PrefixRenditionPicker(VideoConstants.RENDITION_PREFIX + LEGACY_H264_PROFILE));
+      if (rendition == null) {
+        return null;
+      }
     }
 
     String playerUrl = urlHandler.get("/etc/clientlibs/foundation/video/swf/StrobeMediaPlayback.swf")
@@ -229,7 +254,9 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * Build flashvars string to be used on HTML object element for flash embedding.
    * @param flashVars flashvars map
    * @return flashvars string with proper encoding
+   * @deprecated Usage of flash for video player fallback is deprecated
    */
+  @Deprecated
   protected String buildFlashVarsString(Map<String, String> flashVars) {
     try {
       StringBuilder flashvarsString = new StringBuilder();

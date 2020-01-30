@@ -26,21 +26,39 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.wcm.commons.component.ComponentPropertyResolution;
 import io.wcm.wcm.commons.component.ComponentPropertyResolver;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Resolves Link Handler component properties for the component associated
  * with the given resource from content policies and properties defined in the component resource.
+ * Please make sure to {@link #close()} instances of this class after usage.
  */
 @ProviderType
-public final class LinkComponentPropertyResolver {
+public final class LinkComponentPropertyResolver implements AutoCloseable {
 
   private final ComponentPropertyResolver resolver;
 
   /**
    * @param resource Resource containing link properties
+   * @param componentPropertyResolverFactory Component property resolver factory
    */
+  public LinkComponentPropertyResolver(@NotNull Resource resource,
+      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    // resolve media component properties 1. from policies and 2. from component definition
+    resolver = componentPropertyResolverFactory.get(resource, true)
+        .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
+        .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+  }
+
+  /**
+   * @param resource Resource containing link properties
+   * @deprecated Please use {@link #LinkComponentPropertyResolver(Resource, ComponentPropertyResolverFactory)}
+   */
+  @Deprecated
+  @SuppressWarnings("resource")
   public LinkComponentPropertyResolver(@NotNull Resource resource) {
     // resolve media component properties 1. from policies and 2. from component definition
     resolver = new ComponentPropertyResolver(resource, true)
@@ -51,8 +69,14 @@ public final class LinkComponentPropertyResolver {
   /**
    * @return Link target URL fallback property name
    */
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public @NotNull String @Nullable [] getLinkTargetUrlFallbackProperty() {
     return resolver.get(PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, String[].class);
+  }
+
+  @Override
+  public void close() throws Exception {
+    resolver.close();
   }
 
 }

@@ -41,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.image.Layer;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
@@ -309,6 +310,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
    * Builds URL to rescaled version of the binary image.
    * @return Media URL
    */
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   private String buildScaledMediaUrl(@NotNull Dimension dimension, @Nullable CropDimension mediaUrlCropDimension) {
 
     if (isVectorImage()) {

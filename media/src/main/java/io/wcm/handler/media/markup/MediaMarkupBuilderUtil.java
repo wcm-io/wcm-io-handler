@@ -36,6 +36,7 @@ import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.EditConfig;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
@@ -83,6 +84,7 @@ public final class MediaMarkupBuilderUtil {
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    */
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
       @NotNull String refProperty, @NotNull SlingHttpServletRequest request, @Nullable MediaHandlerConfig mediaHandlerConfig) {
 
@@ -182,7 +184,6 @@ public final class MediaMarkupBuilderUtil {
    * @param wcmComponentContext WCM component context
    * @return true if drag&amp;drop can be applied.
    */
-  @SuppressWarnings("null")
   public static boolean canApplyDragDropSupport(@NotNull MediaRequest mediaRequest,
       @Nullable ComponentContext wcmComponentContext) {
     switch (mediaRequest.getMediaArgs().getDragDropSupport()) {
@@ -192,8 +193,9 @@ public final class MediaMarkupBuilderUtil {
         return false;
       case AUTO:
         String resourcePath = null;
-        if (mediaRequest.getResource() != null) {
-          resourcePath = mediaRequest.getResource().getPath();
+        Resource mediaRequestResource = mediaRequest.getResource();
+        if (mediaRequestResource != null) {
+          resourcePath = mediaRequestResource.getPath();
         }
         String componentResourcePath = null;
         if (wcmComponentContext != null && wcmComponentContext.getResource() != null) {

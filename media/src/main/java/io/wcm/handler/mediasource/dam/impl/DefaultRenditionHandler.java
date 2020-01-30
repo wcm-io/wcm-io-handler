@@ -82,7 +82,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
   /**
    * Provides an option to post process the list of candidates. Can be overridden in subclasses
-   * @param candidates
+   * @param candidates Candidates
    * @return {@link Set} of {@link RenditionMetadata}
    */
   protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
@@ -91,8 +91,8 @@ class DefaultRenditionHandler implements RenditionHandler {
 
   /**
    * adds rendition to the list of candidates, if it should be available for resolving
-   * @param candidates
-   * @param rendition
+   * @param candidates Candidates
+   * @param rendition Rendition
    */
   private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
     // ignore AEM-generated thumbnail renditions unless allowed via mediaargs

@@ -25,6 +25,8 @@ import java.util.List;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
@@ -40,6 +42,7 @@ import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Default implementation or {@link MediaBuilder}.
@@ -55,18 +58,37 @@ final class MediaBuilderImpl implements MediaBuilder {
   private MediaPropertyNames mediaPropertyNames = new MediaPropertyNames();
   private List<PictureSource> pictureSourceSets = new ArrayList<>();
 
-  MediaBuilderImpl(Resource resource, MediaHandlerImpl mediaHandler) {
+  private static final Logger log = LoggerFactory.getLogger(MediaBuilderImpl.class);
+
+  MediaBuilderImpl(@Nullable Resource resource, @NotNull MediaHandlerImpl mediaHandler,
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     this.resource = resource;
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
 
     // resolve default settings from content policies and component properties
     if (resource != null) {
-      MediaComponentPropertyResolver resolver = new MediaComponentPropertyResolver(resource);
-      mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
-      mediaArgs.autoCrop(resolver.isAutoCrop());
-      mediaArgs.imageSizes(resolver.getImageSizes());
-      mediaArgs.pictureSources(resolver.getPictureSources());
+      try (MediaComponentPropertyResolver resolver = getMediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+        mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
+        mediaArgs.autoCrop(resolver.isAutoCrop());
+        mediaArgs.imageSizes(resolver.getImageSizes());
+        mediaArgs.pictureSources(resolver.getPictureSources());
+      }
+      catch (Exception ex) {
+        log.warn("Error closing component property resolver.", ex);
+      }
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private static MediaComponentPropertyResolver getMediaComponentPropertyResolver(@NotNull Resource resource,
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    if (componentPropertyResolverFactory != null) {
+      return new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory);
+    }
+    else {
+      // fallback mode if ComponentPropertyResolverFactory is not available
+      return new MediaComponentPropertyResolver(resource);
     }
   }
 

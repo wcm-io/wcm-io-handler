@@ -30,6 +30,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.WCMMode;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
@@ -72,6 +73,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
   }
 
   @SuppressWarnings({ "null", "unused" })
+  @SuppressFBWarnings("STYLE")
   @Override
   public HtmlElement<?> build(@NotNull Media media) {
 

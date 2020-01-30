@@ -34,6 +34,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.jetbrains.annotations.NotNull;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.sling.commons.request.RequestPath;
 import io.wcm.wcm.commons.caching.CacheHeader;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -56,6 +57,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
   public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
   @Override
+  @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
   protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
 
     // get binary data resource

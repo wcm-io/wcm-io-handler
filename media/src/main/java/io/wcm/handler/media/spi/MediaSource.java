@@ -34,6 +34,7 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 import com.google.common.collect.ImmutableList;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
@@ -143,6 +144,7 @@ public abstract class MediaSource {
    * @return Path or null if not present
    */
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected final @Nullable String getMediaRef(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     if (StringUtils.isNotEmpty(mediaRequest.getMediaRef())) {
@@ -207,6 +209,7 @@ public abstract class MediaSource {
    * @return Crop dimension or null if not set or invalid
    */
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected final @Nullable CropDimension getMediaCropDimension(@NotNull MediaRequest mediaRequest,
       @Nullable MediaHandlerConfig mediaHandlerConfig) {
     if (mediaRequest.getResource() != null) {
@@ -263,6 +266,7 @@ public abstract class MediaSource {
    * @return Rotation value or null if not set or invalid
    */
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected final @Nullable Integer getMediaRotation(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
     if (mediaRequest.getResource() != null) {
@@ -301,6 +305,7 @@ public abstract class MediaSource {
    * @return Rotation value or null if not set or invalid
    */
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected final @Nullable List<ImageMapArea> getMediaMap(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
     if (mediaRequest.getResource() != null) {

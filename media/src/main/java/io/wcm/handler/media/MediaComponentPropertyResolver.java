@@ -46,19 +46,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.wcm.commons.component.ComponentPropertyResolution;
 import io.wcm.wcm.commons.component.ComponentPropertyResolver;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Resolves Media Handler component properties for the component associated
  * with the given resource from content policies and properties defined in the component resource.
+ * Please make sure to {@link #close()} instances of this class after usage.
  */
 @ProviderType
-public final class MediaComponentPropertyResolver {
+@SuppressFBWarnings("NP_NONNULL_RETURN_VIOLATION")
+public final class MediaComponentPropertyResolver implements AutoCloseable {
 
   static final String RESPONSIVE_TYPE_IMAGE_SIZES = "imageSizes";
   static final String RESPONSIVE_TYPE_PICTURE_SOURCES = "pictureSources";
@@ -77,7 +81,22 @@ public final class MediaComponentPropertyResolver {
 
   /**
    * @param resource Resource
+   * @param componentPropertyResolverFactory Component property resolver factory
    */
+  public MediaComponentPropertyResolver(@NotNull Resource resource,
+      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    // resolve media component properties 1. from policies and 2. from component definition
+    resolver = componentPropertyResolverFactory.get(resource, true)
+        .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
+        .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+  }
+
+  /**
+   * @param resource Resource
+   * @deprecated Please use {@link #MediaComponentPropertyResolver(Resource, ComponentPropertyResolverFactory)}
+   */
+  @Deprecated
+  @SuppressWarnings("resource")
   public MediaComponentPropertyResolver(@NotNull Resource resource) {
     // resolve media component properties 1. from policies and 2. from component definition
     resolver = new ComponentPropertyResolver(resource, true)
@@ -270,6 +289,11 @@ public final class MediaComponentPropertyResolver {
       widthValue = width;
     }
     return new WidthOption(NumberUtils.toLong(widthValue), !optional);
+  }
+
+  @Override
+  public void close() throws Exception {
+    resolver.close();
   }
 
 }

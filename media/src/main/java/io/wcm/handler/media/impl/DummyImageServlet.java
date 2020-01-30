@@ -36,6 +36,7 @@ import com.day.image.Font;
 import com.day.image.Layer;
 import com.day.image.font.AbstractFont;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.url.suffix.SuffixParser;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
@@ -71,6 +72,7 @@ public final class DummyImageServlet extends AbstractImageServlet {
   public static final @NotNull String SUFFIX_MEDIA_FORMAT_NAME = "mf";
 
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   @Override
   protected Layer createLayer(ImageContext ctx) throws RepositoryException, IOException {
     SuffixParser parser = new SuffixParser(ctx.request);

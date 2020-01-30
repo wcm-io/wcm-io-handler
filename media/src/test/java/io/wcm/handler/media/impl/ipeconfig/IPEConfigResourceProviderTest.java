@@ -52,6 +52,7 @@ import com.day.cq.wcm.api.components.InplaceEditingConfig;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -94,6 +95,7 @@ class IPEConfigResourceProviderTest {
     when(componentManager.getComponentOfResource(any(Resource.class))).thenAnswer(new Answer<Component>() {
       @Override
       @SuppressWarnings("null")
+      @SuppressFBWarnings("STYLE")
       public Component answer(InvocationOnMock invocation) throws Throwable {
         Resource resource = invocation.getArgument(0);
         assertEquals(componentContentResource.getPath(), resource.getPath());
@@ -114,7 +116,6 @@ class IPEConfigResourceProviderTest {
     when(mediaFormatHandler.getMediaFormat(SHOWROOM_STANDARD.getName())).thenReturn(SHOWROOM_STANDARD);
     when(mediaFormatHandler.getMediaFormat(NONFIXED_RAW.getName())).thenReturn(NONFIXED_RAW);
   }
-
   @Test
   @SuppressWarnings("null")
   void testCustomIPEConfig() {

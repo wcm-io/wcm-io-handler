@@ -35,6 +35,8 @@ final class SyntheticNavigatableResource extends AbstractResource {
   private final ResourceResolver resolver;
   private ResourceMetadata metadata;
 
+  private static final String RESOURCE_TYPE = "wcm-io/handler/link/synthetic/resource/navigatable";
+
   private SyntheticNavigatableResource(String path, ResourceResolver resolver) {
     this.path = path;
     this.resolver = resolver;
@@ -46,9 +48,8 @@ final class SyntheticNavigatableResource extends AbstractResource {
   }
 
   @Override
-  @SuppressWarnings("null")
-  public String getResourceType() {
-    return null;
+  public @NotNull String getResourceType() {
+    return RESOURCE_TYPE;
   }
 
   @Override
@@ -75,7 +76,11 @@ final class SyntheticNavigatableResource extends AbstractResource {
     if (path == null) {
       return null;
     }
-    return SyntheticNavigatableResource.get(ResourceUtil.getParent(path), resolver);
+    String parentPath = ResourceUtil.getParent(path);
+    if (parentPath == null) {
+      return null;
+    }
+    return SyntheticNavigatableResource.get(parentPath, resolver);
   }
 
   /**

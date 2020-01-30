@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.handler.parent</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>1.8.0</version>
+  <version>1.9.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Media Handler</name>
@@ -149,20 +149,6 @@
       </plugin>
 
     </plugins>
-    <pluginManagement>
-      <plugins>
-
-        <!-- Disable checkstyle for this project due to https://github.com/checkstyle/checkstyle/issues/4589, https://github.com/checkstyle/checkstyle/issues/3236 -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-
-      </plugins>
-    </pluginManagement>
   </build>
 
   <reporting>

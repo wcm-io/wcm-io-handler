@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.dam.api.Asset;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
@@ -166,6 +167,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
 
   @Override
   @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public @NotNull ValueMap getProperties() {
     if (this.rendition != null) {
       return this.rendition.getRendition().adaptTo(Resource.class).getValueMap();

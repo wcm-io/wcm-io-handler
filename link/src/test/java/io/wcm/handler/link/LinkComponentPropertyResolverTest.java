@@ -27,12 +27,14 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.sling.api.resource.Resource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 @ExtendWith(AemContextExtension.class)
 class LinkComponentPropertyResolverTest {
@@ -41,27 +43,36 @@ class LinkComponentPropertyResolverTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  @Test
-  void testGetLinkTargetUrlFallbackProperty_Default() {
-    Resource resource = context.create().resource("/content/r1");
+  private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
-    LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource);
-    assertNull(underTest.getLinkTargetUrlFallbackProperty());
+  @BeforeEach
+  void setUp() {
+    componentPropertyResolverFactory = context.getService(ComponentPropertyResolverFactory.class);
   }
 
   @Test
-  void testGetLinkTargetUrlFallbackProperty_Component() {
+  void testGetLinkTargetUrlFallbackProperty_Default() throws Exception {
+    Resource resource = context.create().resource("/content/r1");
+
+    try (LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+      assertNull(underTest.getLinkTargetUrlFallbackProperty());
+    }
+  }
+
+  @Test
+  void testGetLinkTargetUrlFallbackProperty_Component() throws Exception {
     context.create().resource(RESOURCE_TYPE,
         PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, "property1");
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
 
-    LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource);
-    assertArrayEquals(new String[] { "property1" }, underTest.getLinkTargetUrlFallbackProperty());
+    try (LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+      assertArrayEquals(new String[] { "property1" }, underTest.getLinkTargetUrlFallbackProperty());
+    }
   }
 
   @Test
-  void testGetLinkTargetUrlFallbackProperty_Component_Policy() {
+  void testGetLinkTargetUrlFallbackProperty_Component_Policy() throws Exception {
     context.contentPolicyMapping(RESOURCE_TYPE,
         PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, new String[] { "property2", "property3" });
 
@@ -70,12 +81,13 @@ class LinkComponentPropertyResolverTest {
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
 
-    LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource);
-    assertArrayEquals(new String[] { "property2", "property3" }, underTest.getLinkTargetUrlFallbackProperty());
+    try (LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+      assertArrayEquals(new String[] { "property2", "property3" }, underTest.getLinkTargetUrlFallbackProperty());
+    }
   }
 
   @Test
-  void testGetLinkTargetUrlFallbackProperty_Component_SubResource() {
+  void testGetLinkTargetUrlFallbackProperty_Component_SubResource() throws Exception {
     context.create().resource(RESOURCE_TYPE,
         PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, "property1");
     Resource resource = context.create().resource("/content/r1",
@@ -84,8 +96,9 @@ class LinkComponentPropertyResolverTest {
         JCR_PRIMARYTYPE, NT_UNSTRUCTURED);
     Resource subResource2 = context.create().resource(subResource1, "subResource2");
 
-    LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(subResource2);
-    assertArrayEquals(new String[] { "property1" }, underTest.getLinkTargetUrlFallbackProperty());
+    try (LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(subResource2, componentPropertyResolverFactory)) {
+      assertArrayEquals(new String[] { "property1" }, underTest.getLinkTargetUrlFallbackProperty());
+    }
   }
 
 }

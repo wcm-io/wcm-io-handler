@@ -27,12 +27,14 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.wcm.api.Page;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkBuilder;
@@ -44,6 +46,7 @@ import io.wcm.handler.link.spi.LinkProcessor;
 import io.wcm.handler.link.spi.LinkType;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Default implementation of a {@link LinkHandler}
@@ -59,10 +62,12 @@ public final class LinkHandlerImpl implements LinkHandler {
   private LinkHandlerConfig linkHandlerConfig;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Page currentPage;
+  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   @Override
   public @NotNull LinkBuilder get(Resource resource) {
-    return new LinkBuilderImpl(resource, this);
+    return new LinkBuilderImpl(resource, this, componentPropertyResolverFactory);
   }
 
   @Override
@@ -87,6 +92,7 @@ public final class LinkHandlerImpl implements LinkHandler {
    */
   @NotNull
   @SuppressWarnings({ "null", "unused" })
+  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   Link processRequest(@NotNull LinkRequest linkRequest) {
 
     // detect link type - first accepting wins
