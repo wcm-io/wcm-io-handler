@@ -41,7 +41,6 @@ import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.handler.media.util.ImageUtils;
 
 /**
  * Generic resource-based media model.
@@ -95,6 +94,7 @@ public class ResourceMedia {
 
   /**
    * "Sizes" string for img element.
+   * Example: "{@literal (min-width: 400px) 400px, 100vw}"<br>
    * Cannot be used together with the picture source parameters.
    */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -102,6 +102,7 @@ public class ResourceMedia {
 
   /**
    * List of media formats for the picture source elements.
+   * Example: "{@literal ['mf_16_9']}"<br>
    * You have to define the same number of array items in all pictureSource* properties.
    * Cannot be used together with image sizes.
    */
@@ -110,6 +111,7 @@ public class ResourceMedia {
 
   /**
    * List of media expressions for the picture source elements.
+   * Example: "{@literal ['(max-width: 799px)', '(min-width: 800px)']}"<br>
    * You have to define the same number of array items in all pictureSource* properties.
    * Cannot be used together with image sizes.
    */
@@ -118,6 +120,7 @@ public class ResourceMedia {
 
   /**
    * List of widths for the picture source elements.
+   * Example: "{@literal 479,719,959,1279,1439,1440}"<br>
    * You have to define the same number of array items in all pictureSource* properties.
    * Cannot be used together with image sizes.
    */
