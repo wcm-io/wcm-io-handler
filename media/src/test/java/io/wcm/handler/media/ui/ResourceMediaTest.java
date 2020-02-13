@@ -131,9 +131,9 @@ class ResourceMediaTest {
 
     HtmlElement<?> img = underTest.getMetadata().getElement();
     assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
-    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.200.95.file/asset1.jpg 200w, "+
-            "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.150.71.file/asset1.jpg 150w, "+
-            "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg 100w, "+
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.200.95.file/asset1.jpg 200w, " +
+        "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.150.71.file/asset1.jpg 150w, " +
+        "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg 100w, " +
             "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.50.24.file/asset1.jpg 50w",
         img.getAttributeValue("srcset"));
     assertEquals(sizes, img.getAttributeValue("sizes"));

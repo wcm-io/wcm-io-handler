@@ -33,7 +33,7 @@ import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 
-class ImageUtils {
+final class ImageUtils {
 
   private static final Logger LOG = LoggerFactory.getLogger(ImageUtils.class);
 
