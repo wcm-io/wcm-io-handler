@@ -30,6 +30,7 @@ import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
@@ -85,6 +86,11 @@ public final class MediaHandlerImpl implements MediaHandler {
   @Override
   public @NotNull MediaBuilder get(String mediaRef) {
     return new MediaBuilderImpl(mediaRef, this);
+  }
+
+  @Override
+  public @NotNull MediaBuilder get(String mediaRef, @Nullable Resource contextResource) {
+    return new MediaBuilderImpl(mediaRef, contextResource, this, componentPropertyResolverFactory);
   }
 
   @Override

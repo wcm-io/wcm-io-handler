@@ -66,17 +66,25 @@ final class MediaBuilderImpl implements MediaBuilder {
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
 
-    // resolve default settings from content policies and component properties
     if (resource != null) {
-      try (MediaComponentPropertyResolver resolver = getMediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-        mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
-        mediaArgs.autoCrop(resolver.isAutoCrop());
-        mediaArgs.imageSizes(resolver.getImageSizes());
-        mediaArgs.pictureSources(resolver.getPictureSources());
-      }
-      catch (Exception ex) {
-        log.warn("Error closing component property resolver.", ex);
-      }
+      resolveDefaultSettingsFromPolicyAndComponent(resource, componentPropertyResolverFactory);
+    }
+  }
+
+  /**
+   * Resolve default settings from content policies and component properties
+   * @param contextResource context resource
+   * @param componentPropertyResolverFactory factory to create a component property resolver
+   */
+  private void resolveDefaultSettingsFromPolicyAndComponent(Resource contextResource, ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    try (MediaComponentPropertyResolver resolver = getMediaComponentPropertyResolver(contextResource, componentPropertyResolverFactory)) {
+      mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
+      mediaArgs.autoCrop(resolver.isAutoCrop());
+      mediaArgs.imageSizes(resolver.getImageSizes());
+      mediaArgs.pictureSources(resolver.getPictureSources());
+    }
+    catch (Exception ex) {
+      log.warn("Error closing component property resolver.", ex);
     }
   }
 
@@ -92,10 +100,19 @@ final class MediaBuilderImpl implements MediaBuilder {
     }
   }
 
-  MediaBuilderImpl(String mediaRef, MediaHandlerImpl mediaHandler) {
-    this.resource = null;
+  MediaBuilderImpl(String mediaRef, Resource contextResource, MediaHandlerImpl mediaHandler,
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    this.resource = contextResource;
     this.mediaRef = mediaRef;
     this.mediaHandler = mediaHandler;
+
+    if (contextResource != null) {
+      resolveDefaultSettingsFromPolicyAndComponent(contextResource, componentPropertyResolverFactory);
+    }
+  }
+
+  MediaBuilderImpl(String mediaRef, MediaHandlerImpl mediaHandler) {
+    this(mediaRef, null, mediaHandler, null);
   }
 
   MediaBuilderImpl(MediaRequest mediaRequest, MediaHandlerImpl mediaHandler) {
