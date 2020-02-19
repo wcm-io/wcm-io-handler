@@ -41,6 +41,7 @@ import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.impl.WidthUtils;
 
 /**
  * Generic resource-based media model.
@@ -84,13 +85,13 @@ public class ResourceMedia {
 
   /**
    * Defines responsive rendition widths for image.
-   * To be used together with 'imageSizes' property. <br>
-   * Example: "{@literal 2560:false,1920:false,1280:false,640:false,320:false}" <br>
-   * The boolean flag indicates whether the with is required.<br>
+   * To be used together with 'imageSizes' property.
+   * Example: "{@literal 2560?,1920,?1280,640,320}" <br>
+   * Widths are by default required. To declare an optional width append the "{@literal ?}" suffix, eg. "1440?"<br>
    * Cannot be used together with the picture source parameters.
    */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
-  private String widthOptions;
+  private String imageWidths;
 
   /**
    * "Sizes" string for img element.
@@ -103,7 +104,7 @@ public class ResourceMedia {
   /**
    * List of media formats for the picture source elements.
    * Example: "{@literal ['mf_16_9']}"<br>
-   * You have to define the same number of array items in all pictureSource* properties.
+   * You have to define the same number of array items in all pictureSource* properties.<br>
    * Cannot be used together with image sizes.
    */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -112,7 +113,7 @@ public class ResourceMedia {
   /**
    * List of media expressions for the picture source elements.
    * Example: "{@literal ['(max-width: 799px)', '(min-width: 800px)']}"<br>
-   * You have to define the same number of array items in all pictureSource* properties.
+   * You have to define the same number of array items in all pictureSource* properties.<br>
    * Cannot be used together with image sizes.
    */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -120,8 +121,9 @@ public class ResourceMedia {
 
   /**
    * List of widths for the picture source elements.
-   * Example: "{@literal 479,719,959,1279,1439,1440}"<br>
+   * Example: "{@literal 479,719,959,1279,1439?,1440?}"<br>
    * You have to define the same number of array items in all pictureSource* properties.
+   * Widths are by default required. To declare an optional width append the "{@literal ?}" suffix, eg. "1440?"<br>
    * Cannot be used together with image sizes.
    */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -158,7 +160,7 @@ public class ResourceMedia {
 
     // apply responsive image handling - either via image sizes or picture sources
     if (StringUtils.isNotEmpty(imageSizes)) {
-      WidthOption[] widthOptionsArray = ImageUtils.toWidthOptionArray(widthOptions);
+      WidthOption[] widthOptionsArray = WidthUtils.parseWidths(imageWidths);
       builder.imageSizes(imageSizes, widthOptionsArray);
     }
     else if (pictureSourceMediaFormat != null && pictureSourceMedia != null && pictureSourceWidths != null) {

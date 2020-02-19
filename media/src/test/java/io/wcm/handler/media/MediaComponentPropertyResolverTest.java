@@ -29,7 +29,7 @@ import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_PICTURE_SOU
 import static io.wcm.handler.media.MediaComponentPropertyResolver.PN_PICTURE_SOURCES_WIDTHS;
 import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYPE_IMAGE_SIZES;
 import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYPE_PICTURE_SOURCES;
-import static io.wcm.handler.media.MediaComponentPropertyResolver.parseWidths;
+import static io.wcm.handler.media.impl.WidthUtils.parseWidths;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES;
@@ -256,11 +256,11 @@ class MediaComponentPropertyResolverTest {
     }, parseWidths("100"));
 
     assertArrayEquals(new WidthOption[] {
-        new WidthOption(100, true),
-        new WidthOption(200, false),
         new WidthOption(500, false),
         new WidthOption(400, true),
         new WidthOption(300, true),
+        new WidthOption(200, false),
+        new WidthOption(100, true),
     }, parseWidths(" 100  , 200? , 500?,400,300  "));
   }
 
@@ -301,9 +301,9 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertEquals(new ImageSizes("sizes1", new WidthOption[] {
-          new WidthOption(200, true),
-          new WidthOption(400, true),
           new WidthOption(600, false),
+          new WidthOption(400, true),
+          new WidthOption(200, true),
       }), underTest.getImageSizes());
     }
   }
@@ -335,7 +335,7 @@ class MediaComponentPropertyResolverTest {
     context.resourceResolver().commit();
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
+      assertEquals(new ImageSizes("sizes1", 400, 200), underTest.getImageSizes());
     }
   }
 
@@ -382,9 +382,9 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertEquals(new ImageSizes("sizes1", new WidthOption[] {
-          new WidthOption(200, true),
-          new WidthOption(400, true),
           new WidthOption(600, false),
+          new WidthOption(400, true),
+          new WidthOption(200, true),
       }), underTest.getImageSizes());
     }
   }
@@ -418,7 +418,7 @@ class MediaComponentPropertyResolverTest {
     context.resourceResolver().commit();
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
+      assertEquals(new ImageSizes("sizes1", 400, 200), underTest.getImageSizes());
     }
   }
 
@@ -487,11 +487,11 @@ class MediaComponentPropertyResolverTest {
               .media("media1")
               .sizes("sizes1")
               .widthOptions(new WidthOption[] {
-                  new WidthOption(200, true),
-                  new WidthOption(400, false)
+                  new WidthOption(400, false),
+                  new WidthOption(200, true)
               }),
           new PictureSource("home_teaser")
-              .widths(200, 300)
+              .widths(300, 200)
       }, underTest.getPictureSources());
     }
   }
@@ -530,7 +530,7 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertArrayEquals(new PictureSource[] {
-          new PictureSource("home_stage").widths(200, 400)
+          new PictureSource("home_stage").widths(400, 200)
       }, underTest.getPictureSources());
     }
   }
@@ -589,11 +589,11 @@ class MediaComponentPropertyResolverTest {
               .media("media1")
               .sizes("sizes1")
               .widthOptions(new WidthOption[] {
-                  new WidthOption(200, true),
-                  new WidthOption(400, false)
+                  new WidthOption(400, false),
+                  new WidthOption(200, true)
               }),
           new PictureSource("home_teaser")
-              .widths(200, 300)
+              .widths(300, 200)
       }, underTest.getPictureSources());
     }
   }
@@ -633,7 +633,7 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertArrayEquals(new PictureSource[] {
-          new PictureSource("home_stage").widths(200, 400)
+          new PictureSource("home_stage").widths(400, 200)
       }, underTest.getPictureSources());
     }
   }

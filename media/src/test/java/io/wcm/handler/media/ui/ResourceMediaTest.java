@@ -123,7 +123,7 @@ class ResourceMediaTest {
     final String sizes = "sizes string";
 
     context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
-    context.request().setAttribute("widthOptions", "50:true,100:true,150:true,200:true,3000:false");
+    context.request().setAttribute("imageWidths", "50,100,150,200,3000?");
     context.request().setAttribute("imageSizes", sizes);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
@@ -145,7 +145,7 @@ class ResourceMediaTest {
     final String sizes = "sizes string";
 
     context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
-    context.request().setAttribute("widthOptions", "50:true,100:true,150:true,200:true,3000:true"); // 3000px is larger than the mediaformat width
+    context.request().setAttribute("imageWidths", "50,100,150,200,3000"); // 3000px is larger than the mediaformat width and makes the media invalid
     context.request().setAttribute("imageSizes", sizes);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
