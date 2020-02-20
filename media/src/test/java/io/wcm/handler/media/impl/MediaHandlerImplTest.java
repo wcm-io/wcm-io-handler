@@ -224,6 +224,32 @@ class MediaHandlerImplTest {
   }
 
   @Test
+  void shouldResolveComponentPropertiesFromContextResourceWhenBuildingFromMediaRef() {
+    Resource component = context.create().resource("/apps/app1/components/comp1",
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] { true, false },
+        MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, true);
+
+    Resource resource = context.create().resource("/content/test",
+        "sling:resourceType", component.getPath());
+
+    String mediaRef = "/content/dummymedia/item1";
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    Media metadata = mediaHandler.get(mediaRef, resource).build();
+
+    MediaFormatOption[] mediaFormatOptions = metadata.getMediaRequest().getMediaArgs().getMediaFormatOptions();
+
+    assertEquals(2, mediaFormatOptions.length);
+    assertEquals(TestMediaFormats.HOME_STAGE, mediaFormatOptions[0].getMediaFormat());
+    assertTrue(mediaFormatOptions[0].isMandatory());
+    assertEquals(TestMediaFormats.HOME_TEASER, mediaFormatOptions[1].getMediaFormat());
+    assertFalse(mediaFormatOptions[1].isMandatory());
+
+    assertTrue(metadata.getMediaRequest().getMediaArgs().isAutoCrop());
+  }
+
+  @Test
   @SuppressWarnings("deprecation")
   void testComponentProperties_Legacy_SingleMandatoryFlag() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
