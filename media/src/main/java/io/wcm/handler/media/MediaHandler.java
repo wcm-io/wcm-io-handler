@@ -21,6 +21,7 @@ package io.wcm.handler.media;
 
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -71,11 +72,23 @@ public interface MediaHandler {
 
   /**
    * Build media which is referenced via its string address.
+   * Same as <code>get(mediaRef,null)</code>
    * @param mediaRef Reference to media item (in most cases a repository path to the DAM asset).
    * @return Media builder
+   * @see #get(String, Resource)
    */
   @NotNull
   MediaBuilder get(String mediaRef);
+
+  /**
+   * Build media which is referenced via its string address.
+   * @param mediaRef Reference to media item (in most cases a repository path to the DAM asset).
+   * @param contextResource optionally used to resolve component/policy level properties affecting media resolving from
+   *          the component associated with the given resource
+   * @return Media builder
+   */
+  @NotNull
+  MediaBuilder get(String mediaRef, @Nullable Resource contextResource);
 
   /**
    * Build media which is referenced via its string address.

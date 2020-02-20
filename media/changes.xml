@@ -24,8 +24,11 @@
   <body>
 
     <release version="1.9.0" date="not released">
-      <action type="update" dev="mrozati" issue="WHAN-33">
-        ResourceMedia supports request attributes for responsive image sizes. This can be either `imageSizes` and `widthOptions` (width + required flag), or `pictureSourceMediaFormat`, `pictureSourceMedia` and `pictureSourceWidths`.
+      <action type="add" dev="mceruti">
+        MediaHandler: Adds MediaHandler.get(String, Resource) that allows building a media from it's path while still looking up policy/component level settings from the given context resource, like it is done when building a media using MediaHandler.get(Resource). Requires the ComponentPropertyResolverFactory to work and be <![CDATA[<a href="https://wcm.io/wcm/commons/configuration.html">configured</a>]]> properly.
+      </action>
+      <action type="add" dev="mrozati" issue="WHAN-33">
+        ResourceMedia: Add support for request attributes defining responsive image sizes. This can be either `imageSizes` and `widthOptions` (width + required flag), or `pictureSourceMediaFormat`, `pictureSourceMedia` and `pictureSourceWidths`.
       </action>
     </release>
 
