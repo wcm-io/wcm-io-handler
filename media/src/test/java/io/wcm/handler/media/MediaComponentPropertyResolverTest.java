@@ -256,11 +256,11 @@ class MediaComponentPropertyResolverTest {
     }, parseWidths("100"));
 
     assertArrayEquals(new WidthOption[] {
+        new WidthOption(100, true),
+        new WidthOption(200, false),
         new WidthOption(500, false),
         new WidthOption(400, true),
         new WidthOption(300, true),
-        new WidthOption(200, false),
-        new WidthOption(100, true),
     }, parseWidths(" 100  , 200? , 500?,400,300  "));
   }
 
@@ -301,9 +301,9 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertEquals(new ImageSizes("sizes1", new WidthOption[] {
-          new WidthOption(600, false),
-          new WidthOption(400, true),
           new WidthOption(200, true),
+          new WidthOption(400, true),
+          new WidthOption(600, false),
       }), underTest.getImageSizes());
     }
   }
@@ -335,7 +335,7 @@ class MediaComponentPropertyResolverTest {
     context.resourceResolver().commit();
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertEquals(new ImageSizes("sizes1", 400, 200), underTest.getImageSizes());
+      assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
     }
   }
 
@@ -382,9 +382,9 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertEquals(new ImageSizes("sizes1", new WidthOption[] {
-          new WidthOption(600, false),
-          new WidthOption(400, true),
           new WidthOption(200, true),
+          new WidthOption(400, true),
+          new WidthOption(600, false),
       }), underTest.getImageSizes());
     }
   }
@@ -418,7 +418,7 @@ class MediaComponentPropertyResolverTest {
     context.resourceResolver().commit();
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertEquals(new ImageSizes("sizes1", 400, 200), underTest.getImageSizes());
+      assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
     }
   }
 
@@ -487,11 +487,11 @@ class MediaComponentPropertyResolverTest {
               .media("media1")
               .sizes("sizes1")
               .widthOptions(new WidthOption[] {
-                  new WidthOption(400, false),
-                  new WidthOption(200, true)
+                  new WidthOption(200, true),
+                  new WidthOption(400, false)
               }),
           new PictureSource("home_teaser")
-              .widths(300, 200)
+              .widths(200, 300)
       }, underTest.getPictureSources());
     }
   }
@@ -530,7 +530,7 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertArrayEquals(new PictureSource[] {
-          new PictureSource("home_stage").widths(400, 200)
+          new PictureSource("home_stage").widths(200, 400)
       }, underTest.getPictureSources());
     }
   }
@@ -589,11 +589,11 @@ class MediaComponentPropertyResolverTest {
               .media("media1")
               .sizes("sizes1")
               .widthOptions(new WidthOption[] {
-                  new WidthOption(400, false),
-                  new WidthOption(200, true)
+                  new WidthOption(200, true),
+                  new WidthOption(400, false)
               }),
           new PictureSource("home_teaser")
-              .widths(300, 200)
+              .widths(200, 300)
       }, underTest.getPictureSources());
     }
   }
@@ -633,7 +633,7 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertArrayEquals(new PictureSource[] {
-          new PictureSource("home_stage").widths(400, 200)
+          new PictureSource("home_stage").widths(200, 400)
       }, underTest.getPictureSources());
     }
   }

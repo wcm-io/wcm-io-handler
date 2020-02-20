@@ -20,6 +20,7 @@
 package io.wcm.handler.media.ui;
 
 import static io.wcm.handler.media.MediaNameConstants.PROP_CSS_CLASS;
+import static io.wcm.handler.media.impl.WidthUtils.parseWidths;
 
 import java.util.Arrays;
 
@@ -41,7 +42,6 @@ import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.format.MediaFormatHandler;
-import io.wcm.handler.media.impl.WidthUtils;
 
 /**
  * Generic resource-based media model.
@@ -139,6 +139,7 @@ public class ResourceMedia {
   private Media media;
 
   @PostConstruct
+  @SuppressWarnings("null")
   private void activate() {
     MediaBuilder builder = mediaHandler.get(resource);
 
@@ -160,8 +161,10 @@ public class ResourceMedia {
 
     // apply responsive image handling - either via image sizes or picture sources
     if (StringUtils.isNotEmpty(imageSizes)) {
-      WidthOption[] widthOptionsArray = WidthUtils.parseWidths(imageWidths);
-      builder.imageSizes(imageSizes, widthOptionsArray);
+      WidthOption[] widthOptionsArray = parseWidths(imageWidths);
+      if (widthOptionsArray != null) {
+        builder.imageSizes(imageSizes, widthOptionsArray);
+      }
     }
     else if (pictureSourceMediaFormat != null && pictureSourceMedia != null && pictureSourceWidths != null) {
       ImageUtils.applyPictureSources(mediaFormatHandler, builder,

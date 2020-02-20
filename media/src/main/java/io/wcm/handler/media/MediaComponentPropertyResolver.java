@@ -193,7 +193,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return Image sizes
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
@@ -219,7 +219,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return List of picture sources
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   public @NotNull PictureSource @Nullable [] getPictureSources() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
