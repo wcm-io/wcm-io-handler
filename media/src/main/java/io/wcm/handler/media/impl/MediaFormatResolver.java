@@ -172,14 +172,15 @@ final class MediaFormatResolver {
       return true;
     }
 
-    if (isEmpty(mediaArgs.getMediaFormats())) {
+    final MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
+    if (isEmpty(mediaFormats)) {
       log.warn("No media format with ratio given - unable to fulfill resolve image sizes.");
       return false;
     }
 
-    Arrays.stream(mediaArgs.getMediaFormats())
+    Arrays.stream(mediaFormats)
         .filter(Objects::nonNull)
-        .forEach(mediaFormat -> generateMediaFormatsForWidths(additionalMediaFormats, mediaFormat, imageSizes.getWidthOptions()));
+        .forEach(mediaFormat -> generateMediaFormatsForWidths(additionalMediaFormats, mediaFormat, true, imageSizes.getWidthOptions()));
     return true;
   }
 
@@ -189,13 +190,13 @@ final class MediaFormatResolver {
       return true;
     }
     for (PictureSource pictureSource : pictureSources) {
-      generateMediaFormatsForWidths(additionalMediaFormats, pictureSource.getMediaFormat(), pictureSource.getWidthOptions());
+      generateMediaFormatsForWidths(additionalMediaFormats, pictureSource.getMediaFormat(), false, pictureSource.getWidthOptions());
     }
     return true;
   }
 
   private void generateMediaFormatsForWidths(@NotNull Map<String, MediaFormatOption> additionalMediaFormats,
-      @Nullable MediaFormat mediaFormat, @NotNull WidthOption @Nullable... widthOptions) {
+      @Nullable MediaFormat mediaFormat, boolean setParent, @NotNull WidthOption @Nullable... widthOptions) {
     if (mediaFormat == null || widthOptions == null) {
       return;
     }
@@ -206,7 +207,7 @@ final class MediaFormatResolver {
           .extensions(mediaFormat.getExtensions())
           .ratio(mediaFormat.getRatio())
           .width(widthOption.getWidth())
-          .property("responsiveMediaFormat", true)
+          .property("parentMediaFormat", setParent ? mediaFormat : null)
           .build();
       additionalMediaFormats.put(widthMediaFormat.getName(), new MediaFormatOption(widthMediaFormat, widthOption.isMandatory()));
     }

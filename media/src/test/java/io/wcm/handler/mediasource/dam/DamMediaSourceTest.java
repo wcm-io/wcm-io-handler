@@ -825,7 +825,7 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMediaFormats_ImageSizes() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormats(RATIO, RATIO2)
+        .mediaFormats(RATIO2, RATIO) // <- only second media format matches
         .imageSizes("sizes", 160, 320)
         .build();
 

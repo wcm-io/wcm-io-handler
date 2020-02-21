@@ -23,12 +23,12 @@ import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
+import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.ValueMap;
@@ -49,6 +49,7 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.imagemap.ImageMapParser;
 
@@ -397,21 +398,22 @@ public abstract class MediaSource {
     boolean anyResolved = false;
     final List<Rendition> resolvedRenditions = new ArrayList<>();
 
-    for (List<MediaFormatOption> mediaFormatOptionsList : getResponsiveMediaFormatOptions(mediaArgs).values()) {
-      for (MediaFormatOption mediaFormatOption : mediaFormatOptionsList) {
-        MediaArgs renditionMediaArgs = mediaArgs.clone();
-        renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
-        Rendition rendition = asset.getRendition(renditionMediaArgs);
-        if (rendition != null) {
-          resolvedRenditions.add(rendition);
-          anyResolved = true;
-        }
-        else if (mediaFormatOption.isMandatory() && !mediaFormatOption.getMediaFormat().getProperties().get("responsiveMediaFormat", false)) {
-          allMandatoryResolved = false;
-        }
-      }
+    List<MediaFormatOption> parentMediaFormatOptions = getParentMediaFormats(mediaArgs);
+    allMandatoryResolved = resolveRenditionsWithMediaFormats(asset, mediaArgs, parentMediaFormatOptions, resolvedRenditions);
 
+    if (allMandatoryResolved && !resolvedRenditions.isEmpty()) {
+      List<MediaFormat> resolvedMediaFormats = resolvedRenditions.stream()
+          .map(Rendition::getMediaFormat)
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
+
+      for (MediaFormat mediaFormat : resolvedMediaFormats) {
+        List<MediaFormatOption> childMediaFormatOptions = getChildMediaFormats(mediaArgs, mediaFormat);
+        allMandatoryResolved = allMandatoryResolved && resolveRenditionsWithMediaFormats(asset, mediaArgs, childMediaFormatOptions, resolvedRenditions);
+      }
     }
+
+    anyResolved = CollectionUtils.isNotEmpty(resolvedRenditions);
 
     media.setRenditions(resolvedRenditions);
     if (!resolvedRenditions.isEmpty()) {
@@ -420,31 +422,53 @@ public abstract class MediaSource {
     return anyResolved && allMandatoryResolved;
   }
 
-  @NotNull
-  private Map<String, List<MediaFormatOption>> getResponsiveMediaFormatOptions(@NotNull MediaArgs mediaArgs) {
-    final Map<String, List<MediaFormatOption>> responsiveMediaFormatOptions = new LinkedHashMap<>();
-
-    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
-      String mediaFormatName = mediaFormatOption.getMediaFormat().getName();
-      String mainMediaFormatName = getMainMediaFormatName(mediaFormatName);
-
-      if (StringUtils.isNotBlank(mainMediaFormatName)) {
-        responsiveMediaFormatOptions.putIfAbsent(mainMediaFormatName, new ArrayList<>());
-        responsiveMediaFormatOptions.get(mainMediaFormatName).add(mediaFormatOption);
+  private boolean resolveRenditionsWithMediaFormats(@NotNull Asset asset, @NotNull MediaArgs mediaArgs,
+      @NotNull List<MediaFormatOption> mediaFormatOptions, @NotNull List<Rendition> resolvedRenditions) {
+    boolean allMandatoryResolved = true;
+    for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
+      MediaArgs renditionMediaArgs = mediaArgs.clone();
+      renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
+      Rendition rendition = asset.getRendition(renditionMediaArgs);
+      if (rendition != null) {
+        resolvedRenditions.add(rendition);
+      }
+      else if (mediaFormatOption.isMandatory()) {
+        allMandatoryResolved = false;
       }
     }
-
-    return responsiveMediaFormatOptions;
+    return allMandatoryResolved;
   }
 
   @NotNull
-  private String getMainMediaFormatName(@NotNull String mediaFormatName) {
-    String mainMediaFormatName = mediaFormatName;
-    Matcher responsiveMediaFormatMatcher = RESPONSIVE_MEDIA_FORMAT_PATTERN.matcher(mediaFormatName);
-    if (responsiveMediaFormatMatcher.matches()) {
-      mainMediaFormatName = responsiveMediaFormatMatcher.group(1);
-    }
-    return mainMediaFormatName;
+  private List<MediaFormatOption> getParentMediaFormats(@NotNull MediaArgs mediaArgs) {
+    return Arrays.stream(mediaArgs.getMediaFormatOptions())
+        .filter(this::isParentMediaFormat)
+        .collect(Collectors.toList());
+  }
+
+  @NotNull
+  private List<MediaFormatOption> getChildMediaFormats(@NotNull MediaArgs mediaArgs, @NotNull final MediaFormat parentMediaFormat) {
+    return Arrays.stream(mediaArgs.getMediaFormatOptions())
+        .filter(this::isChildMediaFormat)
+        .filter(childMediaFormat -> hasParent(childMediaFormat, parentMediaFormat))
+        .collect(Collectors.toList());
+  }
+
+  private boolean isParentMediaFormat(@NotNull MediaFormatOption mediaFormatOption) {
+    return Objects.isNull(getParentMediaFormat(mediaFormatOption.getMediaFormat()));
+  }
+
+  private boolean isChildMediaFormat(@NotNull MediaFormatOption mediaFormatOption) {
+    return Objects.nonNull(getParentMediaFormat(mediaFormatOption.getMediaFormat()));
+  }
+
+  private boolean hasParent(@NotNull MediaFormatOption childMediaFormat, @NotNull MediaFormat parentMediaFormat) {
+    return parentMediaFormat.equals(getParentMediaFormat(childMediaFormat.getMediaFormat()));
+  }
+
+  @Nullable
+  private MediaFormat getParentMediaFormat(@NotNull MediaFormat mediaFormat) {
+    return mediaFormat.getProperties().get("parentMediaFormat", MediaFormat.class);
   }
 
 }
