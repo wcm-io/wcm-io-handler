@@ -384,7 +384,7 @@ class SimpleImageMediaMarkupBuilderTest {
   void testIsValidMedia_Image() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
-    assertFalse(builder.isValidMedia(null));
+    assertFalse(builder.isValidMedia(null)); // FIXME: the parameter 'element' has @NotNull annotation and cannot be null
     assertFalse(builder.isValidMedia(new Image()));
     assertTrue(builder.isValidMedia(new Image("/any/path.gif")));
     assertFalse(builder.isValidMedia(new Image(MediaMarkupBuilder.DUMMY_IMAGE).setCssClass(MediaNameConstants.CSS_DUMMYIMAGE)));
@@ -394,7 +394,7 @@ class SimpleImageMediaMarkupBuilderTest {
   void testIsValidMedia_Picture() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
-    assertFalse(builder.isValidMedia(null));
+    assertFalse(builder.isValidMedia(null)); // FIXME: the parameter 'element' has @NotNull annotation and cannot be null
     assertFalse(builder.isValidMedia(new Picture()));
 
     Picture picture = new Picture();
@@ -412,6 +412,7 @@ class SimpleImageMediaMarkupBuilderTest {
     when(r.getHeight()).thenReturn(Math.round(width / mediaFormat.getRatio()));
     when(r.getRatio()).thenReturn(mediaFormat.getRatio());
     when(r.getUrl()).thenReturn("/media/dummy." + width + ".png");
+    when(r.getMediaFormat()).thenReturn(mediaFormat);
     return r;
   }
 
