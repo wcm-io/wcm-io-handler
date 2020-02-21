@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -63,8 +62,6 @@ import io.wcm.handler.media.imagemap.ImageMapParser;
  */
 @ConsumerType
 public abstract class MediaSource {
-
-  private static final Pattern RESPONSIVE_MEDIA_FORMAT_PATTERN = Pattern.compile("^(.+)___\\d+$");
 
   /**
    * @return Media source ID
