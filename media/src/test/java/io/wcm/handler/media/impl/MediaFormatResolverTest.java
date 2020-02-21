@@ -189,6 +189,14 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  void testImageSizes_NoMediaFormat() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .imageSizes(new ImageSizes("sizes", 10, 20));
+
+    assertFalse(underTest.resolve(mediaArgs));
+  }
+
+  @Test
   void testPictureSources_DifferentRatio() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO)
@@ -265,6 +273,32 @@ class MediaFormatResolverTest {
     assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[1]);
     assertResponsiveMediaFormat(RATIO, 30, true, mediaFormatOptions[2]);
     assertResponsiveMediaFormat(RATIO, 10, true, mediaFormatOptions[3]);
+  }
+
+  @Test
+  void testPictureSources_NoWidths() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(RATIO)
+        .pictureSources(new PictureSource[] {
+            new PictureSource(RATIO).media("media1")
+        });
+
+    assertTrue(underTest.resolve(mediaArgs));
+
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(1, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+  }
+
+  @Test
+  void testPictureSources_InvalidMediaFormatName() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(RATIO)
+        .pictureSources(new PictureSource[] {
+            new PictureSource("invalid-format-name").media("media1")
+        });
+
+    assertFalse(underTest.resolve(mediaArgs));
   }
 
   @SuppressWarnings("null")
