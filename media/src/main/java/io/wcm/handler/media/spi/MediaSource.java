@@ -23,7 +23,11 @@ import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -58,6 +62,8 @@ import io.wcm.handler.media.imagemap.ImageMapParser;
  */
 @ConsumerType
 public abstract class MediaSource {
+
+  private static final Pattern RESPONSIVE_MEDIA_FORMAT_PATTERN = Pattern.compile("^(.+)___\\d+$");
 
   /**
    * @return Media source ID
@@ -386,27 +392,59 @@ public abstract class MediaSource {
    * @param mediaArgs Media args
    * @return true if for all mandatory or for at least one media formats a rendition could be found.
    */
-  private boolean resolveAllRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
+  private boolean resolveAllRenditions(@NotNull Media media, @NotNull Asset asset, @NotNull final MediaArgs mediaArgs) {
     boolean allMandatoryResolved = true;
     boolean anyResolved = false;
-    List<Rendition> resolvedRenditions = new ArrayList<>();
-    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
-      MediaArgs renditionMediaArgs = mediaArgs.clone();
-      renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
-      Rendition rendition = asset.getRendition(renditionMediaArgs);
-      if (rendition != null) {
-        resolvedRenditions.add(rendition);
-        anyResolved = true;
+    final List<Rendition> resolvedRenditions = new ArrayList<>();
+
+    for (List<MediaFormatOption> mediaFormatOptionsList : getResponsiveMediaFormatOptions(mediaArgs).values()) {
+      for (MediaFormatOption mediaFormatOption : mediaFormatOptionsList) {
+        MediaArgs renditionMediaArgs = mediaArgs.clone();
+        renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
+        Rendition rendition = asset.getRendition(renditionMediaArgs);
+        if (rendition != null) {
+          resolvedRenditions.add(rendition);
+          anyResolved = true;
+        }
+        else if (mediaFormatOption.isMandatory() && !mediaFormatOption.getMediaFormat().getProperties().get("responsiveMediaFormat", false)) {
+          allMandatoryResolved = false;
+        }
       }
-      else if (mediaFormatOption.isMandatory()) {
-        allMandatoryResolved = false;
-      }
+
     }
+
     media.setRenditions(resolvedRenditions);
     if (!resolvedRenditions.isEmpty()) {
       media.setUrl(resolvedRenditions.get(0).getUrl());
     }
     return anyResolved && allMandatoryResolved;
+  }
+
+  @NotNull
+  private Map<String, List<MediaFormatOption>> getResponsiveMediaFormatOptions(@NotNull MediaArgs mediaArgs) {
+    final Map<String, List<MediaFormatOption>> responsiveMediaFormatOptions = new LinkedHashMap<>();
+
+    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
+      String mediaFormatName = mediaFormatOption.getMediaFormat().getName();
+      String mainMediaFormatName = getMainMediaFormatName(mediaFormatName);
+
+      if (StringUtils.isNotBlank(mainMediaFormatName)) {
+        responsiveMediaFormatOptions.putIfAbsent(mainMediaFormatName, new ArrayList<>());
+        responsiveMediaFormatOptions.get(mainMediaFormatName).add(mediaFormatOption);
+      }
+    }
+
+    return responsiveMediaFormatOptions;
+  }
+
+  @NotNull
+  private String getMainMediaFormatName(@NotNull String mediaFormatName) {
+    String mainMediaFormatName = mediaFormatName;
+    Matcher responsiveMediaFormatMatcher = RESPONSIVE_MEDIA_FORMAT_PATTERN.matcher(mediaFormatName);
+    if (responsiveMediaFormatMatcher.matches()) {
+      mainMediaFormatName = responsiveMediaFormatMatcher.group(1);
+    }
+    return mainMediaFormatName;
   }
 
 }

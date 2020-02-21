@@ -19,11 +19,14 @@
  */
 package io.wcm.handler.media.impl;
 
+import static org.apache.commons.lang3.ArrayUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -165,25 +168,19 @@ final class MediaFormatResolver {
 
   private boolean resolveForImageSizes(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
     ImageSizes imageSizes = mediaArgs.getImageSizes();
-    if (imageSizes == null) {
+    if (imageSizes == null || imageSizes.getWidthOptions() == null) {
       return true;
     }
-    MediaFormat primaryMediaFormat = getFirstMediaFormat(mediaArgs);
-    if (primaryMediaFormat == null) {
+
+    if (isEmpty(mediaArgs.getMediaFormats())) {
       log.warn("No media format with ratio given - unable to fulfill resolve image sizes.");
       return false;
     }
-    generateMediaFormatsForWidths(additionalMediaFormats, primaryMediaFormat, imageSizes.getWidthOptions());
-    return true;
-  }
 
-  private MediaFormat getFirstMediaFormat(MediaArgs mediaArgs) {
-    if (mediaArgs.getMediaFormats() != null) {
-      for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
-        return mediaFormat;
-      }
-    }
-    return null;
+    Arrays.stream(mediaArgs.getMediaFormats())
+        .filter(Objects::nonNull)
+        .forEach(mediaFormat -> generateMediaFormatsForWidths(additionalMediaFormats, mediaFormat, imageSizes.getWidthOptions()));
+    return true;
   }
 
   private boolean resolveForResponsivePictureSources(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
@@ -209,6 +206,7 @@ final class MediaFormatResolver {
           .extensions(mediaFormat.getExtensions())
           .ratio(mediaFormat.getRatio())
           .width(widthOption.getWidth())
+          .property("responsiveMediaFormat", true)
           .build();
       additionalMediaFormats.put(widthMediaFormat.getName(), new MediaFormatOption(widthMediaFormat, widthOption.isMandatory()));
     }
