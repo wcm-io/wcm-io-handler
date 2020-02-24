@@ -30,6 +30,9 @@
       <action type="add" dev="mrozati" issue="WHAN-33">
         ResourceMedia: Add support for request attributes defining responsive image sizes. This can be either `imageSizes` and `widthOptions` (width + required flag), or `pictureSourceMediaFormat`, `pictureSourceMedia` and `pictureSourceWidths`.
       </action>
+      <action type="fix" dev="bkalbitz" issue="WHAN-35">
+        Avoid duplicated storing for fileReference in File Upload component.
+      </action>
     </release>
 
     <release version="1.8.2" date="2020-01-30">
