@@ -214,6 +214,28 @@ class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
+  void testBuild_ImageSizes_MultipleMediaFormats() {
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    mediaRequest.getMediaArgs().mediaFormats(RATIO2, RATIO); // <- only second format resolves
+    mediaRequest.getMediaArgs().imageSizes(new ImageSizes("sizes1", 64, 32, 16));
+    mediaRequest.getMediaArgs().property("custom-property", "value1");
+    Media media = new Media(mediaSource, mediaRequest);
+    media.setAsset(asset);
+    media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 16)));
+
+    HtmlElement<?> element = builder.build(media);
+    assertTrue(element instanceof Image);
+    assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
+    assertNull(element.getAttributeValue("width"));
+    assertNull(element.getAttributeValue("height"));
+    assertEquals("sizes1", element.getAttributeValue("sizes"));
+    assertEquals("/media/dummy.64.png 64w, /media/dummy.16.png 16w", element.getAttributeValue("srcset"));
+    assertEquals("value1", element.getAttributeValue("custom-property"));
+  }
+
+  @Test
   void testBuild_ImageSizes_NoRatio() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
