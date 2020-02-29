@@ -391,7 +391,7 @@ public abstract class MediaSource {
    * @return true if for all mandatory or for at least one media formats a rendition could be found.
    */
   private boolean resolveAllRenditions(@NotNull Media media, @NotNull Asset asset, @NotNull final MediaArgs mediaArgs) {
-    boolean anyResolved;
+    boolean anyResolved = false;
     boolean allMandatoryResolved;
     final List<Rendition> resolvedRenditions = new ArrayList<>();
 
@@ -410,10 +410,9 @@ public abstract class MediaSource {
       }
     }
 
-    anyResolved = CollectionUtils.isNotEmpty(resolvedRenditions);
-
     media.setRenditions(resolvedRenditions);
     if (!resolvedRenditions.isEmpty()) {
+      anyResolved = true;
       media.setUrl(resolvedRenditions.get(0).getUrl());
     }
     return anyResolved && allMandatoryResolved;
