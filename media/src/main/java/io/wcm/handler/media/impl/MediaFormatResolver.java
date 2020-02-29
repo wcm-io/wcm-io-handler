@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.MediaNameConstants.MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT;
 import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 
 import java.util.ArrayList;
@@ -168,7 +169,7 @@ final class MediaFormatResolver {
 
   private boolean resolveForImageSizes(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
     ImageSizes imageSizes = mediaArgs.getImageSizes();
-    if (imageSizes == null || imageSizes.getWidthOptions() == null) {
+    if (imageSizes == null) {
       return true;
     }
 
@@ -207,7 +208,7 @@ final class MediaFormatResolver {
           .extensions(mediaFormat.getExtensions())
           .ratio(mediaFormat.getRatio())
           .width(widthOption.getWidth())
-          .property("parentMediaFormat", setParent ? mediaFormat : null)
+          .property(MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT, setParent ? mediaFormat : null)
           .build();
       additionalMediaFormats.put(widthMediaFormat.getName(), new MediaFormatOption(widthMediaFormat, widthOption.isMandatory()));
     }

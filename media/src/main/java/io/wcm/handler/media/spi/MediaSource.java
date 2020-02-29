@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.spi;
 
+import static io.wcm.handler.media.MediaNameConstants.MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT;
 import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
 
 import java.util.ArrayList;
@@ -353,8 +354,7 @@ public abstract class MediaSource {
   protected final boolean resolveRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     boolean anyMandatory = mediaArgs.getMediaFormatOptions() != null
         && Arrays.stream(mediaArgs.getMediaFormatOptions())
-        .filter(MediaFormatOption::isMandatory)
-        .findFirst().isPresent();
+        .anyMatch(MediaFormatOption::isMandatory);
     if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1
         && (anyMandatory || mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null)) {
       return resolveAllRenditions(media, asset, mediaArgs);
@@ -391,8 +391,8 @@ public abstract class MediaSource {
    * @return true if for all mandatory or for at least one media formats a rendition could be found.
    */
   private boolean resolveAllRenditions(@NotNull Media media, @NotNull Asset asset, @NotNull final MediaArgs mediaArgs) {
-    boolean allMandatoryResolved = true;
-    boolean anyResolved = false;
+    boolean anyResolved;
+    boolean allMandatoryResolved;
     final List<Rendition> resolvedRenditions = new ArrayList<>();
 
     List<MediaFormatOption> parentMediaFormatOptions = getParentMediaFormats(mediaArgs);
@@ -464,8 +464,11 @@ public abstract class MediaSource {
   }
 
   @Nullable
-  private MediaFormat getParentMediaFormat(@NotNull MediaFormat mediaFormat) {
-    return mediaFormat.getProperties().get("parentMediaFormat", MediaFormat.class);
+  private MediaFormat getParentMediaFormat(@Nullable MediaFormat mediaFormat) {
+    if (mediaFormat == null) {
+      return null;
+    }
+    return mediaFormat.getProperties().get(MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT, MediaFormat.class);
   }
 
 }
