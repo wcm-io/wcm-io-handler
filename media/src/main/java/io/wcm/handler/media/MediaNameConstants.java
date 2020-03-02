@@ -238,4 +238,10 @@ public final class MediaNameConstants {
   @Deprecated
   public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES = "wcmio:mediaRepsonsivePictureSources";
 
+  /**
+   * Media format property name for the parent media format. Parent media format is the original media format that
+   * is used to generate a width-based sub-media-format for responsive images.
+   */
+  public static final String MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT = "parentMediaFormat";
+
 }

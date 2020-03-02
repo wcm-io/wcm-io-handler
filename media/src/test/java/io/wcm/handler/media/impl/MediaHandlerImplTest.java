@@ -34,6 +34,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.Constants;
@@ -335,7 +336,7 @@ class MediaHandlerImplTest {
   })
   public static class TestMediaSource extends MediaSource {
 
-    @Override
+    @Override @NotNull
     public String getId() {
       return "dummy";
     }
@@ -350,8 +351,8 @@ class MediaHandlerImplTest {
       return MediaNameConstants.PN_MEDIA_REF;
     }
 
-    @Override
-    public Media resolveMedia(Media media) {
+    @Override @NotNull
+    public Media resolveMedia(@NotNull Media media) {
       if (media.getMediaRequest().getMediaArgs().isDownload()) {
         String mediaUrl = media.getMediaRequest().getMediaRef();
         media.setUrl("http://xyz" + mediaUrl + ".pdf");
@@ -365,7 +366,7 @@ class MediaHandlerImplTest {
     }
 
     @Override
-    public void enableMediaDrop(HtmlElement<?> element, MediaRequest mediaRequest) {
+    public void enableMediaDrop(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
       // not supported
     }
 

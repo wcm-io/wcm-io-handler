@@ -138,6 +138,42 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  void testImageSizes_MultipleMediaFormats() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormats(RATIO, RATIO2)
+        .imageSizes(new ImageSizes("size1", 10, 20));
+
+    assertTrue(underTest.resolve(mediaArgs));
+
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(6, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertEquals(RATIO2, mediaFormatOptions[1].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 10, true, mediaFormatOptions[2]);
+    assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[3]);
+    assertResponsiveMediaFormat(RATIO2, 10, true, mediaFormatOptions[4]);
+    assertResponsiveMediaFormat(RATIO2, 20, true, mediaFormatOptions[5]);
+  }
+
+  @Test
+  void testImageSizes_MultipleMediaFormats_MixedMandatory() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormats(RATIO, RATIO2)
+        .imageSizes(new ImageSizes("size1", new WidthOption(10, true), new WidthOption(20, false)));
+
+    assertTrue(underTest.resolve(mediaArgs));
+
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(6, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+    assertEquals(RATIO2, mediaFormatOptions[1].getMediaFormat());
+    assertResponsiveMediaFormat(RATIO, 10, true, mediaFormatOptions[2]);
+    assertResponsiveMediaFormat(RATIO, 20, false, mediaFormatOptions[3]);
+    assertResponsiveMediaFormat(RATIO2, 10, true, mediaFormatOptions[4]);
+    assertResponsiveMediaFormat(RATIO2, 20, false, mediaFormatOptions[5]);
+  }
+
+  @Test
   void testImageSizes_NoRatioMediaFormat() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(FIXEDWIDTH_UNCONSTRAINED)
@@ -150,6 +186,14 @@ class MediaFormatResolverTest {
     assertEquals(FIXEDWIDTH_UNCONSTRAINED, mediaFormatOptions[0].getMediaFormat());
     assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 10, true, mediaFormatOptions[1]);
     assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 20, true, mediaFormatOptions[2]);
+  }
+
+  @Test
+  void testImageSizes_NoMediaFormat() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .imageSizes(new ImageSizes("sizes", 10, 20));
+
+    assertFalse(underTest.resolve(mediaArgs));
   }
 
   @Test
@@ -229,6 +273,32 @@ class MediaFormatResolverTest {
     assertResponsiveMediaFormat(RATIO, 20, true, mediaFormatOptions[1]);
     assertResponsiveMediaFormat(RATIO, 30, true, mediaFormatOptions[2]);
     assertResponsiveMediaFormat(RATIO, 10, true, mediaFormatOptions[3]);
+  }
+
+  @Test
+  void testPictureSources_NoWidths() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(RATIO)
+        .pictureSources(new PictureSource[] {
+            new PictureSource(RATIO).media("media1")
+        });
+
+    assertTrue(underTest.resolve(mediaArgs));
+
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    assertEquals(1, mediaFormatOptions.length);
+    assertEquals(RATIO, mediaFormatOptions[0].getMediaFormat());
+  }
+
+  @Test
+  void testPictureSources_InvalidMediaFormatName() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(RATIO)
+        .pictureSources(new PictureSource[] {
+            new PictureSource("invalid-format-name").media("media1")
+        });
+
+    assertFalse(underTest.resolve(mediaArgs));
   }
 
   @SuppressWarnings("null")

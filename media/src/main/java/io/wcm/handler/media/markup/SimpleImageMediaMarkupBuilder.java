@@ -21,6 +21,7 @@ package io.wcm.handler.media.markup;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -295,18 +296,16 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   }
 
   /**
-   * Get first media format from the media formats of the media args that has a ratio set.
+   * Get first media format from the resolved media renditions.
    * @param media Media
    * @return Media format or null if none found
    */
   protected final @Nullable MediaFormat getFirstMediaFormat(@NotNull Media media) {
-    MediaFormat[] mediaFormats = media.getMediaRequest().getMediaArgs().getMediaFormats();
-    if (mediaFormats != null) {
-      for (MediaFormat mediaFormat : mediaFormats) {
-        return mediaFormat;
-      }
-    }
-    return null;
+    return media.getRenditions().stream()
+        .map(Rendition::getMediaFormat)
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElseGet(null);
   }
 
   /**

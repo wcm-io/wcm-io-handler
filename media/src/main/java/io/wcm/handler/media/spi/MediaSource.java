@@ -19,11 +19,14 @@
  */
 package io.wcm.handler.media.spi;
 
+import static io.wcm.handler.media.MediaNameConstants.MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT;
 import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -45,6 +48,7 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.imagemap.ImageMapParser;
 
@@ -349,8 +353,7 @@ public abstract class MediaSource {
   protected final boolean resolveRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     boolean anyMandatory = mediaArgs.getMediaFormatOptions() != null
         && Arrays.stream(mediaArgs.getMediaFormatOptions())
-        .filter(MediaFormatOption::isMandatory)
-        .findFirst().isPresent();
+        .anyMatch(MediaFormatOption::isMandatory);
     if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1
         && (anyMandatory || mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null)) {
       return resolveAllRenditions(media, asset, mediaArgs);
@@ -386,27 +389,84 @@ public abstract class MediaSource {
    * @param mediaArgs Media args
    * @return true if for all mandatory or for at least one media formats a rendition could be found.
    */
-  private boolean resolveAllRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
-    boolean allMandatoryResolved = true;
+  private boolean resolveAllRenditions(@NotNull Media media, @NotNull Asset asset, @NotNull final MediaArgs mediaArgs) {
     boolean anyResolved = false;
-    List<Rendition> resolvedRenditions = new ArrayList<>();
-    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
+    boolean allMandatoryResolved;
+    final List<Rendition> resolvedRenditions = new ArrayList<>();
+
+    List<MediaFormatOption> parentMediaFormatOptions = getParentMediaFormats(mediaArgs);
+    allMandatoryResolved = resolveRenditionsWithMediaFormats(asset, mediaArgs, parentMediaFormatOptions, resolvedRenditions);
+
+    if (allMandatoryResolved && !resolvedRenditions.isEmpty()) {
+      List<MediaFormat> resolvedMediaFormats = resolvedRenditions.stream()
+          .map(Rendition::getMediaFormat)
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
+
+      for (MediaFormat mediaFormat : resolvedMediaFormats) {
+        List<MediaFormatOption> childMediaFormatOptions = getChildMediaFormats(mediaArgs, mediaFormat);
+        allMandatoryResolved = allMandatoryResolved && resolveRenditionsWithMediaFormats(asset, mediaArgs, childMediaFormatOptions, resolvedRenditions);
+      }
+    }
+
+    media.setRenditions(resolvedRenditions);
+    if (!resolvedRenditions.isEmpty()) {
+      anyResolved = true;
+      media.setUrl(resolvedRenditions.get(0).getUrl());
+    }
+    return anyResolved && allMandatoryResolved;
+  }
+
+  private boolean resolveRenditionsWithMediaFormats(@NotNull Asset asset, @NotNull MediaArgs mediaArgs,
+      @NotNull List<MediaFormatOption> mediaFormatOptions, @NotNull List<Rendition> resolvedRenditions) {
+    boolean allMandatoryResolved = true;
+    for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
       MediaArgs renditionMediaArgs = mediaArgs.clone();
       renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
       Rendition rendition = asset.getRendition(renditionMediaArgs);
       if (rendition != null) {
         resolvedRenditions.add(rendition);
-        anyResolved = true;
       }
       else if (mediaFormatOption.isMandatory()) {
         allMandatoryResolved = false;
       }
     }
-    media.setRenditions(resolvedRenditions);
-    if (!resolvedRenditions.isEmpty()) {
-      media.setUrl(resolvedRenditions.get(0).getUrl());
+    return allMandatoryResolved;
+  }
+
+  @NotNull
+  private List<MediaFormatOption> getParentMediaFormats(@NotNull MediaArgs mediaArgs) {
+    return Arrays.stream(mediaArgs.getMediaFormatOptions())
+        .filter(this::isParentMediaFormat)
+        .collect(Collectors.toList());
+  }
+
+  @NotNull
+  private List<MediaFormatOption> getChildMediaFormats(@NotNull MediaArgs mediaArgs, @NotNull final MediaFormat parentMediaFormat) {
+    return Arrays.stream(mediaArgs.getMediaFormatOptions())
+        .filter(this::isChildMediaFormat)
+        .filter(childMediaFormat -> hasParent(childMediaFormat, parentMediaFormat))
+        .collect(Collectors.toList());
+  }
+
+  private boolean isParentMediaFormat(@NotNull MediaFormatOption mediaFormatOption) {
+    return Objects.isNull(getParentMediaFormat(mediaFormatOption.getMediaFormat()));
+  }
+
+  private boolean isChildMediaFormat(@NotNull MediaFormatOption mediaFormatOption) {
+    return Objects.nonNull(getParentMediaFormat(mediaFormatOption.getMediaFormat()));
+  }
+
+  private boolean hasParent(@NotNull MediaFormatOption childMediaFormat, @NotNull MediaFormat parentMediaFormat) {
+    return parentMediaFormat.equals(getParentMediaFormat(childMediaFormat.getMediaFormat()));
+  }
+
+  @Nullable
+  private MediaFormat getParentMediaFormat(@Nullable MediaFormat mediaFormat) {
+    if (mediaFormat == null) {
+      return null;
     }
-    return anyResolved && allMandatoryResolved;
+    return mediaFormat.getProperties().get(MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT, MediaFormat.class);
   }
 
 }
