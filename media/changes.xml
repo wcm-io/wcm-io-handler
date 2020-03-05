@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.9.0" date="not released">
+      <action type="fix" dev="mceruti">
+        mediaPlaceholder.html translate the component's jcr:title so the component's i18ned title is displayed. 
+      </action>
       <action type="add" dev="mceruti">
         MediaHandler: Adds MediaHandler.get(String, Resource) that allows building a media from it's path while still looking up policy/component level settings from the given context resource, like it is done when building a media using MediaHandler.get(Resource). Requires the ComponentPropertyResolverFactory to work and be <![CDATA[<a href="https://wcm.io/wcm/commons/configuration.html">configured</a>]]> properly.
       </action>

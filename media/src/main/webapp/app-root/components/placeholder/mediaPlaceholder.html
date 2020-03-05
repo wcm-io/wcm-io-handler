@@ -30,7 +30,7 @@
     data-sly-use.mediaPlaceholder="${'io.wcm.handler.media.ui.MediaPlaceholder' @ media=media, classAppend=classAppend}">
   <div data-sly-test="${(wcmmode.edit || wcmmode.preview) && isEmpty}"
        class="cq-placeholder ${mediaPlaceholder.classAppend}"
-       data-emptytext="${component.properties.jcr:title}
+       data-emptytext="${component.properties.jcr:title @ i18n}
          ${mediaPlaceholder.mediaInvalidReason && '-'}
          ${mediaPlaceholder.mediaInvalidReason @ i18n}"></div>
 </sly>
