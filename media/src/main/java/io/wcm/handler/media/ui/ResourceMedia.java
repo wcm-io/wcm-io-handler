@@ -70,7 +70,7 @@ public class ResourceMedia {
   /**
    * Name prefix for request attributes that will be put into the media builder properties
    */
-  public static final String REQUEST_ATTRIBUTE_PREFIX = "mediaProp:";
+  private static final String REQUEST_ATTRIBUTE_PREFIX = "mediaProp:";
 
   /**
    * Regex pattern that matches request attribute names with the prefix {@value REQUEST_ATTRIBUTE_PREFIX}
