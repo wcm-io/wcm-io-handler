@@ -83,6 +83,9 @@ public class ResourceMedia {
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String cssClass;
 
+  @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private Boolean autoCrop;
+
   /**
    * Defines responsive rendition widths for image.
    * To be used together with 'imageSizes' property.
@@ -154,6 +157,9 @@ public class ResourceMedia {
     }
     if (StringUtils.isNotEmpty(rotationProperty)) {
       builder.rotationProperty(rotationProperty);
+    }
+    if (autoCrop != null) {
+      builder.autoCrop(autoCrop);
     }
     if (StringUtils.isNotEmpty(cssClass)) {
       builder.property(PROP_CSS_CLASS, cssClass);
