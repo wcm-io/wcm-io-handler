@@ -36,6 +36,9 @@
       <action type="fix" dev="bkalbitz" issue="WHAN-35">
         Avoid duplicated storing for fileReference in File Upload component.
       </action>
+      <action type="add" dev="mrozati" issue="WHAN-36">
+        ResourceMedia: support dynamic custom properties from HTL
+      </action>
     </release>
 
     <release version="1.8.2" date="2020-01-30">
