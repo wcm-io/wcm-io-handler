@@ -83,6 +83,10 @@ public class ResourceMedia {
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private String cssClass;
 
+  /**
+   * Sets the auto cropping behavior of media handler. This would override the component property wcmio:mediaCropAuto, if available.<br>
+   * Example: "autoCrop=true"
+   */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
   private Boolean autoCrop;
 

@@ -36,7 +36,7 @@
       <action type="fix" dev="bkalbitz" issue="WHAN-35">
         Avoid duplicated storing for fileReference in File Upload component.
       </action>
-      <action type="update" dev="mrozati" issue="WHAN-37">
+      <action type="add" dev="mrozati" issue="WHAN-37">
         ResourceMedia: Add support for overwriting auto crop via request attribute 'autoCrop'
       </action>
     </release>
