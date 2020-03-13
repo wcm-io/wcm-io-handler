@@ -77,7 +77,7 @@ public class ResourceMedia {
   /**
    * Regex pattern that matches request attribute names with the prefix {@value #RA_PROPERTY_PREFIX}
    */
-  private static final Pattern REQUEST_ATTRIBUTE_PATTERN = Pattern.compile("^" + RA_PROPERTY_PREFIX + ".+$");
+  private static final Pattern PROPERTY_NAME_PATTERN = Pattern.compile("^" + RA_PROPERTY_PREFIX + ".+$");
 
   /**
    * Optional: Media format to be used.
@@ -235,7 +235,7 @@ public class ResourceMedia {
   }
 
   private boolean isMediaPropAttribute(@NotNull String requestAttributeName) {
-    return REQUEST_ATTRIBUTE_PATTERN.matcher(requestAttributeName).matches();
+    return PROPERTY_NAME_PATTERN.matcher(requestAttributeName).matches();
   }
 
   private boolean attributeValueIsNotNull(String attributeName) {
