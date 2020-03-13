@@ -23,6 +23,7 @@ import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CAMPAIGN;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -103,18 +104,44 @@ class ResourceMediaTest {
 
   @Test
   void testWithRefCropProperty() {
-    context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
+    context.request().setAttribute("mediaFormat", RATIO.getName());
     context.request().setAttribute("refProperty", "myRefProp");
     context.request().setAttribute("cropProperty", "myCropProp");
 
+    Asset asset2 = context.create().asset("/content/dam/asset2.jpg",
+        160, 100, ContentType.JPEG);
     Resource resource2 = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media2",
         PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
-        "myRefProp", asset.getPath());
+        "myRefProp", asset2.getPath(),
+        "myCropProp", "20,12,140,88");
     context.currentResource(resource2);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
     assertTrue(underTest.isValid());
-    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg",
+    assertEquals("/content/dam/asset2.jpg/_jcr_content/renditions/original.image_file.120.76.20,12,140,88.file/asset2.jpg",
+        underTest.getMetadata().getUrl());
+
+    context.request().removeAttribute("cropProperty");
+    ResourceMedia underTest2 = context.request().adaptTo(ResourceMedia.class);
+    assertTrue(underTest2.isValid());
+    assertEquals("/content/dam/asset2.jpg/_jcr_content/renditions/original./asset2.jpg",
+        underTest2.getMetadata().getUrl());
+  }
+
+  @Test
+  void testWithRotationProperty() {
+    context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
+    context.request().setAttribute("rotationProperty", "myRotationProp");
+
+    Resource resource2 = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media2",
+        PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",
+        PN_MEDIA_REF, asset.getPath(),
+        "myRotationProp", "180");
+    context.currentResource(resource2);
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertTrue(underTest.isValid());
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.450.213.-.180.file/asset1.jpg",
         underTest.getMetadata().getUrl());
   }
 
