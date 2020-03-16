@@ -22,7 +22,14 @@ package io.wcm.handler.media.ui;
 import static io.wcm.handler.media.MediaNameConstants.PROP_CSS_CLASS;
 import static io.wcm.handler.media.impl.WidthUtils.parseWidths;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -55,10 +62,22 @@ import io.wcm.handler.media.format.MediaFormatHandler;
  * <li><code>cropProperty</code>: Name of the property which contains the cropping parameters</li>
  * <li><code>rotationProperty</code>: Name of the property which contains the rotation parameter</li>
  * <li><code>cssClass</code>: CSS classes to be applied on the generated media element (most cases img element)</li>
+ * <li><code>property:&lt;propertyname&gt;</code>: Custom properties for MediaArgs can be added with the name prefix {@value #RA_PROPERTY_PREFIX},
+ * e.g. {@literal "property:myprop1"="value1"} which adds property {@literal "myprop1"} to the the MediaArgs. Custom properties with null value will be ignored.</li>
  * </ul>
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 public class ResourceMedia {
+
+  /**
+   * Name prefix for request attributes that will be put into the media builder properties
+   */
+  private static final String RA_PROPERTY_PREFIX = "property:";
+
+  /**
+   * Regex pattern that matches request attribute names with the prefix {@value #RA_PROPERTY_PREFIX}
+   */
+  private static final Pattern PROPERTY_NAME_PATTERN = Pattern.compile("^" + RA_PROPERTY_PREFIX + ".+$");
 
   /**
    * Optional: Media format to be used.
@@ -135,6 +154,8 @@ public class ResourceMedia {
   private MediaFormatHandler mediaFormatHandler;
   @SlingObject
   private Resource resource;
+  @Self
+  private SlingHttpServletRequest request;
 
   private Media media;
 
@@ -173,7 +194,57 @@ public class ResourceMedia {
           toStringArray(pictureSourceWidths));
     }
 
+    setCustomProperties(builder);
+
     media = builder.build();
+  }
+
+  /**
+   * Puts all request attributes that their name starts with the prefix {@value #RA_PROPERTY_PREFIX} into the properties of the media builder
+   * @param builder Media builder
+   */
+  private void setCustomProperties(MediaBuilder builder) {
+    getCustomPropertiesFromRequestAttributes()
+        .forEach((name, value) -> builder.property(name, value));
+  }
+
+  /**
+   * Gathers all request attributes whose name begins with the prefix {@value #RA_PROPERTY_PREFIX}, strips the prefix to get the property name
+   * and returns a map of property name to request attribute value
+   * @return map of custom properties
+   */
+  @NotNull
+  private Map<String, Object> getCustomPropertiesFromRequestAttributes() {
+    return enumToList(request.getAttributeNames()).stream()
+        .filter(this::isMediaPropAttribute)
+        .filter(this::attributeValueIsNotNull)
+        .collect(Collectors.toMap(this::toPropertyName, request::getAttribute));
+  }
+
+  @NotNull
+  private List<String> enumToList(@Nullable Enumeration<?> enumeration) {
+    List<String> list = new ArrayList<>();
+
+    if (enumeration != null) {
+      while (enumeration.hasMoreElements()) {
+        list.add(String.valueOf(enumeration.nextElement()));
+      }
+    }
+
+    return list;
+  }
+
+  private boolean isMediaPropAttribute(@NotNull String requestAttributeName) {
+    return PROPERTY_NAME_PATTERN.matcher(requestAttributeName).matches();
+  }
+
+  private boolean attributeValueIsNotNull(String attributeName) {
+    return Objects.nonNull(request.getAttribute(attributeName));
+  }
+
+  @NotNull
+  private String toPropertyName(@NotNull String requestAttributeName) {
+    return StringUtils.substringAfter(requestAttributeName, RA_PROPERTY_PREFIX);
   }
 
   /**

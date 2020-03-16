@@ -28,12 +28,16 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CAMPAI
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.jdom2.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -218,6 +222,32 @@ class ResourceMediaTest {
     // validate img
     HtmlElement<?> img = (HtmlElement<?>)picture.getChild("img");
     assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
+  }
+
+  @Test
+  void testWithCustomProperties() {
+    context.request().setAttribute("property:prop1", true);
+    context.request().setAttribute("property:prop2", "value2");
+    context.request().setAttribute("property:prop3", new String[]{"array-item1", "array-item2"});
+    context.request().setAttribute("property:prop4", null);
+    context.request().setAttribute("property:prop5", new HashMap<>());
+    context.request().setAttribute("property:", "invalid-prop--no-name");
+    context.request().setAttribute("nonRelevantAttribute", "some-value");
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+
+    assertNotNull(underTest);
+    assertTrue(underTest.isValid());
+
+    final ValueMap properties = underTest.getMetadata().getMediaRequest().getMediaArgs().getProperties();
+    assertEquals(4, properties.size());
+    assertEquals(true, properties.get("prop1"));
+    assertEquals("value2", properties.get("prop2"));
+    assertTrue(properties.get("prop3") instanceof String[]);
+    assertEquals(2, properties.get("prop3", new String[0]).length);
+    assertEquals("array-item2", properties.get("prop3", new String[0])[1]);
+    assertEquals("null-value--is-ignored", properties.get("prop4", "null-value--is-ignored"));
+    assertTrue(properties.get("prop5") instanceof Map);
   }
 
 }

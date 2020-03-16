@@ -618,6 +618,7 @@ public final class MediaArgs implements Cloneable {
    * Custom properties that my be used by application-specific markup builders or processors.
    * @return Value map
    */
+  @NotNull
   public ValueMap getProperties() {
     if (this.properties == null) {
       this.properties = new ValueMapDecorator(new HashMap<String, Object>());
