@@ -42,6 +42,9 @@
       <action type="add" dev="mrozati" issue="WHAN-36">
         ResourceMedia: support dynamic custom properties from HTL
       </action>
+      <action type="add" dev="mrozati" issue="WHAN-37">
+        ResourceMedia: Add support for overwriting auto crop via request attribute 'autoCrop'
+      </action>
     </release>
 
     <release version="1.8.2" date="2020-01-30">

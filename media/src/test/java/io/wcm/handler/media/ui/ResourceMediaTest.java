@@ -150,6 +150,20 @@ class ResourceMediaTest {
   }
 
   @Test
+  void testWithAutoCrop() {
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertTrue(underTest.isValid());
+    assertFalse(underTest.getMetadata().getMediaRequest().getMediaArgs().isAutoCrop());
+
+    context.request().setAttribute("autoCrop", true);
+
+    ResourceMedia underTest2 = context.request().adaptTo(ResourceMedia.class);
+    assertTrue(underTest2.isValid());
+    assertTrue(underTest2.getMetadata().getMediaRequest().getMediaArgs().isAutoCrop());
+
+  }
+
+  @Test
   void testWithImageSizeAndWidthOptions_ValidCase_AllMandatoryWidthsAreAvailable() {
     final String sizes = "sizes string";
 
