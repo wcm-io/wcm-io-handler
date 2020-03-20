@@ -23,6 +23,30 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.9.0" date="2020-03-20">
+      <action type="add" dev="mceruti">
+        MediaHandler: Adds MediaHandler.get(String, Resource) that allows building a media from it's path while still looking up policy/component level settings from the given context resource, like it is done when building a media using MediaHandler.get(Resource). Requires the ComponentPropertyResolverFactory to work and be <![CDATA[<a href="https://wcm.io/wcm/commons/configuration.html">configured</a>]]> properly.
+      </action>
+      <action type="add" dev="mrozati" issue="WHAN-33"><![CDATA[
+        ResourceMedia: Add support for setting responsive image sizes via HTL. This can be either <code>imageSizes</code> and <code>widthOptions</code> (width + required flag), or <code>pictureSourceMediaFormat</code>, <code>pictureSourceMedia</code> and <code>pictureSourceWidths</code>.
+      ]]></action>
+      <action type="add" dev="mrozati" issue="WHAN-36">
+        ResourceMedia: Support setting custom MediaArgs properties via HTL.
+      </action>
+      <action type="add" dev="mrozati" issue="WHAN-37">
+        ResourceMedia: Support settting autoCrop mode via HTL.
+      </action>
+      <action type="update" dev="mrozati" issue="WHAN-34">
+        Support responsive images with multiple media formats and image widths.
+      </action>
+      <action type="fix" dev="bkalbitz" issue="WHAN-35">
+        Avoid duplicated storing for fileReference in File Upload component.
+      </action>
+      <action type="fix" dev="mceruti">
+        mediaPlaceholder.html: Translate the component's jcr:title so the component's translated title is displayed.
+      </action>
+    </release>
+
     <release version="1.8.2" date="2020-01-30">
       <action type="update" dev="sseifert">
         Detect media dimensions for original renditions for non-image binaries (from asset metadata).

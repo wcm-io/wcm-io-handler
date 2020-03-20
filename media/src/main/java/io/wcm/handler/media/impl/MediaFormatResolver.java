@@ -19,11 +19,15 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.MediaNameConstants.MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT;
+import static org.apache.commons.lang3.ArrayUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -168,22 +172,17 @@ final class MediaFormatResolver {
     if (imageSizes == null) {
       return true;
     }
-    MediaFormat primaryMediaFormat = getFirstMediaFormat(mediaArgs);
-    if (primaryMediaFormat == null) {
+
+    final MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
+    if (isEmpty(mediaFormats)) {
       log.warn("No media format with ratio given - unable to fulfill resolve image sizes.");
       return false;
     }
-    generateMediaFormatsForWidths(additionalMediaFormats, primaryMediaFormat, imageSizes.getWidthOptions());
-    return true;
-  }
 
-  private MediaFormat getFirstMediaFormat(MediaArgs mediaArgs) {
-    if (mediaArgs.getMediaFormats() != null) {
-      for (MediaFormat mediaFormat : mediaArgs.getMediaFormats()) {
-        return mediaFormat;
-      }
-    }
-    return null;
+    Arrays.stream(mediaFormats)
+        .filter(Objects::nonNull)
+        .forEach(mediaFormat -> generateMediaFormatsForWidths(additionalMediaFormats, mediaFormat, true, imageSizes.getWidthOptions()));
+    return true;
   }
 
   private boolean resolveForResponsivePictureSources(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
@@ -192,13 +191,13 @@ final class MediaFormatResolver {
       return true;
     }
     for (PictureSource pictureSource : pictureSources) {
-      generateMediaFormatsForWidths(additionalMediaFormats, pictureSource.getMediaFormat(), pictureSource.getWidthOptions());
+      generateMediaFormatsForWidths(additionalMediaFormats, pictureSource.getMediaFormat(), false, pictureSource.getWidthOptions());
     }
     return true;
   }
 
   private void generateMediaFormatsForWidths(@NotNull Map<String, MediaFormatOption> additionalMediaFormats,
-      @Nullable MediaFormat mediaFormat, @NotNull WidthOption @Nullable... widthOptions) {
+      @Nullable MediaFormat mediaFormat, boolean setParent, @NotNull WidthOption @Nullable... widthOptions) {
     if (mediaFormat == null || widthOptions == null) {
       return;
     }
@@ -209,6 +208,7 @@ final class MediaFormatResolver {
           .extensions(mediaFormat.getExtensions())
           .ratio(mediaFormat.getRatio())
           .width(widthOption.getWidth())
+          .property(MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT, setParent ? mediaFormat : null)
           .build();
       additionalMediaFormats.put(widthMediaFormat.getName(), new MediaFormatOption(widthMediaFormat, widthOption.isMandatory()));
     }

@@ -36,10 +36,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
@@ -51,6 +49,7 @@ import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
+import io.wcm.handler.media.impl.WidthUtils;
 import io.wcm.wcm.commons.component.ComponentPropertyResolution;
 import io.wcm.wcm.commons.component.ComponentPropertyResolver;
 import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
@@ -74,8 +73,6 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   static final String PN_PICTURE_SOURCES_MEDIA = "media";
   static final String PN_PICTURE_SOURCES_SIZES = "sizes";
   static final String PN_PICTURE_SOURCES_WIDTHS = "widths";
-
-  private static final Pattern WIDTHS_PATTERN = Pattern.compile("^\\s*\\d+\\??\\s*(,\\s*\\d+\\??\\s*)*$");
 
   private final ComponentPropertyResolver resolver;
 
@@ -196,7 +193,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return Image sizes
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
@@ -204,14 +201,14 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
     }
 
     String sizes = StringUtils.trimToNull(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
-    WidthOption[] widths = parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
+    WidthOption[] widths = WidthUtils.parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
     if (sizes != null && widths != null) {
       return new ImageSizes(sizes, widths);
     }
 
     // try to fallback to deprecated constant with node names with typo (backward compatibility)
     sizes = StringUtils.trimToNull(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
-    widths = parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
+    widths = WidthUtils.parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
     if (sizes != null && widths != null) {
       return new ImageSizes(sizes, widths);
     }
@@ -222,7 +219,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return List of picture sources
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   public @NotNull PictureSource @Nullable [] getPictureSources() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
@@ -244,7 +241,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
       String mediaFormatName = StringUtils.trimToNull(props.get(PN_PICTURE_SOURCES_MEDIAFORMAT, String.class));
       String media = StringUtils.trimToNull(props.get(PN_PICTURE_SOURCES_MEDIA, String.class));
       String sizes = StringUtils.trimToNull(props.get(PN_PICTURE_SOURCES_SIZES, String.class));
-      WidthOption[] widths = parseWidths(props.get(PN_PICTURE_SOURCES_WIDTHS, String.class));
+      WidthOption[] widths = WidthUtils.parseWidths(props.get(PN_PICTURE_SOURCES_WIDTHS, String.class));
       if (mediaFormatName != null && widths != null) {
         sources.add(new PictureSource(mediaFormatName)
             .media(media)
@@ -263,32 +260,6 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
 
   private String getResponsiveType() {
     return resolver.get(PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, String.class);
-  }
-
-  static @NotNull WidthOption @Nullable [] parseWidths(@Nullable String widths) {
-    if (StringUtils.isBlank(widths)) {
-      return null;
-    }
-    if (!WIDTHS_PATTERN.matcher(widths).matches()) {
-      return null;
-    }
-    String[] widthItems = StringUtils.split(widths, ",");
-    return Arrays.stream(widthItems)
-        .map(StringUtils::trim)
-        .map(MediaComponentPropertyResolver::toWidthOption)
-        .toArray(size -> new WidthOption[size]);
-  }
-
-  private static @NotNull WidthOption toWidthOption(String width) {
-    boolean optional = StringUtils.endsWith(width, "?");
-    String widthValue;
-    if (optional) {
-      widthValue = StringUtils.substringBefore(width, "?");
-    }
-    else {
-      widthValue = width;
-    }
-    return new WidthOption(NumberUtils.toLong(widthValue), !optional);
   }
 
   @Override

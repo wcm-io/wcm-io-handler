@@ -59,6 +59,7 @@
       var assetPath = event.path;
       self._$pathfield.val(assetPath);
       self._validate.validateMediaFormat(assetPath);
+      self._removeDuplicatedFileRefInput();
     });
 
     self._$pathfield.on("change", function(event) {
@@ -154,6 +155,20 @@
     });
 
     self._$element.find("[coral-fileupload-clear]").after(self._clearTransformationButton);
+  };
+  
+  /**
+   * Removes duplicated file reference input fields hold in the cq fileupload component instead of the path field.
+   */
+  FileUploadExtension.prototype._removeDuplicatedFileRefInput = function () {
+    var self = this;
+    var fileRefPropName = self._$pathfield.attr('name');
+    if(fileRefPropName) {
+      var inputs = self._$element.find("input[type='hidden'][name='"+ fileRefPropName +"']");
+      inputs.each(function() {
+        this.parentNode.removeChild(this);
+      });
+    }
   };
 
   /**

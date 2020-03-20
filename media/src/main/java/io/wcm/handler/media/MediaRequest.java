@@ -106,11 +106,6 @@ public final class MediaRequest {
     this.mediaRef = mediaRef;
     this.mediaArgs = mediaArgs != null ? mediaArgs : new MediaArgs();
     this.mediaPropertyNames = mediaPropertyNames != null ? mediaPropertyNames : new MediaPropertyNames();
-
-    // validate parameters
-    if (this.resource != null && this.mediaRef != null) {
-      throw new IllegalArgumentException("Set resource or media ref, not both.");
-    }
   }
 
   /**

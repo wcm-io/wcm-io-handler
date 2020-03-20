@@ -496,7 +496,6 @@ public final class DummyMediaFormats {
   public static final MediaFormat RATIO = create("ratio")
       .label("Ratio (16:10)")
       .ratio(16, 10)
-      .extensions("gif","jpg","png")
       .extensions("gif", "jpg", "png")
       .build();
   public static final MediaFormat RATIO2 = create("ratio2")
