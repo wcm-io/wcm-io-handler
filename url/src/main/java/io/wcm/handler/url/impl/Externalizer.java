@@ -157,6 +157,15 @@ final class Externalizer {
     return EXTERNALIZED_PATTERN.matcher(url).matches();
   }
 
+  /**
+   * Checks if the given URL can be externalize, that means seems to be an content path that needs externalization.
+   * @param url URL
+   * @return true if url seems to be a path than needs externaliziation
+   */
+  public static boolean isExternalizable(@NotNull String url) {
+    return StringUtils.startsWith(url, "/");
+  }
+
   private static final String MANGLED_NAMESPACE_PREFIX = "/_";
   private static final String MANGLED_NAMESPACE_SUFFIX = "_";
   private static final char NAMESPACE_SEPARATOR = ':';

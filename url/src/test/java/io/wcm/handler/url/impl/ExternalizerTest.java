@@ -138,4 +138,11 @@ class ExternalizerTest {
     assertEquals("/content/aa/bb/_jcr_content.png", Externalizer.mangleNamespaces("/content/aa/bb/jcr:content.png"));
   }
 
+  @Test
+  void testIsExternalizable() {
+    assertFalse(Externalizer.isExternalizable(""));
+    assertFalse(Externalizer.isExternalizable("abc"));
+    assertTrue(Externalizer.isExternalizable("/abc"));
+  }
+
 }
