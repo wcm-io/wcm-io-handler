@@ -47,6 +47,9 @@
 
   <properties>
     <site.url.module.prefix>handler/media</site.url.module.prefix>
+
+    <!-- Enable reproducible builds -->
+    <project.build.outputTimestamp>${timestamp}</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
