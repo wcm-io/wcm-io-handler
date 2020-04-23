@@ -451,6 +451,10 @@ class UrlHandlerImplTest {
     assertEquals("/apps/testapp/docroot/img.png#hash",
         externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png#hash"));
 
+    // test invalid content path
+    assertEquals("content/unittest/de_test/brand/de/section2/page2a.png",
+        externalizeResourceUrl(urlHandler, "content/unittest/de_test/brand/de/section2/page2a.png"));
+
     if (context.request() != null) {
 
       // externalization with context path and mapping

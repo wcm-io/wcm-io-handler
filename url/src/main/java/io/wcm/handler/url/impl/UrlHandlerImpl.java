@@ -172,8 +172,9 @@ public final class UrlHandlerImpl implements UrlHandler {
       return null;
     }
 
-    // do not externalize urls again that are already externalized
-    if (Externalizer.isExternalized(url)) {
+    // do not externalize URLs again that are already externalized
+    // do not externalize URLs that do not start with "/" (they are no content paths in that case)
+    if (Externalizer.isExternalized(url) || !Externalizer.isExternalizable(url)) {
       return url;
     }
 
