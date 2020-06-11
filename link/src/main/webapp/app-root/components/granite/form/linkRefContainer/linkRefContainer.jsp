@@ -143,8 +143,8 @@ if (contentResource != null && contentResource.getValueMap().get(LinkNameConstan
 }
 
 
-// this is required to ensure that multiple link contains in the same dialog do not interfere with each other
-String showhideCssClass = "option-linktype-showhide-target-" + Escape.validName(namePrefix);
+// this is required to ensure that multiple link containers in the same dialog do not interfere with each other
+String showhideCssClass = "linkRefContainer-option-linktype-showhide-target-" + getUniqueCssClassSuffix(request);
 
 String[] allowedLinkTypes = cfg.get("linkTypes", new String[0]);
 Map<String,LinkType> linkTypes = getLinkTypes(contentResource, linkHandlerConfig, allowedLinkTypes);
@@ -369,4 +369,17 @@ private void insertAdditionalComponents(Resource target, Resource source) {
   }
 }
 
+private String getUniqueCssClassSuffix(HttpServletRequest request) {
+  // use a request attribute to make sure multiple instances of this container in the same dialog do not interfere
+  String key = "io.wcm.handler.link_linkRefContainer_CssClassSuffix";
+  Integer count = (Integer)request.getAttribute(key);
+  if (count == null) {
+    count = 0;
+  }
+  else {
+    count++;
+  }
+  request.setAttribute(key, count);
+  return Integer.toString(count);
+}
 %>
