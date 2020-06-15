@@ -31,6 +31,10 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.Page;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.Anchor;
@@ -43,6 +47,7 @@ import io.wcm.wcm.commons.util.ToStringStyle;
  * Holds information about a link processed and resolved by {@link LinkHandler}.
  */
 @ProviderType
+@JsonInclude(Include.NON_NULL)
 public final class Link {
 
   private final @NotNull LinkType linkType;
@@ -67,6 +72,7 @@ public final class Link {
   /**
    * @return Link type
    */
+  @JsonUnwrapped
   public @NotNull LinkType getLinkType() {
     return this.linkType;
   }
@@ -74,6 +80,7 @@ public final class Link {
   /**
    * @return Link request
    */
+  @JsonIgnore
   public @NotNull LinkRequest getLinkRequest() {
     return this.linkRequest;
   }
@@ -88,6 +95,7 @@ public final class Link {
   /**
    * @return true if a link reference was set, but the reference was invalid and could not be resolved
    */
+  @JsonIgnore
   public boolean isLinkReferenceInvalid() {
     return this.linkReferenceInvalid;
   }
@@ -103,6 +111,7 @@ public final class Link {
   /**
    * @return Anchor element
    */
+  @JsonIgnore
   public Anchor getAnchor() {
     return this.anchor;
   }
@@ -110,6 +119,7 @@ public final class Link {
   /**
    * @return Map with all attributes of the anchor element. Returns null if anchor element is null.
    */
+  @JsonIgnore
   public Map<String, String> getAnchorAttributes() {
     if (getAnchor() == null) {
       return null;
@@ -131,6 +141,7 @@ public final class Link {
   /**
    * @return Link markup (only the opening anchor tag) or null if resolving was not successful.
    */
+  @JsonIgnore
   public String getMarkup() {
     if (this.anchor != null) {
       return StringUtils.removeEnd(this.anchor.toString(), "</a>");
@@ -157,6 +168,7 @@ public final class Link {
   /**
    * @return Target page referenced by the link (applies only for internal links)
    */
+  @JsonIgnore
   public Page getTargetPage() {
     return this.targetPage;
   }
@@ -171,6 +183,7 @@ public final class Link {
   /**
    * @return Target media item (applies only for media links)
    */
+  @JsonIgnore
   public Asset getTargetAsset() {
     return this.targetAsset;
   }
@@ -185,6 +198,7 @@ public final class Link {
   /**
    * @return Target media rendition (applies only for media links)
    */
+  @JsonIgnore
   public Rendition getTargetRendition() {
     return this.targetRendition;
   }
@@ -202,6 +216,7 @@ public final class Link {
    * during the link resolution process.
    * @return List of links in the "resolve history".
    */
+  @JsonIgnore
   public @NotNull List<Page> getRedirectPages() {
     if (redirectPages == null) {
       return ImmutableList.of();

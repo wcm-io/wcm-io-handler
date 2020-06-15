@@ -20,5 +20,5 @@
 /**
  * Link Handler API.
  */
-@org.osgi.annotation.versioning.Version("1.5")
+@org.osgi.annotation.versioning.Version("1.5.1")
 package io.wcm.handler.link;

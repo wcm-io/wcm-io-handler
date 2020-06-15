@@ -25,6 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkHandler;
 import io.wcm.handler.link.LinkNameConstants;
@@ -43,11 +46,13 @@ public abstract class LinkType {
   /**
    * @return Link type ID (is stored as identifier in repository)
    */
+  @JsonProperty("linkType")
   public abstract @NotNull String getId();
 
   /**
    * @return Link type label (displayed in link dialogs)
    */
+  @JsonIgnore
   public @NotNull String getLabel() {
     return getId();
   }
@@ -55,6 +60,7 @@ public abstract class LinkType {
   /**
    * @return Name of the property in which the primary link reference is stored
    */
+  @JsonIgnore
   public abstract @Nullable String getPrimaryLinkRefProperty();
 
   /**
