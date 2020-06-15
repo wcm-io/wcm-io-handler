@@ -79,6 +79,12 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- For build compatibility with Java 11 -->
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
