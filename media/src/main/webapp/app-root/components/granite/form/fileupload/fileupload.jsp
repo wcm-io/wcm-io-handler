@@ -129,7 +129,7 @@ if (contentResource != null) {
   propNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName();
   propFileNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName() + "Name";
   propFileReferenceDefault = "./" + mediaHandlerConfig.getMediaRefProperty();
-  
+
   // check if any transformations are defined
   ValueMap contentProps = contentResource.getValueMap();
   hasTransformation = (contentProps.get(mediaHandlerConfig.getMediaCropProperty(), String.class) != null)

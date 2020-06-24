@@ -72,11 +72,11 @@ Example for a custom `linkPlugin.js`:
   myproject.rte.plugins.LinkPlugin = new Class({
 
     extend: wcmio.handler.richtext.rte.plugins.LinkPlugin,
-    
+
     getDialogClass: function() {
       return myproject.rte.plugins.LinkDialog;
     },
-    
+
     initializeUI: function (tbGenerator) {
       // register icon for this plugins toolbar actions
       tbGenerator.registerIcon("myproject.links#modifylink", "link");
@@ -100,7 +100,7 @@ Example for a custom `linkDialog.js`:
  * Custom link dialog that provides all field supported by the link handler.
  */
 ;(function($) {
-  
+
   myproject.rte.plugins.LinkDialog = new Class({
 
     extend: wcmio.handler.richtext.rte.plugins.LinkDialog,
@@ -109,10 +109,10 @@ Example for a custom `linkDialog.js`:
      * Add fields visible for all link types.
      */
     addAllLinkTypeFields: function(frag, config) {
-      
+
       // call the "super" method
       this.inherited(arguments);
-      
+
       frag.appendChild(this.createColumnItem({
         name: "linkNoFollow",
         fn: this.createCheckbox,

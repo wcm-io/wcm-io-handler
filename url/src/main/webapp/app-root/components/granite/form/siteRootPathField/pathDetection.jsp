@@ -32,7 +32,7 @@
 static ValueMap getRootPathProperties(ComponentHelper cmp, SlingHttpServletRequest request) {
   RootPathResolver rootPathResolver = new RootPathResolver(cmp, request);
   rootPathResolver.setFallbackRootPath("/content");
-  
+
   rootPathResolver.setRootPathDetector(new RootPathDetector() {
     public String detectRootPath(ComponentHelper cmp, SlingHttpServletRequest request) {
       String rootPath = null;
@@ -52,7 +52,7 @@ static ValueMap getRootPathProperties(ComponentHelper cmp, SlingHttpServletReque
       return rootPath;
     }
   });
-  
+
   return new ValueMapDecorator(rootPathResolver.getOverrideProperties());
 }
 

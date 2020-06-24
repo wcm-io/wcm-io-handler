@@ -106,7 +106,7 @@
           <bnd>
             Sling-Initial-Content: \
               SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/richtext
-            
+
             <!-- For build compatibility with Java 11 -->
             Import-Package: \
               javax.annotation;version="[0.0,2)",\

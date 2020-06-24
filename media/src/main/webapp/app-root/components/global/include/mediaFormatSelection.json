@@ -1,6 +1,6 @@
 {
   "jcr:primaryType": "nt:unstructured",
-  "sling:resourceType": "granite/ui/components/coral/foundation/well",                      
+  "sling:resourceType": "granite/ui/components/coral/foundation/well",
   "items": {
     "mediaFormats": {
       "sling:resourceType": "wcm-io/handler/media/components/granite/form/mediaformatselect",

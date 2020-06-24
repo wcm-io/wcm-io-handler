@@ -30,7 +30,7 @@ static Map<String,Object> getDamRootPathProperties(ComponentHelper cmp, SlingHtt
     String fallbackRootPath) {
   RootPathResolver rootPathResolver = new RootPathResolver(cmp, request);
   rootPathResolver.setFallbackRootPath(fallbackRootPath);
-  
+
   rootPathResolver.setRootPathDetector(new RootPathDetector() {
     public String detectRootPath(ComponentHelper cmp, SlingHttpServletRequest request) {
       String rootPath = null;
@@ -42,7 +42,7 @@ static Map<String,Object> getDamRootPathProperties(ComponentHelper cmp, SlingHtt
       return rootPath;
     }
   });
-  
+
   return rootPathResolver.getOverrideProperties();
 }
 

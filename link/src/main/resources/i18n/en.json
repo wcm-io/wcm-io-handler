@@ -2,7 +2,7 @@
   "io.wcm.handler.link": {
     "redirectInfo": "This page forwards to",
     "redirectMissing": "Please specify a redirect link in page properties.",
-    
+
     "components.global.include": {
       "linkRefContainer": {
         "linkRefTab": {
@@ -20,7 +20,7 @@
         }
       }
     },
-    
+
     "components.granite.form": {
       "linkRefContainer": {
         "linkTitle.fieldLabel": "Link title",

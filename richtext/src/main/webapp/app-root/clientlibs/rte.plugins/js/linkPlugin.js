@@ -69,14 +69,14 @@
 
     /**
      * Detects the current page path. May return null.
-     */ 
+     */
     detectCurrentPagePath: function() {
-      
+
       // try get get current page path from ContentFrame (works for IPE and in component edit dialogs)
       if (Granite && Granite.author && Granite.author.ContentFrame) {
         return Granite.author.ContentFrame.getContentPath();
       }
-      
+
       // if we are in page properties dialog - try to get the item URL parameter
       return this.getParameterByName("item");
     },
