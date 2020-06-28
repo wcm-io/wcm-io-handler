@@ -8,7 +8,8 @@ Link, Media and RichText Handler infrastructure for AEM applications.
 Documentation: https://wcm.io/handler/<br/>
 Issues: https://wcm-io.atlassian.net/projects/WHAN<br/>
 Wiki: https://wcm-io.atlassian.net/wiki/<br/>
-Continuous Integration: https://travis-ci.org/wcm-io/wcm-io-handler/
+Continuous Integration: https://travis-ci.org/wcm-io/wcm-io-handler/<br/>
+Commercial support: https://wcm.io/commercial-support.html
 
 
 ## Build from sources

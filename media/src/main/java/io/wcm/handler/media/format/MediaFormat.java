@@ -32,6 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaFileType;
 
@@ -93,6 +96,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Media format name
    */
+  @JsonProperty("mediaFormat")
   public @NotNull String getName() {
     return this.name;
   }
@@ -100,6 +104,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Media format label
    */
+  @JsonIgnore
   public @NotNull String getLabel() {
     return StringUtils.defaultString(this.label, this.name);
   }
@@ -107,6 +112,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Media format description
    */
+  @JsonIgnore
   public @Nullable String getDescription() {
     return this.description;
   }
@@ -114,6 +120,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Image width (px)
    */
+  @JsonIgnore
   public long getWidth() {
     return this.width;
   }
@@ -121,6 +128,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Min. image width (px)
    */
+  @JsonIgnore
   public long getMinWidth() {
     return this.minWidth;
   }
@@ -128,6 +136,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Max. image width (px)
    */
+  @JsonIgnore
   public long getMaxWidth() {
     return this.maxWidth;
   }
@@ -135,6 +144,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Image height (px)
    */
+  @JsonIgnore
   public long getHeight() {
     return this.height;
   }
@@ -142,6 +152,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Min. image height (px)
    */
+  @JsonIgnore
   public long getMinHeight() {
     return this.minHeight;
   }
@@ -149,6 +160,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Max. image height (px)
    */
+  @JsonIgnore
   public long getMaxHeight() {
     return this.maxHeight;
   }
@@ -158,6 +170,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * @deprecated Use {@link #getRatioWidthAsDouble()}
    */
   @Deprecated
+  @JsonIgnore
   public long getRatioWidth() {
     return Math.round(this.ratioWidth);
   }
@@ -167,6 +180,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * @deprecated Use {@link #getRatioHeightAsDouble()}
    */
   @Deprecated
+  @JsonIgnore
   public long getRatioHeight() {
     return Math.round(this.ratioHeight);
   }
@@ -174,6 +188,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Ration width (px)
    */
+  @JsonIgnore
   public double getRatioWidthAsDouble() {
     return this.ratioWidth;
   }
@@ -181,6 +196,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Ration height (px)
    */
+  @JsonIgnore
   public double getRatioHeightAsDouble() {
     return this.ratioHeight;
   }
@@ -191,6 +207,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * Otherwise 0 is returned.
    * @return Ratio
    */
+  @JsonIgnore
   public double getRatio() {
 
     // get ratio from media format definition
@@ -215,6 +232,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * Return display string for defined ratio.
    * @return Display string or null if media format has no ratio.
    */
+  @JsonIgnore
   public String getRatioDisplayString() {
     if (!hasRatio()) {
       return null;
@@ -297,6 +315,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return true if the media format has ratio (calculated for fixed dimensions or defined in media format)
    */
+  @JsonIgnore
   public boolean hasRatio() {
     return getRatio() > 0;
   }
@@ -304,6 +323,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Max. file size (bytes)
    */
+  @JsonIgnore
   public long getFileSizeMax() {
     return this.fileSizeMax;
   }
@@ -311,6 +331,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Allowed file extensions
    */
+  @JsonIgnore
   public String[] getExtensions() {
     return this.extensions != null ? this.extensions.clone() : null;
   }
@@ -318,6 +339,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Rendition group id
    */
+  @JsonIgnore
   public String getRenditionGroup() {
     return this.renditionGroup;
   }
@@ -325,6 +347,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Media assets with this format should be downloaded and not displayed directly
    */
+  @JsonIgnore
   public boolean isDownload() {
     return this.download;
   }
@@ -332,6 +355,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return For internal use only (not displayed for user)
    */
+  @JsonIgnore
   public boolean isInternal() {
     return this.internal;
   }
@@ -339,6 +363,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Ranking for auto-detection. Lowest value = highest priority.
    */
+  @JsonIgnore
   public long getRanking() {
     return this.ranking;
   }
@@ -346,6 +371,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Whether the format allows at least one image extension
    */
+  @JsonIgnore
   public boolean isImage() {
     for (String extension : getExtensions()) {
       if (MediaFileType.isImage(extension)) {
@@ -359,6 +385,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * Checks if the media format has a fixed width defined, and no min/max constraints.
    * @return If the media format has a fixed dimension.
    */
+  @JsonIgnore
   public boolean isFixedWidth() {
     return getWidth() > 0 && getMinWidth() == 0 && getMaxWidth() == 0;
   }
@@ -367,6 +394,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * Checks if the media format has a fixed height defined, and no min/max constraints.
    * @return If the media format has a fixed dimension.
    */
+  @JsonIgnore
   public boolean isFixedHeight() {
     return getHeight() > 0 && getMinHeight() == 0 && getMaxHeight() == 0;
   }
@@ -375,6 +403,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * Checks if the media format has a fixed width and height defined, and no min/max constraints.
    * @return If the media format has a fixed dimension.
    */
+  @JsonIgnore
   public boolean isFixedDimension() {
     return isFixedWidth() && isFixedHeight();
   }
@@ -382,6 +411,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Effective min. image width (px). Takes widthMin and width into account.
    */
+  @JsonIgnore
   public long getEffectiveMinWidth() {
     long widthMin = getMinWidth();
     if (widthMin == 0) {
@@ -393,6 +423,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Effective max. image width (px). Takes widthMax and width into account.
    */
+  @JsonIgnore
   public long getEffectiveMaxWidth() {
     long widthMax = getMaxWidth();
     if (widthMax == 0) {
@@ -404,6 +435,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Effective min. image height (px). Takes heightMin and height into account.
    */
+  @JsonIgnore
   public long getEffectiveMinHeight() {
     long heightMin = getMinHeight();
     if (heightMin == 0) {
@@ -415,6 +447,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Effective max. image height (px). Takes heightMax and height into account.
    */
+  @JsonIgnore
   public long getEffectiveMaxHeight() {
     long heightMax = getMaxHeight();
     if (heightMax == 0) {
@@ -429,6 +462,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * If neither width or height are defined null is returned.
    * @return Min. dimensions or null
    */
+  @JsonIgnore
   public Dimension getMinDimension() {
     long effWithMin = getEffectiveMinWidth();
     long effHeightMin = getEffectiveMinHeight();
@@ -452,6 +486,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return User-friendly combined title of current media format name and dimension.
    */
+  @JsonIgnore
   String getCombinedTitle() {
     if (combinedTitle == null) {
       StringBuilder sb = new StringBuilder();
@@ -548,6 +583,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   /**
    * @return Custom properties that my be used by application-specific markup builders or processors.
    */
+  @JsonIgnore
   public ValueMap getProperties() {
     return this.properties;
   }

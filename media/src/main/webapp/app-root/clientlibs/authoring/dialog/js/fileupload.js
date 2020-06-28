@@ -108,7 +108,7 @@
   FileUploadExtension.prototype._detectMimeType = function (assetPath) {
     var fileExtension = assetPath.substring(assetPath.lastIndexOf('.')+1, assetPath.length);
     if (!fileExtension) {
-      return null;      
+      return null;
     }
     fileExtension = fileExtension.toLowerCase();
     if (fileExtension == "jpg" || fileExtension == "jpeg") {
@@ -140,7 +140,7 @@
     if (!hasTransformation) {
       return;
     }
-    
+
     self._clearTransformationButton = new Coral.Button();
     self._clearTransformationButton.set({
         label : {innerHTML: Granite.I18n.get("Clear Transformation")},
@@ -156,7 +156,7 @@
 
     self._$element.find("[coral-fileupload-clear]").after(self._clearTransformationButton);
   };
-  
+
   /**
    * Removes duplicated file reference input fields hold in the cq fileupload component instead of the path field.
    */

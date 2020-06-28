@@ -93,7 +93,7 @@ static boolean getBooleanWithExpressionSupport(String propertyName, String compo
   if ((value instanceof String) && StringUtils.isNotEmpty((String)value)) {
     // try to resolve as expression
     result = ex.get((String)value, Boolean.class);
-  }  
+  }
 
   // try to get directly from config, fallback to default value from component properties
   if (result == null) {

@@ -28,6 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -40,6 +43,7 @@ import io.wcm.wcm.commons.util.ToStringStyle;
  * Holds information about a media request processed and resolved by {@link MediaHandler}.
  */
 @ProviderType
+@JsonInclude(Include.NON_EMPTY)
 public final class Media {
 
   private final @NotNull MediaSource mediaSource;
@@ -66,6 +70,7 @@ public final class Media {
   /**
    * @return Media source
    */
+  @JsonIgnore
   public @NotNull MediaSource getMediaSource() {
     return this.mediaSource;
   }
@@ -73,6 +78,7 @@ public final class Media {
   /**
    * @return Media handling request
    */
+  @JsonIgnore
   public @NotNull MediaRequest getMediaRequest() {
     return this.mediaRequest;
   }
@@ -87,6 +93,7 @@ public final class Media {
   /**
    * @return Html element
    */
+  @JsonIgnore
   public HtmlElement<?> getElement() {
     return this.element;
   }
@@ -94,6 +101,7 @@ public final class Media {
   /**
    * @return Media HTML element serialized to string. Returns null if media element is null.
    */
+  @JsonIgnore
   public String getMarkup() {
     if (markup == null && this.element != null) {
       if (this.element instanceof Span) {
@@ -153,6 +161,7 @@ public final class Media {
    * Get first (and best-match) rendition that was resolved during media handler processing
    * @return Rendition
    */
+  @JsonIgnore
   public Rendition getRendition() {
     if (this.renditions == null || this.renditions.isEmpty()) {
       return null;
@@ -184,6 +193,7 @@ public final class Media {
   /**
    * @return Crop dimensions (optional)
    */
+  @JsonIgnore
   public @Nullable CropDimension getCropDimension() {
     return this.cropDimension;
   }
@@ -198,6 +208,7 @@ public final class Media {
   /**
    * @return Image rotation (optional)
    */
+  @JsonIgnore
   public @Nullable Integer getRotation() {
     return this.rotation;
   }
@@ -212,6 +223,7 @@ public final class Media {
   /**
    * @return Image map (optional)
    */
+  @JsonIgnore
   public @Nullable List<ImageMapArea> getMap() {
     return this.map;
   }
@@ -233,6 +245,7 @@ public final class Media {
   /**
    * @return Reason why the requested media could not be resolved and is invalid
    */
+  @JsonIgnore
   public MediaInvalidReason getMediaInvalidReason() {
     return this.mediaInvalidReason;
   }

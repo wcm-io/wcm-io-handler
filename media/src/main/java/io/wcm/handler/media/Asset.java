@@ -25,11 +25,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * Represents a media item that is referenced via a {@link MediaRequest} and resolved via {@link MediaHandler}.
  * It cannot be rendered directly, but contains references to renditions depending on {@link MediaArgs}.
  */
 @ProviderType
+@JsonInclude(Include.NON_NULL)
 public interface Asset extends Adaptable {
 
   /**
@@ -61,6 +66,7 @@ public interface Asset extends Adaptable {
    * @return Properties of media item
    */
   @NotNull
+  @JsonIgnore
   ValueMap getProperties();
 
   /**
@@ -68,6 +74,7 @@ public interface Asset extends Adaptable {
    * @return {@link Rendition} instance or null if no rendition exists
    */
   @Nullable
+  @JsonIgnore
   Rendition getDefaultRendition();
 
   /**

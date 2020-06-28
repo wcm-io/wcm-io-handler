@@ -31,7 +31,7 @@ static Map<String,Object> getRootPathProperties(ComponentHelper cmp, SlingHttpSe
     String linkTypeId, String fallbackRootPath) {
   RootPathResolver rootPathResolver = new RootPathResolver(cmp, request);
   rootPathResolver.setFallbackRootPath(fallbackRootPath);
-  
+
   rootPathResolver.setRootPathDetector(new RootPathDetector() {
     public String detectRootPath(ComponentHelper cmp, SlingHttpServletRequest request) {
       String rootPath = null;
@@ -43,7 +43,7 @@ static Map<String,Object> getRootPathProperties(ComponentHelper cmp, SlingHttpSe
       return rootPath;
     }
   });
-  
+
   return rootPathResolver.getOverrideProperties();
 }
 

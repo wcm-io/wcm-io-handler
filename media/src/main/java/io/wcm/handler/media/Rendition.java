@@ -19,11 +19,18 @@
  */
 package io.wcm.handler.media;
 
+import java.util.Date;
+
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
@@ -35,6 +42,7 @@ import io.wcm.wcm.commons.caching.ModificationDateProvider;
  * rendered on the fly if required.
  */
 @ProviderType
+@JsonInclude(Include.NON_NULL)
 public interface Rendition extends Adaptable, ModificationDateProvider {
 
   /**
@@ -79,27 +87,32 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    * @return Media format that matches with the resolved rendition. Null if no media format was specified for resolving.
    */
   @Nullable
+  @JsonUnwrapped
   MediaFormat getMediaFormat();
 
   /**
    * @return Properties of rendition
    */
   @NotNull
+  @JsonIgnore
   ValueMap getProperties();
 
   /**
    * @return true if the rendition is an image format supported by the media handler.
    */
+  @JsonIgnore
   boolean isImage();
 
   /**
    * @return true if the rendition is a web image file that can be displayed in a browser.
    */
+  @JsonIgnore
   boolean isBrowserImage();
 
   /**
    * @return true if the rendition is a vector image that can be displayed in a browser.
    */
+  @JsonIgnore
   boolean isVectorImage();
 
   /**
@@ -107,11 +120,13 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    * @deprecated Flash support is deprecated
    */
   @Deprecated
+  @JsonIgnore
   boolean isFlash();
 
   /**
    * @return true if the rendition is not and image nor a flash movie.
    */
+  @JsonIgnore
   boolean isDownload();
 
   /**
@@ -139,4 +154,11 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
     return 0d;
   }
 
+  /**
+   * @return The date of the last modification
+   */
+  @Override
+  @Nullable
+  @JsonIgnore
+  Date getModificationDate();
 }

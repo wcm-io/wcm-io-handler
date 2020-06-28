@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>1.5.4</version>
+    <version>1.5.6</version>
     <relativePath />
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.parent</artifactId>
-  <version>1.2.5-SNAPSHOT</version>
+  <version>1.3.0</version>
   <packaging>pom</packaging>
 
   <name>Handler</name>
@@ -216,6 +216,20 @@
     </dependency>
 
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>io.wcm.maven</groupId>
+        <artifactId>io.wcm.maven.aem-dependencies</artifactId>
+        <version>6.3.3.0001</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <distributionManagement>
     <site>

@@ -72,7 +72,7 @@ Properties:
    * Can be used to store the properties in another resource by setting e.g. to "./mySubNode/".
    */
   - namePrefix (String) = "./"
-  
+
   /**
    * Additional Granite UI components to be displayed for "internal" link type.
    */
@@ -143,8 +143,8 @@ if (contentResource != null && contentResource.getValueMap().get(LinkNameConstan
 }
 
 
-// this is required to ensure that multiple link contains in the same dialog do not interfere with each other
-String showhideCssClass = "option-linktype-showhide-target-" + Escape.validName(namePrefix);
+// this is required to ensure that multiple link containers in the same dialog do not interfere with each other
+String showhideCssClass = "linkRefContainer-option-linktype-showhide-target-" + getUniqueCssClassSuffix(request);
 
 String[] allowedLinkTypes = cfg.get("linkTypes", new String[0]);
 Map<String,LinkType> linkTypes = getLinkTypes(contentResource, linkHandlerConfig, allowedLinkTypes);
@@ -200,7 +200,7 @@ if (linkTypes.containsKey(InternalLinkType.ID)) {
       .put("showhidetargetvalue", InternalLinkType.ID)
       .build());
   Resource internalWellItems = GraniteUiSyntheticResource.child(internalWell, "items", JcrConstants.NT_UNSTRUCTURED);
-  
+
   ImmutableValueMap.Builder linkContentRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_CONTENT_REF)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldLabel")
@@ -212,7 +212,7 @@ if (linkTypes.containsKey(InternalLinkType.ID)) {
   }
   GraniteUiSyntheticResource.child(internalWellItems, "linkContentRef", "wcm-io/handler/link/components/granite/form/internalLinkPathField",
       linkContentRefProps.build());
-  
+
   insertAdditionalComponents(internalWellItems, cfg.getChild("internalLinkFields"));
 }
 
@@ -227,7 +227,7 @@ if (linkTypes.containsKey(InternalCrossContextLinkType.ID)) {
       .put("showhidetargetvalue", InternalCrossContextLinkType.ID)
       .build());
   Resource internalCrossContextWellItems = GraniteUiSyntheticResource.child(internalCrossContextWell, "items", JcrConstants.NT_UNSTRUCTURED);
-  
+
   ImmutableValueMap.Builder linkCrossContextContentRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldLabel")
@@ -254,7 +254,7 @@ if (linkTypes.containsKey(ExternalLinkType.ID)) {
       .put("showhidetargetvalue", ExternalLinkType.ID)
       .build());
   Resource externalWellItems = GraniteUiSyntheticResource.child(externalWell, "items", JcrConstants.NT_UNSTRUCTURED);
-  
+
   ImmutableValueMap.Builder linkExternalRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_EXTERNAL_REF)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldLabel")
@@ -282,7 +282,7 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
       .put("showhidetargetvalue", MediaLinkType.ID)
       .build());
   Resource mediaWellItems = GraniteUiSyntheticResource.child(mediaWell, "items", JcrConstants.NT_UNSTRUCTURED);
-  
+
   ImmutableValueMap.Builder linkMediaRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_REF)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaRef.fieldLabel");
@@ -293,7 +293,7 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
   }
   GraniteUiSyntheticResource.child(mediaWellItems, "linkMediaRef", "wcm-io/handler/link/components/granite/form/mediaLinkPathField",
       linkMediaRefProps.build());
-  
+
   GraniteUiSyntheticResource.child(mediaWellItems, "linkMediaDownload", "wcm-io/wcm/ui/granite/components/form/checkbox",
       ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD)
@@ -342,7 +342,7 @@ cmp.include(container, "granite/ui/components/coral/foundation/container", new O
 
 private final Logger log = LoggerFactory.getLogger(getClass());
 
-private Map<String,LinkType> getLinkTypes(Resource resource, LinkHandlerConfig linkHandlerConfig, 
+private Map<String,LinkType> getLinkTypes(Resource resource, LinkHandlerConfig linkHandlerConfig,
     String[] allowedLinkTypes) {
   Set<String> allowedLinkTypeSet = ImmutableSet.copyOf(allowedLinkTypes);
   Map<String,LinkType> linkTypes = new LinkedHashMap<>();
@@ -369,4 +369,17 @@ private void insertAdditionalComponents(Resource target, Resource source) {
   }
 }
 
+private String getUniqueCssClassSuffix(HttpServletRequest request) {
+  // use a request attribute to make sure multiple instances of this container in the same dialog do not interfere
+  String key = "io.wcm.handler.link_linkRefContainer_CssClassSuffix";
+  Integer count = (Integer)request.getAttribute(key);
+  if (count == null) {
+    count = 0;
+  }
+  else {
+    count++;
+  }
+  request.setAttribute(key, count);
+  return Integer.toString(count);
+}
 %>

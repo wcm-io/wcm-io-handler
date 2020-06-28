@@ -2,7 +2,7 @@
   "io.wcm.handler.link": {
     "redirectInfo": "Weiterleitung nach",
     "redirectMissing": "Bitte geben Sie ein Linkziel in den Seiteneigenschaften an.",
-    
+
     "components.global.include": {
       "linkRefContainer": {
         "linkRefTab": {
