@@ -133,7 +133,7 @@ public abstract class LinkHandlerConfig implements ContextAwareService {
   public @Nullable String getLinkRootPath(@NotNull Page page, @NotNull String linkTypeId) {
     if (StringUtils.equals(linkTypeId, InternalLinkType.ID)) {
       // inside an experience fragment it does not make sense to use a site root path
-      if (Path.isExperienceFragmentPath(page.getPath())) {
+      if (Path.isExperienceFragmentPath(page.getPath()) || Path.isEditableTemplatePath(page.getPath())) {
         return DEFAULT_ROOT_PATH_CONTENT;
       }
       return AdaptTo.notNull(page.getContentResource(), SiteRoot.class).getRootPath(page);

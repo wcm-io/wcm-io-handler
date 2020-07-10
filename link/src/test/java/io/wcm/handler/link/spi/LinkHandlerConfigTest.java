@@ -49,6 +49,7 @@ class LinkHandlerConfigTest {
   private Page contentPage;
   private Page contentPageOtherSite;
   private Page xfPage;
+  private Page editableTemplatePage;
 
   @BeforeEach
   void setUp() {
@@ -56,6 +57,7 @@ class LinkHandlerConfigTest {
     contentPage = context.create().page(ROOTPATH_CONTENT + "/page1");
     contentPageOtherSite = context.create().page(ROOTPATH_CONTENT_OTHER_SITE + "/page2");
     xfPage = context.create().page("/content/experience-fragments/page3");
+    editableTemplatePage = context.create().page("/conf/app1/settings/wcm/templates/template1/structure");
   }
 
   @Test
@@ -63,6 +65,7 @@ class LinkHandlerConfigTest {
     assertEquals(ROOTPATH_CONTENT, underTest.getLinkRootPath(contentPage, InternalLinkType.ID));
     assertEquals(ROOTPATH_CONTENT_OTHER_SITE, underTest.getLinkRootPath(contentPageOtherSite, InternalLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(xfPage, InternalLinkType.ID));
+    assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(editableTemplatePage, InternalLinkType.ID));
   }
 
   @Test
@@ -70,6 +73,7 @@ class LinkHandlerConfigTest {
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(contentPage, InternalCrossContextLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(contentPageOtherSite, InternalCrossContextLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(xfPage, InternalCrossContextLinkType.ID));
+    assertEquals(DEFAULT_ROOT_PATH_CONTENT, underTest.getLinkRootPath(editableTemplatePage, InternalCrossContextLinkType.ID));
   }
 
   @Test
@@ -77,6 +81,7 @@ class LinkHandlerConfigTest {
     assertEquals(DEFAULT_ROOT_PATH_MEDIA, underTest.getLinkRootPath(contentPage, MediaLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_MEDIA, underTest.getLinkRootPath(contentPageOtherSite, MediaLinkType.ID));
     assertEquals(DEFAULT_ROOT_PATH_MEDIA, underTest.getLinkRootPath(xfPage, MediaLinkType.ID));
+    assertEquals(DEFAULT_ROOT_PATH_MEDIA, underTest.getLinkRootPath(editableTemplatePage, MediaLinkType.ID));
   }
 
   @Test
