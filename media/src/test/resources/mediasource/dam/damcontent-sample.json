@@ -125,6 +125,21 @@
             "jcr:mimeType":"image/jpeg",
             "jcr:primaryType":"nt:resource"
           }
+        },
+        "cq5dam.web.1600.1000.jpg": {
+          "jcr:primaryType":"nt:file",
+          "jcr:content": {
+            "jcr:mimeType":"image/jpeg",
+            "jcr:primaryType":"nt:resource"
+          }
+        }
+      },
+      "renditionsMetadata": {
+        "jcr:primaryType":"nt:unstructured",
+        "cq5dam.web.1600.1000.jpg": {
+          "jcr:primaryType":"nt:unstructured",
+          "imageWidth": 1600,
+          "imageHeight": 1000
         }
       }
     }

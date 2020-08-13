@@ -31,6 +31,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_STAND
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_BANNER;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_13PLUS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT;
@@ -656,7 +657,7 @@ class InlineMediaSourceTest {
 
   @Test
   void testWithCroppingAndRotation() {
-    // set rotation parameters
+    // set cropping and rotation parameters
     ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
     props.put(PN_MEDIA_CROP, "5,10,69,40");
     props.put(PN_MEDIA_ROTATION, "270");
@@ -682,15 +683,78 @@ class InlineMediaSourceTest {
   }
 
   @Test
-  void testWithCropppingInvalid() {
+  void testMultipleMandatoryMediaFormatsWithCropping_AlsoMatchOriginal() {
     // set cropping parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource_16_10.adaptTo(ModifiableValueMap.class);
+    props.put(PN_MEDIA_CROP, "0,0,320,152");
+
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10).args(mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(SHOWROOM_CONTROLS, renditions.get(0).getMediaFormat());
+
+    assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+  }
+
+  @Test
+  void testMultipleMandatoryMediaFormatsWithCropping_AlsoMatchOriginal_AutoCrop() {
+    // set cropping parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource_16_10.adaptTo(ModifiableValueMap.class);
+    props.put(PN_MEDIA_CROP, "0,0,320,152");
+
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO, RATIO2, EDITORIAL_1COL)
+        .autoCrop(true);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10).args(mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(4, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(SHOWROOM_CONTROLS, renditions.get(0).getMediaFormat());
+
+    assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.333.250.34,0,367,250.file/sample_image_400x250.jpg",
+        renditions.get(2).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(RATIO2, renditions.get(2).getMediaFormat());
+
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.215.102.0,0,320,152.file/sample_image_400x250.jpg",
+        renditions.get(3).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(EDITORIAL_1COL, renditions.get(3).getMediaFormat());
+  }
+
+  @Test
+  void testWithCropppingInvalid() {
+    // set invalid cropping parameters - should be ignored and media resolved without cropping
     ModifiableValueMap props = mediaInlineSampleImageResource.adaptTo(ModifiableValueMap.class);
     props.put(PN_MEDIA_CROP, "10,10,20,20");
 
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
-    assertFalse(media.isValid(), "valid?");
+    assertTrue(media.isValid(), "valid?");
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.64.30.file/sample_image_215x102.jpg",
+        media.getUrl(), "rendition.mediaUrl");
+    assertEquals(SHOWROOM_CONTROLS_SCALE1, media.getRendition().getMediaFormat());
   }
 
   @Test
