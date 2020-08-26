@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.inline;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -107,18 +108,17 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     String processedFileName = fileName;
     if (isImage) {
       // get dimension from image binary
-      dimension = getImageDimension();
-
-      if (isVectorImage && (this.rotation != null && this.cropDimension != null)) {
-        // transformation not possible for vector images
-        scaledDimension = SCALING_NOT_POSSIBLE_DIMENSION;
-      }
-
-      else {
-        // check if scaling is required
-        scaledDimension = getScaledDimension(dimension);
-        if (scaledDimension != null) {
-          if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
+      List<Dimension> dimensionCandiates = getImageOrCroppedDimensions();
+      for (int i = 0; i < dimensionCandiates.size(); i++) {
+        dimension = dimensionCandiates.get(i);
+        if (isVectorImage && (this.rotation != null || this.cropDimension != null)) {
+          // transformation not possible for vector images
+          scaledDimension = SCALING_NOT_POSSIBLE_DIMENSION;
+        }
+        else {
+          // check if scaling is required
+          scaledDimension = getScaledDimension(dimension);
+          if (scaledDimension != null && isValidScalingDimension(scaledDimension)) {
             // overwrite image dimension of {@link Rendition} instance with scaled dimensions
             dimension = scaledDimension;
             // extension may have to be changed because scaling case produce different file format
@@ -126,26 +126,33 @@ class InlineRendition extends SlingAdaptable implements Rendition {
               processedFileName = ImageFileServlet.getImageFileName(processedFileName);
             }
           }
-          else if (mediaArgs.isAutoCrop() && this.cropDimension == null && !isVectorImage) {
-            // scaling is required, but not match with inline media - try auto cropping (if enabled)
-            InlineAutoCropping autoCropping = new InlineAutoCropping(dimension, mediaArgs);
-            List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
-            for (CropDimension autoCropDimension : autoCropDimensions) {
-              scaledDimension = getScaledDimension(autoCropDimension);
-              if (scaledDimension == null) {
-                scaledDimension = autoCropDimension;
-              }
-              if (!scaledDimension.equals(SCALING_NOT_POSSIBLE_DIMENSION)) {
-                // overwrite image dimension of {@link Rendition} instance with scaled dimensions
-                dimension = scaledDimension;
-                cropDimension = autoCropDimension;
-                // extension may have to be changed because scaling case produce different file format
-                if (!isVectorImage) {
-                  processedFileName = ImageFileServlet.getImageFileName(processedFileName);
-                }
-                break;
-              }
+        }
+        if (isValidScalingDimension(scaledDimension)) {
+          if (i > 0) {
+            // fallback (original) image dimension is used - clear ignored cropping parameters
+            this.cropDimension = null;
+          }
+          break;
+        }
+      }
+      if (!isValidScalingDimension(scaledDimension) && mediaArgs.isAutoCrop() && !isVectorImage && dimension != null) {
+        // scaling is required, but not match with inline media - try auto cropping (if enabled)
+        InlineAutoCropping autoCropping = new InlineAutoCropping(dimension, mediaArgs);
+        List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
+        for (CropDimension autoCropDimension : autoCropDimensions) {
+          scaledDimension = getScaledDimension(autoCropDimension);
+          if (scaledDimension == null) {
+            scaledDimension = autoCropDimension;
+          }
+          if (isValidScalingDimension(scaledDimension)) {
+            // overwrite image dimension of {@link Rendition} instance with scaled dimensions
+            dimension = scaledDimension;
+            this.cropDimension = autoCropDimension;
+            // extension may have to be changed because scaling case produce different file format
+            if (!isVectorImage) {
+              processedFileName = ImageFileServlet.getImageFileName(processedFileName);
             }
+            break;
           }
         }
       }
@@ -164,6 +171,30 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   }
 
+  private boolean isValidScalingDimension(@Nullable Dimension dimension) {
+    return dimension == null || !dimension.equals(SCALING_NOT_POSSIBLE_DIMENSION);
+  }
+
+  /**
+   * Gets a list of possible dimensions for media processing. If cropping parameters are given
+   * the list contains the cropping dimension and the original image dimension; if not only the latter.
+   * If the original image is not an image at all, an empty list is returned.
+   * @return Dimension
+   */
+  private List<Dimension> getImageOrCroppedDimensions() {
+    List<Dimension> dimensions = new ArrayList<>();
+
+    Dimension originalDimension = getImageDimension();
+    if (originalDimension != null) {
+      if (this.cropDimension != null) {
+        dimensions.add(this.cropDimension);
+      }
+      dimensions.add(originalDimension);
+    }
+
+    return dimensions;
+  }
+
   /**
    * Gets the dimension of the uploaded image (if the binary is an image file at all).
    * @return Dimension
@@ -171,16 +202,10 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private Dimension getImageDimension() {
     Dimension dimension = null;
 
-    // check for cropping dimension
-    if (this.cropDimension != null) {
-      dimension = this.cropDimension;
-    }
-    else {
-      // if binary is image try to calculate dimensions by loading it into a layer
-      Layer layer = this.resource.adaptTo(Layer.class);
-      if (layer != null) {
-        dimension = new Dimension(layer.getWidth(), layer.getHeight());
-      }
+    // if binary is image try to calculate dimensions by loading it into a layer
+    Layer layer = this.resource.adaptTo(Layer.class);
+    if (layer != null) {
+      dimension = new Dimension(layer.getWidth(), layer.getHeight());
     }
 
     return dimension;

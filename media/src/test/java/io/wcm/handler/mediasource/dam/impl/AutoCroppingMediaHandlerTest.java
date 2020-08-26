@@ -123,12 +123,28 @@ class AutoCroppingMediaHandlerTest {
     assertFalse(media.isValid());
   }
 
-  /**
-   * Make sure the existing of manual cropping parameters (including those leading to a mismatch with the
-   * media format) disables auto-cropping.
-   */
   @Test
-  void testManualCroppingParametersDisableAutoCropping() {
+  void testManualCroppingParametersHaveHigherPrecedence() {
+
+    // prepare resource with asset reference and manual cropping parameters
+    // this manual cropping results in a 16:10 image and should have higher precedence than auto-cropping
+    Resource resource2 = context.create().resource("/content/test2",
+        "sling:resourceType", "app1/components/comp1",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath(),
+        MediaNameConstants.PN_MEDIA_CROP, new CropDimension(0, 0, 120, 75).getCropString());
+
+    Media media = mediaHandler.get(resource2)
+        .mediaFormat(RATIO)
+        .build();
+    assertTrue(media.isValid());
+    Rendition rendition = media.getRendition();
+    assertEquals(160, rendition.getWidth());
+    assertEquals(100, rendition.getHeight());
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.160.100.0,0,160,100.file/test.jpg", media.getUrl());
+  }
+
+  @Test
+  void testInvalidManualCroppingParametersFallbackToAutoCropping() {
 
     // prepare resource with asset reference and manual cropping parameters
     // this manual cropping results in a 1:1 image not matching the media format
@@ -140,7 +156,11 @@ class AutoCroppingMediaHandlerTest {
     Media media = mediaHandler.get(resource2)
         .mediaFormat(RATIO)
         .build();
-    assertFalse(media.isValid());
+    assertTrue(media.isValid());
+    Rendition rendition = media.getRendition();
+    assertEquals(320, rendition.getWidth());
+    assertEquals(200, rendition.getHeight());
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.320.200.40,0,360,200.file/test.jpg", media.getUrl());
   }
 
   @Test

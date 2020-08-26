@@ -57,24 +57,39 @@ class DamRendition extends SlingAdaptable implements Rendition {
    */
   DamRendition(Asset asset, CropDimension cropDimension, Integer rotation, MediaArgs mediaArgs, Adaptable adaptable) {
     this.mediaArgs = mediaArgs;
+    RenditionMetadata resolvedRendition = null;
 
-    // resolve rendition from DAM assets
-    RenditionHandler renditionHandler;
-    if (cropDimension != null || rotation != null) {
-      renditionHandler = new TransformedRenditionHandler(asset, cropDimension, rotation);
+    // if no transformation parameters are given find non-transformed matching rendition
+    if (cropDimension == null && rotation == null) {
+      RenditionHandler renditionHandler = new DefaultRenditionHandler(asset);
+      resolvedRendition = renditionHandler.getRendition(mediaArgs);
     }
+
     else {
-      renditionHandler = new DefaultRenditionHandler(asset);
-    }
-    RenditionMetadata resolvedRendition = renditionHandler.getRendition(mediaArgs);
+      // try to match with all transformations that are configured
+      RenditionHandler renditionHandler = new TransformedRenditionHandler(asset, cropDimension, rotation);
+      resolvedRendition = renditionHandler.getRendition(mediaArgs);
 
-    // if auto-cropping is enabled, and no cropping or rotation parameters set, try to build a
-    // transformed rendition with automatically devised cropping parameters
-    if (resolvedRendition == null && mediaArgs.isAutoCrop() && !(renditionHandler instanceof TransformedRenditionHandler)) {
+      // if no match was found check against renditions without applying the explicit cropping
+      if (resolvedRendition == null && cropDimension != null) {
+        if (rotation != null) {
+          renditionHandler = new TransformedRenditionHandler(asset, null, rotation);
+          resolvedRendition = renditionHandler.getRendition(mediaArgs);
+        }
+        else {
+          renditionHandler = new DefaultRenditionHandler(asset);
+          resolvedRendition = renditionHandler.getRendition(mediaArgs);
+        }
+      }
+    }
+
+    // if not match was found and auto-cropping is enabled, try to build a transformed rendition
+    // with automatically devised cropping parameters
+    if (resolvedRendition == null && mediaArgs.isAutoCrop()) {
       DamAutoCropping autoCropping = new DamAutoCropping(asset, mediaArgs);
       List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
       for (CropDimension autoCropDimension : autoCropDimensions) {
-        renditionHandler = new TransformedRenditionHandler(asset, autoCropDimension, null);
+        RenditionHandler renditionHandler = new TransformedRenditionHandler(asset, autoCropDimension, rotation);
         resolvedRendition = renditionHandler.getRendition(mediaArgs);
         if (resolvedRendition != null) {
           break;
