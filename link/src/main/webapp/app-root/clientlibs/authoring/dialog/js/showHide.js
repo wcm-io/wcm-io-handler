@@ -27,12 +27,12 @@
     var showhideEl = $('.option-linktype-showhide-target---');
     var linkType = $('input[name*="./linkType"]').val();
     if (linkType && showhideEl) {
-	    showHide(linkType, showhideEl);
+      showHide(linkType, showhideEl);
     }
   });
 
   $(document).on("click", "coral-tab", function(e) {
-	  $(document).trigger("foundation-contentloaded");
+    $(document).trigger("foundation-contentloaded");
   });
 
   function showHide(linkType, showhideEl) {
