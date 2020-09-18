@@ -48,25 +48,4 @@
     }
   });
 
-  $(document).on("foundation-contentloaded", function(e) {
-    showHide();
-  });
-
-  $(document).on("click", "coral-tab", function(e) {
-    showHide();
-  });
-
-  function showHide() {
-    var linkType = $('input[name*="./linkType"]').val();
-    var showhideEl = $('.option-linktype-showhide-target---');
-
-    if (linkType && showhideEl) {
-      showhideEl.each(function(index) {
-        if ($(this).data("showhidetargetvalue") === linkType) {
-          $(this).removeClass("hide");
-        }
-      });
-    }
-  }
-
 })(document, Granite, Granite.$);
