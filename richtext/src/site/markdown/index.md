@@ -31,7 +31,7 @@ Read the [general concepts][general-concepts] to get an overview of the function
 
 |RichText Handler version |AEM version supported
 |-------------------------|----------------------
-|1.4.x or higher          |AEM 6.3.3+
+|1.4.x or higher          |AEM 6.3.3+, AEM 6.4.5+
 |1.2.x - 1.3.x            |AEM 6.2+
 |1.0.x - 1.1.x            |AEM 6.1+
 |0.x                      |AEM 6.0+
