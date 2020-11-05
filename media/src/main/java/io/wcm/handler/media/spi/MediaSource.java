@@ -394,18 +394,31 @@ public abstract class MediaSource {
     boolean allMandatoryResolved;
     final List<Rendition> resolvedRenditions = new ArrayList<>();
 
+    // 1. resolve main media formats (ignore responsive child formats)
     List<MediaFormatOption> parentMediaFormatOptions = getParentMediaFormats(mediaArgs);
     allMandatoryResolved = resolveRenditionsWithMediaFormats(asset, mediaArgs, parentMediaFormatOptions, resolvedRenditions);
 
-    if (allMandatoryResolved && !resolvedRenditions.isEmpty()) {
-      List<MediaFormat> resolvedMediaFormats = resolvedRenditions.stream()
-          .map(Rendition::getMediaFormat)
-          .filter(Objects::nonNull)
-          .collect(Collectors.toList());
+    if (allMandatoryResolved) {
+      final List<MediaFormat> resolvedMediaFormats;
+
+      if (!resolvedRenditions.isEmpty()) {
+        resolvedMediaFormats = resolvedRenditions.stream()
+            .map(Rendition::getMediaFormat)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+      }
+      else {
+        // parent formats didn't match any rendition, but they are all optional.
+        // try to resolve their child formats
+        resolvedMediaFormats = parentMediaFormatOptions.stream()
+            .map(MediaFormatOption::getMediaFormat)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+      }
 
       for (MediaFormat mediaFormat : resolvedMediaFormats) {
         List<MediaFormatOption> childMediaFormatOptions = getChildMediaFormats(mediaArgs, mediaFormat);
-        allMandatoryResolved = allMandatoryResolved && resolveRenditionsWithMediaFormats(asset, mediaArgs, childMediaFormatOptions, resolvedRenditions);
+        allMandatoryResolved = resolveRenditionsWithMediaFormats(asset, mediaArgs, childMediaFormatOptions, resolvedRenditions) && allMandatoryResolved;
       }
     }
 
