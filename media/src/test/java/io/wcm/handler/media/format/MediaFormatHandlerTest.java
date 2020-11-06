@@ -39,6 +39,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_RAW;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_SMALL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_TAB_FULLSIZE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_TAB_SMALL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.NORATIO_LARGE_MINWIDTH;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SPECIAL_4COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER;
@@ -170,7 +171,7 @@ class MediaFormatHandlerTest {
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(NONFIXED_BIG, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals(5, matchingFormats.size());
+    assertEquals(6, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
     assertEquals(NONFIXED_RAW, format1);
@@ -186,6 +187,9 @@ class MediaFormatHandlerTest {
 
     MediaFormat format5 = iterator.next();
     assertEquals(NONFIXED_BIG, format5);
+
+    MediaFormat format6 = iterator.next();
+    assertEquals(NORATIO_LARGE_MINWIDTH, format6);
 
   }
 
