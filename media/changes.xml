@@ -27,6 +27,9 @@
       <action type="fix" dev="mrozati">
         SimpleImageMediaMarkupBuilder: fix NPE
       </action>
+      <action type="fix" dev="mrozati">
+        Media Handler: When optional media formats don't match any rendition, try to resolve their responsive child formats.
+      </action>
     </release>
 
     <release version="1.9.4" date="2020-08-26">
