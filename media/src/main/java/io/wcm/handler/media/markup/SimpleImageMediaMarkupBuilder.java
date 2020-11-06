@@ -305,7 +305,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
         .map(Rendition::getMediaFormat)
         .filter(Objects::nonNull)
         .findFirst()
-        .orElseGet(null);
+        .orElse(null);
   }
 
   /**

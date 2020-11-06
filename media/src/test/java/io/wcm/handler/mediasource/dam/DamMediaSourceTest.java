@@ -19,12 +19,14 @@
  */
 package io.wcm.handler.mediasource.dam;
 
+import static io.wcm.handler.media.MediaNameConstants.MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_STAGE_SMALL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDHEIGHT_UNCONSTRAINED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.MATERIAL_TILE;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.NORATIO_LARGE_MINWIDTH;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_LARGE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
@@ -682,6 +684,29 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg./cq5dam.web.685.325.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.3");
     assertEquals(EDITORIAL_3COL, renditions.get(1).getMediaFormat());
+  }
+
+  @Test
+  void testOptionalMediaFormatNotMatch_ResponsiveChildFormatsMatch() {
+    MediaArgs mediaArgs = new MediaArgs()
+        .mediaFormat(NORATIO_LARGE_MINWIDTH) // does not match any rendition: too wide
+        .imageSizes(new MediaArgs.ImageSizes("sizes",
+            new MediaArgs.WidthOption(2000, false), // does not match any rendition: too wide
+            new MediaArgs.WidthOption(500, false), // matches the rendition 685x325
+            new MediaArgs.WidthOption(300, false))); // matches the rendition 450x213
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg.image_file.500.237.file/cq5dam.web.685.325.jpg",
+        renditions.get(0).getUrl(), "Virtual rendition for width option 500px should match");
+    assertEquals(NORATIO_LARGE_MINWIDTH.getName() + "___500", renditions.get(0).getMediaFormat().getName());
+
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg.image_file.300.142.file/cq5dam.web.450.213.jpg",
+        renditions.get(1).getUrl(), "Virtual rendition for width option 300px should match");
+    assertEquals(NORATIO_LARGE_MINWIDTH.getName() + "___300", renditions.get(1).getMediaFormat().getName());
   }
 
   @Test
