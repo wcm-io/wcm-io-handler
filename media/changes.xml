@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.9.6" date="2020-11-08">
+    <release version="1.9.6" date="2020-11-06">
       <action type="fix" dev="mrozati">
         Media Handler: When optional media formats don't match any rendition, try to resolve their responsive child formats.
       </action>
