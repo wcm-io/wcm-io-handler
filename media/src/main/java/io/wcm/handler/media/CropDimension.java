@@ -114,7 +114,7 @@ public final class CropDimension extends Dimension {
   /**
    * Get crop dimension from crop string.
    * Please note: Crop string contains not width/height as 3rd/4th parameter but right, bottom.
-   * @param cropString Cropping string from CQ5 smartimage widget
+   * @param cropString Cropping string from AEM inplace editor
    * @return Crop dimension instance
    * @throws IllegalArgumentException if crop string syntax is invalid
    */

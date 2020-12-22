@@ -70,7 +70,7 @@ import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
- * Default implementation for media requests to media items stored in CQ5 DAM.
+ * Default implementation for media requests to media items stored in AEM Assets (DAM).
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
