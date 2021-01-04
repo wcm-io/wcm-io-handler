@@ -24,7 +24,10 @@
   <body>
 
     <release version="1.9.8" date="not released">
-      <action type="fix" dev="mrozati">
+      <action type="fix" dev="sseifert" issue="WHAN-42">
+        File Upload Coral UI component: Show configured DAM root folder when clicking on "Pick" action link.
+      </action>
+      <action type="fix" dev="sseifert">
         File Upload Coral UI component: Fix styling of "Clear Transformation" button in AEM Cloud authoring environment.
       </action>
     </release>
