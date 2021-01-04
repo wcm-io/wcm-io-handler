@@ -146,6 +146,7 @@
         label : {innerHTML: Granite.I18n.get("Clear Transformation")},
         variant: "quiet"
     });
+    self._clearTransformationButton.classList.add("cq-FileUpload-clear");
 
     // insert new button after the existing "Clear" button
     self._clearTransformationButton.on("click", function() {
@@ -163,7 +164,7 @@
   FileUploadExtension.prototype._removeDuplicatedFileRefInput = function () {
     var self = this;
     var fileRefPropName = self._$pathfield.attr('name');
-    if(fileRefPropName) {
+    if (fileRefPropName) {
       var inputs = self._$element.find("input[type='hidden'][name='"+ fileRefPropName +"']");
       inputs.each(function() {
         this.parentNode.removeChild(this);
