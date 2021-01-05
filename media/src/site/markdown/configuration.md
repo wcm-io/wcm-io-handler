@@ -25,5 +25,21 @@ However, this workflow process should not be part of the main "DAM Update Asset"
 See this [How-to article][workflow-how-to] for details.
 
 
+### Previews for inline images in Authoring
+
+The "FileUpload" Granite UI component provides a preview of the selected image in the edit dialog. This does not work out of the box if an inline image was uploaded to the component's resource (instead of selecting a DAM asset). In this case the component has to provide a preview of the image via the `img` selected. The media handler provides a servlet for this, but it has to be configured for each resource type that requires it.
+
+Example for the [wcm.io WCM Core Components][wcmio-wcm-core-components] Responsive Image component for the factory configuration `io.wcm.handler.media.impl.InlineImageAuthorPreviewServlet`:
+
+```
+sling.servlet.resourceTypes=["wcm-io/wcm/core/components/wcmio/responsiveimage/v1/responsiveimage"]
+```
+
+
+This configuration should be applied only on author instances, it is not required on publish instances.
+
+
+
 
 [workflow-how-to]: https://wcm-io.atlassian.net/wiki/x/AQDrRw
+[wcmio-wcm-core-components]: https://wcm.io/wcm/core-components/
