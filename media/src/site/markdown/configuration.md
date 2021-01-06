@@ -1,12 +1,19 @@
 ## Media Handler System Configuration
 
 
-### Service user configuration
+### Service user configuration for Asset Rendition Metadata
 
-The DAM source implementation for Media Handler requires a background service that detects additional metadata for each rendition that is added, modified or removed for a DAM asset (to calculate their width and height and store them in the repository).
+The DAM source implementation for Media Handler requires a background service that detects additional metadata for each rendition that is added, modified or removed for a DAM asset (to calculate their width and height and store them in the repository). Another service user mapping is required that allows the dynamic media support to read configured image profiles.
 
 This service needs a principal-based mapping for the factory configuration `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended` with an entry like this:
 
+_Media Handler 2.0 and up_
+
+```
+user.mapping=["io.wcm.handler.media:dam-rendition-metadata=[dam-writer-service]"]
+```
+
+_Media Handler 1.x_
 ```
 user.mapping=["io.wcm.handler.media=[dam-writer-service]"]
 ```
@@ -14,6 +21,21 @@ user.mapping=["io.wcm.handler.media=[dam-writer-service]"]
 The principal `dam-writer-service` that comes with AEM can be used for this.
 
 This configuration is required **only on author instances**.
+
+
+### Service user configuration for Dynamic Media support
+
+Another service user mapping is required that allows the dynamic media support to read configured image profiles.
+
+This service needs a principal-based mapping for the factory configuration `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended` with an entry like this:
+
+```
+user.mapping=["io.wcm.handler.media:dynamic-media-support=[configuration-reader-service]"]
+```
+
+The principal `configuration-reader-service` that comes with AEM can be used for this.
+
+This configuration is required **for both author and publish instances**.
 
 
 ### Previews for inline images in Authoring
