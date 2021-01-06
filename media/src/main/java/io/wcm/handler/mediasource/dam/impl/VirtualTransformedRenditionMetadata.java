@@ -23,6 +23,8 @@ import java.io.InputStream;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
@@ -81,11 +83,23 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public String getMediaPath(boolean contentDispositionAttachment) {
+  public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
     return RenditionMetadata.buildMediaPath(getRendition().getPath()
         + "." + ImageFileServlet.buildSelectorString(getWidth(), getHeight(),
             this.cropDimension, this.rotation, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+  }
+
+  @Override
+  public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
+    if (contentDispositionAttachment) {
+      // do not use dynamic media for request forced with content disposition attachment
+      return null;
+    }
+    else {
+      // render virtual rendition with dynamic media
+      return DynamicMediaPath.build(damContext, getWidth(), getHeight(), this.cropDimension, this.rotation);
+    }
   }
 
   @Override

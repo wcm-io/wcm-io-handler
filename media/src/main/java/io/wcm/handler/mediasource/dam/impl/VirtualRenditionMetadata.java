@@ -23,6 +23,8 @@ import java.io.InputStream;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
@@ -72,7 +74,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public String getMediaPath(boolean contentDispositionAttachment) {
+  public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
     if (isVectorImage()) {
       // vector images can be scaled in browser without need of ImageFileServlet
       return super.getMediaPath(contentDispositionAttachment);
@@ -81,6 +83,20 @@ class VirtualRenditionMetadata extends RenditionMetadata {
         + "." + getWidth() + "." + getHeight()
         + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+  }
+
+  @Override
+  public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
+    if (contentDispositionAttachment) {
+      // do not use dynamic media for request forced with content disposition attachment
+      return null;
+    }
+    else if (isVectorImage()) {
+      // vector images can be scaled in browser without need of dynamic media
+      return null;
+    }
+    // render virtual rendition with dynamic media
+    return DynamicMediaPath.build(damContext, getWidth(), getHeight());
   }
 
   @Override

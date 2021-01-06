@@ -13,6 +13,7 @@ Media resolving, processing and markup generation.
 * [Component properties][component-properties]
 * [System configuration][configuration]
 * [File format support][file-format-support]
+* [Dynamic Media support][dynamic-media]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -33,6 +34,7 @@ The Media Handler provides:
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic HTL Placeholder template
 * Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
+* Support for [Dynamic Media][dynamic-media]
 
 Read the [general concepts][general-concepts] to get an overview of the functionality.
 
@@ -66,6 +68,7 @@ To use this module you have to deploy also:
 [component-properties]: component-properties.html
 [configuration]: configuration.html
 [file-format-support]: file-format-support.html
+[dynamic-media]: dynamic-media.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [url-handler]: ../url/

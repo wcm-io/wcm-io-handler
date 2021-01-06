@@ -33,8 +33,10 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.featureflags.Features;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +45,7 @@ import org.osgi.annotation.versioning.ProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.dam.api.s7dam.utils.PublishUtils;
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -92,6 +95,10 @@ public final class DamMediaSource extends MediaSource {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
+  @OSGiService
+  private Features featureFlagService;
+  @OSGiService
+  private PublishUtils dynamicMediaPublishUtils;
 
   private static final Logger log = LoggerFactory.getLogger(DamMediaSource.class);
 
@@ -144,7 +151,7 @@ public final class DamMediaSource extends MediaSource {
         damAsset = assetResource.adaptTo(com.day.cq.dam.api.Asset.class);
       }
       if (damAsset != null) {
-        Asset asset = new DamAsset(damAsset, media, adaptable);
+        Asset asset = new DamAsset(media, damAsset, featureFlagService, dynamicMediaPublishUtils, adaptable);
         media.setAsset(asset);
 
         // resolve rendition(s)

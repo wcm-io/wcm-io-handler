@@ -23,13 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
-
-import com.day.cq.dam.api.Asset;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.CropDimension;
@@ -46,50 +43,53 @@ import io.wcm.wcm.commons.caching.ModificationDate;
  */
 class DamRendition extends SlingAdaptable implements Rendition {
 
-  private final Adaptable adaptable;
+  private final DamContext damContext;
   private final MediaArgs mediaArgs;
   private final RenditionMetadata rendition;
 
+  private static final String DYNAMICMEDIA_IS_IMAGE_PATH = "/is/image/";
+
   /**
-   * @param asset DAM asset
    * @param cropDimension Crop dimension
    * @param mediaArgs Media args
+   * @param damContext DAM context objects
    */
-  DamRendition(Asset asset, CropDimension cropDimension, Integer rotation, MediaArgs mediaArgs, Adaptable adaptable) {
+  DamRendition(CropDimension cropDimension, Integer rotation, MediaArgs mediaArgs, DamContext damContext) {
+    this.damContext = damContext;
     this.mediaArgs = mediaArgs;
     RenditionMetadata resolvedRendition = null;
 
     // if no transformation parameters are given find non-transformed matching rendition
     if (cropDimension == null && rotation == null) {
-      RenditionHandler renditionHandler = new DefaultRenditionHandler(asset);
+      RenditionHandler renditionHandler = new DefaultRenditionHandler(damContext);
       resolvedRendition = renditionHandler.getRendition(mediaArgs);
     }
 
     else {
       // try to match with all transformations that are configured
-      RenditionHandler renditionHandler = new TransformedRenditionHandler(asset, cropDimension, rotation);
+      RenditionHandler renditionHandler = new TransformedRenditionHandler(cropDimension, rotation, damContext);
       resolvedRendition = renditionHandler.getRendition(mediaArgs);
 
       // if no match was found check against renditions without applying the explicit cropping
       if (resolvedRendition == null && cropDimension != null) {
         if (rotation != null) {
-          renditionHandler = new TransformedRenditionHandler(asset, null, rotation);
+          renditionHandler = new TransformedRenditionHandler(null, rotation, damContext);
           resolvedRendition = renditionHandler.getRendition(mediaArgs);
         }
         else {
-          renditionHandler = new DefaultRenditionHandler(asset);
+          renditionHandler = new DefaultRenditionHandler(damContext);
           resolvedRendition = renditionHandler.getRendition(mediaArgs);
         }
       }
     }
 
-    // if not match was found and auto-cropping is enabled, try to build a transformed rendition
+    // if no match was found and auto-cropping is enabled, try to build a transformed rendition
     // with automatically devised cropping parameters
     if (resolvedRendition == null && mediaArgs.isAutoCrop()) {
-      DamAutoCropping autoCropping = new DamAutoCropping(asset, mediaArgs);
+      DamAutoCropping autoCropping = new DamAutoCropping(damContext.getAsset(), mediaArgs);
       List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
       for (CropDimension autoCropDimension : autoCropDimensions) {
-        RenditionHandler renditionHandler = new TransformedRenditionHandler(asset, autoCropDimension, rotation);
+        RenditionHandler renditionHandler = new TransformedRenditionHandler(autoCropDimension, rotation, damContext);
         resolvedRendition = renditionHandler.getRendition(mediaArgs);
         if (resolvedRendition != null) {
           break;
@@ -97,22 +97,32 @@ class DamRendition extends SlingAdaptable implements Rendition {
       }
     }
     this.rendition = resolvedRendition;
-
-    this.adaptable = adaptable;
   }
 
   @Override
   public String getUrl() {
-    if (this.rendition != null) {
-      // build externalized URL
-      UrlHandler urlHandler = AdaptTo.notNull(adaptable, UrlHandler.class);
-      String mediaPath = this.rendition.getMediaPath(this.mediaArgs.isContentDispositionAttachment());
-      return urlHandler.get(mediaPath).urlMode(this.mediaArgs.getUrlMode())
-          .buildExternalResourceUrl(this.rendition.adaptTo(Resource.class));
-    }
-    else {
+    if (this.rendition == null) {
       return null;
     }
+    String url = null;
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+      // if DM is enabled: try to get rendition URL from dynamic media
+      String dynamicMediaPath = this.rendition.getDynamicMediaPath(this.mediaArgs.isContentDispositionAttachment(), damContext);
+      if (dynamicMediaPath != null) {
+        String productionAssetUrl = damContext.getDynamicMediaProductionAssetUrl();
+        if (productionAssetUrl != null) {
+          url = productionAssetUrl + DYNAMICMEDIA_IS_IMAGE_PATH + dynamicMediaPath;
+        }
+      }
+    }
+    if (url == null) {
+      // Render renditions in AEM: build externalized URL
+      UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
+      String mediaPath = this.rendition.getMediaPath(this.mediaArgs.isContentDispositionAttachment());
+      url = urlHandler.get(mediaPath).urlMode(this.mediaArgs.getUrlMode())
+          .buildExternalResourceUrl(this.rendition.adaptTo(Resource.class));
+    }
+    return url;
   }
 
   @Override

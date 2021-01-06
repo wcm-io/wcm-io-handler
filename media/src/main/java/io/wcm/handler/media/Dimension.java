@@ -71,7 +71,10 @@ public class Dimension {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+        .append("width", getWidth())
+        .append("height", getHeight())
+        .build();
   }
 
 }

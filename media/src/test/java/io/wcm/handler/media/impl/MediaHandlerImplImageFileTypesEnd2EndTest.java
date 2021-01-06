@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 import com.day.image.Layer;
 
 import ch.randelshofer.io.ByteArrayImageInputStream;
@@ -61,10 +62,10 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(AemContextExtension.class)
 class MediaHandlerImplImageFileTypesEnd2EndTest {
 
-  private final AemContext context = AppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
-  private ImageFileServlet imageFileServlet;
-  private MediaHandler mediaHandler;
+  ImageFileServlet imageFileServlet;
+  MediaHandler mediaHandler;
 
   @BeforeEach
   void setUp() {
@@ -143,7 +144,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   }
 
   @Test
-  void testASset_GIF_Original() {
+  void testAsset_GIF_Original() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia(asset, 100, 50,
         "/content/dam/sample.gif/_jcr_content/renditions/original./sample.gif",
@@ -362,22 +363,23 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     buildAssertInvalidMedia_AutoCrop(resource);
   }
 
-  private Asset createSampleAsset(String classpathResource, String contentType) {
+  Asset createSampleAsset(String classpathResource, String contentType) {
     String fileName = FilenameUtils.getName(classpathResource);
     String fileExtension = FilenameUtils.getExtension(classpathResource);
-    Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType);
+    Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType,
+        Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
     context.create().assetRendition(asset, "cq5dam.web.sample." + fileExtension, classpathResource, contentType);
     return asset;
   }
 
-  private void buildAssertMedia(Asset asset, int width, int height, String mediaUrl,
+  void buildAssertMedia(Asset asset, int width, int height, String mediaUrl,
       String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildAssertMedia_ContentDisposition(Asset asset, int width, int height, String mediaUrl,
+  void buildAssertMedia_ContentDisposition(Asset asset, int width, int height, String mediaUrl,
       String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .contentDispositionAttachment(true)
@@ -385,14 +387,14 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildAssertMedia_Rescale(Asset asset, int width, int height, String mediaUrl, String contentType) {
+  void buildAssertMedia_Rescale(Asset asset, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .fixedDimension(width, height)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType) {
+  void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
@@ -400,7 +402,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildAssertInvalidMedia_AutoCrop(Asset asset) {
+  void buildAssertInvalidMedia_AutoCrop(Asset asset) {
     Media media = mediaHandler.get(asset.getPath())
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
@@ -408,7 +410,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertFalse(media.isValid(), "media valid");
   }
 
-  private void assertMedia(Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
+  void assertMedia(Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
     assertTrue(media.isValid(), "media valid");
     assertEquals(mediaUrl, media.getUrl(), "mediaUrl");
 
@@ -416,7 +418,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertEquals(width, layer.getWidth(), "rendition layer width");
     assertEquals(height, layer.getHeight(), "rendition layer height");
 
-    if (!StringUtils.contains(mediaUrl, ".download_attachment.")) {
+    if (!StringUtils.contains(mediaUrl, ".download_attachment.") && !StringUtils.contains(mediaUrl, "/is/image/")) {
       Rendition rendition = media.getRendition();
       assertEquals(FilenameUtils.getName(mediaUrl), rendition.getFileName());
       assertEquals(FilenameUtils.getExtension(mediaUrl), rendition.getFileExtension());
@@ -451,7 +453,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     }
   }
 
-  private Resource createSampleFileUpload(String classpathResource) {
+  Resource createSampleFileUpload(String classpathResource) {
     String fileName = FilenameUtils.getName(classpathResource);
     Resource resource = context.create().resource("/content/upload",
         NN_MEDIA_INLINE + "Name", fileName);
@@ -459,14 +461,14 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     return resource;
   }
 
-  private void buildAssertMedia_Rescale(Resource resource, int width, int height, String mediaUrl, String contentType) {
+  void buildAssertMedia_Rescale(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .fixedDimension(width, height)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildAssertMedia_AutoCrop(Resource resource, int width, int height, String mediaUrl, String contentType) {
+  void buildAssertMedia_AutoCrop(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
@@ -474,7 +476,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildAssertInvalidMedia_AutoCrop(Resource resource) {
+  void buildAssertInvalidMedia_AutoCrop(Resource resource) {
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
@@ -482,13 +484,13 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertFalse(media.isValid(), "media valid");
   }
 
-  private void buildAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {
+  void buildAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
   }
 
-  private void buildAssertMedia_ContentDisposition(Resource resource, int width, int height, String mediaUrl, String contentType) {
+  void buildAssertMedia_ContentDisposition(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .contentDispositionAttachment(true)
         .build();
