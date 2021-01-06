@@ -17,27 +17,26 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
+package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
-import static io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.CROP_TYPE_SMART;
-import static io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.PN_BANNER;
-import static io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.PN_CROP_TYPE;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.CROP_TYPE_SMART;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_BANNER;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_CROP_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.featureflags.Features;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
-import com.day.cq.dam.api.s7dam.utils.PublishUtils;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.impl.DamContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -60,9 +59,8 @@ class DynamicMediaPathTest {
 
     Asset asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test.jpg");
-    Features featureFlagService = context.getService(Features.class);
-    PublishUtils dynamicMediaPublishUtils = context.getService(PublishUtils.class);
-    damContext = new DamContext(asset, featureFlagService, dynamicMediaPublishUtils, context.request());
+    DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+    damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
   }
 
   @Test

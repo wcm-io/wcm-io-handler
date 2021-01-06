@@ -33,7 +33,6 @@ import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.featureflags.Features;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
@@ -45,7 +44,6 @@ import org.osgi.annotation.versioning.ProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.dam.api.s7dam.utils.PublishUtils;
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -70,6 +68,7 @@ import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamAsset;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
@@ -96,9 +95,7 @@ public final class DamMediaSource extends MediaSource {
   @Self
   private MediaFormatHandler mediaFormatHandler;
   @OSGiService
-  private Features featureFlagService;
-  @OSGiService
-  private PublishUtils dynamicMediaPublishUtils;
+  private DynamicMediaSupportService dynamicMediaSupportService;
 
   private static final Logger log = LoggerFactory.getLogger(DamMediaSource.class);
 
@@ -151,7 +148,7 @@ public final class DamMediaSource extends MediaSource {
         damAsset = assetResource.adaptTo(com.day.cq.dam.api.Asset.class);
       }
       if (damAsset != null) {
-        Asset asset = new DamAsset(media, damAsset, featureFlagService, dynamicMediaPublishUtils, adaptable);
+        Asset asset = new DamAsset(media, damAsset, dynamicMediaSupportService, adaptable);
         media.setAsset(asset);
 
         // resolve rendition(s)

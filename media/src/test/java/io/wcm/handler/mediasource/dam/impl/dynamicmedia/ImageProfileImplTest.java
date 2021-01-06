@@ -17,17 +17,18 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
+package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
-import static io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.CROP_TYPE_SMART;
-import static io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.PN_BANNER;
-import static io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.PN_CROP_TYPE;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.CROP_TYPE_SMART;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_BANNER;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_CROP_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.sling.api.resource.Resource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -37,16 +38,22 @@ import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.NamedDimension;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
 @SuppressWarnings("null")
-class DynamicMediaImageProfileTest {
+class ImageProfileImplTest {
 
   private final AemContext context = AppAemContext.newAemContext();
+
+  private DynamicMediaSupportService dynamicMediaSupportService;
+
+  @BeforeEach
+  void setUp() {
+    dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+  }
 
   @Test
   void testValidProfileWithCroppingPresets() {
@@ -60,7 +67,7 @@ class DynamicMediaImageProfileTest {
     Asset asset1 = context.create().asset(assetFolder1.getPath() + "/asset1.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/asset1.jpg");
 
-    DynamicMediaImageProfile underTest = DynamicMediaImageProfile.get(asset1);
+    ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNotNull(underTest);
     assertEquals(ImmutableList.of(new NamedDimension("Crop-1", 100, 60), new NamedDimension("Crop-2", 50, 30)),
         underTest.getSmartCropDefinitions());
@@ -81,7 +88,7 @@ class DynamicMediaImageProfileTest {
     Asset asset1 = context.create().asset(assetFolder11.getPath() + "/asset1.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/asset1.jpg");
 
-    DynamicMediaImageProfile underTest = DynamicMediaImageProfile.get(asset1);
+    ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNotNull(underTest);
     assertEquals(ImmutableList.of(new NamedDimension("Crop-1", 100, 60), new NamedDimension("Crop-2", 50, 30)),
         underTest.getSmartCropDefinitions());
@@ -99,7 +106,7 @@ class DynamicMediaImageProfileTest {
     Asset asset1 = context.create().asset(assetFolder1.getPath() + "/asset1.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/asset1.jpg");
 
-    DynamicMediaImageProfile underTest = DynamicMediaImageProfile.get(asset1);
+    ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNotNull(underTest);
     assertEquals(ImmutableList.of(new NamedDimension("Crop-4", 10, 20)), underTest.getSmartCropDefinitions());
   }
@@ -113,7 +120,7 @@ class DynamicMediaImageProfileTest {
     Asset asset1 = context.create().asset(assetFolder1.getPath() + "/asset1.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/asset1.jpg");
 
-    DynamicMediaImageProfile underTest = DynamicMediaImageProfile.get(asset1);
+    ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNull(underTest);
   }
 
@@ -125,7 +132,7 @@ class DynamicMediaImageProfileTest {
     Asset asset1 = context.create().asset(assetFolder1.getPath() + "/asset1.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/asset1.jpg");
 
-    DynamicMediaImageProfile underTest = DynamicMediaImageProfile.get(asset1);
+    ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNull(underTest);
   }
 

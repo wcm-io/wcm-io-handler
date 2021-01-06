@@ -32,6 +32,7 @@ import com.day.image.Layer;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 
 /**
  * Virtual rendition that is cropping and/or rotating and downscaling from an existing rendition.

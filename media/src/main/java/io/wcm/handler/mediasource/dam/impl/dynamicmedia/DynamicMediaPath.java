@@ -17,24 +17,22 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
+package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.day.cq.dam.api.Asset;
-
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.format.Ratio;
-import io.wcm.handler.mediasource.dam.impl.DynamicMediaImageProfile.NamedDimension;
+import io.wcm.handler.mediasource.dam.impl.DamContext;
 
 /**
  * Build part of dynamic media/scene7 URL to render renditions.
  */
-final class DynamicMediaPath {
+public final class DynamicMediaPath {
 
   /**
    * Maximum width/height we support for dynamic media delivery. (should by made configurable)
@@ -71,7 +69,7 @@ final class DynamicMediaPath {
 
     if (cropDimension != null && cropDimension.isAutoCrop() && rotation == null) {
       // auto-crop applied - check for matching image profile and use predefined cropping preset if match found
-      Optional<NamedDimension> smartCroppingDef = getSmartCropDimension(damContext.getAsset(), width, height);
+      Optional<NamedDimension> smartCroppingDef = getSmartCropDimension(damContext, width, height);
       if (smartCroppingDef.isPresent()) {
         return damContext.getDynamicMediaObject() + "%3A" + smartCroppingDef.get().getName();
       }
@@ -115,8 +113,8 @@ final class DynamicMediaPath {
     return new Dimension(width, height);
   }
 
-  private static Optional<NamedDimension> getSmartCropDimension(@NotNull Asset asset, long width, long height) {
-    DynamicMediaImageProfile imageProfile = DynamicMediaImageProfile.get(asset);
+  private static Optional<NamedDimension> getSmartCropDimension(@NotNull DamContext damContext, long width, long height) {
+    ImageProfile imageProfile = damContext.getImageProfile();
     if (imageProfile != null) {
       return imageProfile.getSmartCropDefinitions().stream()
           .filter(def -> (def.getWidth() == width) && (def.getHeight() == height))

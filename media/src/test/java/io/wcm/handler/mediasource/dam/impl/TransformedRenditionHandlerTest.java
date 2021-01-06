@@ -23,18 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.featureflags.Features;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
-import com.day.cq.dam.api.s7dam.utils.PublishUtils;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -65,9 +64,8 @@ class TransformedRenditionHandlerTest {
 
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 
-    Features featureFlagService = context.getService(Features.class);
-    PublishUtils dynamicMediaPublishUtils = context.getService(PublishUtils.class);
-    damContext = new DamContext(asset, featureFlagService, dynamicMediaPublishUtils, context.request());
+    DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+    damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
 
     // generate web-enabled rendition
     webRendition = context.create().assetRendition(asset, "cq5dam.web.200.150.jpg", 200, 150, ContentType.JPEG);

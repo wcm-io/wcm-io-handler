@@ -25,17 +25,16 @@ import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
-import org.apache.sling.featureflags.Features;
 import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.dam.api.DamConstants;
-import com.day.cq.dam.api.s7dam.utils.PublishUtils;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 
 /**
  * {@link Asset} implementation for DAM assets.
@@ -51,13 +50,12 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   /**
    * @param media Media metadata
    * @param damAsset DAM asset
-   * @param featureFlagService Feature flag service
-   * @param dynamicMediaPublishUtils Dynamic media publish utils service
+   * @param dynamicMediaSupportService Dynamic media support service
    * @param adaptable Adaptable from current context
    */
   public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset,
-      Features featureFlagService, PublishUtils dynamicMediaPublishUtils, Adaptable adaptable) {
-    this.damContext = new DamContext(damAsset, featureFlagService, dynamicMediaPublishUtils, adaptable);
+      DynamicMediaSupportService dynamicMediaSupportService, Adaptable adaptable) {
+    this.damContext = new DamContext(damAsset, dynamicMediaSupportService, adaptable);
     this.cropDimension = media.getCropDimension();
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();

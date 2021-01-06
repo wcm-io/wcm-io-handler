@@ -31,6 +31,7 @@ import com.day.image.Layer;
 
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 
 /**
  * Virtual rendition that is downscaling from an existing rendition.

@@ -43,6 +43,7 @@ import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.AssetRendition;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**

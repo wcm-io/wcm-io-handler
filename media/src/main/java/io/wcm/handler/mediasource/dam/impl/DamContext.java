@@ -19,51 +19,52 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import javax.jcr.RepositoryException;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.featureflags.Features;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.s7dam.utils.PublishUtils;
-import com.day.cq.dam.entitlement.api.EntitlementConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
-import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 
 /**
  * Context objects require in DAM support implementation.
  */
-class DamContext implements Adaptable {
+public final class DamContext implements Adaptable {
 
   private final Asset asset;
-  private final Features featureFlagService;
-  private final PublishUtils dynamicMediaPublishUtils;
+  private final DynamicMediaSupportService dynamicMediaSupportService;
   private final Adaptable adaptable;
 
   private Boolean dynamicMediaEnabled;
   private String dynamicMediaObject;
   private String dynamicMediaProductionAssetUrl;
+  private ImageProfile imageProfile;
 
-  private static final Logger log = LoggerFactory.getLogger(DamContext.class);
+  private static final ImageProfile NO_IMAGE_PROFILE = new ImageProfile() {
+    @Override
+    public @NotNull List<NamedDimension> getSmartCropDefinitions() {
+      return Collections.emptyList();
+    }
+  };
 
   /**
    * @param asset DAM asset
-   * @param featureFlagService Feature flag service
-   * @param dynamicMediaPublishUtils Dynamic media publish utils service
+   * @param dynamicMediaSupportService Dynamic media support service
    * @param adaptable Adaptable from current context
    */
-  DamContext(Asset asset, Features featureFlagService, PublishUtils dynamicMediaPublishUtils, Adaptable adaptable) {
+  public DamContext(Asset asset, DynamicMediaSupportService dynamicMediaSupportService,
+      Adaptable adaptable) {
     this.asset = asset;
     this.adaptable = adaptable;
-    this.featureFlagService = featureFlagService;
-    this.dynamicMediaPublishUtils = dynamicMediaPublishUtils;
+    this.dynamicMediaSupportService = dynamicMediaSupportService;
   }
 
   /**
@@ -78,7 +79,7 @@ class DamContext implements Adaptable {
    */
   public boolean isDynamicMediaEnabled() {
     if (dynamicMediaEnabled == null) {
-      dynamicMediaEnabled = featureFlagService.isEnabled(EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID);
+      dynamicMediaEnabled = dynamicMediaSupportService.isDynamicMediaEnabled();
     }
     return dynamicMediaEnabled;
   }
@@ -105,18 +106,28 @@ class DamContext implements Adaptable {
    */
   public @Nullable String getDynamicMediaProductionAssetUrl() {
     if (dynamicMediaProductionAssetUrl == null) {
-      Resource assetResource = AdaptTo.notNull(asset, Resource.class);
-      try {
-        String[] productionAssetUrls = dynamicMediaPublishUtils.externalizeImageDeliveryAsset(assetResource);
-        if (productionAssetUrls != null && productionAssetUrls.length > 0) {
-          dynamicMediaProductionAssetUrl = productionAssetUrls[0];
-        }
-      }
-      catch (RepositoryException ex) {
-        log.warn("Unable to get dynamic media production asset URLs for {}", assetResource.getPath(), ex);
-      }
+      dynamicMediaProductionAssetUrl = dynamicMediaSupportService.getDynamicMediaProductionAssetUrl(asset);
     }
     return dynamicMediaProductionAssetUrl;
+  }
+
+  /**
+   * Get image profile for current DAM asset.
+   * @return Image profile or null if none associated/found
+   */
+  public @Nullable ImageProfile getImageProfile() {
+    if (imageProfile == null) {
+      imageProfile = dynamicMediaSupportService.getImageProfileForAsset(asset);
+      if (imageProfile == null) {
+        imageProfile = NO_IMAGE_PROFILE;
+      }
+    }
+    if (imageProfile == NO_IMAGE_PROFILE) {
+      return null;
+    }
+    else {
+      return imageProfile;
+    }
   }
 
   @Override
