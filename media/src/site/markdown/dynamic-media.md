@@ -29,6 +29,11 @@ During the media resolution process when the media handler has detected the requ
 See also [this video][aem-smart-crop-video] for general information about smart cropping.
 
 
+### System configuration
+
+Make sure to configure the service user mapping for dynamic media as described in the [system configuration][configuration].
+
+
 
 [aem-dynamic-media]: https://experienceleague.adobe.com/docs/experience-manager-65/assets/dynamic/dynamic-media.html
 [aem-dynamic-media-administration]: https://experienceleague.adobe.com/docs/experience-manager-65/assets/dynamic/administering-dynamic-media.html
@@ -36,3 +41,4 @@ See also [this video][aem-smart-crop-video] for general information about smart 
 [aem-smart-crop-video]: https://experienceleague.adobe.com/docs/experience-manager-learn/assets/dynamic-media/smart-crop-feature-video-use.html
 [general-concepts]: general-concepts.html
 [file-format-support]: file-format-support.html
+[configuration]: configuration.html

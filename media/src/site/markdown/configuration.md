@@ -5,20 +5,14 @@
 
 The DAM source implementation for Media Handler requires a background service that detects additional metadata for each rendition that is added, modified or removed for a DAM asset (to calculate their width and height and store them in the repository). Another service user mapping is required that allows the dynamic media support to read configured image profiles.
 
-This service needs a principal-based mapping for the factory configuration `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended` with an entry like this:
-
-_Media Handler 2.0 and up_
+This service needs a principal-based service user mapping with an entry like this:
 
 ```
-user.mapping=["io.wcm.handler.media:dam-rendition-metadata=[dam-writer-service]"]
+  org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-myapp-wcmio-handler-media-mtd
+    user.mapping=["io.wcm.handler.media:dam-rendition-metadata\=[dam-writer-service]"]
 ```
 
-_Media Handler 1.x_
-```
-user.mapping=["io.wcm.handler.media=[dam-writer-service]"]
-```
-
-The principal `dam-writer-service` that comes with AEM can be used for this.
+The built-in principal `dam-writer-service` has read/write access to `/content/dam`.
 
 This configuration is required **only on author instances**.
 
@@ -27,13 +21,14 @@ This configuration is required **only on author instances**.
 
 Another service user mapping is required that allows the dynamic media support to read configured image profiles.
 
-This service needs a principal-based mapping for the factory configuration `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended` with an entry like this:
+This service needs a principal-based service user mapping with an entry like this:
 
 ```
-user.mapping=["io.wcm.handler.media:dynamic-media-support=[configuration-reader-service]"]
+  org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended-myapp-wcmio-handler-media-dm
+    user.mapping=["io.wcm.handler.media:dynamic-media-support\=[configuration-reader-service]"]
 ```
 
-The principal `configuration-reader-service` that comes with AEM can be used for this.
+The built-in principal `configuration-reader-service` has read access to `/conf`.
 
 This configuration is required **for both author and publish instances**.
 
