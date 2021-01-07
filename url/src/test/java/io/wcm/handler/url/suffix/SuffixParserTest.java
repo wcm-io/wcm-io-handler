@@ -28,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ class SuffixParserTest {
     String decodedSuffix = null;
     if (urlEncodedSuffix != null) {
       try {
-        decodedSuffix = URLDecoder.decode(urlEncodedSuffix, CharEncoding.UTF_8);
+        decodedSuffix = URLDecoder.decode(urlEncodedSuffix, StandardCharsets.UTF_8.name());
       }
       catch (UnsupportedEncodingException ex) {
         throw new RuntimeException("Unsupported encoding.", ex);

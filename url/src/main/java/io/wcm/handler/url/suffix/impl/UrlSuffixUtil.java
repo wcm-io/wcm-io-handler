@@ -31,6 +31,7 @@ import org.apache.sling.api.resource.Resource;
 /**
  * Static methods and constants for URL suffix handling.
  */
+@SuppressWarnings("deprecation")
 public final class UrlSuffixUtil {
 
   /**
