@@ -20,16 +20,14 @@
 package io.wcm.handler.mediasource.dam.markup;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -71,7 +69,6 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
 
   private static final String H264_PROFILE = "format_aac";
   private static final String OGG_PROFILE = "format_ogg";
-  // TODO: remove legacy video profiles when migrating to AEM 6.4
   private static final String LEGACY_H264_PROFILE = "hq"; // for AEM 6.3
   private static final String LEGACY_OGG_PROFILE = "firefoxhq"; // for AEM 6.3
   private static final List<String> VIDEO_PROFILE_NAMES = ImmutableList.of(H264_PROFILE, OGG_PROFILE,
@@ -127,16 +124,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   private VideoProfile getVideoProfile(String profileName) {
-    // try to get new get signature from AEM 6.4+ via reflection
-    // TODO: switch to new method signature without reflection when migration to AEM 6.4 API
-    try {
-      Method getMethod = VideoProfile.class.getMethod("get", ResourceResolver.class, ConfigurationResourceResolver.class, String.class);
-      return (VideoProfile)getMethod.invoke(null, resourceResolver, configurationResourceResolver, profileName);
-    }
-    catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-      // fallback to AEM 6.3 method
-      return VideoProfile.get(resourceResolver, profileName);
-    }
+    return VideoProfile.get(resourceResolver, configurationResourceResolver, profileName);
   }
 
   /**
@@ -263,9 +251,9 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
       Iterator<Map.Entry<String, String>> flashvarsIterator = flashVars.entrySet().iterator();
       while (flashvarsIterator.hasNext()) {
         Map.Entry<String, String> entry = flashvarsIterator.next();
-        flashvarsString.append(URLEncoder.encode(entry.getKey(), CharEncoding.UTF_8));
+        flashvarsString.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.name()));
         flashvarsString.append('=');
-        flashvarsString.append(URLEncoder.encode(entry.getValue(), CharEncoding.UTF_8));
+        flashvarsString.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.name()));
         if (flashvarsIterator.hasNext()) {
           flashvarsString.append('&');
         }
