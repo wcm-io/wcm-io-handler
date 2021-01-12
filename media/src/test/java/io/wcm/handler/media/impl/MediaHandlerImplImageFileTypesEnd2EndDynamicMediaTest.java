@@ -58,6 +58,13 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
         ContentType.JPEG);
   }
 
+  @Test
+  void testAsset_JPEG_Original_DynamicMediaDisabled() {
+    // disabling dynamic media produced media handler URL
+    mediaArgs.dynamicMediaDisabled(true);
+    super.testAsset_JPEG_Original();
+  }
+
   @Override
   @Test
   void testAsset_JPEG_Original_ContentDisposition() {
