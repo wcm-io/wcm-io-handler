@@ -308,6 +308,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder dynamicMediaDisabled(boolean value) {
+    this.mediaArgs.dynamicMediaDisabled(value);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder refProperty(@NotNull String value) {
     this.mediaPropertyNames.refProperty(value);
     return this;

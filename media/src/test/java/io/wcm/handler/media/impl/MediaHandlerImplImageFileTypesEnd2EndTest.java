@@ -43,7 +43,6 @@ import com.day.image.Layer;
 
 import ch.randelshofer.io.ByteArrayImageInputStream;
 import io.wcm.handler.media.Media;
-import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
@@ -67,7 +66,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   ImageFileServlet imageFileServlet;
   MediaHandler mediaHandler;
-  MediaArgs mediaArgs;
+  boolean dynamicMediaDisabled;
 
   @BeforeEach
   void setUp() {
@@ -79,7 +78,6 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
     imageFileServlet = context.registerInjectActivateService(new ImageFileServlet());
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    mediaArgs = new MediaArgs();
   }
 
   @Test
@@ -378,7 +376,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void buildAssertMedia(Asset asset, int width, int height, String mediaUrl,
       String contentType) {
     Media media = mediaHandler.get(asset.getPath())
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }
@@ -386,7 +384,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void buildAssertMedia_ContentDisposition(Asset asset, int width, int height, String mediaUrl,
       String contentType) {
     Media media = mediaHandler.get(asset.getPath())
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .contentDispositionAttachment(true)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
@@ -394,7 +392,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   void buildAssertMedia_Rescale(Asset asset, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(asset.getPath())
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .fixedDimension(width, height)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
@@ -402,7 +400,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(asset.getPath())
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
@@ -411,7 +409,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   void buildAssertInvalidMedia_AutoCrop(Asset asset) {
     Media media = mediaHandler.get(asset.getPath())
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
@@ -471,7 +469,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   void buildAssertMedia_Rescale(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .fixedDimension(width, height)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
@@ -479,7 +477,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   void buildAssertMedia_AutoCrop(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
@@ -488,7 +486,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   void buildAssertInvalidMedia_AutoCrop(Resource resource) {
     Media media = mediaHandler.get(resource)
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
@@ -497,14 +495,14 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   void buildAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertMedia_ContentDisposition(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
-        .args(mediaArgs)
+        .dynamicMediaDisabled(dynamicMediaDisabled)
         .contentDispositionAttachment(true)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);

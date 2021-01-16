@@ -552,6 +552,22 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return If set to true, dynamic media support is disabled even when enabled on the instance.
+   */
+  public boolean isDynamicMediaDisabled() {
+    return this.dynamicMediaDisabled;
+  }
+
+  /**
+   * @param value If set to true, dynamic media support is disabled even when enabled on the instance.
+   * @return this
+   */
+  public @NotNull MediaArgs dynamicMediaDisabled(boolean value) {
+    this.dynamicMediaDisabled = value;
+    return this;
+  }
+
+  /**
    * Drag&amp;Drop support for media builder.
    * @return Drag&amp;Drop support
    */
@@ -585,22 +601,6 @@ public final class MediaArgs implements Cloneable {
    */
   public @NotNull MediaArgs ipeRatioCustomize(IPERatioCustomize value) {
     this.ipeRatioCustomize = value;
-    return this;
-  }
-
-  /**
-   * @return If set to true, dynamic media support is disabled even when enabled on the instance.
-   */
-  public boolean isDynamicMediaDisabled() {
-    return this.dynamicMediaDisabled;
-  }
-
-  /**
-   * @param value If set to true, dynamic media support is disabled even when enabled on the instance.
-   * @return this
-   */
-  public @NotNull MediaArgs dynamicMediaDisabled(boolean value) {
-    this.dynamicMediaDisabled = value;
     return this;
   }
 
