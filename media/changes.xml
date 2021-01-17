@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.10.0" date="not released">
+    <release version="1.10.0" date="2021-01-17">
       <action type="add" dev="sseifert"><![CDATA[
         Add support for dynamic media, see <a href="https://wcm.io/handler/media/dynamic-media.html">Dynamic Media documentation</a>.
       ]]></action>
