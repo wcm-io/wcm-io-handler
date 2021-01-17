@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.DamEvent;
 import com.day.cq.dam.api.DamEvent.Type;
 import com.day.cq.dam.api.handler.store.AssetStore;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.wcm.handler.media.MediaFileType;
@@ -92,6 +93,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
   private static final int REMOVE_EVENT_EXECUTION_DELAY_SECONDS = 10;
   private static final int MAX_RETRY_COUNT = 3;
   private static final int RETRY_DELAY_SECONDS = 5;
+  private static final String SERVICEUSER_SUBSERVICE = "dam-rendition-metadata";
 
   private static final EnumSet<DamEvent.Type> SUPPORTED_EVENT_TYPES = EnumSet.of(DamEvent.Type.RENDITION_UPDATED, DamEvent.Type.RENDITION_REMOVED);
   private static final Logger log = LoggerFactory.getLogger(RenditionMetadataListenerService.class);
@@ -212,7 +214,6 @@ public final class RenditionMetadataListenerService implements EventHandler {
     }
 
     @Override
-    @SuppressWarnings("PMD.GuardLogStatement")
     public void run() {
       // process event synchronized per asset path
       Lock lock = assetSynchronizationService.getLock(assetPath);
@@ -221,7 +222,8 @@ public final class RenditionMetadataListenerService implements EventHandler {
       ResourceResolver serviceResourceResolver = null;
       try {
         // open service user session for reading/writing rendition metadata
-        serviceResourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
+        serviceResourceResolver = resourceResolverFactory
+            .getServiceResourceResolver(ImmutableMap.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE));
 
         // make sure asset resource exists
         Resource assetResource = serviceResourceResolver.getResource(assetPath);
@@ -250,8 +252,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
         }
       }
       catch (LoginException ex) {
-        log.error("Missing service user mapping for 'io.wcm.handler.media' - "
-            + "see https://wcm.io/handler/media/configuration.html", ex);
+        log.error("Missing service user mapping for 'io.wcm.handler.media:dam-rendition-metadata' - see https://wcm.io/handler/media/configuration.html", ex);
       }
       finally {
         lock.unlock();

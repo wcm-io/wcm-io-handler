@@ -29,6 +29,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
@@ -41,6 +43,8 @@ import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.AssetRendition;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Wrapper class for rendition metadata retrieved from DAM rendition filenames.
@@ -169,7 +173,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param contentDispositionAttachment Force content disposition download header.
    * @return Media path (not externalized)
    */
-  public String getMediaPath(boolean contentDispositionAttachment) {
+  public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
     if (contentDispositionAttachment) {
       return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServlet.SELECTOR
           + "." + MediaFileServlet.SELECTOR_DOWNLOAD
@@ -185,6 +189,31 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
           + "." + getWidth() + "." + getHeight()
           + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+    }
+  }
+
+  /**
+   * Returns a dynamic media path part (object and further URL modifiers, the string after "/is/image/").
+   * @param contentDispositionAttachment Force content disposition download header.
+   * @param damContext DAM context
+   * @return Dynamic media path part or null if dynamic media not supported for this rendition
+   */
+  public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
+    if (contentDispositionAttachment) {
+      // do not use dynamic media for request forced with content disposition attachment
+      return null;
+    }
+    else if ((MediaFileType.isBrowserImage(getFileExtension())
+        && (MediaFileType.isVectorImage(getFileExtension()) || StringUtils.equals(getFileExtension(), FileExtension.GIF)))
+        || !MediaFileType.isImage(getFileExtension())) {
+      // do not use dynamic media for non-image requests or Vector/GIF images that can be displayed in browser directly
+      // (vector can be scaled in browser directly, GIF may be animated which is not supported by dynamic media)
+      return null;
+    }
+    else {
+      // display original rendition with original file size - or image rendition that uses a file extension
+      // that cannot be displayed in browser directly - render via dynamic media
+      return DynamicMediaPath.build(damContext, getWidth(), getHeight());
     }
   }
 

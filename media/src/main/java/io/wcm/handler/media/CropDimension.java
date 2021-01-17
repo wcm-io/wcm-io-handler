@@ -40,6 +40,7 @@ public final class CropDimension extends Dimension {
 
   private final long left;
   private final long top;
+  private final boolean autoCrop;
 
   /**
    * @param left Left in pixels
@@ -48,9 +49,21 @@ public final class CropDimension extends Dimension {
    * @param height Height in pixels
    */
   public CropDimension(long left, long top, long width, long height) {
+    this(left, top, width, height, false);
+  }
+
+  /**
+   * @param left Left in pixels
+   * @param top Top in pixels
+   * @param width Width in pixels
+   * @param height Height in pixels
+   * @param autoCrop Mark this dimension as auto-cropped
+   */
+  public CropDimension(long left, long top, long width, long height, boolean autoCrop) {
     super(width, height);
     this.left = left;
     this.top = top;
+    this.autoCrop = autoCrop;
   }
 
   /**
@@ -81,6 +94,13 @@ public final class CropDimension extends Dimension {
     return getTop() + getHeight();
   }
 
+  /**
+   * @return true if is dimenions is marked as auto-cropped
+   */
+  public boolean isAutoCrop() {
+    return this.autoCrop;
+  }
+
   @Override
   public int hashCode() {
     return HashCodeBuilder.reflectionHashCode(this);
@@ -93,15 +113,26 @@ public final class CropDimension extends Dimension {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+        .append("left", getLeft())
+        .append("top", getTop())
+        .append("width", getWidth())
+        .append("height", getHeight())
+        .build();
   }
 
   /**
-   * @return Crop string.
-   *         Please note: Crop string contains no width/height as 3rd/4th parameter but right, bottom.
+   * @return Crop string with left,top,right,bottom.
    */
   public @NotNull String getCropString() {
     return getLeft() + "," + getTop() + "," + getRight() + "," + getBottom();
+  }
+
+  /**
+   * @return Crop string with left,top,width,height.
+   */
+  public @NotNull String getCropStringWidthHeight() {
+    return getLeft() + "," + getTop() + "," + getWidth() + "," + getHeight();
   }
 
   /**
@@ -114,7 +145,7 @@ public final class CropDimension extends Dimension {
   /**
    * Get crop dimension from crop string.
    * Please note: Crop string contains not width/height as 3rd/4th parameter but right, bottom.
-   * @param cropString Cropping string from CQ5 smartimage widget
+   * @param cropString Cropping string from AEM inplace editor
    * @return Crop dimension instance
    * @throws IllegalArgumentException if crop string syntax is invalid
    */

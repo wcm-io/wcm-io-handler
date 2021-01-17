@@ -77,6 +77,7 @@ class DamAutoCropping {
    * @param asset Asset
    * @return Web rendition or null if none found
    */
+  @SuppressWarnings("null")
   public static @Nullable RenditionMetadata getWebRenditionForCropping(@NotNull Asset asset) {
     return asset.getRenditions().stream()
         .filter(AssetRendition::isWebRendition)

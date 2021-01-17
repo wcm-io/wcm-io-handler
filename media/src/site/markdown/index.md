@@ -13,6 +13,7 @@ Media resolving, processing and markup generation.
 * [Component properties][component-properties]
 * [System configuration][configuration]
 * [File format support][file-format-support]
+* [Dynamic Media support][dynamic-media]
 * [API documentation][apidocs]
 * [Changelog][changelog]
 
@@ -33,6 +34,7 @@ The Media Handler provides:
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic HTL Placeholder template
 * Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
+* Support for [Dynamic Media][dynamic-media]
 
 Read the [general concepts][general-concepts] to get an overview of the functionality.
 
@@ -41,7 +43,8 @@ Read the [general concepts][general-concepts] to get an overview of the function
 
 |Media Handler version |AEM version supported
 |----------------------|----------------------
-|1.8.x or higher       |AEM 6.3.3+, AEM 6.4.5+
+|1.10.x or higher      |AEM 6.4.5+
+|1.8.x - 1.9.x         |AEM 6.3.3+, AEM 6.4.5+
 |1.2.x - 1.7.x         |AEM 6.2+
 |1.0.x - 1.1.x         |AEM 6.1+
 |0.x                   |AEM 6.0+
@@ -66,6 +69,7 @@ To use this module you have to deploy also:
 [component-properties]: component-properties.html
 [configuration]: configuration.html
 [file-format-support]: file-format-support.html
+[dynamic-media]: dynamic-media.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html
 [url-handler]: ../url/

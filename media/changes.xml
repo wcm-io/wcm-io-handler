@@ -23,7 +23,31 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.9.6" date="2020-11-08">
+    <release version="1.10.0" date="not released">
+      <action type="add" dev="sseifert"><![CDATA[
+        Add support for dynamic media, see <a href="https://wcm.io/handler/media/dynamic-media.html">Dynamic Media documentation</a>.
+      ]]></action>
+      <action type="add" dev="sseifert">
+        Add "wcm.io Media Handler Inline Image Author Preview Servlet" OSGi factory configuration to support preview images in edit dialogs on author instances for components with inline media.
+      </action>
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.4 as minimum version.
+      </action>
+      <action type="update" dev="sseifert">
+        Switch to individual OSGi artifacts with compile dependency instead of osgi.core and osgi.cmpn with provided dependency.
+      </action>
+      <action type="update" dev="sseifert">
+        Rendition metadata: Add subservice identifier 'dam-rendition-metadata' to allow explicit service user mapping.
+      </action>
+      <action type="fix" dev="sseifert" issue="WHAN-42">
+        File Upload Coral UI component: Show configured DAM root folder when clicking on "Pick" action link.
+      </action>
+      <action type="fix" dev="sseifert">
+        File Upload Coral UI component: Fix styling of "Clear Transformation" button in AEM Cloud authoring environment.
+      </action>
+    </release>
+
+    <release version="1.9.6" date="2020-11-06">
       <action type="fix" dev="mrozati">
         Media Handler: When optional media formats don't match any rendition, try to resolve their responsive child formats.
       </action>

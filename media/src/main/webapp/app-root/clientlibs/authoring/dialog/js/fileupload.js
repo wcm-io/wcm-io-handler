@@ -28,6 +28,7 @@
     self._$pathfield = $(config.pathfield);
     self._bindEvents();
     self._addClearTransformationButton();
+    self._updatePickLink();
 
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
@@ -146,6 +147,7 @@
         label : {innerHTML: Granite.I18n.get("Clear Transformation")},
         variant: "quiet"
     });
+    self._clearTransformationButton.classList.add("cq-FileUpload-clear");
 
     // insert new button after the existing "Clear" button
     self._clearTransformationButton.on("click", function() {
@@ -163,12 +165,23 @@
   FileUploadExtension.prototype._removeDuplicatedFileRefInput = function () {
     var self = this;
     var fileRefPropName = self._$pathfield.attr('name');
-    if(fileRefPropName) {
+    if (fileRefPropName) {
       var inputs = self._$element.find("input[type='hidden'][name='"+ fileRefPropName +"']");
       inputs.each(function() {
         this.parentNode.removeChild(this);
       });
     }
+  };
+
+  /**
+   * Replace click handler for "Pick" link - apply same feature as the browse button in the path field.
+   */
+  FileUploadExtension.prototype._updatePickLink = function () {
+    var self = this;
+    self._$element.find(".cq-FileUpload-picker").off("click").on("click", function(e) {
+      e.preventDefault();
+      self._pathfield._togglePicker();
+    });
   };
 
   /**

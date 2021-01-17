@@ -48,15 +48,15 @@ class DefaultRenditionHandler implements RenditionHandler {
 
   private Set<RenditionMetadata> renditions;
   private final RenditionMetadata originalRendition;
-  private final Asset asset;
+  private final DamContext damContext;
 
   /**
-   * @param asset DAM asset
+   * @param damContext DAM context objects
    */
-  DefaultRenditionHandler(Asset asset) {
-    this.asset = asset;
+  DefaultRenditionHandler(DamContext damContext) {
+    this.damContext = damContext;
 
-    Rendition damOriginalRendition = asset.getOriginal();
+    Rendition damOriginalRendition = damContext.getAsset().getOriginal();
     originalRendition = damOriginalRendition != null ? new RenditionMetadata(damOriginalRendition) : null;
   }
 
@@ -71,7 +71,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     if (this.renditions == null) {
       // gather rendition infos of all renditions and sort them by size (smallest or virtual crop rendition first)
       Set<RenditionMetadata> candidates = new TreeSet<>();
-      for (Rendition rendition : asset.getRenditions()) {
+      for (Rendition rendition : damContext.getAsset().getRenditions()) {
         addRendition(candidates, rendition, mediaArgs);
       }
       candidates = postProcessCandidates(candidates);
@@ -408,7 +408,7 @@ class DefaultRenditionHandler implements RenditionHandler {
   }
 
   protected Asset getAsset() {
-    return asset;
+    return damContext.getAsset();
   }
 
 }

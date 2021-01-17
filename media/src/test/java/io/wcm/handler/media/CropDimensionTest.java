@@ -45,6 +45,7 @@ class CropDimensionTest {
     assertEquals(5, dimension.getRectangle().getY(), 0.0001);
     assertEquals(20, dimension.getRectangle().getWidth(), 0.0001);
     assertEquals(10, dimension.getRectangle().getHeight(), 0.0001);
+    assertFalse(dimension.isAutoCrop());
   }
 
   @Test
@@ -161,6 +162,7 @@ class CropDimensionTest {
     assertEquals(15, dimension.getBottom());
     assertEquals("CropDimension[left=15,top=5,width=20,height=10]", dimension.toString());
     assertEquals("15,5,35,15", dimension.getCropString());
+    assertEquals("15,5,20,10", dimension.getCropStringWidthHeight());
     assertEquals(15, dimension.getRectangle().getX(), 0.0001);
     assertEquals(5, dimension.getRectangle().getY(), 0.0001);
     assertEquals(20, dimension.getRectangle().getWidth(), 0.0001);
@@ -179,10 +181,17 @@ class CropDimensionTest {
     assertEquals(15, dimension.getBottom());
     assertEquals("CropDimension[left=15,top=5,width=20,height=10]", dimension.toString());
     assertEquals("15,5,35,15", dimension.getCropString());
+    assertEquals("15,5,20,10", dimension.getCropStringWidthHeight());
     assertEquals(15, dimension.getRectangle().getX(), 0.0001);
     assertEquals(5, dimension.getRectangle().getY(), 0.0001);
     assertEquals(20, dimension.getRectangle().getWidth(), 0.0001);
     assertEquals(10, dimension.getRectangle().getHeight(), 0.0001);
+  }
+
+  @Test
+  void testSimpleMarkedAutoCrop() {
+    CropDimension dimension = new CropDimension(15, 5, 20, 10, true);
+    assertTrue(dimension.isAutoCrop());
   }
 
 }

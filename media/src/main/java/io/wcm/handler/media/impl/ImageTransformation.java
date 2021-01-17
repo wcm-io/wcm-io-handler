@@ -145,7 +145,7 @@ public final class ImageTransformation {
       top = Math.round(((double)givenHeight - (double)height) / 2d);
       left = 0;
     }
-    return new CropDimension(left, top, width, height);
+    return new CropDimension(left, top, width, height, true);
   }
 
 }

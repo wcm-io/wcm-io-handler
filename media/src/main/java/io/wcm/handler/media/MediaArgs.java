@@ -62,6 +62,7 @@ public final class MediaArgs implements Cloneable {
   private PictureSource[] pictureSourceSets;
   private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
   private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
+  private boolean dynamicMediaDisabled;
   private ValueMap properties;
 
   /**
@@ -551,6 +552,22 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return If set to true, dynamic media support is disabled even when enabled on the instance.
+   */
+  public boolean isDynamicMediaDisabled() {
+    return this.dynamicMediaDisabled;
+  }
+
+  /**
+   * @param value If set to true, dynamic media support is disabled even when enabled on the instance.
+   * @return this
+   */
+  public @NotNull MediaArgs dynamicMediaDisabled(boolean value) {
+    this.dynamicMediaDisabled = value;
+    return this;
+  }
+
+  /**
    * Drag&amp;Drop support for media builder.
    * @return Drag&amp;Drop support
    */
@@ -668,6 +685,7 @@ public final class MediaArgs implements Cloneable {
     clone.pictureSourceSets = ArrayUtils.clone(this.pictureSourceSets);
     clone.dragDropSupport = this.dragDropSupport;
     clone.ipeRatioCustomize = this.ipeRatioCustomize;
+    clone.dynamicMediaDisabled = this.dynamicMediaDisabled;
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
     }

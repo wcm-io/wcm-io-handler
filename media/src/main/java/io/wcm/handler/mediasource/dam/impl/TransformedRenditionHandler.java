@@ -28,8 +28,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.day.cq.dam.api.Asset;
-
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.format.Ratio;
 
@@ -42,11 +40,12 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
   private final Integer rotation;
 
   /**
-   * @param asset DAM asset
    * @param cropDimension Crop dimension
+   * @param rotation Rotation
+   * @param damContext DAM context objects
    */
-  TransformedRenditionHandler(Asset asset, CropDimension cropDimension, Integer rotation) {
-    super(asset);
+  TransformedRenditionHandler(CropDimension cropDimension, Integer rotation, DamContext damContext) {
+    super(damContext);
     this.cropDimension = cropDimension;
     this.rotation = (rotation != null && isValidRotation(rotation)) ? rotation : null;
   }
@@ -104,7 +103,8 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
         Math.round(cropDimension.getLeft() * scaleFactor),
         Math.round(cropDimension.getTop() * scaleFactor),
         Math.round(cropDimension.getWidth() * scaleFactor),
-        Math.round(cropDimension.getHeight() * scaleFactor));
+        Math.round(cropDimension.getHeight() * scaleFactor),
+        cropDimension.isAutoCrop());
     return new VirtualTransformedRenditionMetadata(original.getRendition(),
         rotateMapWidth(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
         rotateMapHeight(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),

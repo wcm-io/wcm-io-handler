@@ -29,6 +29,7 @@ import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 
 @SuppressWarnings("null")
 class DefaultRenditionHandlerTest extends AbstractDamTest {
@@ -38,7 +39,11 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
   @BeforeEach
   void setUp() throws Exception {
     Asset asset = context.resourceResolver().getResource(MEDIAITEM_PATH_16_10).adaptTo(Asset.class);
-    underTest = new DefaultRenditionHandler(asset);
+
+    DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+    DamContext damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
+
+    underTest = new DefaultRenditionHandler(damContext);
   }
 
   @Test

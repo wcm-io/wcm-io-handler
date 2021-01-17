@@ -33,6 +33,7 @@ import com.day.cq.dam.api.Rendition;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -48,6 +49,7 @@ class TransformedRenditionHandlerTest {
   private AemContext context = AppAemContext.newAemContext();
 
   private Asset asset;
+  private DamContext damContext;
   private Rendition webRendition;
   private CropDimension cropDimension;
 
@@ -62,6 +64,9 @@ class TransformedRenditionHandlerTest {
 
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 
+    DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+    damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
+
     // generate web-enabled rendition
     webRendition = context.create().assetRendition(asset, "cq5dam.web.200.150.jpg", 200, 150, ContentType.JPEG);
 
@@ -70,7 +75,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testCroppingWithoutRotation() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, cropDimension, null);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(cropDimension, null, damContext);
     assertEquals(1, underTest.getAvailableRenditions(new MediaArgs()).size());
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.200.60.40,20,240,80.file/cropTest.jpg",
@@ -83,7 +88,7 @@ class TransformedRenditionHandlerTest {
     // delete web rendition
     context.resourceResolver().delete(webRendition.adaptTo(Resource.class));
 
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, cropDimension, null);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(cropDimension, null, damContext);
     assertEquals(1, underTest.getAvailableRenditions(new MediaArgs()).size());
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.100.30.20,10,120,40.file/cropTest.jpg",
@@ -92,7 +97,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotation90() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, null, 90);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(null, 90, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.300.400.-.90.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
@@ -100,7 +105,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotation180() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, null, 180);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(null, 180, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.400.300.-.180.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
@@ -108,7 +113,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotation270() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, null, 270);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(null, 270, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.300.400.-.270.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
@@ -116,7 +121,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotationInvalid() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, null, 45);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(null, 45, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original./cropTest.jpg",
         firstRendition.getMediaPath(false));
@@ -124,7 +129,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotation90Cropping() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, cropDimension, 90);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(cropDimension, 90, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.60.200.40,20,240,80.90.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
@@ -132,7 +137,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotation180Cropping() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, cropDimension, 180);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(cropDimension, 180, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.200.60.40,20,240,80.180.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
@@ -140,7 +145,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotation270Cropping() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, cropDimension, 270);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(cropDimension, 270, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.60.200.40,20,240,80.270.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
@@ -148,7 +153,7 @@ class TransformedRenditionHandlerTest {
 
   @Test
   void testRotationInvalidCropping() {
-    TransformedRenditionHandler underTest = new TransformedRenditionHandler(asset, cropDimension, 45);
+    TransformedRenditionHandler underTest = new TransformedRenditionHandler(cropDimension, 45, damContext);
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
     assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.200.60.40,20,240,80.file/cropTest.jpg",
         firstRendition.getMediaPath(false));

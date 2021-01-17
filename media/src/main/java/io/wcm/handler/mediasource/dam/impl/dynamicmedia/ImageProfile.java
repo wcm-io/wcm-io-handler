@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2021 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,22 @@
  * limitations under the License.
  * #L%
  */
+package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
+
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
+
 /**
- * Media Handler API.
+ * Minimal wrapper for image profile.
  */
-@org.osgi.annotation.versioning.Version("1.12")
-package io.wcm.handler.media;
+public interface ImageProfile {
+
+  /**
+   * Get defined smart cropping dimensions. Returns empty list of no definitions are found.
+   * @return List of named smart cropping dimensions
+   */
+  @NotNull
+  List<NamedDimension> getSmartCropDefinitions();
+
+}

@@ -34,36 +34,38 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 
 /**
  * {@link Asset} implementation for DAM assets.
  */
 public final class DamAsset extends SlingAdaptable implements Asset {
 
-  private final Adaptable adaptable;
-  private final com.day.cq.dam.api.Asset damAsset;
+  private final DamContext damContext;
   private final CropDimension cropDimension;
   private final Integer rotation;
   private final MediaArgs defaultMediaArgs;
   private final ValueMap properties;
 
   /**
-   * @param damAsset DAM asset
    * @param media Media metadata
+   * @param damAsset DAM asset
+   * @param dynamicMediaSupportService Dynamic media support service
+   * @param adaptable Adaptable from current context
    */
-  public DamAsset(com.day.cq.dam.api.Asset damAsset, Media media, Adaptable adaptable) {
-    this.damAsset = damAsset;
+  public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset,
+      DynamicMediaSupportService dynamicMediaSupportService, Adaptable adaptable) {
+    this.damContext = new DamContext(damAsset, dynamicMediaSupportService, adaptable);
     this.cropDimension = media.getCropDimension();
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
     this.properties = new ValueMapDecorator(damAsset.getMetadata());
-    this.adaptable = adaptable;
   }
 
   @Override
   public String getTitle() {
     // default title is the asset name
-    String title = this.damAsset.getName();
+    String title = damContext.getAsset().getName();
 
     Object titleObj = this.properties.get(DamConstants.DC_TITLE);
     if (titleObj != null) {
@@ -94,7 +96,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
 
   @Override
   public @NotNull String getPath() {
-    return this.damAsset.getPath();
+    return this.damContext.getAsset().getPath();
   }
 
   @Override
@@ -159,17 +161,17 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    * @return DAM rendition instance (may be invalid rendition)
    */
   protected Rendition getDamRendition(MediaArgs mediaArgs) {
-    return new DamRendition(this.damAsset, this.cropDimension, this.rotation, mediaArgs, adaptable);
+    return new DamRendition(this.cropDimension, this.rotation, mediaArgs, damContext);
   }
 
   @Override
   @SuppressWarnings({ "unchecked", "null" })
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == com.day.cq.dam.api.Asset.class) {
-      return (AdapterType)this.damAsset;
+      return (AdapterType)this.damContext.getAsset();
     }
     if (type == Resource.class) {
-      return (AdapterType)this.damAsset.adaptTo(Resource.class);
+      return (AdapterType)this.damContext.getAsset().adaptTo(Resource.class);
     }
     return super.adaptTo(type);
   }

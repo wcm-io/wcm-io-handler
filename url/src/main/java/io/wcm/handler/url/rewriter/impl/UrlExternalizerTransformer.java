@@ -21,10 +21,10 @@ package io.wcm.handler.url.rewriter.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.cocoon.xml.sax.AbstractSAXPipe;
 import org.apache.cocoon.xml.sax.AttributesImpl;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.rewriter.ProcessingComponentConfiguration;
 import org.apache.sling.rewriter.ProcessingContext;
@@ -98,7 +98,7 @@ class UrlExternalizerTransformer extends AbstractSAXPipe implements Transformer 
 
     // decode URL (without URL remainder)
     try {
-      url = URLDecoder.decode(url, CharEncoding.UTF_8);
+      url = URLDecoder.decode(url, StandardCharsets.UTF_8.name());
     }
     catch (UnsupportedEncodingException ex) {
       throw new RuntimeException("Unsupported encoding.", ex);

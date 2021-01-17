@@ -30,9 +30,9 @@ import static org.mockito.Mockito.when;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -709,7 +709,7 @@ class UrlHandlerImplTest {
         }
         path = Externalizer.mangleNamespaces(path);
         try {
-          return URLEncoder.encode(path, CharEncoding.UTF_8);
+          return URLEncoder.encode(path, StandardCharsets.UTF_8.name());
         }
         catch (UnsupportedEncodingException ex) {
           throw new RuntimeException(ex);

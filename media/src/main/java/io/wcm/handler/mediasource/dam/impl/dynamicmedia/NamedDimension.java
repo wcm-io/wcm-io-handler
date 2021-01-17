@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2021 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,46 +17,29 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.media;
+package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.osgi.annotation.versioning.ProviderType;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
- * Dimension with width and height as integer.
- * This class is used instead of {@link java.awt.Dimension} because the latter converts the dimensions to double.
+ * Dimension with a name
  */
-@ProviderType
-public class Dimension {
+public final class NamedDimension extends Dimension {
 
-  private final long width;
-  private final long height;
+  private final String name;
 
-  /**
-   * @param width Width in pixels
-   * @param height Height in pixels
-   */
-  public Dimension(long width, long height) {
-    this.width = width;
-    this.height = height;
+  NamedDimension(String name, long width, long height) {
+    super(width, height);
+    this.name = name;
   }
 
-  /**
-   * @return Width in pixels
-   */
-  public final long getWidth() {
-    return this.width;
-  }
-
-  /**
-   * @return Height in pixels
-   */
-  public final long getHeight() {
-    return this.height;
+  public String getName() {
+    return this.name;
   }
 
   @Override
@@ -72,6 +55,7 @@ public class Dimension {
   @Override
   public String toString() {
     return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+        .append("name", getName())
         .append("width", getWidth())
         .append("height", getHeight())
         .build();

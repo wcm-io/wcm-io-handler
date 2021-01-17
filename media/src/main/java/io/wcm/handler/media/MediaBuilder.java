@@ -303,6 +303,14 @@ public interface MediaBuilder {
   MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths);
 
   /**
+   * Disable dynamic media support.
+   * @param value If set to true, dynamic media support is disabled even when enabled on the instance.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder dynamicMediaDisabled(boolean value);
+
+  /**
    * Sets the name of the property from which the media reference path is read, or node name for inline media.
    * @param refProperty Property or node name
    * @return Media builder

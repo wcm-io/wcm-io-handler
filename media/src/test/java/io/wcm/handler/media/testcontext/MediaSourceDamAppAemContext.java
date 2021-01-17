@@ -36,6 +36,7 @@ import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
 import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
 import io.wcm.handler.url.impl.SiteRootDetectorImpl;
@@ -109,6 +110,9 @@ public final class MediaSourceDamAppAemContext {
       // media formats
       context.registerService(MediaFormatProvider.class, new DummyMediaFormatProvider());
       context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
+
+      // dynamic media
+      context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.media",
