@@ -34,6 +34,7 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
@@ -48,7 +49,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Virtually maps an *.htx request to a cq:Page resource to a *.html request internally (because components
  * and JSPs are normally only registered to *.html extension). Mapping can be enabled or disabled.
  */
-@Component(service = Servlet.class)
+@Component(service = Servlet.class, configurationPolicy = ConfigurationPolicy.REQUIRE)
 @SlingServletResourceTypes(
     resourceTypes = NameConstants.NT_PAGE,
     methods = HttpConstants.METHOD_GET,
@@ -63,7 +64,7 @@ public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
   static @interface Config {
 
     @AttributeDefinition(name = "Enabled", description = "Enable mapping.")
-    boolean enabled() default true;
+    boolean enabled() default false;
 
   }
 

@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.4.2" date="not released">
+      <action type="update" dev="sseifert">
+        Disable htx extension mapper by default - it's not longer best practice to use it.
+      </action>
       <action type="fix" dev="sseifert">
         Make htx extension mapper compatbile with most recent AEM versions (directly map to cq:Page).
       </action>
