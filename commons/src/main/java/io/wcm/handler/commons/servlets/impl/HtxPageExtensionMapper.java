@@ -31,6 +31,7 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.request.RequestPathInfo;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -39,17 +40,20 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.wcm.api.NameConstants;
+
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Virtually maps an *.htx request to a cq:Page resource to a *.html request internally (because components
  * and JSPs are normally only registered to *.html extension). Mapping can be enabled or disabled.
  */
-@Component(service = Servlet.class, immediate = true, property = {
-    "sling.servlet.paths=/apps/foundation/components/primary/cq/Page/Page." + FileExtension.HTML_UNCACHED + ".servlet",
-    "sling.servlet.methods=" + HttpConstants.METHOD_GET,
-    "sling.servlet.extensions=" + FileExtension.HTML_UNCACHED
-})
+@Component(service = Servlet.class)
+@SlingServletResourceTypes(
+    resourceTypes = NameConstants.NT_PAGE,
+    methods = HttpConstants.METHOD_GET,
+    extensions = FileExtension.HTML_UNCACHED
+)
 @Designate(ocd = HtxPageExtensionMapper.Config.class)
 public class HtxPageExtensionMapper extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
