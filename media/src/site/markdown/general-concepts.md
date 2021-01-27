@@ -42,6 +42,8 @@ wcm.io Media Handler supports rendering virtual renditions of images on-the-fly.
 
 The URLs of these virtual renditions are based on the Asset URLs from `/content/dam` with additional selectors pointing to image handling servlets from the wcm.io Media Handler. These URLs are cached by default by the AEM dispatcher. If multiple components or pages are using the same image with the same resolution it's generated only once and than re-used from cache. If the HTML pages referencing the virtual renditions are re-published the virtual renditions are not flushed from the dispatcher cache. They are only flushed when the asset itself is re-published.
 
+By default, the renditions are generated within the JVM process of AEM. If AEM is configured with Dynamic Media, the media handler generates URLs pointing to the Dynamic Media CDN instead, offloading the rendition generation to the Dynamic Media cloud services. See [Dynamic Media support][dynamic-media] for details.
+
 
 ### Touch UI support
 
@@ -66,4 +68,5 @@ The Media Handler is highly customizable to adapt it to the needs of your projec
 
 
 [usage]: usage.html
+[dynamic-media]: dynamic-media.html
 [aem-core-wcm-components]: https://github.com/adobe/aem-core-wcm-components
