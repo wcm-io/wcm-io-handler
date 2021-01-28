@@ -208,7 +208,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   @SuppressWarnings("null")
   public boolean isValidElement(HtmlElement<?> element) {
 
-    // it it is null it is always invalid
+    // if it is null it is always invalid
     if (element == null) {
       return false;
     }
