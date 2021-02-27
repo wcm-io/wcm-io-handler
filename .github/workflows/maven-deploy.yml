@@ -47,9 +47,18 @@ jobs:
         run: mvn -s ./.maven-settings.xml -Pcontinuous-integration -B -U clean deploy site
 
       # Deploy site to Github Pages
-      - name: Stage and deploy site
+      # WORKAROUND for https://issues.apache.org/jira/browse/MSCMPUB-18 - deploy site in multiple steps for subset of modules
+      - name: Stage and deploy site - Part 1
         run: >
           mvn -s ./.maven-settings.xml -Pcontinuous-integration -B site:stage scm-publish:publish-scm
-          -Dscmpublish.checkinComment="Maven site: ${{ github.repository }}"
+          --projects '.,parent,commons,url,link'
+          -Dscmpublish.checkinComment="Maven site: ${{ github.repository }} - Part 1"
+          -Dusername=${{ secrets.GH_SITE_DEPLOY_USERNAME }}
+          -Dpassword=${{ secrets.GH_SITE_DEPLOY_PAT }}
+      - name: Stage and deploy site - Part 2
+        run: >
+          mvn -s ./.maven-settings.xml -Pcontinuous-integration -B site:stage scm-publish:publish-scm
+          --projects '!parent,!commons,!url,!link'
+          -Dscmpublish.checkinComment="Maven site: ${{ github.repository }} - Part 2"
           -Dusername=${{ secrets.GH_SITE_DEPLOY_USERNAME }}
           -Dpassword=${{ secrets.GH_SITE_DEPLOY_PAT }}
