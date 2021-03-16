@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.inline;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
@@ -29,7 +30,10 @@ import org.jetbrains.annotations.NotNull;
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
 
 /**
  * {@link Asset} implementation for inline media objects stored in a node in a content page.
@@ -148,6 +152,17 @@ class InlineAsset extends SlingAdaptable implements Asset {
       return (AdapterType)this.resource;
     }
     return super.adaptTo(type);
+  }
+
+  @Override
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
+    String extension = FilenameUtils.getExtension(fileName);
+    if (!MediaFileType.isImage(extension) || MediaFileType.isVectorImage(extension)) {
+      throw new UnsupportedOperationException("Unable to build URI template for this asset type: " + getPath());
+    }
+    Rendition originalRendition = getInlineRendition(new MediaArgs());
+    return new InlineUriTemplate(type, originalRendition.getWidth(), originalRendition.getHeight(),
+        this.resource, fileName, defaultMediaArgs, adaptable);
   }
 
 }

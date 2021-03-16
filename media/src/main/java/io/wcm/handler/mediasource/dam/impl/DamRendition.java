@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath.DYNAMICMEDIA_IS_IMAGE_PATH;
+
 import java.util.Date;
 import java.util.List;
 
@@ -46,8 +48,6 @@ class DamRendition extends SlingAdaptable implements Rendition {
   private final DamContext damContext;
   private final MediaArgs mediaArgs;
   private final RenditionMetadata rendition;
-
-  private static final String DYNAMICMEDIA_IS_IMAGE_PATH = "/is/image/";
 
   /**
    * @param cropDimension Crop dimension

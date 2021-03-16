@@ -244,4 +244,14 @@ public final class MediaNameConstants {
    */
   public static final String MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT = "parentMediaFormat";
 
+  /**
+   * URI template placeholder for width.
+   */
+  public static final String URI_TEMPLATE_PLACEHOLDER_WITH = "{width}";
+
+  /**
+   * URI template placeholder for height.
+   */
+  public static final String URI_TEMPLATE_PLACEHOLDER_HEIGHT = "{height}";
+
 }
