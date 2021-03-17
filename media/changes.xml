@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert">
         Add Media.getUriTemplate method to build URI templates for getting scaled or auto-cropped renditions of an asset.
       </action>
+      <action type="fix" dev="sseifert">
+        Ensure that calculating crop dimension for very big images does not lead to over-sized width/height values due to rounding errors.
+      </action>
     </release>
 
     <release version="1.10.0" date="2021-01-17">
