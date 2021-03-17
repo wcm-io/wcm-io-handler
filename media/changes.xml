@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.11.0" date="not released">
+    <release version="1.11.0" date="2021-03-17">
       <action type="add" dev="sseifert">
         Add Media.getUriTemplate method to build URI templates for getting scaled or auto-cropped renditions of an asset.
       </action>
