@@ -51,7 +51,8 @@ HTL template example:
 <div>
   ${richtext.markup @ context='html'}
 </div>
-<div class="cq-placeholder" data-emptytext="${component.title}" data-sly-test="${!richtext.valid}"></div>
+<sly data-sly-use.templates="core/wcm/components/commons/v1/templates.html"
+    data-sly-call="${templates.placeholder @ isEmpty=!richtext.valid}"></sly>
 ```
 
 

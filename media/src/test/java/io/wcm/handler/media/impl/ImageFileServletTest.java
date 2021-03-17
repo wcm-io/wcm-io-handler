@@ -73,6 +73,48 @@ class ImageFileServletTest {
   }
 
   @Test
+  void testGet_Invalid() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.0.0");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(SC_NOT_FOUND, context.response().getStatus());
+  }
+
+  @Test
+  void testGet_OnlyWidth() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.72.0");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(72, 34);
+  }
+
+  @Test
+  void testGet_OnlyHeight() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.0.34");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(72, 34);
+  }
+
+  @Test
+  void testGet_DifferentRatioCenterCrop() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.34.34");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(34, 34);
+  }
+
+  @Test
   void testGet_Cropping() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.10,10,20,25");
 

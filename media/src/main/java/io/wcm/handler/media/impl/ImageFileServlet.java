@@ -41,6 +41,7 @@ import com.day.image.Layer;
 import com.drew.lang.annotations.Nullable;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -81,7 +82,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       width = NumberUtils.toInt(selectors[1]);
       height = NumberUtils.toInt(selectors[2]);
     }
-    if (width <= 0 || height <= 0) {
+    if (width < 0 || height < 0 || (width == 0 && height == 0)) {
       return null;
     }
 
@@ -114,9 +115,26 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       return null;
     }
 
+    // if only width or only height is given - derive other value from ratio
+    double layerRatio = Ratio.get(layer.getWidth(), layer.getHeight());
+    if (width == 0) {
+      width = (int)Math.round(height * layerRatio);
+    }
+    else if (height == 0) {
+      height = (int)Math.round(width / layerRatio);
+    }
+
     // if required: crop image
     if (cropDimension != null) {
       layer.crop(cropDimension.getRectangle());
+    }
+    else {
+      // if image ratio that is requested does not match with the given ratio apply a center-crop here
+      double requestedRatio = Ratio.get(width, height);
+      if (!Ratio.matches(layerRatio, requestedRatio)) {
+        cropDimension = ImageTransformation.calculateAutoCropDimension(layer.getWidth(), layer.getHeight(), requestedRatio);
+        layer.crop(cropDimension.getRectangle());
+      }
     }
 
     // if required: rotate image
@@ -186,7 +204,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   public static @NotNull String buildSelectorString(long width, long height,
       @Nullable CropDimension cropDimension, @Nullable Integer rotation,
       boolean contentDispositionAttachment) {
-    StringBuffer result = new StringBuffer()
+    StringBuilder result = new StringBuilder()
         .append(SELECTOR)
         .append(".").append(Long.toString(width))
         .append(".").append(Long.toString(height));

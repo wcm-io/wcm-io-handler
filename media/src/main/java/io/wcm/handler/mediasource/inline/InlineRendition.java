@@ -108,9 +108,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     String processedFileName = fileName;
     if (isImage) {
       // get dimension from image binary
-      List<Dimension> dimensionCandiates = getImageOrCroppedDimensions();
-      for (int i = 0; i < dimensionCandiates.size(); i++) {
-        dimension = dimensionCandiates.get(i);
+      List<Dimension> dimensionCandidates = getImageOrCroppedDimensions();
+      for (int i = 0; i < dimensionCandidates.size(); i++) {
+        dimension = dimensionCandidates.get(i);
         if (isVectorImage && (this.rotation != null || this.cropDimension != null)) {
           // transformation not possible for vector images
           scaledDimension = SCALING_NOT_POSSIBLE_DIMENSION;

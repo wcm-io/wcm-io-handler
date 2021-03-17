@@ -98,12 +98,18 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
     if (original == null || original.isVectorImage()) {
       return null;
     }
-    Double scaleFactor = getCropScaleFactor();
-    CropDimension scaledCropDimension = new CropDimension(
-        Math.round(cropDimension.getLeft() * scaleFactor),
-        Math.round(cropDimension.getTop() * scaleFactor),
-        Math.round(cropDimension.getWidth() * scaleFactor),
-        Math.round(cropDimension.getHeight() * scaleFactor),
+    Double scaleFactor = getCropScaleFactor(original);
+    long scaledLeft = Math.round(cropDimension.getLeft() * scaleFactor);
+    long scaledTop = Math.round(cropDimension.getTop() * scaleFactor);
+    long scaledWidth = Math.round(cropDimension.getWidth() * scaleFactor);
+    if (scaledWidth > original.getWidth()) {
+      scaledWidth = original.getWidth();
+    }
+    long scaledHeight = Math.round(cropDimension.getHeight() * scaleFactor);
+    if (scaledHeight > original.getHeight()) {
+      scaledHeight = original.getHeight();
+    }
+    CropDimension scaledCropDimension = new CropDimension(scaledLeft, scaledTop, scaledWidth, scaledHeight,
         cropDimension.isAutoCrop());
     return new VirtualTransformedRenditionMetadata(original.getRendition(),
         rotateMapWidth(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
@@ -116,8 +122,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
    * to crop the original image, so we have to scale those values to match the coordinates in the original image.
    * @return Scale factor
    */
-  private double getCropScaleFactor() {
-    RenditionMetadata original = getOriginalRendition();
+  private double getCropScaleFactor(RenditionMetadata original) {
     RenditionMetadata webEnabled = DamAutoCropping.getWebRenditionForCropping(getAsset());
     if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
       return 1d;

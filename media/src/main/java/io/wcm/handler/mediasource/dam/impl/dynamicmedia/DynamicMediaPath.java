@@ -35,6 +35,12 @@ import io.wcm.handler.mediasource.dam.impl.DamContext;
 public final class DynamicMediaPath {
 
   /**
+   * Fixed path part for dynamic media image serving API.
+   */
+  public static final String DYNAMICMEDIA_IS_IMAGE_PATH = "/is/image/";
+
+
+  /**
    * Maximum width/height we support for dynamic media delivery. (should by made configurable)
    */
   private static final long MAX_WIDTH_HEIGHT = 4000;
@@ -75,7 +81,7 @@ public final class DynamicMediaPath {
       }
     }
 
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     result.append(damContext.getDynamicMediaObject()).append("?");
     if (cropDimension != null) {
       result.append("crop=").append(cropDimension.getCropStringWidthHeight()).append("&");

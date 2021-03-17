@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
@@ -31,9 +32,14 @@ import com.day.cq.dam.api.DamConstants;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 
 /**
@@ -174,6 +180,20 @@ public final class DamAsset extends SlingAdaptable implements Asset {
       return (AdapterType)this.damContext.getAsset().adaptTo(Resource.class);
     }
     return super.adaptTo(type);
+  }
+
+  @Override
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
+    String extension = FilenameUtils.getExtension(damContext.getAsset().getName());
+    if (!MediaFileType.isImage(extension) || MediaFileType.isVectorImage(extension)) {
+      throw new UnsupportedOperationException("Unable to build URI template for this asset type: " + getPath());
+    }
+    com.day.cq.dam.api.Rendition original = damContext.getAsset().getOriginal();
+    Dimension dimension = AssetRendition.getDimension(original);
+    if (dimension == null) {
+      throw new IllegalArgumentException("Unable to get dimension for original rendition of asset: " + getPath());
+    }
+    return new DamUriTemplate(type, dimension, damContext, defaultMediaArgs);
   }
 
 }
