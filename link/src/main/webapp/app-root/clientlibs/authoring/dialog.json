@@ -1,5 +1,8 @@
 {
   "jcr:primaryType":"cq:ClientLibraryFolder",
-  "categories":["cq.authoring.dialog"],
+  "categories":[
+    "wcm.io.authoring.dialog",
+    "cq.authoring.dialog"
+  ],
   "dependencies":["granite.jquery"]
 }
