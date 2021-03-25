@@ -42,7 +42,7 @@ public enum UriTemplateType {
   SCALE_WIDTH,
 
   /**
-   * URI template for building an asset rendition with <code>{width}</code> parameter,
+   * URI template for building an asset rendition with <code>{height}</code> parameter,
    * resizing the image to the given height.
    * The image is never scaled up.
    */
