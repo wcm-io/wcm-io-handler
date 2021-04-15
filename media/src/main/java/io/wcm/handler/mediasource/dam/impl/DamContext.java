@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
@@ -45,7 +46,8 @@ public final class DamContext implements Adaptable {
 
   private Boolean dynamicMediaEnabled;
   private String dynamicMediaObject;
-  private String dynamicMediaProductionAssetUrl;
+  private String dynamicMediaServerUrl;
+  private Dimension dynamicMediaImageSizeLimit;
   private ImageProfile imageProfile;
 
   private static final ImageProfile NO_IMAGE_PROFILE = new ImageProfile() {
@@ -102,13 +104,23 @@ public final class DamContext implements Adaptable {
   }
 
   /**
-   * @return Get scene7 host for publish environment.
+   * @return Get scene7 host for publish environment. Empty string if author preview mode is active.
    */
-  public @Nullable String getDynamicMediaProductionAssetUrl() {
-    if (dynamicMediaProductionAssetUrl == null) {
-      dynamicMediaProductionAssetUrl = dynamicMediaSupportService.getDynamicMediaProductionAssetUrl(asset);
+  public @Nullable String getDynamicMediaServerUrl() {
+    if (dynamicMediaServerUrl == null) {
+      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset);
     }
-    return dynamicMediaProductionAssetUrl;
+    return dynamicMediaServerUrl;
+  }
+
+  /**
+   * @return Dynamic media reply image size limit
+   */
+  public @NotNull Dimension getDynamicMediaImageSizeLimit() {
+    if (dynamicMediaImageSizeLimit == null) {
+      dynamicMediaImageSizeLimit = dynamicMediaSupportService.getImageSizeLimit();
+    }
+    return dynamicMediaImageSizeLimit;
   }
 
   /**

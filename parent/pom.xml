@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.parent</artifactId>
-  <version>1.4.5-SNAPSHOT</version>
+  <version>1.4.6</version>
   <packaging>pom</packaging>
 
   <name>Handler</name>
@@ -165,7 +165,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-      <version>4.0.2</version>
+      <version>4.0.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>

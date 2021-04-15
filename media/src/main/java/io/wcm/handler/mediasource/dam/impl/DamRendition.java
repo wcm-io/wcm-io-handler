@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath.DYNAMICMEDIA_IS_IMAGE_PATH;
-
 import java.util.Date;
 import java.util.List;
 
@@ -109,9 +107,9 @@ class DamRendition extends SlingAdaptable implements Rendition {
       // if DM is enabled: try to get rendition URL from dynamic media
       String dynamicMediaPath = this.rendition.getDynamicMediaPath(this.mediaArgs.isContentDispositionAttachment(), damContext);
       if (dynamicMediaPath != null) {
-        String productionAssetUrl = damContext.getDynamicMediaProductionAssetUrl();
+        String productionAssetUrl = damContext.getDynamicMediaServerUrl();
         if (productionAssetUrl != null) {
-          url = productionAssetUrl + DYNAMICMEDIA_IS_IMAGE_PATH + dynamicMediaPath;
+          url = productionAssetUrl + dynamicMediaPath;
         }
       }
     }
