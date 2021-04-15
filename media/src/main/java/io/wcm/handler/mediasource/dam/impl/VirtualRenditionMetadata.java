@@ -93,11 +93,11 @@ class VirtualRenditionMetadata extends RenditionMetadata {
       return null;
     }
     else if (isVectorImage()) {
-      // vector images can be scaled in browser without need of dynamic media
-      return null;
+      // vector images can be scaled in browser without need of dynamic media - serve as static content
+      return DynamicMediaPath.buildContent(damContext);
     }
     // render virtual rendition with dynamic media
-    return DynamicMediaPath.build(damContext, getWidth(), getHeight());
+    return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight());
   }
 
   @Override

@@ -21,7 +21,6 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT;
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WITH;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath.DYNAMICMEDIA_IS_IMAGE_PATH;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
@@ -33,6 +32,7 @@ import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
@@ -54,20 +54,19 @@ class DamUriTemplate implements UriTemplate {
     String url = null;
     if (!mediaArgs.isDynamicMediaDisabled() && damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
       // if DM is enabled: try to get rendition URL from dynamic media
-      String dynamicMediaPath = damContext.getDynamicMediaObject();
-      String productionAssetUrl = damContext.getDynamicMediaProductionAssetUrl();
-      if (dynamicMediaPath != null && productionAssetUrl != null) {
+      String productionAssetUrl = damContext.getDynamicMediaServerUrl();
+      if (productionAssetUrl != null) {
         switch (type) {
           case CROP_CENTER:
-            url = productionAssetUrl + DYNAMICMEDIA_IS_IMAGE_PATH + dynamicMediaPath
+            url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
                 + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WITH + "&hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT + "&fit=crop";
             break;
           case SCALE_WIDTH:
-            url = productionAssetUrl + DYNAMICMEDIA_IS_IMAGE_PATH + dynamicMediaPath
+            url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
                 + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WITH;
             break;
           case SCALE_HEIGHT:
-            url = productionAssetUrl + DYNAMICMEDIA_IS_IMAGE_PATH + dynamicMediaPath
+            url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
                 + "?hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT;
             break;
           default:

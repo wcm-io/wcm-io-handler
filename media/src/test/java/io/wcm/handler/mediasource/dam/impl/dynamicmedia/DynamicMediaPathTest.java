@@ -47,6 +47,8 @@ class DynamicMediaPathTest {
   private final AemContext context = AppAemContext.newAemContext();
 
   private DamContext damContext;
+  private DynamicMediaSupportService dynamicMediaSupportService;
+  private Resource assetFolder;
 
   @BeforeEach
   void setUp() {
@@ -54,67 +56,84 @@ class DynamicMediaPathTest {
         PN_CROP_TYPE, CROP_TYPE_SMART,
         PN_BANNER, "Crop-1,90,60|Crop-2,30,20");
 
-    Resource assetFolder = context.create().resource("/content/dam/folder1");
+    dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+
+    assetFolder = context.create().resource("/content/dam/folder1");
     context.create().resource(assetFolder, JCR_CONTENT, DamConstants.IMAGE_PROFILE, profile1.getPath());
 
     Asset asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
-        Scene7Constants.PN_S7_FILE, "DummyFolder/test.jpg");
-    DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+        Scene7Constants.PN_S7_FILE, "DummyFolder/test");
     damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
   }
 
   @Test
   void testWidthHeight() {
-    String result = DynamicMediaPath.build(damContext, 30, 20);
-    assertEquals("DummyFolder/test.jpg?wid=30&hei=20&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 30, 20);
+    assertEquals("/is/image/DummyFolder/test?wid=30&hei=20&fit=stretch", result);
   }
 
   @Test
   void testCrop() {
-    String result = DynamicMediaPath.build(damContext, 30, 20, new CropDimension(5, 2, 10, 8), null);
-    assertEquals("DummyFolder/test.jpg?crop=5,2,10,8&wid=30&hei=20&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8), null);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&wid=30&hei=20&fit=stretch", result);
   }
 
   @Test
   void testAutoCrop_SmartCrop() {
-    String result = DynamicMediaPath.build(damContext, 30, 20, new CropDimension(5, 2, 10, 8, true), null);
-    assertEquals("DummyFolder/test.jpg%3ACrop-2", result);
+    String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8, true), null);
+    assertEquals("/is/image/DummyFolder/test%3ACrop-2", result);
   }
 
   @Test
   void testWidthHeight_MaxWidth() {
-    String result = DynamicMediaPath.build(damContext, 5000, 2500);
-    assertEquals("DummyFolder/test.jpg?wid=4000&hei=2000&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 3000, 1500);
+    assertEquals("/is/image/DummyFolder/test?wid=2000&hei=1000&fit=stretch", result);
   }
 
   @Test
   void testWidthHeight_MaxHeight() {
-    String result = DynamicMediaPath.build(damContext, 2500, 5000);
-    assertEquals("DummyFolder/test.jpg?wid=2000&hei=4000&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 2500, 5000);
+    assertEquals("/is/image/DummyFolder/test?wid=1000&hei=2000&fit=stretch", result);
   }
 
   @Test
   void testWidthHeight_MaxWidthHeight() {
-    String result = DynamicMediaPath.build(damContext, 6000, 8000);
-    assertEquals("DummyFolder/test.jpg?wid=3000&hei=4000&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 6000, 8000);
+    assertEquals("/is/image/DummyFolder/test?wid=1500&hei=2000&fit=stretch", result);
   }
 
   @Test
   void testRotate() {
-    String result = DynamicMediaPath.build(damContext, 30, 20, null, 180);
-    assertEquals("DummyFolder/test.jpg?rotate=180&wid=30&hei=20&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 30, 20, null, 180);
+    assertEquals("/is/image/DummyFolder/test?rotate=180&wid=30&hei=20&fit=stretch", result);
   }
 
   @Test
   void testCropRotate() {
-    String result = DynamicMediaPath.build(damContext, 30, 20, new CropDimension(5, 2, 10, 8), 90);
-    assertEquals("DummyFolder/test.jpg?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8), 90);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch", result);
   }
 
   @Test
   void testAutoCropRotate_NoSmartCrop() {
-    String result = DynamicMediaPath.build(damContext, 30, 20, new CropDimension(5, 2, 10, 8, true), 90);
-    assertEquals("DummyFolder/test.jpg?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch", result);
+    String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8, true), 90);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch", result);
+  }
+
+  @Test
+  void testBuildContent() {
+    String result = DynamicMediaPath.buildContent(damContext);
+    assertEquals("/is/content/DummyFolder/test", result);
+  }
+
+  @Test
+  void testBuildImage_SpecialChars() {
+    Asset assetSpecialChars = context.create().asset(assetFolder.getPath() + "/test with spaces äöüß€.jpg", 50, 30, ContentType.JPEG,
+        Scene7Constants.PN_S7_FILE, "DummyFolder/test with spaces äöüß€");
+    damContext = new DamContext(assetSpecialChars, dynamicMediaSupportService, context.request());
+
+    String result = DynamicMediaPath.buildContent(damContext);
+    assertEquals("/is/content/DummyFolder/test+with+spaces+%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
   }
 
 }

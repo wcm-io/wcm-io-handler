@@ -99,7 +99,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
     }
     else {
       // render virtual rendition with dynamic media
-      return DynamicMediaPath.build(damContext, getWidth(), getHeight(), this.cropDimension, this.rotation);
+      return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight(), this.cropDimension, this.rotation);
     }
   }
 

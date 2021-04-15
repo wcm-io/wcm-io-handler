@@ -121,8 +121,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_GIF_Original() {
-    // fallback to media handler rendering: original file used directly from dispatcher
-    super.testAsset_GIF_Original();
+    Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
+    buildAssertMedia(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.gif",
+        ContentType.GIF);
   }
 
   @Override
@@ -277,8 +279,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_SVG_Original() {
-    // fallback to media handler rendering: SVG is scaled by browser directly
-    super.testAsset_SVG_Original();
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.svg",
+        ContentType.SVG);
   }
 
   @Override
@@ -291,8 +295,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_SVG_Rescale() {
-    // fallback to media handler rendering: SVG is scaled by browser directly
-    super.testAsset_SVG_Rescale();
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia_Rescale(asset, 80, 40,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.svg",
+        ContentType.SVG);
   }
 
   @Override

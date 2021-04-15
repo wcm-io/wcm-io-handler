@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.11.4" date="not released">
+      <action type="update" dev="sseifert">
+        Dynamic media: Add OSGi configuration to enable/disable dynamic media support, activate author preview mode and allow to configure image size limits.
+      </action>
+      <action type="update" dev="sseifert">
+        Dynamic media: Serve non-image or SVG/GIF images as static content via dynamic media (except if a content-disposition header is expected).
+      </action>
+      <action type="update" dev="fix">
+        Dynamic media: URL-encode dynamic media file names.
+      </action>
+    </release>
+
     <release version="1.11.2" date="2021-03-25">
       <action type="update" dev="sseifert" issue="WTOOL-72">
         Add sling-initial-content-transform-maven-plugin to alternatively allow to deploy OSGi bundle and content as content package separately in AEMaaCS.

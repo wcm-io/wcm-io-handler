@@ -206,14 +206,14 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     else if ((MediaFileType.isBrowserImage(getFileExtension())
         && (MediaFileType.isVectorImage(getFileExtension()) || StringUtils.equals(getFileExtension(), FileExtension.GIF)))
         || !MediaFileType.isImage(getFileExtension())) {
-      // do not use dynamic media for non-image requests or Vector/GIF images that can be displayed in browser directly
+      // serve non-image requests or Vector/GIF images as static content from dynamic media
       // (vector can be scaled in browser directly, GIF may be animated which is not supported by dynamic media)
-      return null;
+      return DynamicMediaPath.buildContent(damContext);
     }
     else {
       // display original rendition with original file size - or image rendition that uses a file extension
       // that cannot be displayed in browser directly - render via dynamic media
-      return DynamicMediaPath.build(damContext, getWidth(), getHeight());
+      return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight());
     }
   }
 
