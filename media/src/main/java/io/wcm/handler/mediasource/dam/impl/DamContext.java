@@ -34,6 +34,7 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
+import io.wcm.handler.url.UrlMode;
 
 /**
  * Context objects require in DAM support implementation.
@@ -41,6 +42,7 @@ import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 public final class DamContext implements Adaptable {
 
   private final Asset asset;
+  private final UrlMode urlMode;
   private final DynamicMediaSupportService dynamicMediaSupportService;
   private final Adaptable adaptable;
 
@@ -59,12 +61,14 @@ public final class DamContext implements Adaptable {
 
   /**
    * @param asset DAM asset
+   * @param urlMode urlMode
    * @param dynamicMediaSupportService Dynamic media support service
    * @param adaptable Adaptable from current context
    */
-  public DamContext(Asset asset, DynamicMediaSupportService dynamicMediaSupportService,
-      Adaptable adaptable) {
+  public DamContext(@NotNull Asset asset, @Nullable UrlMode urlMode,
+      @NotNull DynamicMediaSupportService dynamicMediaSupportService, @NotNull Adaptable adaptable) {
     this.asset = asset;
+    this.urlMode = urlMode;
     this.adaptable = adaptable;
     this.dynamicMediaSupportService = dynamicMediaSupportService;
   }
@@ -108,7 +112,7 @@ public final class DamContext implements Adaptable {
    */
   public @Nullable String getDynamicMediaServerUrl() {
     if (dynamicMediaServerUrl == null) {
-      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset);
+      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset, urlMode);
     }
     return dynamicMediaServerUrl;
   }

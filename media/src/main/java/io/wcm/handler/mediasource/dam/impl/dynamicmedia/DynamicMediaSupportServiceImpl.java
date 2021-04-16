@@ -50,6 +50,8 @@ import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.url.SiteConfig;
+import io.wcm.handler.url.UrlMode;
+import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
@@ -154,9 +156,9 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   }
 
   @Override
-  public @Nullable String getDynamicMediaServerUrl(@NotNull Asset asset) {
+  public @Nullable String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode) {
     Resource assetResource = AdaptTo.notNull(asset, Resource.class);
-    if (authorPreviewMode) {
+    if (authorPreviewMode && !forcePublishMode(urlMode)) {
       // route dynamic media requests through author instance for preview
       // return configured author URL, or empty string if none configured
       SiteConfig siteConfig = AdaptTo.notNull(assetResource, SiteConfig.class);
@@ -172,6 +174,18 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
       log.warn("Unable to get dynamic media production asset URLs for {}", assetResource.getPath(), ex);
     }
     return null;
+  }
+
+  /**
+   * If URL mode is target for publish instance, use dynamic media production URL.
+   * @param urlMode URL mode
+   * @return true if publish mode should be forced
+   */
+  private boolean forcePublishMode(@Nullable UrlMode urlMode) {
+    return (urlMode == UrlModes.FULL_URL_PUBLISH
+        || urlMode == UrlModes.FULL_URL_PUBLISH_FORCENONSECURE
+        || urlMode == UrlModes.FULL_URL_PUBLISH_FORCESECURE
+        || urlMode == UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE);
   }
 
 }
