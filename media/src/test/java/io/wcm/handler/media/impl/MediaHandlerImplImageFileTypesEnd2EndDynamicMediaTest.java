@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.entitlement.api.EntitlementConstants;
 
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -68,8 +69,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_JPEG_Original_ContentDisposition() {
-    // fallback to media handler rendering: content disposition header not supported by scene7
-    super.testAsset_JPEG_Original_ContentDisposition();
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.jpg" + DynamicMediaPath.DOWNLOAD_SUFFIX,
+        ContentType.JPEG);
   }
 
   @Override
@@ -226,8 +229,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_TIFF_Original_ContentDisposition() {
-    // fallback to media handler rendering: content disposition header not supported by scene7
-    super.testAsset_TIFF_Original_ContentDisposition();
+    Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.tif" + DynamicMediaPath.DOWNLOAD_SUFFIX,
+        ContentType.TIFF);
   }
 
   @Override
@@ -288,8 +293,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_SVG_Original_ContentDisposition() {
-    // fallback to media handler rendering: SVG is scaled by browser directly
-    super.testAsset_SVG_Original_ContentDisposition();
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.svg" + DynamicMediaPath.DOWNLOAD_SUFFIX,
+        ContentType.SVG);
   }
 
   @Override

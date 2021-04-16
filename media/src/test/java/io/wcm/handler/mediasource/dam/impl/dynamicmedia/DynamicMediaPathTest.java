@@ -122,8 +122,14 @@ class DynamicMediaPathTest {
 
   @Test
   void testBuildContent() {
-    String result = DynamicMediaPath.buildContent(damContext);
+    String result = DynamicMediaPath.buildContent(damContext, false);
     assertEquals("/is/content/DummyFolder/test", result);
+  }
+
+  @Test
+  void testBuildContent_Download() {
+    String result = DynamicMediaPath.buildContent(damContext, true);
+    assertEquals("/is/content/DummyFolder/test" + DynamicMediaPath.DOWNLOAD_SUFFIX, result);
   }
 
   @Test
@@ -132,7 +138,7 @@ class DynamicMediaPathTest {
         Scene7Constants.PN_S7_FILE, "DummyFolder/test with spaces äöüß€");
     damContext = new DamContext(assetSpecialChars, null, dynamicMediaSupportService, context.request());
 
-    String result = DynamicMediaPath.buildContent(damContext);
+    String result = DynamicMediaPath.buildContent(damContext, false);
     assertEquals("/is/content/DummyFolder/test+with+spaces+%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
   }
 
