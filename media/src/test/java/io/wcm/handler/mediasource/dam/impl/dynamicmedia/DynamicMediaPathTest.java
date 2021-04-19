@@ -63,7 +63,7 @@ class DynamicMediaPathTest {
 
     Asset asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test");
-    damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
+    damContext = new DamContext(asset, null, dynamicMediaSupportService, context.request());
   }
 
   @Test
@@ -122,17 +122,23 @@ class DynamicMediaPathTest {
 
   @Test
   void testBuildContent() {
-    String result = DynamicMediaPath.buildContent(damContext);
+    String result = DynamicMediaPath.buildContent(damContext, false);
     assertEquals("/is/content/DummyFolder/test", result);
+  }
+
+  @Test
+  void testBuildContent_Download() {
+    String result = DynamicMediaPath.buildContent(damContext, true);
+    assertEquals("/is/content/DummyFolder/test" + DynamicMediaPath.DOWNLOAD_SUFFIX, result);
   }
 
   @Test
   void testBuildImage_SpecialChars() {
     Asset assetSpecialChars = context.create().asset(assetFolder.getPath() + "/test with spaces äöüß€.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test with spaces äöüß€");
-    damContext = new DamContext(assetSpecialChars, dynamicMediaSupportService, context.request());
+    damContext = new DamContext(assetSpecialChars, null, dynamicMediaSupportService, context.request());
 
-    String result = DynamicMediaPath.buildContent(damContext);
+    String result = DynamicMediaPath.buildContent(damContext, false);
     assertEquals("/is/content/DummyFolder/test+with+spaces+%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
   }
 

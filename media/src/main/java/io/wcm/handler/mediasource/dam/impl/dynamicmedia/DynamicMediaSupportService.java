@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.url.UrlMode;
 
 /**
  * Read image profiles stored in /conf resources.
@@ -66,6 +67,6 @@ public interface DynamicMediaSupportService {
    *         If author preview mode is enabled, returns empty string.
    */
   @Nullable
-  String getDynamicMediaServerUrl(@NotNull Asset asset);
+  String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode);
 
 }

@@ -23,6 +23,15 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.11.6" date="2021-04-19">
+      <action type="update" dev="sseifert">
+        Dynamic media: Use production dynamic media host name when author preview mode is active, but an URL mode forces to generate a publish URL.
+      </action>
+      <action type="update" dev="sseifert">
+        Dynamic media: Add .download_attachment suffix to static content URLs to be serviced with Content-Disposition: attachment header (via custom ruleset).
+      </action>
+    </release>
+
     <release version="1.11.4" date="2021-04-15">
       <action type="update" dev="sseifert">
         Dynamic media: Add OSGi configuration to enable/disable dynamic media support, activate author preview mode and allow to configure image size limits.

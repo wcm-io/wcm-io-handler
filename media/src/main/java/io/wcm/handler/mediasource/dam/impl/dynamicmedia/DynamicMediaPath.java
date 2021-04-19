@@ -48,6 +48,13 @@ public final class DynamicMediaPath {
    */
   private static final String CONTENT_SERVER_PATH = "/is/content/";
 
+  /**
+   * Suffix is appended to static content dynamic media URLs that should be served with
+   * Content-Disposition: attachment header.
+   * This is configured via a custom ruleset, see https://wcm.io/handler/media/dynamic-media.html
+   */
+  public static final String DOWNLOAD_SUFFIX = "?cdh=attachment";
+
   private DynamicMediaPath() {
     // static methods only
   }
@@ -55,10 +62,16 @@ public final class DynamicMediaPath {
   /**
    * Build media path for serving static content via dynamic media/scene7.
    * @param damContext DAM context objects
+   * @param contentDispositionAttachment Whether to send content disposition: attachment header for downloads
    * @return Media path
    */
-  public static @NotNull String buildContent(@NotNull DamContext damContext) {
-    return CONTENT_SERVER_PATH + encodeDynamicMediaObject(damContext);
+  public static @NotNull String buildContent(@NotNull DamContext damContext, boolean contentDispositionAttachment) {
+    StringBuilder result = new StringBuilder();
+    result.append(CONTENT_SERVER_PATH).append(encodeDynamicMediaObject(damContext));
+    if (contentDispositionAttachment) {
+      result.append(DOWNLOAD_SUFFIX);
+    }
+    return result.toString();
   }
 
   /**

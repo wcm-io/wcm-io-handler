@@ -47,11 +47,11 @@ import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServi
  */
 public final class DamAsset extends SlingAdaptable implements Asset {
 
-  private final DamContext damContext;
   private final CropDimension cropDimension;
   private final Integer rotation;
   private final MediaArgs defaultMediaArgs;
   private final ValueMap properties;
+  private final DamContext damContext;
 
   /**
    * @param media Media metadata
@@ -61,11 +61,11 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    */
   public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset,
       DynamicMediaSupportService dynamicMediaSupportService, Adaptable adaptable) {
-    this.damContext = new DamContext(damAsset, dynamicMediaSupportService, adaptable);
     this.cropDimension = media.getCropDimension();
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
     this.properties = new ValueMapDecorator(damAsset.getMetadata());
+    this.damContext = new DamContext(damAsset, defaultMediaArgs.getUrlMode(), dynamicMediaSupportService, adaptable);
   }
 
   @Override

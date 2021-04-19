@@ -65,7 +65,7 @@ class TransformedRenditionHandlerTest {
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 
     DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
-    damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
+    damContext = new DamContext(asset, null, dynamicMediaSupportService, context.request());
 
     // generate web-enabled rendition
     webRendition = context.create().assetRenditionWebEnabled(asset, 200, 150);
