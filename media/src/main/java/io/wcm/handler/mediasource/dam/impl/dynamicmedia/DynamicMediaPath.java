@@ -174,6 +174,8 @@ public final class DynamicMediaPath {
     try {
       for (int i = 0; i < pathParts.length; i++) {
         pathParts[i] = URLEncoder.encode(pathParts[i], StandardCharsets.UTF_8.name());
+        // replace "+" with %20 in URL paths
+        pathParts[i] = StringUtils.replace(pathParts[i], "+", "%20");
       }
     }
     catch (UnsupportedEncodingException ex) {

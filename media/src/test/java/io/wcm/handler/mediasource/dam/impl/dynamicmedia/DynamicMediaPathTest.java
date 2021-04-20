@@ -139,7 +139,7 @@ class DynamicMediaPathTest {
     damContext = new DamContext(assetSpecialChars, null, dynamicMediaSupportService, context.request());
 
     String result = DynamicMediaPath.buildContent(damContext, false);
-    assertEquals("/is/content/DummyFolder/test+with+spaces+%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
+    assertEquals("/is/content/DummyFolder/test%20with%20spaces%20%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
   }
 
 }
