@@ -247,11 +247,18 @@ public final class MediaNameConstants {
   /**
    * URI template placeholder for width.
    */
-  public static final String URI_TEMPLATE_PLACEHOLDER_WITH = "{width}";
+  public static final String URI_TEMPLATE_PLACEHOLDER_WIDTH = "{width}";
 
   /**
    * URI template placeholder for height.
    */
   public static final String URI_TEMPLATE_PLACEHOLDER_HEIGHT = "{height}";
+
+  /**
+   * URI template placeholder for width.
+   * @deprecated Please use {@link #URI_TEMPLATE_PLACEHOLDER_WIDTH}
+   */
+  @Deprecated
+  public static final String URI_TEMPLATE_PLACEHOLDER_WITH = URI_TEMPLATE_PLACEHOLDER_WIDTH;
 
 }

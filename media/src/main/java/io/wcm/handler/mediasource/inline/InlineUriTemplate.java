@@ -20,7 +20,7 @@
 package io.wcm.handler.mediasource.inline;
 
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT;
-import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WITH;
+import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
@@ -76,11 +76,11 @@ class InlineUriTemplate implements UriTemplate {
 
     switch (type) {
       case CROP_CENTER:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WITH);
+        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
         url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
         break;
       case SCALE_WIDTH:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WITH);
+        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
         url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), "0");
         break;
       case SCALE_HEIGHT:
