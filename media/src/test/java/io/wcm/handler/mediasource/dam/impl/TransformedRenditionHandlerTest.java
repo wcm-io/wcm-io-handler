@@ -54,6 +54,7 @@ class TransformedRenditionHandlerTest {
   private CropDimension cropDimension;
 
   @BeforeEach
+  @SuppressWarnings("null")
   void setUp() throws Exception {
 
     // register RenditionMetadataListenerService to generate rendition metadata

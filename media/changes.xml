@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.11.8" date="not released">
+      <action type="update" dev="sseifert">
+        Dynamic media: Use smart cropping profiles for all renditions with the same ratio, not only when the exact resolution matches.
+      </action>
       <action type="fix" dev="sseifert">
         Dynamic media: Use "%20" instead of "+" for encoding spaces in dynamic media URLs.
       </action>
