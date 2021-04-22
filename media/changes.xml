@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.11.8" date="not released">
+      <action type="add" dev="sseifert">
+        Add new media format property "minWidthHeight" which accepts image with either width or height (whatever is the longest edge) matching the configured min. value.
+      </action>
       <action type="update" dev="sseifert">
         Dynamic media: Use smart cropping profiles for all renditions with the same ratio, not only when the exact resolution matches.
       </action>

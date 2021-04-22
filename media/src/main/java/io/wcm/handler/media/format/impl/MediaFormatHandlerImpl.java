@@ -210,8 +210,8 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return true if media format is same size or bigger
    */
   private boolean isRenditionMatchSizeSameBigger(MediaFormat mediaFormat, MediaFormat mediaFormatRequested) {
-    long widthRequested = mediaFormatRequested.getEffectiveMinWidth();
-    long heightRequested = mediaFormatRequested.getEffectiveMinHeight();
+    long widthRequested = getEffectiveMinWidthPreferringMinWidthHeight(mediaFormatRequested);
+    long heightRequested = getEffectiveMinHeightPreferringMinWidthHeight(mediaFormatRequested);
 
     long widthMax = mediaFormat.getEffectiveMaxWidth();
     long heightMax = mediaFormat.getEffectiveMaxHeight();
@@ -227,13 +227,31 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return true if media format is same size or smaller
    */
   private boolean isRenditionMatchSizeSameSmaller(MediaFormat mediaFormat, MediaFormat mediaFormatRequested) {
-    long widthRequested = mediaFormatRequested.getEffectiveMinWidth();
-    long heightRequested = mediaFormatRequested.getEffectiveMinHeight();
+    long widthRequested = getEffectiveMinWidthPreferringMinWidthHeight(mediaFormatRequested);
+    long heightRequested = getEffectiveMinHeightPreferringMinWidthHeight(mediaFormatRequested);
 
-    long widthMin = mediaFormat.getEffectiveMinWidth();
-    long heightMin = mediaFormat.getEffectiveMinHeight();
+    long widthMin = getEffectiveMinWidthPreferringMinWidthHeight(mediaFormat);
+    long heightMin = getEffectiveMinHeightPreferringMinWidthHeight(mediaFormat);
 
     return widthMin <= widthRequested && heightMin <= heightRequested;
+  }
+
+  private long getEffectiveMinWidthPreferringMinWidthHeight(MediaFormat mf) {
+    if (mf.getMinWidthHeight() > 0) {
+      return mf.getMinWidthHeight();
+    }
+    else {
+      return mf.getEffectiveMinWidth();
+    }
+  }
+
+  private long getEffectiveMinHeightPreferringMinWidthHeight(MediaFormat mf) {
+    if (mf.getMinWidthHeight() > 0) {
+      return mf.getMinWidthHeight();
+    }
+    else {
+      return mf.getEffectiveMinHeight();
+    }
   }
 
   /**
@@ -311,10 +329,16 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
       // width/height match
       boolean dimensionMatch = false;
       if (width > 0 && height > 0) {
-        dimensionMatch = (mediaFormat.getEffectiveMinWidth() == 0 || width >= mediaFormat.getEffectiveMinWidth())
-            && (mediaFormat.getEffectiveMaxWidth() == 0 || width <= mediaFormat.getEffectiveMaxWidth())
-            && (mediaFormat.getEffectiveMinHeight() == 0 || height >= mediaFormat.getEffectiveMinHeight())
-            && (mediaFormat.getEffectiveMaxHeight() == 0 || height <= mediaFormat.getEffectiveMaxHeight());
+        if (mediaFormat.getMinWidthHeight() > 0) {
+          dimensionMatch = (width >= mediaFormat.getMinWidthHeight())
+              || (height >= mediaFormat.getMinWidthHeight());
+        }
+        else {
+          dimensionMatch = (mediaFormat.getEffectiveMinWidth() == 0 || width >= mediaFormat.getEffectiveMinWidth())
+              && (mediaFormat.getEffectiveMaxWidth() == 0 || width <= mediaFormat.getEffectiveMaxWidth())
+              && (mediaFormat.getEffectiveMinHeight() == 0 || height >= mediaFormat.getEffectiveMinHeight())
+              && (mediaFormat.getEffectiveMaxHeight() == 0 || height <= mediaFormat.getEffectiveMaxHeight());
+        }
       }
       else {
         dimensionMatch = true;

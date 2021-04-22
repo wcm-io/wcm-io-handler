@@ -121,20 +121,24 @@ class RenditionMetadataTest extends AbstractDamTest {
 
   @Test
   void testMatchesSpec() {
-    assertTrue(smallestRendition.matches(450, 213, 450, 213, 0d));
-    assertTrue(smallestRendition.matches(200, 100, 500, 300, 0d));
-    assertTrue(smallestRendition.matches(0, 213, 0, 213, 0d));
-    assertTrue(smallestRendition.matches(450, 0, 450, 0, 0d));
-    assertTrue(smallestRendition.matches(0, 0, 450, 213, 0d));
-    assertTrue(smallestRendition.matches(450, 213, 0, 0, 0d));
+    assertTrue(smallestRendition.matches(450, 213, 450, 213, 0, 0d));
+    assertTrue(smallestRendition.matches(200, 100, 500, 300, 0, 0d));
+    assertTrue(smallestRendition.matches(0, 213, 0, 213, 0, 0d));
+    assertTrue(smallestRendition.matches(450, 0, 450, 0, 0, 0d));
+    assertTrue(smallestRendition.matches(0, 0, 450, 213, 0, 0d));
+    assertTrue(smallestRendition.matches(450, 213, 0, 0, 0, 0d));
 
-    assertFalse(smallestRendition.matches(500, 0, 0, 0, 0d));
-    assertFalse(smallestRendition.matches(0, 500, 0, 0, 0d));
-    assertFalse(smallestRendition.matches(0, 0, 100, 0, 0d));
-    assertFalse(smallestRendition.matches(0, 0, 0, 100, 0d));
+    assertFalse(smallestRendition.matches(500, 0, 0, 0, 0, 0d));
+    assertFalse(smallestRendition.matches(0, 500, 0, 0, 0, 0d));
+    assertFalse(smallestRendition.matches(0, 0, 100, 0, 0, 0d));
+    assertFalse(smallestRendition.matches(0, 0, 0, 100, 0, 0d));
 
-    assertTrue(smallestRendition.matches(0, 0, 0, 0, 2.11d));
-    assertFalse(smallestRendition.matches(0, 0, 0, 0, 2.2d));
+    assertTrue(smallestRendition.matches(0, 0, 0, 0, 200, 0d));
+    assertTrue(smallestRendition.matches(0, 0, 0, 0, 400, 0d));
+    assertFalse(smallestRendition.matches(0, 0, 0, 0, 600, 0d));
+
+    assertTrue(smallestRendition.matches(0, 0, 0, 0, 0, 2.11d));
+    assertFalse(smallestRendition.matches(0, 0, 0, 0, 0, 2.2d));
   }
 
   @Test
