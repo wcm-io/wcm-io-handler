@@ -415,6 +415,13 @@ public final class DummyMediaFormats {
       .renditionGroup("/apps/test/renditiongroup/nonfixed")
       .ranking(205)
       .build();
+  public static final MediaFormat NONFIXED_MINWIDTHHEIGHT = create("nonfixed_minwidthheight")
+      .label("nonfixed_minwidthheight")
+      .minWidthHeight(400)
+      .extensions("gif", "jpg", "png")
+      .renditionGroup("/apps/test/renditiongroup/nonfixed")
+      .ranking(206)
+      .build();
   public static final MediaFormat NORATIO_LARGE_MINWIDTH = create("noratio_large_minwidth")
       .label("freehand (no ratio, large min width)")
       .minWidth(2650)

@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.12.0" date="2021-04-23">
+      <action type="add" dev="sseifert">
+        Add new media format property "minWidthHeight" which accepts image with either width or height (whatever is the longest edge) matching the configured min. value.
+      </action>
+      <action type="update" dev="sseifert">
+        Dynamic media: Use smart cropping profiles for all renditions with the same ratio, not only when the exact resolution matches.
+      </action>
+      <action type="fix" dev="sseifert">
+        Dynamic media: Use "%20" instead of "+" for encoding spaces in dynamic media URLs.
+      </action>
+    </release>
+
     <release version="1.11.6" date="2021-04-19">
       <action type="update" dev="sseifert">
         Dynamic media: Use production dynamic media host name when author preview mode is active, but an URL mode forces to generate a publish URL.

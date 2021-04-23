@@ -220,6 +220,7 @@ class DefaultRenditionHandler implements RenditionHandler {
             || mediaFormat.getEffectiveMaxWidth() > 0
             || mediaFormat.getEffectiveMinHeight() > 0
             || mediaFormat.getEffectiveMaxHeight() > 0
+            || mediaFormat.getMinWidthHeight() > 0
             || mediaFormat.getRatio() > 0) {
           return true;
         }
@@ -255,6 +256,7 @@ class DefaultRenditionHandler implements RenditionHandler {
                 (int)mediaFormat.getEffectiveMinHeight(),
                 (int)mediaFormat.getEffectiveMaxWidth(),
                 (int)mediaFormat.getEffectiveMaxHeight(),
+                (int)mediaFormat.getMinWidthHeight(),
                 mediaFormat.getRatio())) {
               candidate.setMediaFormat(mediaFormat);
               return candidate;
@@ -309,7 +311,7 @@ class DefaultRenditionHandler implements RenditionHandler {
       if (destWidth > 0 && destHeight > 0) {
         destRatio = Ratio.get(destWidth, destHeight);
       }
-      return getVirtualRendition(candidates, destWidth, destHeight, destRatio);
+      return getVirtualRendition(candidates, destWidth, destHeight, 0, destRatio);
     }
 
     // or from any media format
@@ -318,9 +320,10 @@ class DefaultRenditionHandler implements RenditionHandler {
       public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
         int destWidth = (int)mediaFormat.getEffectiveMinWidth();
         int destHeight = (int)mediaFormat.getEffectiveMinHeight();
+        int minWidthHeight = (int)mediaFormat.getMinWidthHeight();
         double destRatio = mediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
-        RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, destRatio);
+        RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, minWidthHeight, destRatio);
         if (rendition != null) {
           rendition.setMediaFormat(mediaFormat);
         }
@@ -335,16 +338,17 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param candidates Candidates
    * @param destWidth Destination width
    * @param destHeight Destination height
+   * @param minWidthHeight Min. width/height (longest edge)
    * @param destRatio Destination ratio
    * @return Rendition or null
    */
   private RenditionMetadata getVirtualRendition(Set<RenditionMetadata> candidates,
-      long destWidth, long destHeight, double destRatio) {
+      long destWidth, long destHeight, long minWidthHeight, double destRatio) {
 
     // if ratio is defined get first rendition with matching ratio and same or bigger size
     if (destRatio > 0) {
       for (RenditionMetadata candidate : candidates) {
-        if (candidate.matches(destWidth, destHeight, 0, 0, destRatio)) {
+        if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, destRatio)) {
           return getVirtualRendition(candidate, destWidth, destHeight, destRatio);
         }
       }
@@ -352,7 +356,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     // otherwise get first rendition which is same or bigger in width and height
     else {
       for (RenditionMetadata candidate : candidates) {
-        if (candidate.matches(destWidth, destHeight, 0, 0, 0d)) {
+        if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, 0d)) {
           return getVirtualRendition(candidate, destWidth, destHeight, 0d);
         }
       }

@@ -20,7 +20,7 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT;
-import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WITH;
+import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
@@ -59,11 +59,11 @@ class DamUriTemplate implements UriTemplate {
         switch (type) {
           case CROP_CENTER:
             url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
-                + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WITH + "&hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT + "&fit=crop";
+                + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WIDTH + "&hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT + "&fit=crop";
             break;
           case SCALE_WIDTH:
             url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
-                + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WITH;
+                + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WIDTH;
             break;
           case SCALE_HEIGHT:
             url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
@@ -88,11 +88,11 @@ class DamUriTemplate implements UriTemplate {
 
       switch (type) {
         case CROP_CENTER:
-          url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WITH);
+          url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
           url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
           break;
         case SCALE_WIDTH:
-          url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WITH);
+          url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
           url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), "0");
           break;
         case SCALE_HEIGHT:

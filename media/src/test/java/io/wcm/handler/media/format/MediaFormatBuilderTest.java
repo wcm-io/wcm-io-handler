@@ -124,6 +124,18 @@ class MediaFormatBuilderTest {
   }
 
   @Test
+  void testBuilder_MinWidthHeight() {
+    MediaFormat mf = MediaFormatBuilder.create("name4_minWidthHeight")
+        .minWidthHeight(500)
+        .ratio(2, 1)
+        .build();
+
+    assertEquals("name4_minWidthHeight", mf.getName());
+    assertEquals(500, mf.getMinWidthHeight());
+    assertEquals("name4_minWidthHeight (min. 500px width/height; 2:1)", mf.getCombinedTitle());
+  }
+
+  @Test
   void testNullName() {
     assertThrows(IllegalArgumentException.class, () -> {
       MediaFormatBuilder.create(null).build();
@@ -134,6 +146,17 @@ class MediaFormatBuilderTest {
   void testIllegalName() {
     assertThrows(IllegalArgumentException.class, () -> {
       MediaFormatBuilder.create("name with spaces").build();
+    });
+  }
+
+  @Test
+  void testMinWidthHeight_withOtherWidthHeightRestrictions() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      MediaFormatBuilder.create("name")
+          .minWidth(500)
+          .minHeight(500)
+          .minWidthHeight(500)
+          .build();
     });
   }
 

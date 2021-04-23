@@ -54,7 +54,7 @@ class DynamicMediaPathTest {
   void setUp() {
     Resource profile1 = context.create().resource("/conf/global/settings/dam/adminui-extension/imageprofile/profile1",
         PN_CROP_TYPE, CROP_TYPE_SMART,
-        PN_BANNER, "Crop-1,90,60|Crop-2,30,20");
+        PN_BANNER, "Crop-1,90,60|Crop-2,50,50");
 
     dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
 
@@ -81,7 +81,7 @@ class DynamicMediaPathTest {
   @Test
   void testAutoCrop_SmartCrop() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8, true), null);
-    assertEquals("/is/image/DummyFolder/test%3ACrop-2", result);
+    assertEquals("/is/image/DummyFolder/test%3ACrop-1?wid=30&hei=20&fit=stretch", result);
   }
 
   @Test
@@ -139,7 +139,7 @@ class DynamicMediaPathTest {
     damContext = new DamContext(assetSpecialChars, null, dynamicMediaSupportService, context.request());
 
     String result = DynamicMediaPath.buildContent(damContext, false);
-    assertEquals("/is/content/DummyFolder/test+with+spaces+%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
+    assertEquals("/is/content/DummyFolder/test%20with%20spaces%20%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
   }
 
 }

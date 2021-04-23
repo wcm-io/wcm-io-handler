@@ -107,16 +107,23 @@ public final class DynamicMediaPath {
       @Nullable CropDimension cropDimension, @Nullable Integer rotation) {
     Dimension dimension = calcWidthHeight(damContext, width, height);
 
+    StringBuilder result = new StringBuilder();
+    result.append(IMAGE_SERVER_PATH).append(encodeDynamicMediaObject(damContext));
+
     if (cropDimension != null && cropDimension.isAutoCrop() && rotation == null) {
       // auto-crop applied - check for matching image profile and use predefined cropping preset if match found
       Optional<NamedDimension> smartCroppingDef = getSmartCropDimension(damContext, width, height);
       if (smartCroppingDef.isPresent()) {
-        return IMAGE_SERVER_PATH + encodeDynamicMediaObject(damContext) + "%3A" + smartCroppingDef.get().getName();
+        result.append("%3A").append(smartCroppingDef.get().getName()).append("?")
+            .append("wid=").append(dimension.getWidth()).append("&")
+            .append("hei=").append(dimension.getHeight()).append("&")
+            // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
+            .append("fit=stretch");
+        return result.toString();
       }
     }
 
-    StringBuilder result = new StringBuilder();
-    result.append(IMAGE_SERVER_PATH).append(encodeDynamicMediaObject(damContext)).append("?");
+    result.append("?");
     if (cropDimension != null) {
       result.append("crop=").append(cropDimension.getCropStringWidthHeight()).append("&");
     }
@@ -154,14 +161,16 @@ public final class DynamicMediaPath {
     return new Dimension(width, height);
   }
 
-  private static Optional<NamedDimension> getSmartCropDimension(@NotNull DamContext damContext, long width, long height) {
+  private static Optional<@NotNull NamedDimension> getSmartCropDimension(@NotNull DamContext damContext, long width, long height) {
+    Double requestedRatio = Ratio.get(width, height);
     ImageProfile imageProfile = damContext.getImageProfile();
-    if (imageProfile != null) {
-      return imageProfile.getSmartCropDefinitions().stream()
-          .filter(def -> (def.getWidth() == width) && (def.getHeight() == height))
-          .findFirst();
+    if (imageProfile == null) {
+      return Optional.empty();
     }
-    return Optional.empty();
+    Optional<NamedDimension> matchingDimension = imageProfile.getSmartCropDefinitions().stream()
+        .filter(def -> Ratio.matches(Ratio.get(def), requestedRatio))
+        .findFirst();
+    return matchingDimension.map(def -> new NamedDimension(def.getName(), width, height));
   }
 
   /**
@@ -174,6 +183,8 @@ public final class DynamicMediaPath {
     try {
       for (int i = 0; i < pathParts.length; i++) {
         pathParts[i] = URLEncoder.encode(pathParts[i], StandardCharsets.UTF_8.name());
+        // replace "+" with %20 in URL paths
+        pathParts[i] = StringUtils.replace(pathParts[i], "+", "%20");
       }
     }
     catch (UnsupportedEncodingException ex) {

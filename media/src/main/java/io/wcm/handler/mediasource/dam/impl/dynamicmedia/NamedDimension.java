@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.wcm.commons.util.ToStringStyle;
@@ -33,12 +34,12 @@ public final class NamedDimension extends Dimension {
 
   private final String name;
 
-  NamedDimension(String name, long width, long height) {
+  NamedDimension(@NotNull String name, long width, long height) {
     super(width, height);
     this.name = name;
   }
 
-  public String getName() {
+  public @NotNull String getName() {
     return this.name;
   }
 

@@ -45,6 +45,7 @@ public final class MediaFormatBuilder {
   private long height;
   private long minHeight;
   private long maxHeight;
+  private long minWidthHeight;
   private double ratio;
   private double ratioWidth;
   private double ratioHeight;
@@ -163,6 +164,16 @@ public final class MediaFormatBuilder {
   public @NotNull MediaFormatBuilder height(long min, long max) {
     this.minHeight = min;
     this.maxHeight = max;
+    return this;
+  }
+
+  /**
+   * @param value Min. width/height (px) - the longest edge is checked.
+   *          Cannot be combined with other width/height restrictions.
+   * @return this
+   */
+  public @NotNull MediaFormatBuilder minWidthHeight(long value) {
+    this.minWidthHeight = value;
     return this;
   }
 
@@ -301,6 +312,10 @@ public final class MediaFormatBuilder {
     if (this.name == null) {
       throw new IllegalArgumentException("Name is missing.");
     }
+    if (this.minWidthHeight != 0 && (this.width != 0 || this.minWidth != 0 || this.maxWidth != 0
+            || this.height != 0 || this.minHeight != 0 || this.maxHeight != 0)) {
+      throw new IllegalArgumentException("minWithHeight cannot be combined with any other width/height restriction.");
+    }
     return new MediaFormat(
         name,
         label,
@@ -311,6 +326,7 @@ public final class MediaFormatBuilder {
         height,
         minHeight,
         maxHeight,
+        minWidthHeight,
         ratio,
         ratioWidth,
         ratioHeight,

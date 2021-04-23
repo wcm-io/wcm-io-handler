@@ -477,7 +477,6 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertNotNull(url, "returned url?");
     assertEquals("http://www.dummysite.org/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url,
         "url as expected?");
-
   }
 
   @Test
@@ -975,6 +974,36 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED, media.getMap());
     assertTrue(StringUtils.startsWith(media.getMarkup(), "<img "));
     assertTrue(StringUtils.endsWith(media.getMarkup(), "</map>"));
+  }
+
+  @Test
+  void testMinWidthHeight_1() {
+    MediaArgs mediaArgs = new MediaArgs(MediaFormatBuilder.create("medium_minWithHeight_1")
+        .extensions("gif", "jpg", "png")
+        .minWidthHeight(1000)
+        .build());
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+  }
+
+  @Test
+  void testMinWidthHeight_2() {
+    MediaArgs mediaArgs = new MediaArgs(MediaFormatBuilder.create("medium_minWithHeight_2")
+        .extensions("gif", "jpg", "png")
+        .minWidthHeight(1200)
+        .build());
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+  }
+
+  @Test
+  void testMinWidthHeight_NotFulfilled() {
+    MediaArgs mediaArgs = new MediaArgs(MediaFormatBuilder.create("large_minWithHeight")
+        .extensions("gif", "jpg", "png")
+        .minWidthHeight(2000)
+        .build());
+    Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
+    assertFalse(media.isValid(), "valid?");
   }
 
 }
