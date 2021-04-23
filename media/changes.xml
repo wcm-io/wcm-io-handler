@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.11.8" date="not released">
+    <release version="1.12.0" date="2021-04-23">
       <action type="add" dev="sseifert">
         Add new media format property "minWidthHeight" which accepts image with either width or height (whatever is the longest edge) matching the configured min. value.
       </action>
