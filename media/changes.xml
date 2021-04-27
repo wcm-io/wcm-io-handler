@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.12.2" date="not released">
+      <action type="update" dev="bkalbitz">
+        Register authoring clientlib also to category 'cq.siteadmin.admin.properties' so it's also loaded in page properties dialog.
+      </action>
       <action type="fix" dev="sseifert" issue="WHAN-46">
         DefaultRenditionHandler: Media requests with responsive image handling but with a media format without ratio or width/height restrictions should be detected as "size-matching request".
       </action>
