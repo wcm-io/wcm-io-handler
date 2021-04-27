@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.12.2" date="not released">
+      <action type="fix" dev="sseifert" issue="WHAN-46">
+        DefaultRenditionHandler: Media requests with responsive image handling but with a media format without ratio or width/height restrictions should be detected as "size-matching request".
+      </action>
       <action type="fix" dev="sseifert" issue="WHAN-45">
         DefaultRenditionHandler: break after detecting any matching file extension.
       </action>

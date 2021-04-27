@@ -31,7 +31,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDHEIGHT_UNC
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_188;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_288;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_MAXWIDTH;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_UNCONSTRAINED;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.IMAGE_UNCONSTRAINED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_BIG;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_FULLSIZE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_FULLSIZE_OVERLAY;
@@ -212,7 +212,7 @@ class MediaFormatHandlerTest {
     assertEquals(FIXEDWIDTH_MAXWIDTH, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals(FIXEDWIDTH_UNCONSTRAINED, format3);
+    assertEquals(IMAGE_UNCONSTRAINED, format3);
 
   }
 
@@ -339,7 +339,7 @@ class MediaFormatHandlerTest {
     assertEquals(FIXEDWIDTH_MAXWIDTH, format3);
 
     MediaFormat format4 = iterator.next();
-    assertEquals(FIXEDWIDTH_UNCONSTRAINED, format4);
+    assertEquals(IMAGE_UNCONSTRAINED, format4);
 
   }
 
