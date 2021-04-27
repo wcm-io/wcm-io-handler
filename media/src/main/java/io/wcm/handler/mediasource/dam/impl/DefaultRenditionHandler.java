@@ -203,6 +203,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     for (String fileExtension : requestedFileExtensions) {
       if (MediaFileType.isImage(fileExtension)) {
         anyImageFileExtension = true;
+        break;
       }
     }
     if (!anyImageFileExtension && mediaArgs.getFixedWidth() == 0 && mediaArgs.getFixedHeight() == 0) {
