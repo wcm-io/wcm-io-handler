@@ -31,10 +31,11 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDHEIGHT_UNC
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_188;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_288;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_MAXWIDTH;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_UNCONSTRAINED;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.IMAGE_UNCONSTRAINED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_BIG;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_FULLSIZE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_FULLSIZE_OVERLAY;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_MINWIDTHHEIGHT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_RAW;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_SMALL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_TAB_FULLSIZE;
@@ -171,7 +172,7 @@ class MediaFormatHandlerTest {
     Set<MediaFormat> matchingFormats = underTest.getSameBiggerMediaFormats(NONFIXED_BIG, true);
     Iterator<MediaFormat> iterator = matchingFormats.iterator();
 
-    assertEquals(6, matchingFormats.size());
+    assertEquals(7, matchingFormats.size());
 
     MediaFormat format1 = iterator.next();
     assertEquals(NONFIXED_RAW, format1);
@@ -189,7 +190,10 @@ class MediaFormatHandlerTest {
     assertEquals(NONFIXED_BIG, format5);
 
     MediaFormat format6 = iterator.next();
-    assertEquals(NORATIO_LARGE_MINWIDTH, format6);
+    assertEquals(NONFIXED_MINWIDTHHEIGHT, format6);
+
+    MediaFormat format7 = iterator.next();
+    assertEquals(NORATIO_LARGE_MINWIDTH, format7);
 
   }
 
@@ -208,7 +212,7 @@ class MediaFormatHandlerTest {
     assertEquals(FIXEDWIDTH_MAXWIDTH, format2);
 
     MediaFormat format3 = iterator.next();
-    assertEquals(FIXEDWIDTH_UNCONSTRAINED, format3);
+    assertEquals(IMAGE_UNCONSTRAINED, format3);
 
   }
 
@@ -335,7 +339,7 @@ class MediaFormatHandlerTest {
     assertEquals(FIXEDWIDTH_MAXWIDTH, format3);
 
     MediaFormat format4 = iterator.next();
-    assertEquals(FIXEDWIDTH_UNCONSTRAINED, format4);
+    assertEquals(IMAGE_UNCONSTRAINED, format4);
 
   }
 
@@ -386,11 +390,11 @@ class MediaFormatHandlerTest {
     assertEquals(11, underTest.detectMediaFormats("swf", 0, 0, 0).size(), "swf");
 
     // test direct match
-    assertEquals(6, underTest.detectMediaFormats("jpg", 100, 450, 213).size(), "editorial_2col");
+    assertEquals(7, underTest.detectMediaFormats("jpg", 100, 450, 213).size(), "editorial_2col");
 
     // test ranking match
     SortedSet<MediaFormat> mediaFormats = underTest.detectMediaFormats("jpg", 100, 960, 455);
-    assertEquals(8, mediaFormats.size(), "showroom");
+    assertEquals(9, mediaFormats.size(), "showroom");
     assertEquals("showroom_campaign", mediaFormats.first().getName(), "showroom_campaign");
 
     // test ratio match
@@ -402,6 +406,14 @@ class MediaFormatHandlerTest {
     mediaFormats = underTest.detectMediaFormats("png", 100, 160, 100);
     assertTrue(mediaFormats.contains(ratioFormat), "nonfixed_raw ratio match");
 
+  }
+
+  @Test
+  void testDetectMediaFormats_minWidthHeight() {
+    assertFalse(underTest.detectMediaFormats("jpg", 100, 100, 100).contains(NONFIXED_MINWIDTHHEIGHT));
+    assertTrue(underTest.detectMediaFormats("jpg", 100, 400, 100).contains(NONFIXED_MINWIDTHHEIGHT));
+    assertTrue(underTest.detectMediaFormats("jpg", 100, 100, 400).contains(NONFIXED_MINWIDTHHEIGHT));
+    assertTrue(underTest.detectMediaFormats("jpg", 100, 600, 600).contains(NONFIXED_MINWIDTHHEIGHT));
   }
 
 }

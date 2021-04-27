@@ -30,9 +30,11 @@ import org.jetbrains.annotations.Nullable;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
+import io.wcm.handler.url.UrlMode;
 
 /**
  * Context objects require in DAM support implementation.
@@ -40,12 +42,14 @@ import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 public final class DamContext implements Adaptable {
 
   private final Asset asset;
+  private final UrlMode urlMode;
   private final DynamicMediaSupportService dynamicMediaSupportService;
   private final Adaptable adaptable;
 
   private Boolean dynamicMediaEnabled;
   private String dynamicMediaObject;
-  private String dynamicMediaProductionAssetUrl;
+  private String dynamicMediaServerUrl;
+  private Dimension dynamicMediaImageSizeLimit;
   private ImageProfile imageProfile;
 
   private static final ImageProfile NO_IMAGE_PROFILE = new ImageProfile() {
@@ -57,12 +61,14 @@ public final class DamContext implements Adaptable {
 
   /**
    * @param asset DAM asset
+   * @param urlMode urlMode
    * @param dynamicMediaSupportService Dynamic media support service
    * @param adaptable Adaptable from current context
    */
-  public DamContext(Asset asset, DynamicMediaSupportService dynamicMediaSupportService,
-      Adaptable adaptable) {
+  public DamContext(@NotNull Asset asset, @Nullable UrlMode urlMode,
+      @NotNull DynamicMediaSupportService dynamicMediaSupportService, @NotNull Adaptable adaptable) {
     this.asset = asset;
+    this.urlMode = urlMode;
     this.adaptable = adaptable;
     this.dynamicMediaSupportService = dynamicMediaSupportService;
   }
@@ -102,13 +108,23 @@ public final class DamContext implements Adaptable {
   }
 
   /**
-   * @return Get scene7 host for publish environment.
+   * @return Get scene7 host for publish environment. Empty string if author preview mode is active.
    */
-  public @Nullable String getDynamicMediaProductionAssetUrl() {
-    if (dynamicMediaProductionAssetUrl == null) {
-      dynamicMediaProductionAssetUrl = dynamicMediaSupportService.getDynamicMediaProductionAssetUrl(asset);
+  public @Nullable String getDynamicMediaServerUrl() {
+    if (dynamicMediaServerUrl == null) {
+      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset, urlMode);
     }
-    return dynamicMediaProductionAssetUrl;
+    return dynamicMediaServerUrl;
+  }
+
+  /**
+   * @return Dynamic media reply image size limit
+   */
+  public @NotNull Dimension getDynamicMediaImageSizeLimit() {
+    if (dynamicMediaImageSizeLimit == null) {
+      dynamicMediaImageSizeLimit = dynamicMediaSupportService.getImageSizeLimit();
+    }
+    return dynamicMediaImageSizeLimit;
   }
 
   /**

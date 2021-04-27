@@ -67,7 +67,7 @@ class AutoCroppingMediaHandlerTest {
 
     // prepare asset with web rendition
     asset = context.create().asset("/content/dam/test.jpg", 400, 200, ContentType.JPEG);
-    context.create().assetRendition(asset, "cq5dam.web.300.150.jpg", 300, 150, ContentType.JPEG);
+    context.create().assetRenditionWebEnabled(asset, 300, 150);
 
     // prepare component with auto-cropping
     context.create().resource("/apps/app1/components/comp1",

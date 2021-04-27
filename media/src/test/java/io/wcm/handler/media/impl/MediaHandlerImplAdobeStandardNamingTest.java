@@ -72,7 +72,7 @@ class MediaHandlerImplAdobeStandardNamingTest {
     Asset asset = context.create().asset("/content/dam/test.jpg", 20, 20, ContentType.JPEG);
 
     // create crop rendition as expected by CropRenditionHandler
-    context.create().assetRendition(asset, "cq5dam.web.10.10.jpg", 10, 10, ContentType.JPEG);
+    context.create().assetRenditionWebEnabled(asset, 10, 10);
 
     Resource resource = context.create().resource(ROOTPATH_CONTENT + "/media",
         PN_MEDIA_REF_STANDARD, asset.getPath(),

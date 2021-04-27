@@ -200,20 +200,20 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    */
   public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
     if (contentDispositionAttachment) {
-      // do not use dynamic media for request forced with content disposition attachment
-      return null;
+      // serve static content from dynamic media for content disposition attachment
+      return DynamicMediaPath.buildContent(damContext, true);
     }
     else if ((MediaFileType.isBrowserImage(getFileExtension())
         && (MediaFileType.isVectorImage(getFileExtension()) || StringUtils.equals(getFileExtension(), FileExtension.GIF)))
         || !MediaFileType.isImage(getFileExtension())) {
-      // do not use dynamic media for non-image requests or Vector/GIF images that can be displayed in browser directly
+      // serve non-image requests or Vector/GIF images as static content from dynamic media
       // (vector can be scaled in browser directly, GIF may be animated which is not supported by dynamic media)
-      return null;
+      return DynamicMediaPath.buildContent(damContext, false);
     }
     else {
       // display original rendition with original file size - or image rendition that uses a file extension
       // that cannot be displayed in browser directly - render via dynamic media
-      return DynamicMediaPath.build(damContext, getWidth(), getHeight());
+      return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight());
     }
   }
 
@@ -239,10 +239,14 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param minHeight Min. height
    * @param maxWidth Max. width
    * @param maxHeight Max. height
+   * @param minWidthHeight Min. width/height (the longest edge)
    * @param ratio Ratio
    * @return true if matches
    */
-  public boolean matches(long minWidth, long minHeight, long maxWidth, long maxHeight, double ratio) {
+  public boolean matches(long minWidth, long minHeight, long maxWidth, long maxHeight, long minWidthHeight, double ratio) {
+    if (minWidthHeight > 0 && (getWidth() < minWidthHeight && getHeight() < minWidthHeight)) {
+      return false;
+    }
     if (minWidth > 0 && getWidth() < minWidth) {
       return false;
     }

@@ -89,15 +89,15 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   @Override
   public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
     if (contentDispositionAttachment) {
-      // do not use dynamic media for request forced with content disposition attachment
-      return null;
+      // serve static content from dynamic media for content disposition attachment
+      return DynamicMediaPath.buildContent(damContext, true);
     }
     else if (isVectorImage()) {
-      // vector images can be scaled in browser without need of dynamic media
-      return null;
+      // vector images can be scaled in browser without need of dynamic media - serve as static content
+      return DynamicMediaPath.buildContent(damContext, false);
     }
     // render virtual rendition with dynamic media
-    return DynamicMediaPath.build(damContext, getWidth(), getHeight());
+    return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight());
   }
 
   @Override

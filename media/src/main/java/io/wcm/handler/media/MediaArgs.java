@@ -434,14 +434,15 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * @return The custom alternative text that is to be used instead of the one defined in the the media lib item
+   * @return The custom alternative text that is to be used instead of the one defined in the the asset metadata.
    */
   public String getAltText() {
     return this.altText;
   }
 
   /**
-   * Allows to specify a custom alternative text that is to be used instead of the one defined in the the media lib item
+   * Allows to specify a custom alternative text that is to be used instead of the one defined in the the asset
+   * metadata.
    * @param value Custom alternative text. If null or empty, the default alt text from media library is used.
    * @return this
    */

@@ -22,7 +22,7 @@ package io.wcm.handler.media.impl;
 import static io.wcm.handler.media.impl.MediaFormatResolver.MEDIAFORMAT_NAME_SEPARATOR;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDWIDTH_UNCONSTRAINED;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.IMAGE_UNCONSTRAINED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -176,16 +176,16 @@ class MediaFormatResolverTest {
   @Test
   void testImageSizes_NoRatioMediaFormat() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(FIXEDWIDTH_UNCONSTRAINED)
+        .mediaFormat(IMAGE_UNCONSTRAINED)
         .imageSizes(new ImageSizes("size1", 10, 20));
 
     assertTrue(underTest.resolve(mediaArgs));
 
     MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
     assertEquals(3, mediaFormatOptions.length);
-    assertEquals(FIXEDWIDTH_UNCONSTRAINED, mediaFormatOptions[0].getMediaFormat());
-    assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 10, true, mediaFormatOptions[1]);
-    assertResponsiveMediaFormat(FIXEDWIDTH_UNCONSTRAINED, 20, true, mediaFormatOptions[2]);
+    assertEquals(IMAGE_UNCONSTRAINED, mediaFormatOptions[0].getMediaFormat());
+    assertResponsiveMediaFormat(IMAGE_UNCONSTRAINED, 10, true, mediaFormatOptions[1]);
+    assertResponsiveMediaFormat(IMAGE_UNCONSTRAINED, 20, true, mediaFormatOptions[2]);
   }
 
   @Test

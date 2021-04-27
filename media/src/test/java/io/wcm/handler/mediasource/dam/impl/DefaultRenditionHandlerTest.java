@@ -41,7 +41,7 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
     Asset asset = context.resourceResolver().getResource(MEDIAITEM_PATH_16_10).adaptTo(Asset.class);
 
     DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
-    DamContext damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
+    DamContext damContext = new DamContext(asset, null, dynamicMediaSupportService, context.request());
 
     underTest = new DefaultRenditionHandler(damContext);
   }

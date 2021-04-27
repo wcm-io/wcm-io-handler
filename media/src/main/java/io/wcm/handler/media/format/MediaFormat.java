@@ -53,6 +53,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private final long height;
   private final long minHeight;
   private final long maxHeight;
+  private final long minWidthHeight;
   private final double ratio;
   private final double ratioWidth;
   private final double ratioHeight;
@@ -68,7 +69,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
   //CHECKSTYLE:OFF
   MediaFormat(String name, String label, String description,
-      long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight,
+      long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight, long minWidthHeight,
       double ratio, double ratioWidth, double ratioHeight, long fileSizeMax, String[] extensions,
       String renditionGroup, boolean download, boolean internal, int ranking, ValueMap properties) {
     this.name = name;
@@ -80,6 +81,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
     this.height = height;
     this.minHeight = minHeight;
     this.maxHeight = maxHeight;
+    this.minWidthHeight = minWidthHeight;
     this.ratio = ratio;
     this.ratioWidth = ratioWidth;
     this.ratioHeight = ratioHeight;
@@ -163,6 +165,14 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   @JsonIgnore
   public long getMaxHeight() {
     return this.maxHeight;
+  }
+
+  /**
+   * @return Min. width/height (px) - the longest edge is checked.
+   *         Cannot be combined with other width/height restrictions.
+   */
+  public long getMinWidthHeight() {
+    return this.minWidthHeight;
   }
 
   /**
@@ -457,7 +467,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
-   * Get minimum dimensions for media format. If only with or height is defined the missing dimensions
+   * Get minimum dimensions for media format. If only width or height is defined the missing dimensions
    * is calculated from the ratio. If no ratio defined either only width or height dimension is returned.
    * If neither width or height are defined null is returned.
    * @return Min. dimensions or null
@@ -496,49 +506,54 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       List<String> extParts = new ArrayList<>();
 
       // with/height restrictions
-      long widthMin = getEffectiveMinWidth();
-      long widthMax = getEffectiveMaxWidth();
-      long heightMin = getEffectiveMinHeight();
-      long heightMax = getEffectiveMaxHeight();
-      if (widthMin > 0 || widthMax > 0 || heightMin > 0 || heightMax > 0) {
-        StringBuilder sbRestrictions = new StringBuilder();
-        if (widthMin == widthMax) {
-          if (widthMin == 0) {
-            sbRestrictions.append("?");
+      if (minWidthHeight != 0) {
+        extParts.add("min. " + minWidthHeight + "px width/height");
+      }
+      else {
+        long widthMin = getEffectiveMinWidth();
+        long widthMax = getEffectiveMaxWidth();
+        long heightMin = getEffectiveMinHeight();
+        long heightMax = getEffectiveMaxHeight();
+        if (widthMin > 0 || widthMax > 0 || heightMin > 0 || heightMax > 0) {
+          StringBuilder sbRestrictions = new StringBuilder();
+          if (widthMin == widthMax) {
+            if (widthMin == 0) {
+              sbRestrictions.append("?");
+            }
+            else {
+              sbRestrictions.append(widthMin);
+            }
           }
           else {
-            sbRestrictions.append(widthMin);
+            if (widthMin > 0) {
+              sbRestrictions.append(widthMin);
+            }
+            sbRestrictions.append("..");
+            if (widthMax > 0) {
+              sbRestrictions.append(widthMax);
+            }
           }
-        }
-        else {
-          if (widthMin > 0) {
-            sbRestrictions.append(widthMin);
-          }
-          sbRestrictions.append("..");
-          if (widthMax > 0) {
-            sbRestrictions.append(widthMax);
-          }
-        }
-        sbRestrictions.append('x');
-        if (heightMin == heightMax) {
-          if (heightMin == 0) {
-            sbRestrictions.append("?");
+          sbRestrictions.append('x');
+          if (heightMin == heightMax) {
+            if (heightMin == 0) {
+              sbRestrictions.append("?");
+            }
+            else {
+              sbRestrictions.append(heightMin);
+            }
           }
           else {
-            sbRestrictions.append(heightMin);
+            if (heightMin > 0) {
+              sbRestrictions.append(heightMin);
+            }
+            sbRestrictions.append("..");
+            if (heightMax > 0) {
+              sbRestrictions.append(heightMax);
+            }
           }
+          sbRestrictions.append("px");
+          extParts.add(sbRestrictions.toString());
         }
-        else {
-          if (heightMin > 0) {
-            sbRestrictions.append(heightMin);
-          }
-          sbRestrictions.append("..");
-          if (heightMax > 0) {
-            sbRestrictions.append(heightMax);
-          }
-        }
-        sbRestrictions.append("px");
-        extParts.add(sbRestrictions.toString());
       }
 
       // ratio (if label contains a ":" it is assumed a ratio is already contained in the label)

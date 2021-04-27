@@ -40,7 +40,7 @@ public interface MediaHandler {
 
   /**
    * Build media which is referenced in the resource (as property or inline binary data).
-   * @param resource Resource containing reference to media asset and optionally futher properties like alt. text,
+   * @param resource Resource containing reference to media asset and optionally further properties like alt. text,
    *          cropping information etc. Alternatively it can contain an inline binary asset uploaded directly to the
    *          resource.
    * @return Media builder
@@ -50,7 +50,7 @@ public interface MediaHandler {
 
   /**
    * Build media which is referenced in the resource (as property or inline binary data).
-   * @param resource Resource containing reference to media asset and optionally futher properties like alt. text,
+   * @param resource Resource containing reference to media asset and optionally further properties like alt. text,
    *          cropping information etc. Alternatively it can contain an inline binary asset uploaded directly to the
    *          resource.
    * @param mediaArgs Additional arguments affecting media resolving
@@ -61,7 +61,7 @@ public interface MediaHandler {
 
   /**
    * Build media which is referenced in the resource (as property or inline binary data).
-   * @param resource Resource containing reference to media asset and optionally futher properties like alt. text,
+   * @param resource Resource containing reference to media asset and optionally further properties like alt. text,
    *          cropping information etc. Alternatively it can contain an inline binary asset uploaded directly to the
    *          resource.
    * @param mediaFormats Media format(s)

@@ -24,6 +24,9 @@ import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Asset;
 
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.url.UrlMode;
+
 /**
  * Read image profiles stored in /conf resources.
  * Image profiles are usually stored at /conf/global/settings/dam/adminui-extension/imageprofile.
@@ -34,6 +37,12 @@ public interface DynamicMediaSupportService {
    * @return Whether dynamic media is enabled on this AEM instance
    */
   boolean isDynamicMediaEnabled();
+
+  /**
+   * @return Reply image size limit as configured in dynamic media.
+   */
+  @NotNull
+  Dimension getImageSizeLimit();
 
   /**
    * Get image profile.
@@ -54,9 +63,10 @@ public interface DynamicMediaSupportService {
   /**
    * Get scene7 host/URL prefix for publish environment.
    * @param asset DAM asset
-   * @return Protocol and hostname of scene7 host or null
+   * @return Protocol and hostname of scene7 host or null.
+   *         If author preview mode is enabled, returns empty string.
    */
   @Nullable
-  String getDynamicMediaProductionAssetUrl(@NotNull Asset asset);
+  String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode);
 
 }

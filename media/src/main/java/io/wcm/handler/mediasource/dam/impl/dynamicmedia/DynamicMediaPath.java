@@ -19,8 +19,12 @@
  */
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,33 +39,63 @@ import io.wcm.handler.mediasource.dam.impl.DamContext;
 public final class DynamicMediaPath {
 
   /**
-   * Fixed path part for dynamic media image serving API.
+   * Fixed path part for dynamic media image serving API for serving images.
    */
-  public static final String DYNAMICMEDIA_IS_IMAGE_PATH = "/is/image/";
-
+  private static final String IMAGE_SERVER_PATH = "/is/image/";
 
   /**
-   * Maximum width/height we support for dynamic media delivery. (should by made configurable)
+   * Fixed path part for dynamic media image serving API for serving static content.
    */
-  private static final long MAX_WIDTH_HEIGHT = 4000;
+  private static final String CONTENT_SERVER_PATH = "/is/content/";
+
+  /**
+   * Suffix is appended to static content dynamic media URLs that should be served with
+   * Content-Disposition: attachment header.
+   * This is configured via a custom ruleset, see https://wcm.io/handler/media/dynamic-media.html
+   */
+  public static final String DOWNLOAD_SUFFIX = "?cdh=attachment";
 
   private DynamicMediaPath() {
     // static methods only
   }
 
   /**
-   * Build media path for rendering with dynamic media/scene7.
+   * Build media path for serving static content via dynamic media/scene7.
+   * @param damContext DAM context objects
+   * @param contentDispositionAttachment Whether to send content disposition: attachment header for downloads
+   * @return Media path
+   */
+  public static @NotNull String buildContent(@NotNull DamContext damContext, boolean contentDispositionAttachment) {
+    StringBuilder result = new StringBuilder();
+    result.append(CONTENT_SERVER_PATH).append(encodeDynamicMediaObject(damContext));
+    if (contentDispositionAttachment) {
+      result.append(DOWNLOAD_SUFFIX);
+    }
+    return result.toString();
+  }
+
+  /**
+   * Build media path for rendering image via dynamic media/scene7.
+   * @param damContext DAM context objects
+   * @return Media path
+   */
+  public static @NotNull String buildImage(@NotNull DamContext damContext) {
+    return IMAGE_SERVER_PATH + encodeDynamicMediaObject(damContext);
+  }
+
+  /**
+   * Build media path for rendering image with dynamic media/scene7.
    * @param damContext DAM context objects
    * @param width Width
    * @param height Height
    * @return Media path
    */
-  public static @NotNull String build(@NotNull DamContext damContext, long width, long height) {
-    return build(damContext, width, height, null, null);
+  public static @NotNull String buildImage(@NotNull DamContext damContext, long width, long height) {
+    return buildImage(damContext, width, height, null, null);
   }
 
   /**
-   * Build media path for rendering with dynamic media/scene7.
+   * Build media path for rendering image with dynamic media/scene7.
    * @param damContext DAM context objects
    * @param width Width
    * @param height Height
@@ -69,20 +103,27 @@ public final class DynamicMediaPath {
    * @param rotation Rotation
    * @return Media path
    */
-  public static @NotNull String build(@NotNull DamContext damContext, long width, long height,
+  public static @NotNull String buildImage(@NotNull DamContext damContext, long width, long height,
       @Nullable CropDimension cropDimension, @Nullable Integer rotation) {
-    Dimension dimension = calcWidthHeight(width, height);
+    Dimension dimension = calcWidthHeight(damContext, width, height);
+
+    StringBuilder result = new StringBuilder();
+    result.append(IMAGE_SERVER_PATH).append(encodeDynamicMediaObject(damContext));
 
     if (cropDimension != null && cropDimension.isAutoCrop() && rotation == null) {
       // auto-crop applied - check for matching image profile and use predefined cropping preset if match found
       Optional<NamedDimension> smartCroppingDef = getSmartCropDimension(damContext, width, height);
       if (smartCroppingDef.isPresent()) {
-        return damContext.getDynamicMediaObject() + "%3A" + smartCroppingDef.get().getName();
+        result.append("%3A").append(smartCroppingDef.get().getName()).append("?")
+            .append("wid=").append(dimension.getWidth()).append("&")
+            .append("hei=").append(dimension.getHeight()).append("&")
+            // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
+            .append("fit=stretch");
+        return result.toString();
       }
     }
 
-    StringBuilder result = new StringBuilder();
-    result.append(damContext.getDynamicMediaObject()).append("?");
+    result.append("?");
     if (cropDimension != null) {
       result.append("crop=").append(cropDimension.getCropStringWidthHeight()).append("&");
     }
@@ -103,30 +144,53 @@ public final class DynamicMediaPath {
    * @param height Height
    * @return Dimension with capped width/height
    */
-  private static Dimension calcWidthHeight(long width, long height) {
-    if (width > MAX_WIDTH_HEIGHT) {
+  private static Dimension calcWidthHeight(@NotNull DamContext damContext, long width, long height) {
+    Dimension sizeLimit = damContext.getDynamicMediaImageSizeLimit();
+    if (width > sizeLimit.getWidth()) {
       double ratio = Ratio.get(width, height);
-      long newWidth = MAX_WIDTH_HEIGHT;
+      long newWidth = sizeLimit.getWidth();
       long newHeight = Math.round(newWidth / ratio);
-      return calcWidthHeight(newWidth, newHeight);
+      return calcWidthHeight(damContext, newWidth, newHeight);
     }
-    if (height > MAX_WIDTH_HEIGHT) {
+    if (height > sizeLimit.getHeight()) {
       double ratio = Ratio.get(width, height);
-      long newHeight = MAX_WIDTH_HEIGHT;
+      long newHeight = sizeLimit.getHeight();
       long newWidth = Math.round(newHeight * ratio);
       return new Dimension(newWidth, newHeight);
     }
     return new Dimension(width, height);
   }
 
-  private static Optional<NamedDimension> getSmartCropDimension(@NotNull DamContext damContext, long width, long height) {
+  private static Optional<@NotNull NamedDimension> getSmartCropDimension(@NotNull DamContext damContext, long width, long height) {
+    Double requestedRatio = Ratio.get(width, height);
     ImageProfile imageProfile = damContext.getImageProfile();
-    if (imageProfile != null) {
-      return imageProfile.getSmartCropDefinitions().stream()
-          .filter(def -> (def.getWidth() == width) && (def.getHeight() == height))
-          .findFirst();
+    if (imageProfile == null) {
+      return Optional.empty();
     }
-    return Optional.empty();
+    Optional<NamedDimension> matchingDimension = imageProfile.getSmartCropDefinitions().stream()
+        .filter(def -> Ratio.matches(Ratio.get(def), requestedRatio))
+        .findFirst();
+    return matchingDimension.map(def -> new NamedDimension(def.getName(), width, height));
+  }
+
+  /**
+   * Splits dynamic media folder and file name and URL-encodes them separately (may contain spaces or special chars).
+   * @param damContext DAM context
+   * @return Encoded path
+   */
+  private static String encodeDynamicMediaObject(@NotNull DamContext damContext) {
+    String[] pathParts = StringUtils.split(damContext.getDynamicMediaObject(), "/");
+    try {
+      for (int i = 0; i < pathParts.length; i++) {
+        pathParts[i] = URLEncoder.encode(pathParts[i], StandardCharsets.UTF_8.name());
+        // replace "+" with %20 in URL paths
+        pathParts[i] = StringUtils.replace(pathParts[i], "+", "%20");
+      }
+    }
+    catch (UnsupportedEncodingException ex) {
+      throw new RuntimeException("Unsupported encoding.", ex);
+    }
+    return StringUtils.join(pathParts, "/");
   }
 
 }

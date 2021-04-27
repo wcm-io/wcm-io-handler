@@ -47,6 +47,7 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -426,8 +427,9 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
     if (!StringUtils.contains(mediaUrl, ".download_attachment.") && !StringUtils.contains(mediaUrl, "/is/image/")) {
       Rendition rendition = media.getRendition();
-      assertEquals(FilenameUtils.getName(mediaUrl), rendition.getFileName());
-      assertEquals(FilenameUtils.getExtension(mediaUrl), rendition.getFileExtension());
+      String strippedMediaUrl = StringUtils.removeEnd(mediaUrl, DynamicMediaPath.DOWNLOAD_SUFFIX);
+      assertEquals(FilenameUtils.getName(strippedMediaUrl), rendition.getFileName());
+      assertEquals(FilenameUtils.getExtension(strippedMediaUrl), rendition.getFileExtension());
     }
 
     if (StringUtils.contains(mediaUrl, ".image_file.")) {

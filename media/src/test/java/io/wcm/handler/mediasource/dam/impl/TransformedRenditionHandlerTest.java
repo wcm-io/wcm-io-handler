@@ -54,6 +54,7 @@ class TransformedRenditionHandlerTest {
   private CropDimension cropDimension;
 
   @BeforeEach
+  @SuppressWarnings("null")
   void setUp() throws Exception {
 
     // register RenditionMetadataListenerService to generate rendition metadata
@@ -65,10 +66,10 @@ class TransformedRenditionHandlerTest {
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 
     DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
-    damContext = new DamContext(asset, dynamicMediaSupportService, context.request());
+    damContext = new DamContext(asset, null, dynamicMediaSupportService, context.request());
 
     // generate web-enabled rendition
-    webRendition = context.create().assetRendition(asset, "cq5dam.web.200.150.jpg", 200, 150, ContentType.JPEG);
+    webRendition = context.create().assetRenditionWebEnabled(asset, 200, 150);
 
     cropDimension = new CropDimension(20, 10, 100, 30);
   }
