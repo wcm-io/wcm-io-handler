@@ -27,6 +27,9 @@
       <action type="update" dev="bkalbitz">
         Register authoring clientlib also to category 'cq.siteadmin.admin.properties' so it's also loaded in page properties dialog.
       </action>
+      <action type="update" dev="sseifert">
+        In case of manual cropping and request for multiple non-mandatory media formats, prefer renditions based on the media format selected for manual cropping over "fallback" renditions based on the other media formats.
+      </action>
       <action type="fix" dev="sseifert" issue="WHAN-46">
         DefaultRenditionHandler: Media requests with responsive image handling but with a media format without ratio or width/height restrictions should be detected as "size-matching request".
       </action>

@@ -645,6 +645,29 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(EDITORIAL_STAGE_SMALL, renditions.get(3).getMediaFormat());
   }
 
+  /**
+   * If there are multiple non-mandatory media formats requests with an explicit cropping, and
+   * the original image matches with the first media format (uncropped), and the cropped image with the
+   * second media format, the cropped image should be preferred because the user explitely defined the cropping.
+   */
+  @Test
+  void testMultipleMediaFormatsWithCropping_PreferCroppingOverFallback() {
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO, SHOWROOM_CONTROLS);
+    Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(SHOWROOM_CONTROLS, renditions.get(0).getMediaFormat());
+
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+  }
+
   @Test
   void testMultipleMandatoryMediaFormatsNotAllMatch() {
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(VIDEO_2COL, EDITORIAL_2COL, EDITORIAL_3COL);

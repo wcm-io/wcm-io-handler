@@ -726,19 +726,43 @@ class InlineMediaSourceTest {
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
     assertEquals(SHOWROOM_CONTROLS, renditions.get(0).getMediaFormat());
 
-    assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
-        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
-
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.333.250.34,0,367,250.file/sample_image_400x250.jpg",
-        renditions.get(2).getUrl(), "rendition.mediaUrl.1");
-    assertEquals(RATIO2, renditions.get(2).getMediaFormat());
+        renditions.get(1).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(RATIO2, renditions.get(1).getMediaFormat());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.215.102.0,0,320,152.file/sample_image_400x250.jpg",
-        renditions.get(3).getUrl(), "rendition.mediaUrl.1");
-    assertEquals(EDITORIAL_1COL, renditions.get(3).getMediaFormat());
+        renditions.get(2).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(EDITORIAL_1COL, renditions.get(2).getMediaFormat());
+
+    assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
+        renditions.get(3).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(RATIO, renditions.get(3).getMediaFormat());
+  }
+
+  @Test
+  void testMultipleMediaFormatsWithCropping_PreferCroppingOverFallback() {
+    // set cropping parameters
+    ModifiableValueMap props = mediaInlineSampleImageResource_16_10.adaptTo(ModifiableValueMap.class);
+    props.put(PN_MEDIA_CROP, "0,0,320,152");
+
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO, SHOWROOM_CONTROLS);
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10).args(mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(SHOWROOM_CONTROLS, renditions.get(0).getMediaFormat());
+
+    assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(RATIO, renditions.get(1).getMediaFormat());
   }
 
   @Test
