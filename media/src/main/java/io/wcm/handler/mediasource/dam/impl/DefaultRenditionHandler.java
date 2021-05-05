@@ -203,6 +203,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     for (String fileExtension : requestedFileExtensions) {
       if (MediaFileType.isImage(fileExtension)) {
         anyImageFileExtension = true;
+        break;
       }
     }
     if (!anyImageFileExtension && mediaArgs.getFixedWidth() == 0 && mediaArgs.getFixedHeight() == 0) {
@@ -216,12 +217,17 @@ class DefaultRenditionHandler implements RenditionHandler {
     Boolean isSizeMatchingMediaFormat = visitMediaFormats(mediaArgs, new MediaFormatVisitor<Boolean>() {
       @Override
       public @Nullable Boolean visit(@NotNull MediaFormat mediaFormat) {
+        // check if any width or ratio restrictions are defined for the media format
         if (mediaFormat.getEffectiveMinWidth() > 0
             || mediaFormat.getEffectiveMaxWidth() > 0
             || mediaFormat.getEffectiveMinHeight() > 0
             || mediaFormat.getEffectiveMaxHeight() > 0
             || mediaFormat.getMinWidthHeight() > 0
             || mediaFormat.getRatio() > 0) {
+          return true;
+        }
+        // alternatively check if responsive image is requested via image sizes or picture sources
+        if (mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null) {
           return true;
         }
         return null;

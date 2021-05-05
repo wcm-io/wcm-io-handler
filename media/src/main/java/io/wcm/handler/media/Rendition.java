@@ -161,4 +161,11 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   @Nullable
   @JsonIgnore
   Date getModificationDate();
+
+  /**
+   * @return true if this rendition is returned as "fallback" not fully fulfilling the media request.
+   *         Example: An explicit cropping was given, but it could not be fulfilled. If in this case another
+   *         rendition is returned that fulfills all other media format restrictions, this flag is set to true.
+   */
+  boolean isFallback();
 }

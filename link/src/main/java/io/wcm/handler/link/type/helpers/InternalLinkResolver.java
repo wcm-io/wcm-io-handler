@@ -178,8 +178,18 @@ public final class InternalLinkResolver {
       String fragment = linkArgs.getFragment();
 
       // optionally override query parameters and fragment from link resource
-      queryString = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, queryString);
-      fragment = props.get(LinkNameConstants.PN_LINK_FRAGMENT, fragment);
+      if (queryString == null) {
+        queryString = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, String.class);
+      }
+      else {
+        queryString = props.get(LinkNameConstants.PN_LINK_QUERY_PARAM, queryString);
+      }
+      if (fragment == null) {
+        fragment = props.get(LinkNameConstants.PN_LINK_FRAGMENT, String.class);
+      }
+      else {
+        fragment = props.get(LinkNameConstants.PN_LINK_FRAGMENT, fragment);
+      }
 
       // build link url
       linkUrl = resolvingUrlHandler.get(targetPage)

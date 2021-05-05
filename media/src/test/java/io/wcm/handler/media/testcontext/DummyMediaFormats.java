@@ -452,7 +452,7 @@ public final class DummyMediaFormats {
       .ranking(402)
       .renditionGroup("/apps/test/renditiongroup/fixedwidth")
       .build();
-  public static final MediaFormat FIXEDWIDTH_UNCONSTRAINED = create("fixedwidth_unconstrained")
+  public static final MediaFormat IMAGE_UNCONSTRAINED = create("fixedwidth_unconstrained")
       .label("fixedwidth_unconstrained")
       .extensions("gif","jpg","jpeg","png")
       .ranking(403)

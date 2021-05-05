@@ -128,12 +128,14 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
         .getServiceResourceResolver(ImmutableMap.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
       Resource profileResource = resourceResolver.getResource(profilePath);
       if (profileResource != null) {
+        log.debug("Loaded image profile: {}", profilePath);
         return new ImageProfileImpl(profileResource);
       }
     }
     catch (LoginException ex) {
       log.error("Missing service user mapping for 'io.wcm.handler.media:dynamic-media-support' - see https://wcm.io/handler/media/configuration.html", ex);
     }
+    log.debug("Image profile not found: {}", profilePath);
     return null;
   }
 

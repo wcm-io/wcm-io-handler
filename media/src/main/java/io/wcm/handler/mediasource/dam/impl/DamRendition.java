@@ -46,6 +46,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
   private final DamContext damContext;
   private final MediaArgs mediaArgs;
   private final RenditionMetadata rendition;
+  private boolean fallback;
 
   /**
    * @param cropDimension Crop dimension
@@ -78,6 +79,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
           renditionHandler = new DefaultRenditionHandler(damContext);
           resolvedRendition = renditionHandler.getRendition(mediaArgs);
         }
+        fallback = true;
       }
     }
 
@@ -244,6 +246,11 @@ class DamRendition extends SlingAdaptable implements Rendition {
     else {
       return 0;
     }
+  }
+
+  @Override
+  public boolean isFallback() {
+    return fallback;
   }
 
   @Override

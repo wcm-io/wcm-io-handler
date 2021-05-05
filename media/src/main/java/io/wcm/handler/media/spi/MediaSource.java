@@ -432,18 +432,29 @@ public abstract class MediaSource {
 
   private boolean resolveRenditionsWithMediaFormats(@NotNull Asset asset, @NotNull MediaArgs mediaArgs,
       @NotNull List<MediaFormatOption> mediaFormatOptions, @NotNull List<Rendition> resolvedRenditions) {
+
+    // collect "fallback" renditions that do not fully fulfill the media request (e.g. ignored explicit cropping)
+    // separately and add them last in the returned list
+    List<Rendition> fallbackRenditions = new ArrayList<>();
+
     boolean allMandatoryResolved = true;
     for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
       MediaArgs renditionMediaArgs = mediaArgs.clone();
       renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
       Rendition rendition = asset.getRendition(renditionMediaArgs);
       if (rendition != null) {
-        resolvedRenditions.add(rendition);
+        if (rendition.isFallback()) {
+          fallbackRenditions.add(rendition);
+        }
+        else {
+          resolvedRenditions.add(rendition);
+        }
       }
       else if (mediaFormatOption.isMandatory()) {
         allMandatoryResolved = false;
       }
     }
+    resolvedRenditions.addAll(fallbackRenditions);
     return allMandatoryResolved;
   }
 

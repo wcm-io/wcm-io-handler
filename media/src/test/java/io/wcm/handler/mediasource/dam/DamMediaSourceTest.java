@@ -24,6 +24,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_STAGE_SMALL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.FIXEDHEIGHT_UNCONSTRAINED;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.IMAGE_UNCONSTRAINED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.MATERIAL_TILE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NORATIO_LARGE_MINWIDTH;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_LARGE;
@@ -644,6 +645,29 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(EDITORIAL_STAGE_SMALL, renditions.get(3).getMediaFormat());
   }
 
+  /**
+   * If there are multiple non-mandatory media formats requests with an explicit cropping, and
+   * the original image matches with the first media format (uncropped), and the cropped image with the
+   * second media format, the cropped image should be preferred because the user explitely defined the cropping.
+   */
+  @Test
+  void testMultipleMediaFormatsWithCropping_PreferCroppingOverFallback() {
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO, SHOWROOM_CONTROLS);
+    Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(2, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
+        renditions.get(0).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(SHOWROOM_CONTROLS, renditions.get(0).getMediaFormat());
+
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
+        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+  }
+
   @Test
   void testMultipleMandatoryMediaFormatsNotAllMatch() {
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(VIDEO_2COL, EDITORIAL_2COL, EDITORIAL_3COL);
@@ -937,6 +961,92 @@ class DamMediaSourceTest extends AbstractDamTest {
     MediaFormat mediaFormat2 = rendition2.getMediaFormat();
     assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
     assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(320, mediaFormat2.getWidth());
+  }
+
+  @Test
+  void testImageSizes_UnconstrainedMediaFormatWithoutRatioOrMinSizes() {
+    Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
+        .mediaFormats(IMAGE_UNCONSTRAINED)
+        .imageSizes("sizes", 160, 320)
+        .build();
+
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(3, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    Rendition rendition0 = renditions.get(0);
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
+        rendition0.getUrl(), "rendition.mediaUrl.1");
+    assertEquals(1600, rendition0.getWidth());
+    assertEquals(1000, rendition0.getHeight());
+    assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
+
+    MediaFormat mediaFormat0 = rendition0.getMediaFormat();
+    assertEquals(IMAGE_UNCONSTRAINED.getName(), mediaFormat0.getName());
+
+    Rendition rendition1 = renditions.get(1);
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
+        rendition1.getUrl(), "rendition.mediaUrl.2");
+    assertEquals(160, rendition1.getWidth());
+    assertEquals(100, rendition1.getHeight());
+    assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
+
+    MediaFormat mediaFormat1 = rendition1.getMediaFormat();
+    assertEquals(IMAGE_UNCONSTRAINED.getLabel(), mediaFormat1.getLabel());
+    assertEquals(160, mediaFormat1.getWidth());
+
+    Rendition rendition2 = renditions.get(2);
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
+        rendition2.getUrl(), "rendition.mediaUrl.3");
+    assertEquals(320, rendition2.getWidth());
+    assertEquals(200, rendition2.getHeight());
+
+    MediaFormat mediaFormat2 = rendition2.getMediaFormat();
+    assertEquals(IMAGE_UNCONSTRAINED.getLabel(), mediaFormat2.getLabel());
+    assertEquals(320, mediaFormat2.getWidth());
+  }
+
+  @Test
+  void testPictureSources_UnconstrainedMediaFormatWithoutRatioOrMinSizes() {
+    Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
+        .mediaFormat(IMAGE_UNCONSTRAINED)
+        .pictureSource(new PictureSource(IMAGE_UNCONSTRAINED).media("media1").widths(160))
+        .pictureSource(new PictureSource(IMAGE_UNCONSTRAINED).media("media2").widths(320))
+        .build();
+
+    assertTrue(media.isValid(), "valid?");
+    assertNotNull(media.getAsset(), "asset?");
+    assertEquals(3, media.getRenditions().size(), "renditions");
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+
+    Rendition rendition0 = renditions.get(0);
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
+        rendition0.getUrl(), "rendition.mediaUrl.1");
+    assertEquals(1600, rendition0.getWidth());
+    assertEquals(1000, rendition0.getHeight());
+    assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
+
+    Rendition rendition1 = renditions.get(1);
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
+        rendition1.getUrl(), "rendition.mediaUrl.2");
+    assertEquals(160, rendition1.getWidth());
+    assertEquals(100, rendition1.getHeight());
+    assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
+
+    MediaFormat mediaFormat1 = rendition1.getMediaFormat();
+    assertEquals(IMAGE_UNCONSTRAINED.getLabel(), mediaFormat1.getLabel());
+    assertEquals(160, mediaFormat1.getWidth());
+
+    Rendition rendition2 = renditions.get(2);
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
+        rendition2.getUrl(), "rendition.mediaUrl.3");
+    assertEquals(320, rendition2.getWidth());
+    assertEquals(200, rendition2.getHeight());
+
+    MediaFormat mediaFormat2 = rendition2.getMediaFormat();
+    assertEquals(IMAGE_UNCONSTRAINED.getLabel(), mediaFormat2.getLabel());
     assertEquals(320, mediaFormat2.getWidth());
   }
 

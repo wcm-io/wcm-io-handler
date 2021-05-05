@@ -76,6 +76,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private CropDimension cropDimension;
   private final Integer rotation;
   private MediaFormat resolvedMediaFormat;
+  private boolean fallback;
 
   /**
    * Special dimension instance that marks "scaling is required but not possible"
@@ -131,6 +132,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
           if (i > 0) {
             // fallback (original) image dimension is used - clear ignored cropping parameters
             this.cropDimension = null;
+            this.fallback = true;
           }
           break;
         }
@@ -570,6 +572,11 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     else {
       return 0;
     }
+  }
+
+  @Override
+  public boolean isFallback() {
+    return fallback;
   }
 
   @Override
