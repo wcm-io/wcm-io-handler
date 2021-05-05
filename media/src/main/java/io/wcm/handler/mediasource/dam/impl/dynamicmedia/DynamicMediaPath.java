@@ -27,6 +27,8 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
@@ -54,6 +56,8 @@ public final class DynamicMediaPath {
    * This is configured via a custom ruleset, see https://wcm.io/handler/media/dynamic-media.html
    */
   public static final String DOWNLOAD_SUFFIX = "?cdh=attachment";
+
+  private static final Logger log = LoggerFactory.getLogger(DynamicMediaPath.class);
 
   private DynamicMediaPath() {
     // static methods only
@@ -119,6 +123,7 @@ public final class DynamicMediaPath {
             .append("hei=").append(dimension.getHeight()).append("&")
             // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
             .append("fit=stretch");
+        logResult(damContext, result);
         return result.toString();
       }
     }
@@ -134,7 +139,14 @@ public final class DynamicMediaPath {
         .append("hei=").append(dimension.getHeight()).append("&")
         // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
         .append("fit=stretch");
+    logResult(damContext, result);
     return result.toString();
+  }
+
+  private static void logResult(@NotNull DamContext damContext, @NotNull StringBuilder result) {
+    if (log.isTraceEnabled()) {
+      log.trace("Build dynamic media path for {}: {}", damContext.getAsset().getPath(), result);
+    }
   }
 
   /**
