@@ -21,6 +21,8 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 
+import java.util.regex.Pattern;
+
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,8 +42,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.commons.inherit.HierarchyNodeInheritanceValueMap;
-import com.day.cq.commons.inherit.InheritanceValueMap;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.s7dam.utils.PublishUtils;
@@ -102,6 +102,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   private Dimension imageSizeLimit;
 
   private static final String SERVICEUSER_SUBSERVICE = "dynamic-media-support";
+  private static final Pattern DAM_PATH_PATTERN = Pattern.compile("^/content/dam(/.*)?$");
 
   private static final Logger log = LoggerFactory.getLogger(DynamicMediaSupportServiceImpl.class);
 
@@ -140,21 +141,33 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   }
 
   @Override
-  @SuppressWarnings("null")
   public @Nullable ImageProfile getImageProfileForAsset(@NotNull Asset asset) {
     Resource assetResource = AdaptTo.notNull(asset, Resource.class);
     Resource folderResource = assetResource.getParent();
     if (folderResource != null) {
-      Resource folderContentResource = folderResource.getChild(JCR_CONTENT);
-      if (folderContentResource != null) {
-        InheritanceValueMap inheritanceValueMap = new HierarchyNodeInheritanceValueMap(folderContentResource);
-        String imageProfilePath = inheritanceValueMap.getInherited(DamConstants.IMAGE_PROFILE, String.class);
-        if (imageProfilePath != null) {
-          return getImageProfile(imageProfilePath);
-        }
-      }
+      return getImageProfileForAssetFolder(folderResource);
     }
     return null;
+  }
+
+  private @Nullable ImageProfile getImageProfileForAssetFolder(@NotNull Resource folderResource) {
+    if (!DAM_PATH_PATTERN.matcher(folderResource.getPath()).matches()) {
+      return null;
+    }
+    Resource folderContentResource = folderResource.getChild(JCR_CONTENT);
+    if (folderContentResource != null) {
+      String imageProfilePath = folderContentResource.getValueMap().get(DamConstants.IMAGE_PROFILE, String.class);
+      if (imageProfilePath != null) {
+        return getImageProfile(imageProfilePath);
+      }
+    }
+    Resource parentFolderResource = folderResource.getParent();
+    if (parentFolderResource != null) {
+      return getImageProfileForAssetFolder(parentFolderResource);
+    }
+    else {
+      return null;
+    }
   }
 
   @Override

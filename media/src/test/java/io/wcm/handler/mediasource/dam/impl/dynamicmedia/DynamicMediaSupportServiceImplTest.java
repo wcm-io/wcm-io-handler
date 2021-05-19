@@ -19,12 +19,15 @@
  */
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.Stream;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.featureflags.impl.ConfiguredFeature;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +38,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.entitlement.api.EntitlementConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
@@ -109,6 +113,58 @@ class DynamicMediaSupportServiceImplTest {
     assertTrue(underTest.isDynamicMediaEnabled());
     assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
     assertEquals("https://author", underTest.getDynamicMediaServerUrl(asset, null));
+  }
+
+  /**
+   * Test getting image profile for asset with profile association in one of the parent folders.
+   */
+  @Test
+  void testGetImageProfileForAsset_MultipleFolders() {
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
+    Resource profile1 = context.create().resource("/conf/global/settings/dam/adminui-extension/imageprofile/profile1");
+
+    Resource folder1 = context.create().resource("/content/dam/folder1");
+    context.create().resource(folder1, JCR_CONTENT, DamConstants.IMAGE_PROFILE, profile1.getPath());
+
+    Resource folder2 = context.create().resource(folder1, "folder2");
+    context.create().resource(folder2, JCR_CONTENT);
+
+    Resource folder3 = context.create().resource(folder2, "folder3");
+    context.create().resource(folder3, JCR_CONTENT);
+
+    Asset testAsset = context.create().asset(folder3.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
+        Scene7Constants.PN_S7_FILE, "DummyFolder/folder1/folder2/folder3/test");
+
+    ImageProfile imageProfile = underTest.getImageProfileForAsset(testAsset);
+
+    assertNotNull(imageProfile);
+  }
+
+  /**
+   * Test getting image profile for asset with profile association in one of the parent folders,
+   * and at least one of the parent folders is "incomplete" (no jcr:content node), e.g. because the
+   * folder itself was never published.
+   */
+  @Test
+  void testGetImageProfileForAsset_MultipleFolders_IncompleteFolders() {
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
+    Resource profile1 = context.create().resource("/conf/global/settings/dam/adminui-extension/imageprofile/profile1");
+
+    Resource folder1 = context.create().resource("/content/dam/folder1");
+    context.create().resource(folder1, JCR_CONTENT, DamConstants.IMAGE_PROFILE, profile1.getPath());
+
+    Resource folder2 = context.create().resource(folder1, "folder2");
+    // deliberately create no jcr:content node for "folder2"
+
+    Resource folder3 = context.create().resource(folder2, "folder3");
+    // deliberately create no jcr:content node for "folder3"
+
+    Asset testAsset = context.create().asset(folder3.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
+        Scene7Constants.PN_S7_FILE, "DummyFolder/folder1/folder2/folder3/test");
+
+    ImageProfile imageProfile = underTest.getImageProfileForAsset(testAsset);
+
+    assertNotNull(imageProfile);
   }
 
   @ParameterizedTest
