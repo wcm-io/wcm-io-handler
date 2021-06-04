@@ -87,6 +87,12 @@
    * Trigger 'assetselected' event on the fileupload widget.
    */
   FileUploadExtension.prototype._triggerAssetSelected = function (assetPath) {
+
+    // special case when asset path is removed in the pathfield we treat it as click on the clear button for file upload
+    if (assetPath === "") {
+      this._$element.find("[coral-fileupload-clear]").trigger($.Event("click"));
+    }
+
     var self = this;
     var mimeType = self._detectMimeType(assetPath);
     var thumbnailObject;
