@@ -112,6 +112,11 @@ are overwritten or added.
    */
   - mediaCropAuto (BooleanEL) = 'false'
 
+  /**
+   * Property is mandatory.
+   */
+  - required (Boolean) = 'false'
+
 
 ###--%><%
 
@@ -184,6 +189,7 @@ dispatcher.include(slingRequest, slingResponse);
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
+pathFieldProps.put("required", cfg.get("required", false));
 
 // detect root path
 pathFieldProps.putAll(getDamRootPathProperties(cmp, slingRequest, "/content/dam"));

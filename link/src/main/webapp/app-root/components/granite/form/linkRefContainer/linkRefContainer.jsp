@@ -98,6 +98,21 @@ Properties:
    */
   - allLinkTypeFields (Resources)
 
+  /**
+   * It is required to select any link target and a link title (if a link title field is shown).
+   */
+  - required (Boolean) = 'false'
+
+  /**
+   * It is required to select any link target.
+   */
+  - requiredLink (Boolean) = 'false'
+
+  /**
+   * If showLinkTitle is set to true, it is set to required.
+   */
+  - requiredTitle (Boolean) = 'false'
+
 ###--%><%
 
 Tag tag = cmp.consumeTag();
@@ -105,6 +120,8 @@ Config cfg = cmp.getConfig();
 
 boolean showLinkTitle = cfg.get("showLinkTitle", false);
 String namePrefix = cfg.get("namePrefix", "./");
+boolean requiredLink = cfg.get("requiredLink", cfg.get("required", false));
+boolean requiredTitle = cfg.get("requiredTitle", cfg.get("required", false));
 
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 LinkHandlerConfig linkHandlerConfig = null;
@@ -159,6 +176,7 @@ if (showLinkTitle) {
       ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_TITLE)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkTitle.fieldLabel")
+      .put("required", requiredTitle)
       .build());
 }
 
@@ -167,6 +185,7 @@ if (showLinkTitle) {
 ImmutableValueMap.Builder linkTypeSelectProps = ImmutableValueMap.builder()
     .put("name", namePrefix + LinkNameConstants.PN_LINK_TYPE)
     .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkType.fieldLabel")
+    .put("required", requiredLink)
     .put("granite:class", "cq-dialog-dropdown-showhide");
 if (linkTargetUrlFallbackTypeId != null) {
   linkTypeSelectProps.put("ignoreData", true);
@@ -204,7 +223,8 @@ if (linkTypes.containsKey(InternalLinkType.ID)) {
   ImmutableValueMap.Builder linkContentRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_CONTENT_REF)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldLabel")
-      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldDescription");
+      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldDescription")
+      .put("required", requiredLink);
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, InternalLinkType.ID)) {
     linkContentRefProps
         .put("value", linkTargetUrlFallbackValue)
@@ -231,7 +251,8 @@ if (linkTypes.containsKey(InternalCrossContextLinkType.ID)) {
   ImmutableValueMap.Builder linkCrossContextContentRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldLabel")
-      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldDescription");
+      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldDescription")
+      .put("required", requiredLink);
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, InternalCrossContextLinkType.ID)) {
     linkCrossContextContentRefProps
         .put("value", linkTargetUrlFallbackValue)
@@ -259,6 +280,7 @@ if (linkTypes.containsKey(ExternalLinkType.ID)) {
       .put("name", namePrefix + LinkNameConstants.PN_LINK_EXTERNAL_REF)
       .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldLabel")
       .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldDescription")
+      .put("required", requiredLink)
       .put("validation", new String[] { "wcmio.handler.link.url" });
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, ExternalLinkType.ID)) {
     linkExternalRefProps
@@ -285,7 +307,8 @@ if (linkTypes.containsKey(MediaLinkType.ID)) {
 
   ImmutableValueMap.Builder linkMediaRefProps = ImmutableValueMap.builder()
       .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_REF)
-      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaRef.fieldLabel");
+      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaRef.fieldLabel")
+      .put("required", requiredLink);
   if (StringUtils.equals(linkTargetUrlFallbackTypeId, MediaLinkType.ID)) {
     linkMediaRefProps
         .put("value", linkTargetUrlFallbackValue)

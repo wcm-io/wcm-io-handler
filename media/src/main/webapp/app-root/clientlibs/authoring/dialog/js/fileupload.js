@@ -65,7 +65,12 @@
 
     self._$pathfield.on("change", function(event) {
       var assetPath = self._$pathfield.val();
-      self._triggerAssetSelected(assetPath);
+      if (assetPath == "") {
+        self._triggerAssetClear();
+      }
+      else {
+        self._triggerAssetSelected(assetPath);
+      }
     });
 
     self._$pathfield.on("assetselected", function (event) {
@@ -101,6 +106,13 @@
       param: {},
       thumbnail: thumbnailObject
     }));
+  };
+
+  /**
+   * Trigger a click on the 'clear' button on the fileupload widget.
+   */
+  FileUploadExtension.prototype._triggerAssetClear = function () {
+    this._$element.find("[coral-fileupload-clear]").trigger($.Event("click"));
   };
 
   /**
