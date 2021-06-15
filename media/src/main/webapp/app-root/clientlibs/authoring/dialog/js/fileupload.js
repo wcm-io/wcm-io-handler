@@ -65,7 +65,12 @@
 
     self._$pathfield.on("change", function(event) {
       var assetPath = self._$pathfield.val();
-      self._triggerAssetSelected(assetPath);
+      if (assetPath == "") {
+        self._triggerAssetClear();
+      }
+      else {
+        self._triggerAssetSelected(assetPath);
+      }
     });
 
     self._$pathfield.on("assetselected", function (event) {
@@ -87,12 +92,6 @@
    * Trigger 'assetselected' event on the fileupload widget.
    */
   FileUploadExtension.prototype._triggerAssetSelected = function (assetPath) {
-
-    // special case when asset path is removed in the pathfield we treat it as click on the clear button for file upload
-    if (assetPath === "") {
-      this._$element.find("[coral-fileupload-clear]").trigger($.Event("click"));
-    }
-
     var self = this;
     var mimeType = self._detectMimeType(assetPath);
     var thumbnailObject;
@@ -107,6 +106,13 @@
       param: {},
       thumbnail: thumbnailObject
     }));
+  };
+
+  /**
+   * Trigger a click on the 'clear' button on the fileupload widget.
+   */
+  FileUploadExtension.prototype._triggerAssetClear = function () {
+    this._$element.find("[coral-fileupload-clear]").trigger($.Event("click"));
   };
 
   /**
