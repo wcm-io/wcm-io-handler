@@ -91,6 +91,11 @@ are overwritten or added.
    */
   - mediaCropAuto (BooleanEL) = 'false'
 
+  /**
+   * Property is mandatory.
+   */
+  - required (Boolean) = 'false'
+
 
 ###--%><%
 

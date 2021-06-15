@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.12.6" date="not released">
+      <action type="fix" dev="sseifert" issue="WHAN-48">
+        FileUpload GraniteUI component: Proplery support "required" state also for embedded pathfield component.
+      </action>
+    </release>
+
     <release version="1.12.4" date="2021-05-19">
       <action type="fix" dev="sseifert">
         Dynamic media: Fix resolving of image profiles if asset folders do not have jcr:content child nodes (e.g. because folder itself is not published).
