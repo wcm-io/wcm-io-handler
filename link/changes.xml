@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.6.4" date="not released">
+      <action type="update" dev="sseifert">
+        Link Reference Container: Support 'required', 'requiredLink', 'requiredTitle' properties to make sure a valid link and/or title is defined.
+      </action>
       <action type="update" dev="bkalbitz">
         Register authoring clientlib also to category 'cq.siteadmin.admin.properties' so it's also loaded in page properties dialog.
       </action>
