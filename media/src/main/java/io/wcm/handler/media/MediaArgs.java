@@ -470,14 +470,14 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * @return Marks this image as "decorative". Alt. text is then explicitly set to an empy string.
+   * @return Marks this image as "decorative". Alt. text is then explicitly set to an empty string.
    */
   public boolean isDecorative() {
     return this.decorative;
   }
 
   /**
-   * @param value Marks this image as "decorative". Alt. text is then explicitly set to an empy string.
+   * @param value Marks this image as "decorative". Alt. text is then explicitly set to an empty string.
    * @return this
    */
   public @NotNull MediaArgs decorative(boolean value) {

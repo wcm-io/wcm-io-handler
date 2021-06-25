@@ -184,6 +184,13 @@ public interface MediaBuilder {
   MediaBuilder altText(@NotNull String value);
 
   /**
+   * @param value Marks this image as "decorative". Alt. text is then explicitly set to an empty string.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder decorative(boolean value);
+
+  /**
    * @param value If set to false, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
