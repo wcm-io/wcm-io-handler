@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.inline;
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ALTTEXT;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_CROP;
+import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_IS_DECORATIVE;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ROTATION;
 import static io.wcm.handler.media.MediaNameConstants.PROP_BREAKPOINT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
@@ -150,6 +151,8 @@ class InlineMediaSourceTest {
     Resource unstructuredNodeMediaInlineSampleImage_16_10 = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage16_10",
         ImmutableValueMap.builder()
             .put(NN_MEDIA_INLINE + "Name", "sample_image_400x250.jpg")
+            .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 16:9")
+            .put(PN_MEDIA_IS_DECORATIVE, true)
         .build());
     context.load().binaryResource("/sample_image_400x250.jpg",
         unstructuredNodeMediaInlineSampleImage_16_10.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
@@ -354,6 +357,27 @@ class InlineMediaSourceTest {
     media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
 
+
+  }
+
+  @Test
+  void testDecorativeWithAltText() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs().altText("Der Jodelkaiser");
+
+    // isDecorative should return empty string as alt. text
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10, mediaArgs).build();
+    assertEquals("", media.getAsset().getAltText());
+  }
+
+  @Test
+  void testDecorativeWithoutAltText() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs();
+
+    // isDecorative should return empty string as alt. text
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10, mediaArgs).build();
+    assertEquals("", media.getAsset().getAltText());
   }
 
   @Test

@@ -54,6 +54,8 @@ public final class MediaArgs implements Cloneable {
   private boolean download;
   private boolean contentDispositionAttachment;
   private String altText;
+  private boolean altValueFromDam = true;
+  private boolean decorative;
   private boolean dummyImage = true;
   private String dummyImageUrl;
   private boolean includeAssetThumbnails;
@@ -452,6 +454,38 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return Whether to read alt. text from DAM asset if non custom alt. text is defined. Default to true.
+   */
+  public boolean isAltValueFromDam() {
+    return this.altValueFromDam;
+  }
+
+  /**
+   * @param value Whether to read alt. text from DAM asset if non custom alt. text is defined. Default to true.
+   * @return this
+   */
+  public @NotNull MediaArgs altValueFromDam(boolean value) {
+    this.altValueFromDam = value;
+    return this;
+  }
+
+  /**
+   * @return Marks this image as "decorative". Alt. text is then explicitly set to an empy string.
+   */
+  public boolean isDecorative() {
+    return this.decorative;
+  }
+
+  /**
+   * @param value Marks this image as "decorative". Alt. text is then explicitly set to an empy string.
+   * @return this
+   */
+  public @NotNull MediaArgs decorative(boolean value) {
+    this.decorative = value;
+    return this;
+  }
+
+  /**
    * @return If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    */
   public boolean isDummyImage() {
@@ -678,6 +712,8 @@ public final class MediaArgs implements Cloneable {
     clone.download = this.download;
     clone.contentDispositionAttachment = this.contentDispositionAttachment;
     clone.altText = this.altText;
+    clone.altValueFromDam = this.altValueFromDam;
+    clone.decorative = this.decorative;
     clone.dummyImage = this.dummyImage;
     clone.dummyImageUrl = this.dummyImageUrl;
     clone.includeAssetThumbnails = this.includeAssetThumbnails;

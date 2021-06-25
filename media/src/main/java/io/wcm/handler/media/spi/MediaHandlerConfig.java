@@ -185,6 +185,30 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * @return Default property name for reading alt. text from DAM - defaults to true if not set
+   */
+  public @NotNull String getMediaAltTextFromDamProperty() {
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_ALTTEXT_FROM_DAM_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_ALTTEXT_FROM_DAM;
+    }
+  }
+
+  /**
+   * @return Default property name for marking image as "decorative" - requiring no alt. text
+   */
+  public @NotNull String getMediaIsDecorativeProperty() {
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_IS_DECORATIVE_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_IS_DECORATIVE;
+    }
+  }
+
+  /**
    * @return Default node name for inline media item stored in node within the content page
    */
   public @NotNull String getMediaInlineNodeName() {

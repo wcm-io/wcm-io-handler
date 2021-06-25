@@ -66,7 +66,12 @@ class InlineAsset extends SlingAdaptable implements Asset {
 
   @Override
   public String getAltText() {
-    return this.defaultMediaArgs.getAltText();
+    if (defaultMediaArgs.isDecorative()) {
+      return "";
+    }
+    else {
+      return defaultMediaArgs.getAltText();
+    }
   }
 
   @Override

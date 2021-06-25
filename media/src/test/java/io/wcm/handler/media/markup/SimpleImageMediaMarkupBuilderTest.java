@@ -192,6 +192,29 @@ class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
+  void testBuild_ValidRendition_EmptyStringAlt() {
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
+    Media media = new Media(mediaSource, mediaRequest);
+    media.setAsset(asset);
+    media.setRenditions(ImmutableList.of(rendition));
+    when(rendition.getUrl()).thenReturn("/media/dummy.gif");
+
+    when(rendition.getWidth()).thenReturn(100L);
+    when(rendition.getHeight()).thenReturn(50L);
+    when(asset.getAltText()).thenReturn("");
+
+    HtmlElement<?> element = builder.build(media);
+    assertTrue(element instanceof Image);
+    assertEquals("/media/dummy.gif", element.getAttributeValue("src"));
+    assertEquals(100, element.getAttributeValueAsInteger("width"));
+    assertEquals(50, element.getAttributeValueAsInteger("height"));
+    assertEquals("", element.getAttributeValue("alt"));
+  }
+
+  @Test
   void testBuild_ImageSizes() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 

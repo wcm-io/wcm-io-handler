@@ -177,6 +177,8 @@ class MediaArgsTest {
     mediaArgs.download(true);
     mediaArgs.contentDispositionAttachment(true);
     mediaArgs.altText("altText");
+    mediaArgs.altValueFromDam(false);
+    mediaArgs.decorative(true);
     mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
     mediaArgs.includeAssetThumbnails(true);
@@ -206,6 +208,8 @@ class MediaArgsTest {
     assertEquals(mediaArgs.isDownload(), clone.isDownload());
     assertEquals(mediaArgs.isContentDispositionAttachment(), clone.isContentDispositionAttachment());
     assertEquals(mediaArgs.getAltText(), clone.getAltText());
+    assertEquals(mediaArgs.isAltValueFromDam(), clone.isAltValueFromDam());
+    assertEquals(mediaArgs.isDecorative(), clone.isDecorative());
     assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
     assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());

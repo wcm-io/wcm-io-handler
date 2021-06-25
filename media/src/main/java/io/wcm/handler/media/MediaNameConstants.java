@@ -104,6 +104,26 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_ALTTEXT_STANDARD = "alt";
 
   /**
+   * Default property name for reading alt. text from DAM - defaults to true if not set (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String PN_MEDIA_ALTTEXT_FROM_DAM = "mediaAltValueFromDAM";
+
+  /**
+   * Default property name for reading alt. text from DAM - defaults to true if not set (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_ALTTEXT_FROM_DAM_STANDARD = "altValueFromDAM";
+
+  /**
+   * Default property name for marking image as "decorative" - requiring no alt. text (Legacy wcm.io Handler Standard)
+   */
+  public static final @NotNull String PN_MEDIA_IS_DECORATIVE = "mediaIsDecorative";
+
+  /**
+   * Default property name for marking image as "decorative" - requiring no alt. text (Adobe/Core Component standard)
+   */
+  public static final @NotNull String PN_MEDIA_IS_DECORATIVE_STANDARD = "isDecorative";
+
+  /**
    * Default node name for inline media item stored in node within the content page (Legacy wcm.io Handler Standard)
    */
   public static final @NotNull String NN_MEDIA_INLINE = "mediaInline";

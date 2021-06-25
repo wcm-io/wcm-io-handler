@@ -241,7 +241,7 @@ class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetMediaElementImageAltTextFromMediaLib() {
+  void testGetMediaElementImageAltTextFromAssetWithTitleOnly() {
     // create img element for the first rendition of the 'standard' media-item
     MediaArgs args = new MediaArgs();
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
@@ -251,6 +251,25 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(215, img.getAttributeValueAsInteger("width"), "width set?");
     assertEquals(102, img.getAttributeValueAsInteger("height"), "height set?");
     assertEquals("Editorial Standard 1", img.getAttributeValue("alt"), "alt text from medialib?");
+  }
+
+  @Test
+  void testGetMediaElementImageAltTextFromAssetWithDescription() {
+    MediaArgs args = new MediaArgs();
+    HtmlElement img = mediaHandler().get(parSixteenTenMediaRefCrop, args).buildElement();
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
+    assertEquals("Description for 16:10 Image", img.getAttributeValue("alt"), "alt text from medialib?");
+  }
+
+  @Test
+  void testGetMediaElementImageAltTextFromAssetDecorative() {
+    MediaArgs args = new MediaArgs()
+        .decorative(true);
+    HtmlElement img = mediaHandler().get(parSixteenTenMediaRefCrop, args).buildElement();
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
+    assertEquals("", img.getAttributeValue("alt"), "alt text from medialib?");
   }
 
   @Test
