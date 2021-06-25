@@ -104,14 +104,14 @@ public final class MediaNameConstants {
   public static final @NotNull String PN_MEDIA_ALTTEXT_STANDARD = "alt";
 
   /**
-   * Default property name for reading alt. text from DAM - defaults to true if not set (Legacy wcm.io Handler Standard)
+   * Default property name for forcing reading alt. text from DAM asset description (Legacy wcm.io Handler Standard)
    */
-  public static final @NotNull String PN_MEDIA_ALTTEXT_FROM_DAM = "mediaAltValueFromDAM";
+  public static final @NotNull String PN_MEDIA_FORCE_ALTTEXT_FROM_ASSET = "mediaForceAltValueFromAsset";
 
   /**
-   * Default property name for reading alt. text from DAM - defaults to true if not set (Adobe/Core Component standard)
+   * Default property name for forcing reading alt. text from DAM asset description (Adobe/Core Component standard)
    */
-  public static final @NotNull String PN_MEDIA_ALTTEXT_FROM_DAM_STANDARD = "altValueFromDAM";
+  public static final @NotNull String PN_MEDIA_FORCE_ALTTEXT_FROM_ASSET_STANDARD = "altValueFromDAM";
 
   /**
    * Default property name for marking image as "decorative" - requiring no alt. text (Legacy wcm.io Handler Standard)

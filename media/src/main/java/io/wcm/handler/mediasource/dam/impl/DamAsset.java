@@ -104,13 +104,10 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     if (defaultMediaArgs.isDecorative()) {
       return "";
     }
-    if (StringUtils.isNotEmpty(defaultMediaArgs.getAltText())) {
+    if (!defaultMediaArgs.isForceAltValueFromAsset() && StringUtils.isNotEmpty(defaultMediaArgs.getAltText())) {
       return defaultMediaArgs.getAltText();
     }
-    if (defaultMediaArgs.isAltValueFromDam()) {
-      return StringUtils.defaultString(getDescription(), getTitle());
-    }
-    return null;
+    return StringUtils.defaultString(getDescription(), getTitle());
   }
 
   @Override

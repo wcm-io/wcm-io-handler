@@ -28,7 +28,7 @@
         Add support for properties "isDecorative"/"mediaIsDecorative" - if set to true, alt. text of image is explicitly set to empty string.
       </action>
       <action type="add" dev="sseifert">
-        Add support for properties "altValueFromDAM"/"mediaAltValueFromDAM" - defaults to true. If set to false, alt. text is not looked up from DAM if no alt. text is configured.
+        Add support for properties "altValueFromDAM"/"mediaForceAltValueFromAsset". If set to true, it is forced to use the alt. text from asset description (otherwise it's the fallback behavior).
       </action>
       <action type="update" dev="sseifert">
         Change default behavior of alt text lookup from DAM: Use asset description if avalailable as alt. text, fallback to asset title if not description is set.

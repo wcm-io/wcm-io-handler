@@ -289,6 +289,17 @@ class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
+  void testGetMediaElementImageAltTextForceFromAsset() {
+    // define alt-text-override via MediaArgs and check if it is appears in the img-tag
+    HtmlElement img = mediaHandler().get(parStandardMediaRef)
+        .altText("Alt. Text Override!")
+        .forceAltValueFromAsset(true)
+        .buildElement();
+    assertNotNull(img, "returned html element?");
+    assertEquals("Editorial Standard 1", img.getAttributeValue("alt"), "alt text from asset?");
+  }
+
+  @Test
   void testGetMediaElementImageNoAltTextNoDimensions() {
     // create img-tag for the medialib-item that has no alt-text, and its rendition lacks dimension information
     HtmlElement img = mediaHandler().get(parImgNoAltNoDimension).buildElement();

@@ -185,14 +185,14 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
-   * @return Default property name for reading alt. text from DAM - defaults to true if not set
+   * @return Default property name for forcing reading alt. text from DAM asset description
    */
-  public @NotNull String getMediaAltTextFromDamProperty() {
+  public @NotNull String getMediaForceAltTextFromAssetProperty() {
     if (useAdobeStandardNames()) {
-      return MediaNameConstants.PN_MEDIA_ALTTEXT_FROM_DAM_STANDARD;
+      return MediaNameConstants.PN_MEDIA_FORCE_ALTTEXT_FROM_ASSET_STANDARD;
     }
     else {
-      return MediaNameConstants.PN_MEDIA_ALTTEXT_FROM_DAM;
+      return MediaNameConstants.PN_MEDIA_FORCE_ALTTEXT_FROM_ASSET;
     }
   }
 

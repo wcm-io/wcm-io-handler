@@ -184,6 +184,14 @@ public interface MediaBuilder {
   MediaBuilder altText(@NotNull String value);
 
   /**
+   * @param value Whether to force to read alt. text from DAM asset description.
+   *          If not set, the asset description is used as fallback value of no custom alt. text is defined.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder forceAltValueFromAsset(boolean value);
+
+  /**
    * @param value Marks this image as "decorative". Alt. text is then explicitly set to an empty string.
    * @return this
    */

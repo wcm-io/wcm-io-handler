@@ -360,8 +360,8 @@ public abstract class MediaSource {
     if (!mediaArgs.isDecorative()) {
       mediaArgs.decorative(props.get(mediaHandlerConfig.getMediaIsDecorativeProperty(), false));
     }
-    if (mediaArgs.isAltValueFromDam()) {
-      mediaArgs.altValueFromDam(props.get(mediaHandlerConfig.getMediaAltTextFromDamProperty(), true));
+    if (mediaArgs.isForceAltValueFromAsset()) {
+      mediaArgs.forceAltValueFromAsset(props.get(mediaHandlerConfig.getMediaForceAltTextFromAssetProperty(), true));
     }
   }
 

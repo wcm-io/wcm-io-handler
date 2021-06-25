@@ -242,6 +242,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder forceAltValueFromAsset(boolean value) {
+    this.mediaArgs.forceAltValueFromAsset(value);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder decorative(boolean value) {
     this.mediaArgs.decorative(value);
     return this;

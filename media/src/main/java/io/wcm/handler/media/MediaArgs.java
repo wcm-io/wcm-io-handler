@@ -54,7 +54,7 @@ public final class MediaArgs implements Cloneable {
   private boolean download;
   private boolean contentDispositionAttachment;
   private String altText;
-  private boolean altValueFromDam = true;
+  private boolean forceAltValueFromAsset;
   private boolean decorative;
   private boolean dummyImage = true;
   private String dummyImageUrl;
@@ -454,18 +454,19 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * @return Whether to read alt. text from DAM asset if non custom alt. text is defined. Default to true.
+   * @return Whether to force to read alt. text from DAM asset description.
    */
-  public boolean isAltValueFromDam() {
-    return this.altValueFromDam;
+  public boolean isForceAltValueFromAsset() {
+    return this.forceAltValueFromAsset;
   }
 
   /**
-   * @param value Whether to read alt. text from DAM asset if non custom alt. text is defined. Default to true.
+   * @param value Whether to force to read alt. text from DAM asset description.
+   *          If not set, the asset description is used as fallback value of no custom alt. text is defined.
    * @return this
    */
-  public @NotNull MediaArgs altValueFromDam(boolean value) {
-    this.altValueFromDam = value;
+  public @NotNull MediaArgs forceAltValueFromAsset(boolean value) {
+    this.forceAltValueFromAsset = value;
     return this;
   }
 
@@ -712,7 +713,7 @@ public final class MediaArgs implements Cloneable {
     clone.download = this.download;
     clone.contentDispositionAttachment = this.contentDispositionAttachment;
     clone.altText = this.altText;
-    clone.altValueFromDam = this.altValueFromDam;
+    clone.forceAltValueFromAsset = this.forceAltValueFromAsset;
     clone.decorative = this.decorative;
     clone.dummyImage = this.dummyImage;
     clone.dummyImageUrl = this.dummyImageUrl;
