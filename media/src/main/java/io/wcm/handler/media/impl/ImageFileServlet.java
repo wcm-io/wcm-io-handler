@@ -179,10 +179,25 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
    * @return Filename to be used for URL.
    */
   public static String getImageFileName(@NotNull String originalFilename) {
+    return getImageFileName(originalFilename, null);
+  }
+
+  /**
+   * Get image filename to be used for the URL with file extension matching the image format which is produced by this
+   * servlet.
+   * @param originalFilename Original filename of the image to render.
+   * @param enforceOutputFileExtension Enforced output file extensions from media args
+   * @return Filename to be used for URL.
+   */
+  public static String getImageFileName(@NotNull String originalFilename,
+      @Nullable String enforceOutputFileExtension) {
     String namePart = StringUtils.substringBeforeLast(originalFilename, ".");
     String extensionPart = StringUtils.substringAfterLast(originalFilename, ".");
+    if (enforceOutputFileExtension != null) {
+      extensionPart = enforceOutputFileExtension;
+    }
 
-    // use PNG format if original image is PNG, otherwise always use JPEG
+    // use PNG format if requested format is PNG, otherwise always use JPEG
     if (StringUtils.equalsIgnoreCase(extensionPart, FileExtension.PNG)) {
       extensionPart = FileExtension.PNG;
     }

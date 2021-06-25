@@ -88,6 +88,7 @@ import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
 import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Test {@link DamMediaSource}
@@ -460,6 +461,16 @@ class DamMediaSourceTest extends AbstractDamTest {
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL).buildUrl();
     assertNotNull(url, "returned url?");
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.215.102.file/standard.jpg", url, "url as expected?");
+  }
+
+  @Test
+  void testGetMediaUrlStandard_enforceOutputFileExtensions() {
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL)
+        .enforceOutputFileExtension(FileExtension.PNG)
+        .buildUrl();
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.215.102.file/standard.png", url, "url as expected?");
   }
 
   @Test

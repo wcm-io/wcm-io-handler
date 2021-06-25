@@ -29,6 +29,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.Ratio;
 
 /**
@@ -54,13 +55,14 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
    * Searches for the biggest web enabled rendition and, if exists,
    * adds a {@link VirtualTransformedRenditionMetadata} to the list.
    * @param candidates Candidates
+   * @param mediaArgs Media args
    * @return {@link Set} of {@link RenditionMetadata}
    */
   @Override
-  protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
+  protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
     NavigableSet<RenditionMetadata> processedCandidates = new TreeSet<>(candidates);
     if (cropDimension != null) {
-      VirtualTransformedRenditionMetadata cropRendition = getCropRendition();
+      VirtualTransformedRenditionMetadata cropRendition = getCropRendition(mediaArgs);
       if (cropRendition != null) {
         // return only cropped rendition
         processedCandidates.clear();
@@ -68,15 +70,16 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
         return processedCandidates;
       }
     }
-    return rotateSourceRenditions(processedCandidates);
+    return rotateSourceRenditions(processedCandidates, mediaArgs);
   }
 
   /**
    * Rotates all source renditions if configured.
    * @param candidates Candidate renditions
+   * @param mediaArgs Media args
    * @return Virtual-rotated and sorted candidate renditions
    */
-  private NavigableSet<RenditionMetadata> rotateSourceRenditions(Set<RenditionMetadata> candidates) {
+  private NavigableSet<RenditionMetadata> rotateSourceRenditions(Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
     if (rotation == null) {
       return new TreeSet<>(candidates);
     }
@@ -85,15 +88,16 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
         .map(rendition -> new VirtualTransformedRenditionMetadata(rendition.getRendition(),
             rotateMapWidth(rendition.getWidth(), rendition.getHeight(), rotation),
             rotateMapHeight(rendition.getWidth(), rendition.getHeight(), rotation),
-            null, rotation))
+            mediaArgs.getEnforceOutputFileExtension(), null, rotation))
         .collect(Collectors.toCollection(TreeSet::new));
   }
 
   /**
    * Searches for the biggest web-enabled rendition that matches the crop dimensions width and height or is bigger.
+   * @param mediaArgs Media args
    * @return Rendition or null if no match found
    */
-  private VirtualTransformedRenditionMetadata getCropRendition() {
+  private VirtualTransformedRenditionMetadata getCropRendition(MediaArgs mediaArgs) {
     RenditionMetadata original = getOriginalRendition();
     if (original == null || original.isVectorImage()) {
       return null;
@@ -114,7 +118,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
     return new VirtualTransformedRenditionMetadata(original.getRendition(),
         rotateMapWidth(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
         rotateMapHeight(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
-        scaledCropDimension, rotation);
+        mediaArgs.getEnforceOutputFileExtension(), scaledCropDimension, rotation);
   }
 
   /**

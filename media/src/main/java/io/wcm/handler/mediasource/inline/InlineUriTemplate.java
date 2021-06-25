@@ -68,7 +68,7 @@ class InlineUriTemplate implements UriTemplate {
         + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, null, null, false)
         + "." + MediaFileServlet.EXTENSION + "/"
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
-        + ImageFileServlet.getImageFileName(fileName);
+        + ImageFileServlet.getImageFileName(fileName, mediaArgs.getEnforceOutputFileExtension());
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(adaptable, UrlHandler.class);

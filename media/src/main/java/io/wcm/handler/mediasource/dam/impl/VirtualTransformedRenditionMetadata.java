@@ -41,14 +41,16 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
 
   private final long width;
   private final long height;
+  private final String enforceOutputFileExtension;
   private final CropDimension cropDimension;
   private final Integer rotation;
 
-  VirtualTransformedRenditionMetadata(Rendition rendition, long width, long height,
+  VirtualTransformedRenditionMetadata(Rendition rendition, long width, long height, String enforceOutputFileExtension,
       CropDimension cropDimension, Integer rotation) {
     super(rendition);
     this.width = width;
     this.height = height;
+    this.enforceOutputFileExtension = enforceOutputFileExtension;
     this.cropDimension = cropDimension;
     this.rotation = rotation;
   }
@@ -56,7 +58,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   @Override
   public String getFileName(boolean contentDispositionAttachment) {
     // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
-    return ImageFileServlet.getImageFileName(super.getFileName(contentDispositionAttachment));
+    return ImageFileServlet.getImageFileName(super.getFileName(contentDispositionAttachment), enforceOutputFileExtension);
   }
 
   @Override

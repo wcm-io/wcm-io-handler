@@ -86,6 +86,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Test {@link InlineMediaSource}
@@ -613,6 +614,24 @@ class InlineMediaSourceTest {
     assertEquals(215, rendition.getWidth(), "width");
     assertEquals(102, rendition.getHeight(), "height");
     assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline.image_file.215.102.file/sample_image_215x102.jpg", rendition.getUrl(), "url");
+    assertEquals(EDITORIAL_1COL, rendition.getMediaFormat());
+  }
+
+  @Test
+  void testWithMediaFormats_enforceOutputFileExtensions() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    // test image resource with media format exact fit
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_1COL))
+        .refProperty("mediaInline")
+        .enforceOutputFileExtension(FileExtension.PNG)
+        .build();
+    Rendition rendition = media.getRendition();
+    assertTrue(media.isValid(), "media valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
+    assertEquals(215, rendition.getWidth(), "width");
+    assertEquals(102, rendition.getHeight(), "height");
+    assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline.image_file.215.102.file/sample_image_215x102.png", rendition.getUrl(), "url");
     assertEquals(EDITORIAL_1COL, rendition.getMediaFormat());
   }
 

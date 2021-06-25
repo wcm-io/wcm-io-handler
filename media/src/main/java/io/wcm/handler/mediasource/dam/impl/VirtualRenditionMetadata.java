@@ -40,11 +40,13 @@ class VirtualRenditionMetadata extends RenditionMetadata {
 
   private final long width;
   private final long height;
+  private final String enforceOutputFileExtension;
 
-  VirtualRenditionMetadata(Rendition rendition, long width, long height) {
+  VirtualRenditionMetadata(Rendition rendition, long width, long height, String enforceOutputFileExtension) {
     super(rendition);
     this.width = width;
     this.height = height;
+    this.enforceOutputFileExtension = enforceOutputFileExtension;
   }
 
   @Override
@@ -54,7 +56,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
     }
     else {
       // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
-      return ImageFileServlet.getImageFileName(super.getFileName(contentDispositionAttachment));
+      return ImageFileServlet.getImageFileName(super.getFileName(contentDispositionAttachment), enforceOutputFileExtension);
     }
   }
 

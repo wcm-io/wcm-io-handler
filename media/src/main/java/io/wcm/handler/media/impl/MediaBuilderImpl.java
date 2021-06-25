@@ -206,6 +206,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder enforceOutputFileExtension(String value) {
+    this.mediaArgs.enforceOutputFileExtension(value);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder urlMode(@NotNull UrlMode value) {
     this.mediaArgs.urlMode(value);
     return this;

@@ -74,7 +74,7 @@ class DefaultRenditionHandler implements RenditionHandler {
       for (Rendition rendition : damContext.getAsset().getRenditions()) {
         addRendition(candidates, rendition, mediaArgs);
       }
-      candidates = postProcessCandidates(candidates);
+      candidates = postProcessCandidates(candidates, mediaArgs);
       this.renditions = ImmutableSet.<RenditionMetadata>copyOf(candidates);
     }
     return this.renditions;
@@ -83,9 +83,10 @@ class DefaultRenditionHandler implements RenditionHandler {
   /**
    * Provides an option to post process the list of candidates. Can be overridden in subclasses
    * @param candidates Candidates
+   * @param mediaArgs Media args
    * @return {@link Set} of {@link RenditionMetadata}
    */
-  protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates) {
+  protected Set<RenditionMetadata> postProcessCandidates(Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
     return candidates;
   }
 
@@ -175,9 +176,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // original rendition is a image - check for matching rendition or build virtual one
     RenditionMetadata exactMatchRendition = getExactMatchRendition(candidates, mediaArgs);
-    if (exactMatchRendition != null
-        && (!damContext.getMediaHandlerConfig().enforceVirtualRenditions()
-            || !exactMatchRendition.isImage() || exactMatchRendition.isVectorImage())) {
+    if (exactMatchRendition != null && !enforceVirtualRendition(exactMatchRendition, mediaArgs)) {
       return exactMatchRendition;
     }
 
@@ -189,6 +188,18 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // no match found
     return null;
+  }
+
+  private boolean enforceVirtualRendition(RenditionMetadata rendition, MediaArgs mediaArgs) {
+    if (rendition.isImage() && !rendition.isVectorImage()) {
+      if (damContext.getMediaHandlerConfig().enforceVirtualRenditions()) {
+        return true;
+      }
+      if (mediaArgs.getEnforceOutputFileExtension() != null) {
+        return !StringUtils.equalsIgnoreCase(rendition.getFileExtension(), mediaArgs.getEnforceOutputFileExtension());
+      }
+    }
+    return false;
   }
 
   /**
@@ -319,7 +330,8 @@ class DefaultRenditionHandler implements RenditionHandler {
       if (destWidth > 0 && destHeight > 0) {
         destRatio = Ratio.get(destWidth, destHeight);
       }
-      return getVirtualRendition(candidates, destWidth, destHeight, 0, destRatio);
+      return getVirtualRendition(candidates, destWidth, destHeight, 0, destRatio,
+          mediaArgs.getEnforceOutputFileExtension());
     }
 
     // or from any media format
@@ -331,7 +343,8 @@ class DefaultRenditionHandler implements RenditionHandler {
         int minWidthHeight = (int)mediaFormat.getMinWidthHeight();
         double destRatio = mediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
-        RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, minWidthHeight, destRatio);
+        RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, minWidthHeight, destRatio,
+            mediaArgs.getEnforceOutputFileExtension());
         if (rendition != null) {
           rendition.setMediaFormat(mediaFormat);
         }
@@ -348,16 +361,18 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param destHeight Destination height
    * @param minWidthHeight Min. width/height (longest edge)
    * @param destRatio Destination ratio
+   * @param enforceOutputFileExtension Enforce output file extension
    * @return Rendition or null
    */
   private RenditionMetadata getVirtualRendition(Set<RenditionMetadata> candidates,
-      long destWidth, long destHeight, long minWidthHeight, double destRatio) {
+      long destWidth, long destHeight, long minWidthHeight, double destRatio,
+      String enforceOutputFileExtension) {
 
     // if ratio is defined get first rendition with matching ratio and same or bigger size
     if (destRatio > 0) {
       for (RenditionMetadata candidate : candidates) {
         if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, destRatio)) {
-          return getVirtualRendition(candidate, destWidth, destHeight, destRatio);
+          return getVirtualRendition(candidate, destWidth, destHeight, destRatio, enforceOutputFileExtension);
         }
       }
     }
@@ -365,7 +380,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     else {
       for (RenditionMetadata candidate : candidates) {
         if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, 0d)) {
-          return getVirtualRendition(candidate, destWidth, destHeight, 0d);
+          return getVirtualRendition(candidate, destWidth, destHeight, 0d, enforceOutputFileExtension);
         }
       }
     }
@@ -380,9 +395,11 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param widthValue Width
    * @param heightValue Height
    * @param ratioValue Ratio
+   * @param enforceOutputFileExtension Enforce output file extension
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(RenditionMetadata rendition, long widthValue, long heightValue, double ratioValue) {
+  private RenditionMetadata getVirtualRendition(RenditionMetadata rendition, long widthValue, long heightValue,
+      double ratioValue, String enforceOutputFileExtension) {
 
     long width = widthValue;
     long height = heightValue;
@@ -407,11 +424,11 @@ class DefaultRenditionHandler implements RenditionHandler {
     if (width > 0 && height > 0) {
       if (rendition instanceof VirtualTransformedRenditionMetadata) {
         VirtualTransformedRenditionMetadata cropRendition = (VirtualTransformedRenditionMetadata)rendition;
-        return new VirtualTransformedRenditionMetadata(cropRendition.getRendition(), width, height,
+        return new VirtualTransformedRenditionMetadata(cropRendition.getRendition(), width, height, enforceOutputFileExtension,
             cropRendition.getCropDimension(), cropRendition.getRotation());
       }
       else {
-        return new VirtualRenditionMetadata(rendition.getRendition(), width, height);
+        return new VirtualRenditionMetadata(rendition.getRendition(), width, height, enforceOutputFileExtension);
       }
     }
     else {

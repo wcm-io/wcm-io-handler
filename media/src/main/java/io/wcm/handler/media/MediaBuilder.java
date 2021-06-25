@@ -121,18 +121,34 @@ public interface MediaBuilder {
   MediaBuilder autoCrop(boolean value);
 
   /**
-   * @param values File extensions
+   * @param values Accepted file extensions
    * @return this
    */
   @NotNull
   MediaBuilder fileExtensions(@NotNull String @NotNull... values);
 
   /**
-   * @param value File extension
+   * @param value Accpeted file extension
    * @return this
    */
   @NotNull
   MediaBuilder fileExtension(@NotNull String value);
+
+  /**
+   * Enforces image file type for renditions.
+   * <p>
+   * By default, renditions are rendered with the same file type as the original rendition (except if the
+   * original renditions uses a file type not directly supported in browser, e.g. a TIFF image).
+   * With this parameter, it is possible to enforce generating renditions with this file type.
+   * </p>
+   * <p>
+   * Supported file types: JPEG, PNG
+   * </p>
+   * @param value File extension to be used for returned renditions
+   * @return this
+   */
+  @NotNull
+  MediaBuilder enforceOutputFileExtension(String value);
 
   /**
    * @param value URS mode

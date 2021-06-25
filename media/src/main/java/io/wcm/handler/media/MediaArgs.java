@@ -22,8 +22,10 @@ package io.wcm.handler.media;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,10 +35,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import com.google.common.collect.ImmutableSet;
+
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.url.UrlMode;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
@@ -48,6 +53,7 @@ public final class MediaArgs implements Cloneable {
   private MediaFormatOption[] mediaFormatOptions;
   private boolean autoCrop;
   private String[] fileExtensions;
+  private String enforceOutputFileExtension;
   private UrlMode urlMode;
   private long fixedWidth;
   private long fixedHeight;
@@ -66,6 +72,9 @@ public final class MediaArgs implements Cloneable {
   private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private boolean dynamicMediaDisabled;
   private ValueMap properties;
+
+  private static final Set<String> ALLOWED_FORCED_FILE_EXTENSIONS = ImmutableSet.of(
+      FileExtension.JPEG, FileExtension.PNG);
 
   /**
    * Default constructor
@@ -302,14 +311,14 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * @return File extensions
+   * @return Accepted file extensions
    */
   public String[] getFileExtensions() {
     return this.fileExtensions;
   }
 
   /**
-   * @param values File extensions
+   * @param values Accepted file extensions
    * @return this
    */
   public @NotNull MediaArgs fileExtensions(@NotNull String @Nullable... values) {
@@ -323,7 +332,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * @param value File extension
+   * @param value Accepted file extension
    * @return this
    */
   public @NotNull MediaArgs fileExtension(String value) {
@@ -335,6 +344,44 @@ public final class MediaArgs implements Cloneable {
           value
       };
     }
+    return this;
+  }
+
+  /**
+   * Enforces image file type for renditions.
+   * <p>
+   * By default, renditions are rendered with the same file type as the original rendition (except if the
+   * original renditions uses a file type not directly supported in browser, e.g. a TIFF image).
+   * With this parameter, it is possible to enforce generating renditions with this file type.
+   * </p>
+   * <p>
+   * Supported file types: JPEG, PNG
+   * </p>
+   * @return File extension to be used for returned renditions
+   */
+  public String getEnforceOutputFileExtension() {
+    return this.enforceOutputFileExtension;
+  }
+
+  /**
+   * Enforces image file type for renditions.
+   * <p>
+   * By default, renditions are rendered with the same file type as the original rendition (except if the
+   * original renditions uses a file type not directly supported in browser, e.g. a TIFF image).
+   * With this parameter, it is possible to enforce generating renditions with this file type.
+   * </p>
+   * <p>
+   * Supported file types: JPEG, PNG
+   * </p>
+   * @param value File extension to be used for returned renditions
+   * @return this
+   */
+  public @NotNull MediaArgs enforceOutputFileExtension(String value) {
+    if (!ALLOWED_FORCED_FILE_EXTENSIONS.contains(value)) {
+      throw new IllegalArgumentException("Allowed enfourced output file extensions: "
+          + StringUtils.join(ALLOWED_FORCED_FILE_EXTENSIONS, ","));
+    }
+    this.enforceOutputFileExtension = value;
     return this;
   }
 
@@ -707,6 +754,7 @@ public final class MediaArgs implements Cloneable {
     clone.mediaFormatOptions = ArrayUtils.clone(this.mediaFormatOptions);
     clone.autoCrop = this.autoCrop;
     clone.fileExtensions = ArrayUtils.clone(this.fileExtensions);
+    clone.enforceOutputFileExtension = this.enforceOutputFileExtension;
     clone.urlMode = this.urlMode;
     clone.fixedWidth = this.fixedWidth;
     clone.fixedHeight = this.fixedHeight;

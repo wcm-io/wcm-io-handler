@@ -42,6 +42,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Test Inline URI template
@@ -75,6 +76,21 @@ class InlineUriTemplateTest {
     UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.jpg",
+        uriTemplate.getUriTemplate());
+    assertEquals(215, uriTemplate.getMaxWidth());
+    assertEquals(102, uriTemplate.getMaxHeight());
+    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
+  }
+
+  @Test
+  void testGetUriTemplate_CropCenter_EnforceOutputFileExtension() {
+    Media media = mediaHandler.get(inlineImage)
+        .enforceOutputFileExtension(FileExtension.PNG)
+        .build();
+
+    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
+    assertEquals(
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.png",
         uriTemplate.getUriTemplate());
     assertEquals(215, uriTemplate.getMaxWidth());
     assertEquals(102, uriTemplate.getMaxHeight());

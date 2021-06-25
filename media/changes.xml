@@ -28,6 +28,9 @@
         MediaHandlerConfig: Introduce enforceVirtualRenditions flag to enforce that all renditions are served as virtual renditions.
       </action>
       <action type="add" dev="sseifert">
+        MediaBuilder/MediaArgs: Introduce enforceOutputFileExtension to enforce generating the renditions in a given output file format (PNG or JPEG), regardless of the format of the original image.
+      </action>
+      <action type="add" dev="sseifert">
         Add support for properties "isDecorative"/"mediaIsDecorative" - if set to true, alt. text of image is explicitly set to empty string.
       </action>
       <action type="add" dev="sseifert">

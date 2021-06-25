@@ -40,6 +40,7 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Test DAM URI template
@@ -64,6 +65,19 @@ class DamUriTemplateTest {
 
     UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
     assertEquals("/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.{height}.file/sample.jpg", uriTemplate.getUriTemplate());
+    assertEquals(100, uriTemplate.getMaxWidth());
+    assertEquals(50, uriTemplate.getMaxHeight());
+    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
+  }
+
+  @Test
+  void testGetUriTemplate_CropCenter_EnforceOutputFileExtension() {
+    Media media = mediaHandler.get(asset.getPath())
+        .enforceOutputFileExtension(FileExtension.PNG)
+        .build();
+
+    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
+    assertEquals("/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.{height}.file/sample.png", uriTemplate.getUriTemplate());
     assertEquals(100, uriTemplate.getMaxWidth());
     assertEquals(50, uriTemplate.getMaxHeight());
     assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());

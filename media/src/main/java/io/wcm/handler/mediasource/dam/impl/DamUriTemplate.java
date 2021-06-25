@@ -81,7 +81,8 @@ class DamUriTemplate implements UriTemplate {
 
       String mediaPath = RenditionMetadata.buildMediaPath(damContext.getAsset().getOriginal().getPath() + "." + ImageFileServlet.SELECTOR
           + "." + DUMMY_WIDTH + "." + DUMMY_HEIGHT
-          + "." + MediaFileServlet.EXTENSION, ImageFileServlet.getImageFileName(damContext.getAsset().getName()));
+          + "." + MediaFileServlet.EXTENSION,
+          ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
       UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
       url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
           .buildExternalResourceUrl(damContext.getAsset().adaptTo(Resource.class));

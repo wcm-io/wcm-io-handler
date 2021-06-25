@@ -129,7 +129,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
             dimension = scaledDimension;
             // extension may have to be changed because scaling case produce different file format
             if (!isVectorImage) {
-              processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+              processedFileName = ImageFileServlet.getImageFileName(processedFileName,
+                  mediaArgs.getEnforceOutputFileExtension());
             }
           }
         }
@@ -157,7 +158,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
             this.cropDimension = autoCropDimension;
             // extension may have to be changed because scaling case produce different file format
             if (!isVectorImage) {
-              processedFileName = ImageFileServlet.getImageFileName(processedFileName);
+              processedFileName = ImageFileServlet.getImageFileName(processedFileName,
+                  mediaArgs.getEnforceOutputFileExtension());
             }
             break;
           }
@@ -301,9 +303,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       return buildDownloadMediaUrl();
     }
     else if (MediaFileType.isBrowserImage(getFileExtension()) || !MediaFileType.isImage(getFileExtension())) {
-      if (mediaHandlerConfig.enforceVirtualRenditions()
-          && MediaFileType.isImage(getFileExtension()) && !MediaFileType.isVectorImage(getFileExtension())) {
-        // enfore virtual rendition instead of native media URL
+      if (enforceVirtualRendition()) {
+        // enforce virtual rendition instead of native media URL
         return buildScaledMediaUrl(this.imageDimension, null);
       }
       else {
@@ -315,6 +316,18 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
       return buildScaledMediaUrl(this.imageDimension, null);
     }
+  }
+
+  private boolean enforceVirtualRendition() {
+    if (MediaFileType.isImage(getFileExtension()) && !MediaFileType.isVectorImage(getFileExtension())) {
+      if (mediaHandlerConfig.enforceVirtualRenditions()) {
+        return true;
+      }
+      if (mediaArgs.getEnforceOutputFileExtension() != null) {
+        return !StringUtils.equalsIgnoreCase(getFileExtension(), mediaArgs.getEnforceOutputFileExtension());
+      }
+    }
+    return false;
   }
 
   /**
@@ -371,7 +384,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
             mediaUrlCropDimension, this.rotation, this.mediaArgs.isContentDispositionAttachment())
         + "." + MediaFileServlet.EXTENSION + "/"
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
-        + ImageFileServlet.getImageFileName(getFileName());
+        + ImageFileServlet.getImageFileName(getFileName(),
+            mediaArgs.getEnforceOutputFileExtension());
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
