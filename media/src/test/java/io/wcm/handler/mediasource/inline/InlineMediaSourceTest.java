@@ -57,6 +57,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.osgi.framework.Constants;
 
 import com.day.cq.wcm.api.Page;
 import com.day.image.Layer;
@@ -75,7 +76,9 @@ import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
+import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -588,6 +591,29 @@ class InlineMediaSourceTest {
     assertEquals(MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason(), "invalid reason");
     assertNull(rendition, "rendition invalid");
 
+  }
+
+  @Test
+  void testWithMediaFormats_enforceVirtualRendition() {
+    // enfore virtual renditions
+    context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+      @Override
+      public boolean enforceVirtualRenditions() {
+        return true;
+      }
+    }, Constants.SERVICE_RANKING, 1000);
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    // test image resource with media format exact fit
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_1COL)).refProperty("mediaInline").build();
+    Rendition rendition = media.getRendition();
+    assertTrue(media.isValid(), "media valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
+    assertEquals(215, rendition.getWidth(), "width");
+    assertEquals(102, rendition.getHeight(), "height");
+    assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline.image_file.215.102.file/sample_image_215x102.jpg", rendition.getUrl(), "url");
+    assertEquals(EDITORIAL_1COL, rendition.getMediaFormat());
   }
 
   @Test

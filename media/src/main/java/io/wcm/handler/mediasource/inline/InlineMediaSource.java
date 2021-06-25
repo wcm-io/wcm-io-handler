@@ -166,7 +166,7 @@ public final class InlineMediaSource extends MediaSource {
    * @return Inline media item instance
    */
   private Asset getInlineAsset(Resource ntResourceResource, Media media, String fileName) {
-    return new InlineAsset(ntResourceResource, media, fileName, adaptable);
+    return new InlineAsset(ntResourceResource, media, mediaHandlerConfig, fileName, adaptable);
   }
 
   /**

@@ -175,7 +175,9 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // original rendition is a image - check for matching rendition or build virtual one
     RenditionMetadata exactMatchRendition = getExactMatchRendition(candidates, mediaArgs);
-    if (exactMatchRendition != null) {
+    if (exactMatchRendition != null
+        && (!damContext.getMediaHandlerConfig().enforceVirtualRenditions()
+            || !exactMatchRendition.isImage() || exactMatchRendition.isVectorImage())) {
       return exactMatchRendition;
     }
 

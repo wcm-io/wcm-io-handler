@@ -53,6 +53,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.wcm.api.WCMMode;
@@ -81,8 +82,10 @@ import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
+import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -438,9 +441,25 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testGetMediaUrlStandard() {
     // construct url to an existing media item - should resolve to the first rendition
-    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl();
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL).buildUrl();
     assertNotNull(url, "returned url?");
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url, "url as expected?");
+  }
+
+  @Test
+  void testGetMediaUrlStandard_enforceVirtualRendition() {
+    // enfore virtual renditions
+    context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+      @Override
+      public boolean enforceVirtualRenditions() {
+        return true;
+      }
+    }, Constants.SERVICE_RANKING, 1000);
+
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL).buildUrl();
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.215.102.file/standard.jpg", url, "url as expected?");
   }
 
   @Test

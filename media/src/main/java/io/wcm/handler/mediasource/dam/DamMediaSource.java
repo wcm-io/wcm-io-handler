@@ -145,7 +145,7 @@ public final class DamMediaSource extends MediaSource {
         damAsset = assetResource.adaptTo(com.day.cq.dam.api.Asset.class);
       }
       if (damAsset != null) {
-        Asset asset = new DamAsset(media, damAsset, dynamicMediaSupportService, adaptable);
+        Asset asset = new DamAsset(media, damAsset, mediaHandlerConfig, dynamicMediaSupportService, adaptable);
         media.setAsset(asset);
 
         // resolve rendition(s)

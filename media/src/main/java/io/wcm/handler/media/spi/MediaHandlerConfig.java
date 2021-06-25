@@ -229,6 +229,25 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Enforce to generate only virtual renditions.
+   * <p>
+   * By default, virtual renditions (rendered on-the-fly via <code>ImageFileServet</code>) are only
+   * generated if there is a need to re-scale or crop or transform an image. Otherwise direct references
+   * to renditions or original stored in DAM are returned when there is an direct match with the requested ratio and
+   * resolution.
+   * </p>
+   * <p>
+   * When this flag is set to <code>true</code>, even if there is a direct match a virtual rendition is returned.
+   * This ensures that the default quality setting e.g. for JPEG images is always respected, regardless
+   * in which quality the original images was uploaded.
+   * </p>
+   * @return Enforce always returning virtual renditions for images.
+   */
+  public boolean enforceVirtualRenditions() {
+    return false;
+  }
+
+  /**
    * Get root path for picking assets using path field widgets.
    * @param page Context page
    * @return DAM root path

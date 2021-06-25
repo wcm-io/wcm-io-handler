@@ -25,6 +25,9 @@
 
     <release version="1.13.0" date="not released">
       <action type="add" dev="sseifert">
+        MediaHandlerConfig: Introduce enforceVirtualRenditions flag to enforce that all renditions are served as virtual renditions.
+      </action>
+      <action type="add" dev="sseifert">
         Add support for properties "isDecorative"/"mediaIsDecorative" - if set to true, alt. text of image is explicitly set to empty string.
       </action>
       <action type="add" dev="sseifert">

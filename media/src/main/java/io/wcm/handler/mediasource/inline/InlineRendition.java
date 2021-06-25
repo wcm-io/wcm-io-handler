@@ -56,6 +56,7 @@ import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.JcrBinary;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.caching.ModificationDate;
@@ -68,6 +69,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final Adaptable adaptable;
   private final Resource resource;
   private final MediaArgs mediaArgs;
+  private final MediaHandlerConfig mediaHandlerConfig;
   private final String fileName;
   private final String fileExtension;
   private final String originalFileExtension;
@@ -86,12 +88,15 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   /**
    * @param resource Binary resource
    * @param media Media metadata
+   * @param mediaHandlerConfig Media handler config
    * @param mediaArgs Media args
    * @param fileName File name
    */
-  InlineRendition(Resource resource, Media media, MediaArgs mediaArgs, String fileName, Adaptable adaptable) {
+  InlineRendition(Resource resource, Media media, MediaArgs mediaArgs, MediaHandlerConfig mediaHandlerConfig,
+      String fileName, Adaptable adaptable) {
     this.resource = resource;
     this.mediaArgs = mediaArgs;
+    this.mediaHandlerConfig = mediaHandlerConfig;
     this.adaptable = adaptable;
 
     this.rotation = media.getRotation();
@@ -296,8 +301,15 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       return buildDownloadMediaUrl();
     }
     else if (MediaFileType.isBrowserImage(getFileExtension()) || !MediaFileType.isImage(getFileExtension())) {
-      // if no scaling and no cropping required build native media URL
-      return buildNativeMediaUrl();
+      if (mediaHandlerConfig.enforceVirtualRenditions()
+          && MediaFileType.isImage(getFileExtension()) && !MediaFileType.isVectorImage(getFileExtension())) {
+        // enfore virtual rendition instead of native media URL
+        return buildScaledMediaUrl(this.imageDimension, null);
+      }
+      else {
+        // if no scaling and no cropping required build native media URL
+        return buildNativeMediaUrl();
+      }
     }
     else {
       // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
