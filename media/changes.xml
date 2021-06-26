@@ -36,9 +36,9 @@
       <action type="add" dev="sseifert">
         Add support for properties "altValueFromDAM"/"mediaForceAltValueFromAsset". If set to true, it is forced to use the alt. text from asset description (otherwise it's the fallback behavior).
       </action>
-      <action type="update" dev="sseifert">
-        Change default behavior of alt text lookup from DAM: Use asset description if avalailable as alt. text, fallback to asset title if not description is set.
-      </action>
+      <action type="update" dev="sseifert"><![CDATA[
+        <strong>Change default behavior of alt text lookup from DAM</strong>: Use asset description if avalailable as alt. text, fallback to asset title if not description is set.
+      ]]></action>
     </release>
 
     <release version="1.12.6" date="2021-06-15">
