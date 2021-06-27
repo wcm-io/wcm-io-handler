@@ -34,6 +34,7 @@ import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 
 /**
  * {@link Asset} implementation for inline media objects stored in a node in a content page.
@@ -44,6 +45,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
   private final Resource resource;
   private final Media media;
   private final MediaArgs defaultMediaArgs;
+  private final MediaHandlerConfig mediaHandlerConfig;
   private final String fileName;
 
   /**
@@ -51,9 +53,11 @@ class InlineAsset extends SlingAdaptable implements Asset {
    * @param media Media metadata
    * @param fileName File name
    */
-  InlineAsset(Resource resource, Media media, String fileName, Adaptable adaptable) {
+  InlineAsset(Resource resource, Media media, MediaHandlerConfig mediaHandlerConfig,
+      String fileName, Adaptable adaptable) {
     this.resource = resource;
     this.media = media;
+    this.mediaHandlerConfig = mediaHandlerConfig;
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
     this.fileName = fileName;
     this.adaptable = adaptable;
@@ -66,7 +70,12 @@ class InlineAsset extends SlingAdaptable implements Asset {
 
   @Override
   public String getAltText() {
-    return this.defaultMediaArgs.getAltText();
+    if (defaultMediaArgs.isDecorative()) {
+      return "";
+    }
+    else {
+      return defaultMediaArgs.getAltText();
+    }
   }
 
   @Override
@@ -142,7 +151,8 @@ class InlineAsset extends SlingAdaptable implements Asset {
    * @return Inline rendition instance (may be invalid rendition)
    */
   private Rendition getInlineRendition(MediaArgs mediaArgs) {
-    return new InlineRendition(this.resource, this.media, mediaArgs, this.fileName, this.adaptable);
+    return new InlineRendition(this.resource, this.media, mediaArgs, this.mediaHandlerConfig,
+        this.fileName, this.adaptable);
   }
 
   @Override

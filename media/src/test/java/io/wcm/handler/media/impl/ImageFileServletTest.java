@@ -208,6 +208,12 @@ class ImageFileServletTest {
     assertEquals("myimage.jpg", getImageFileName("myimage.gif"));
   }
 
+  @Test
+  void testGetImageFileNameEnforceOutputFileExtensions() {
+    assertEquals("myimage.png", getImageFileName("myimage.jpg", "png"));
+    assertEquals("myimage.jpg", getImageFileName("myimage.png", "svg"));
+  }
+
   private void assertResponseLayerSize(long width, long height) throws IOException {
     InputStream is = new ByteArrayInputStream(context.response().getOutput());
     Layer layer = new Layer(is);

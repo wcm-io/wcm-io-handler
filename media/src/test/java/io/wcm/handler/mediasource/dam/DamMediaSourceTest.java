@@ -53,6 +53,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.wcm.api.WCMMode;
@@ -81,10 +82,13 @@ import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ipeconfig.IPEConfigResourceProvider;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
+import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Test {@link DamMediaSource}
@@ -241,16 +245,33 @@ class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetMediaElementImageAltTextFromMediaLib() {
+  void testGetMediaElementImageAltTextFromAssetWithTitleOnly() {
     // create img element for the first rendition of the 'standard' media-item
-    MediaArgs args = new MediaArgs();
-    HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
+    HtmlElement img = mediaHandler().get(parStandardMediaRef).buildElement();
     assertNotNull(img, "returned html element?");
     assertEquals("img", img.getName(), "is img?");
-    assertEquals(mediaHandler().get(MEDIAITEM_PATH_STANDARD, args).buildUrl(), img.getAttributeValue("src"), "src set?");
+    assertEquals(mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl(), img.getAttributeValue("src"), "src set?");
     assertEquals(215, img.getAttributeValueAsInteger("width"), "width set?");
     assertEquals(102, img.getAttributeValueAsInteger("height"), "height set?");
     assertEquals("Editorial Standard 1", img.getAttributeValue("alt"), "alt text from medialib?");
+  }
+
+  @Test
+  void testGetMediaElementImageAltTextFromAssetWithDescription() {
+    HtmlElement img = mediaHandler().get(parSixteenTenMediaRefCrop).buildElement();
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
+    assertEquals("Description for 16:10 Image", img.getAttributeValue("alt"), "alt text from medialib?");
+  }
+
+  @Test
+  void testGetMediaElementImageAltTextFromAssetDecorative() {
+    HtmlElement img = mediaHandler().get(parSixteenTenMediaRefCrop)
+        .decorative(true)
+        .buildElement();
+    assertNotNull(img, "returned html element?");
+    assertEquals("img", img.getName(), "is img?");
+    assertEquals("", img.getAttributeValue("alt"), "alt text from medialib?");
   }
 
   @Test
@@ -269,6 +290,17 @@ class DamMediaSourceTest extends AbstractDamTest {
     HtmlElement img = mediaHandler().get(parStandardMediaRef, args).buildElement();
     assertNotNull(img, "returned html element?");
     assertEquals("Alt. Text Override!", img.getAttributeValue("alt"), "alt text from override?");
+  }
+
+  @Test
+  void testGetMediaElementImageAltTextForceFromAsset() {
+    // define alt-text-override via MediaArgs and check if it is appears in the img-tag
+    HtmlElement img = mediaHandler().get(parStandardMediaRef)
+        .altText("Alt. Text Override!")
+        .forceAltValueFromAsset(true)
+        .buildElement();
+    assertNotNull(img, "returned html element?");
+    assertEquals("Editorial Standard 1", img.getAttributeValue("alt"), "alt text from asset?");
   }
 
   @Test
@@ -410,9 +442,35 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testGetMediaUrlStandard() {
     // construct url to an existing media item - should resolve to the first rendition
-    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD).buildUrl();
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL).buildUrl();
     assertNotNull(url, "returned url?");
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg", url, "url as expected?");
+  }
+
+  @Test
+  void testGetMediaUrlStandard_enforceVirtualRendition() {
+    // enfore virtual renditions
+    context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+      @Override
+      public boolean enforceVirtualRenditions() {
+        return true;
+      }
+    }, Constants.SERVICE_RANKING, 1000);
+
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL).buildUrl();
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.215.102.file/standard.jpg", url, "url as expected?");
+  }
+
+  @Test
+  void testGetMediaUrlStandard_enforceOutputFileExtensions() {
+    // construct url to an existing media item - should resolve to the first rendition
+    String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL)
+        .enforceOutputFileExtension(FileExtension.PNG)
+        .buildUrl();
+    assertNotNull(url, "returned url?");
+    assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.215.102.file/standard.png", url, "url as expected?");
   }
 
   @Test

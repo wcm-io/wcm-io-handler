@@ -185,6 +185,30 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * @return Default property name for forcing reading alt. text from DAM asset description
+   */
+  public @NotNull String getMediaForceAltTextFromAssetProperty() {
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_FORCE_ALTTEXT_FROM_ASSET_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_FORCE_ALTTEXT_FROM_ASSET;
+    }
+  }
+
+  /**
+   * @return Default property name for marking image as "decorative" - requiring no alt. text
+   */
+  public @NotNull String getMediaIsDecorativeProperty() {
+    if (useAdobeStandardNames()) {
+      return MediaNameConstants.PN_MEDIA_IS_DECORATIVE_STANDARD;
+    }
+    else {
+      return MediaNameConstants.PN_MEDIA_IS_DECORATIVE;
+    }
+  }
+
+  /**
    * @return Default node name for inline media item stored in node within the content page
    */
   public @NotNull String getMediaInlineNodeName() {
@@ -202,6 +226,25 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    */
   public boolean includeAssetWebRenditionsByDefault() {
     return true;
+  }
+
+  /**
+   * Enforce to generate only virtual renditions.
+   * <p>
+   * By default, virtual renditions (rendered on-the-fly via <code>ImageFileServet</code>) are only
+   * generated if there is a need to re-scale or crop or transform an image. Otherwise direct references
+   * to renditions or original stored in DAM are returned when there is an direct match with the requested ratio and
+   * resolution.
+   * </p>
+   * <p>
+   * When this flag is set to <code>true</code>, even if there is a direct match a virtual rendition is returned.
+   * This ensures that the default quality setting e.g. for JPEG images is always respected, regardless
+   * in which quality the original images was uploaded.
+   * </p>
+   * @return Enforce always returning virtual renditions for images.
+   */
+  public boolean enforceVirtualRenditions() {
+    return false;
   }
 
   /**

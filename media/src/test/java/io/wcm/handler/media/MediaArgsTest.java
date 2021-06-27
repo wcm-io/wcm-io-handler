@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
@@ -43,6 +44,7 @@ import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 class MediaArgsTest {
 
@@ -151,6 +153,14 @@ class MediaArgsTest {
   }
 
   @Test
+  void testInvalidForceOutputFileExtensions() {
+    MediaArgs mediaArgs = new MediaArgs();
+    assertThrows(IllegalArgumentException.class, () -> {
+      mediaArgs.enforceOutputFileExtension(FileExtension.SVG);
+    });
+  }
+
+  @Test
   void testClone() {
     MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[] {
         new MediaFormatOption(EDITORIAL_1COL, true),
@@ -171,12 +181,15 @@ class MediaArgsTest {
     MediaArgs mediaArgs = new MediaArgs();
     mediaArgs.mediaFormatOptions(mediaFormatOptions);
     mediaArgs.fileExtensions(fileExtensions);
+    mediaArgs.enforceOutputFileExtension(FileExtension.PNG);
     mediaArgs.urlMode(UrlModes.FULL_URL_FORCENONSECURE);
     mediaArgs.fixedWidth(10);
     mediaArgs.fixedHeight(20);
     mediaArgs.download(true);
     mediaArgs.contentDispositionAttachment(true);
     mediaArgs.altText("altText");
+    mediaArgs.forceAltValueFromAsset(true);
+    mediaArgs.decorative(true);
     mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
     mediaArgs.includeAssetThumbnails(true);
@@ -200,12 +213,15 @@ class MediaArgsTest {
     assertArrayEquals(mediaArgs.getMediaFormats(), clone.getMediaFormats());
     assertArrayEquals(mediaArgs.getMediaFormatNames(), clone.getMediaFormatNames());
     assertArrayEquals(mediaArgs.getFileExtensions(), clone.getFileExtensions());
+    assertEquals(mediaArgs.getEnforceOutputFileExtension(), clone.getEnforceOutputFileExtension());
     assertEquals(mediaArgs.getUrlMode(), clone.getUrlMode());
     assertEquals(mediaArgs.getFixedWidth(), clone.getFixedWidth());
     assertEquals(mediaArgs.getFixedHeight(), clone.getFixedHeight());
     assertEquals(mediaArgs.isDownload(), clone.isDownload());
     assertEquals(mediaArgs.isContentDispositionAttachment(), clone.isContentDispositionAttachment());
     assertEquals(mediaArgs.getAltText(), clone.getAltText());
+    assertEquals(mediaArgs.isForceAltValueFromAsset(), clone.isForceAltValueFromAsset());
+    assertEquals(mediaArgs.isDecorative(), clone.isDecorative());
     assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
     assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());

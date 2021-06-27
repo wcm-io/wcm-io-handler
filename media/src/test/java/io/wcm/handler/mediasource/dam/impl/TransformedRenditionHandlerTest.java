@@ -32,10 +32,12 @@ import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -65,8 +67,9 @@ class TransformedRenditionHandlerTest {
 
     asset = context.create().asset("/content/dam/cropTest.jpg", 400, 300, ContentType.JPEG);
 
+    MediaHandlerConfig mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);
     DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
-    damContext = new DamContext(asset, null, dynamicMediaSupportService, context.request());
+    damContext = new DamContext(asset, null, mediaHandlerConfig, dynamicMediaSupportService, context.request());
 
     // generate web-enabled rendition
     webRendition = context.create().assetRenditionWebEnabled(asset, 200, 150);

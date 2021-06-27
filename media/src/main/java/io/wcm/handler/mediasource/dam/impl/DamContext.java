@@ -31,6 +31,7 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
@@ -43,6 +44,7 @@ public final class DamContext implements Adaptable {
 
   private final Asset asset;
   private final UrlMode urlMode;
+  private final MediaHandlerConfig mediaHandlerConfig;
   private final DynamicMediaSupportService dynamicMediaSupportService;
   private final Adaptable adaptable;
 
@@ -62,15 +64,17 @@ public final class DamContext implements Adaptable {
   /**
    * @param asset DAM asset
    * @param urlMode urlMode
+   * @param mediaHandlerConfig Media handler config
    * @param dynamicMediaSupportService Dynamic media support service
    * @param adaptable Adaptable from current context
    */
-  public DamContext(@NotNull Asset asset, @Nullable UrlMode urlMode,
+  public DamContext(@NotNull Asset asset, @Nullable UrlMode urlMode, @NotNull MediaHandlerConfig mediaHandlerConfig,
       @NotNull DynamicMediaSupportService dynamicMediaSupportService, @NotNull Adaptable adaptable) {
     this.asset = asset;
     this.urlMode = urlMode;
-    this.adaptable = adaptable;
+    this.mediaHandlerConfig = mediaHandlerConfig;
     this.dynamicMediaSupportService = dynamicMediaSupportService;
+    this.adaptable = adaptable;
   }
 
   /**
@@ -78,6 +82,13 @@ public final class DamContext implements Adaptable {
    */
   public Asset getAsset() {
     return asset;
+  }
+
+  /**
+   * @return Media handler config
+   */
+  public MediaHandlerConfig getMediaHandlerConfig() {
+    return this.mediaHandlerConfig;
   }
 
   /**

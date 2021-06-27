@@ -51,7 +51,7 @@ class VirtualRenditionMetadataTest extends AbstractDamTest {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     Asset asset = media.getAsset().adaptTo(Asset.class);
     rendition = asset.getRendition("cq5dam.thumbnail.215.102.jpg");
-    underTest = new VirtualRenditionMetadata(rendition, 108, 51);
+    underTest = new VirtualRenditionMetadata(rendition, 108, 51, null);
   }
 
   @Test
@@ -69,9 +69,9 @@ class VirtualRenditionMetadataTest extends AbstractDamTest {
 
   @Test
   void testEquals() {
-    VirtualRenditionMetadata m1 = new VirtualRenditionMetadata(rendition, 108, 51);
-    VirtualRenditionMetadata m2 = new VirtualRenditionMetadata(rendition, 108, 51);
-    VirtualRenditionMetadata m3 = new VirtualRenditionMetadata(rendition, 10, 20);
+    VirtualRenditionMetadata m1 = new VirtualRenditionMetadata(rendition, 108, 51, null);
+    VirtualRenditionMetadata m2 = new VirtualRenditionMetadata(rendition, 108, 51, null);
+    VirtualRenditionMetadata m3 = new VirtualRenditionMetadata(rendition, 10, 20, null);
 
     assertTrue(m1.equals(m2));
     assertFalse(m1.equals(m3));

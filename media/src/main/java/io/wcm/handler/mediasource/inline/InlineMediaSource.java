@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
@@ -125,11 +124,9 @@ public final class InlineMediaSource extends MediaSource {
       return media;
     }
 
-    // Alternative text - if there is a custom alt text specified in the media args then use that one
-    if (StringUtils.isEmpty(mediaArgs.getAltText()) && referencedResource != null) {
-      // otherwise check if there is a custom altText specified in the component's properties
-      ValueMap props = referencedResource.getValueMap();
-      mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
+    // Update media args settings from resource (e.g. alt. text setings)
+    if (referencedResource != null) {
+      updateMediaArgsFromResource(mediaArgs, referencedResource, mediaHandlerConfig);
     }
 
     // Check for transformations
@@ -169,7 +166,7 @@ public final class InlineMediaSource extends MediaSource {
    * @return Inline media item instance
    */
   private Asset getInlineAsset(Resource ntResourceResource, Media media, String fileName) {
-    return new InlineAsset(ntResourceResource, media, fileName, adaptable);
+    return new InlineAsset(ntResourceResource, media, mediaHandlerConfig, fileName, adaptable);
   }
 
   /**

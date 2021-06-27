@@ -115,7 +115,8 @@
         "dam:MIMEtype": "image/jpeg",
         "tiff:ImageWidth": 1600,
         "tiff:ImageLength": 1000,
-        "dc:title": "16:10 Bild"
+        "dc:title": "16:10 Image",
+        "dc:description": "Description for 16:10 Image"
       },
       "renditions": {
         "jcr:primaryType":"nt:folder",

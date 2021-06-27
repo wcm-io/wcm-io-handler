@@ -184,7 +184,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       if (asset != null) {
         altText = asset.getAltText();
       }
-      if (StringUtils.isNotEmpty(altText)) {
+      if (altText != null) {
         img.setAlt(altText);
       }
 

@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.inline;
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ALTTEXT;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_CROP;
+import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_IS_DECORATIVE;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ROTATION;
 import static io.wcm.handler.media.MediaNameConstants.PROP_BREAKPOINT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
@@ -56,6 +57,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.osgi.framework.Constants;
 
 import com.day.cq.wcm.api.Page;
 import com.day.image.Layer;
@@ -74,7 +76,9 @@ import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
+import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -82,6 +86,7 @@ import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
  * Test {@link InlineMediaSource}
@@ -150,6 +155,8 @@ class InlineMediaSourceTest {
     Resource unstructuredNodeMediaInlineSampleImage_16_10 = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage16_10",
         ImmutableValueMap.builder()
             .put(NN_MEDIA_INLINE + "Name", "sample_image_400x250.jpg")
+            .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 16:9")
+            .put(PN_MEDIA_IS_DECORATIVE, true)
         .build());
     context.load().binaryResource("/sample_image_400x250.jpg",
         unstructuredNodeMediaInlineSampleImage_16_10.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
@@ -354,6 +361,27 @@ class InlineMediaSourceTest {
     media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertEquals("Der Jodelkaiser", media.getAsset().getAltText());
 
+
+  }
+
+  @Test
+  void testDecorativeWithAltText() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs().altText("Der Jodelkaiser");
+
+    // isDecorative should return empty string as alt. text
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10, mediaArgs).build();
+    assertEquals("", media.getAsset().getAltText());
+  }
+
+  @Test
+  void testDecorativeWithoutAltText() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+    MediaArgs mediaArgs = new MediaArgs();
+
+    // isDecorative should return empty string as alt. text
+    Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10, mediaArgs).build();
+    assertEquals("", media.getAsset().getAltText());
   }
 
   @Test
@@ -564,6 +592,47 @@ class InlineMediaSourceTest {
     assertEquals(MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason(), "invalid reason");
     assertNull(rendition, "rendition invalid");
 
+  }
+
+  @Test
+  void testWithMediaFormats_enforceVirtualRendition() {
+    // enfore virtual renditions
+    context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+      @Override
+      public boolean enforceVirtualRenditions() {
+        return true;
+      }
+    }, Constants.SERVICE_RANKING, 1000);
+
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    // test image resource with media format exact fit
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_1COL)).refProperty("mediaInline").build();
+    Rendition rendition = media.getRendition();
+    assertTrue(media.isValid(), "media valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
+    assertEquals(215, rendition.getWidth(), "width");
+    assertEquals(102, rendition.getHeight(), "height");
+    assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline.image_file.215.102.file/sample_image_215x102.jpg", rendition.getUrl(), "url");
+    assertEquals(EDITORIAL_1COL, rendition.getMediaFormat());
+  }
+
+  @Test
+  void testWithMediaFormats_enforceOutputFileExtensions() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    // test image resource with media format exact fit
+    Media media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_1COL))
+        .refProperty("mediaInline")
+        .enforceOutputFileExtension(FileExtension.PNG)
+        .build();
+    Rendition rendition = media.getRendition();
+    assertTrue(media.isValid(), "media valid");
+    assertNull(media.getMediaInvalidReason(), "no invalid reason");
+    assertEquals(215, rendition.getWidth(), "width");
+    assertEquals(102, rendition.getHeight(), "height");
+    assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline.image_file.215.102.file/sample_image_215x102.png", rendition.getUrl(), "url");
+    assertEquals(EDITORIAL_1COL, rendition.getMediaFormat());
   }
 
   @Test

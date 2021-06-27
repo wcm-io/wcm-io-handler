@@ -35,8 +35,10 @@ import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.DamContext;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -47,6 +49,7 @@ class DynamicMediaPathTest {
   private final AemContext context = AppAemContext.newAemContext();
 
   private DamContext damContext;
+  private MediaHandlerConfig mediaHandlerConfig;
   private DynamicMediaSupportService dynamicMediaSupportService;
   private Resource assetFolder;
 
@@ -56,6 +59,7 @@ class DynamicMediaPathTest {
         PN_CROP_TYPE, CROP_TYPE_SMART,
         PN_BANNER, "Crop-1,90,60|Crop-2,50,50");
 
+    mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);
     dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
 
     assetFolder = context.create().resource("/content/dam/folder1");
@@ -63,7 +67,8 @@ class DynamicMediaPathTest {
 
     Asset asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test");
-    damContext = new DamContext(asset, null, dynamicMediaSupportService, context.request());
+    damContext = new DamContext(asset, null, mediaHandlerConfig,
+        dynamicMediaSupportService, context.request());
   }
 
   @Test
@@ -136,7 +141,8 @@ class DynamicMediaPathTest {
   void testBuildImage_SpecialChars() {
     Asset assetSpecialChars = context.create().asset(assetFolder.getPath() + "/test with spaces äöüß€.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test with spaces äöüß€");
-    damContext = new DamContext(assetSpecialChars, null, dynamicMediaSupportService, context.request());
+    damContext = new DamContext(assetSpecialChars, null, mediaHandlerConfig,
+        dynamicMediaSupportService, context.request());
 
     String result = DynamicMediaPath.buildContent(damContext, false);
     assertEquals("/is/content/DummyFolder/test%20with%20spaces%20%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);

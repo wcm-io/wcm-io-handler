@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -339,6 +340,29 @@ public abstract class MediaSource {
       mapProperty = mediaHandlerConfig.getMediaMapProperty();
     }
     return mapProperty;
+  }
+
+  /**
+   * Updates media args settings that have default default values with values defined in the current
+   * resource that defines the media reference (e.g. alt. text settings).
+   * @param mediaArgs Media args
+   * @param resource Resource with media reference
+   * @param mediaHandlerConfig Media handler config
+   */
+  protected final void updateMediaArgsFromResource(@NotNull MediaArgs mediaArgs, @NotNull Resource resource,
+      @NotNull MediaHandlerConfig mediaHandlerConfig) {
+
+    // Get alt. text-relevant properties from current resource - if not set in media args
+    ValueMap props = resource.getValueMap();
+    if (StringUtils.isEmpty(mediaArgs.getAltText())) {
+      mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
+    }
+    if (!mediaArgs.isDecorative()) {
+      mediaArgs.decorative(props.get(mediaHandlerConfig.getMediaIsDecorativeProperty(), false));
+    }
+    if (mediaArgs.isForceAltValueFromAsset()) {
+      mediaArgs.forceAltValueFromAsset(props.get(mediaHandlerConfig.getMediaForceAltTextFromAssetProperty(), true));
+    }
   }
 
   /**

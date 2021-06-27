@@ -32,7 +32,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
@@ -129,11 +128,9 @@ public final class DamMediaSource extends MediaSource {
     boolean renditionsResolved = false;
     if (StringUtils.isNotBlank(mediaRef)) {
 
-      // Check if there is a custom altText specified in the component's properties
-      if (StringUtils.isEmpty(mediaArgs.getAltText())
-          && media.getMediaRequest().getResource() != null) {
-        ValueMap props = media.getMediaRequest().getResource().getValueMap();
-        mediaArgs.altText(props.get(mediaHandlerConfig.getMediaAltTextProperty(), String.class));
+      // Update media args settings from resource (e.g. alt. text setings)
+      if (media.getMediaRequest().getResource() != null) {
+        updateMediaArgsFromResource(mediaArgs, media.getMediaRequest().getResource(), mediaHandlerConfig);
       }
 
       // Check for transformations
@@ -148,7 +145,7 @@ public final class DamMediaSource extends MediaSource {
         damAsset = assetResource.adaptTo(com.day.cq.dam.api.Asset.class);
       }
       if (damAsset != null) {
-        Asset asset = new DamAsset(media, damAsset, dynamicMediaSupportService, adaptable);
+        Asset asset = new DamAsset(media, damAsset, mediaHandlerConfig, dynamicMediaSupportService, adaptable);
         media.setAsset(asset);
 
         // resolve rendition(s)
