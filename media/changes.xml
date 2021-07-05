@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.13.2" date="not released">
+      <action type="update" dev="sseifert">
+        ImageMapParser: Support returning actual link object form link handler for ImageMap results.
+      </action>
+    </release>
+
     <release version="1.13.0" date="2021-06-27">
       <action type="add" dev="sseifert">
         MediaHandlerConfig: Introduce enforceVirtualRenditions flag to enforce that all renditions are served as virtual renditions.

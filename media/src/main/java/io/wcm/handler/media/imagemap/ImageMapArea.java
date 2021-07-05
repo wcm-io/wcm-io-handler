@@ -25,9 +25,10 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Represents an image map area defined by the AEM image editor.
+ * @param <T> Link result type
  */
 @ProviderType
-public interface ImageMapArea {
+public interface ImageMapArea<T> {
 
   /**
    * Returns the value for the {@code shape} attribute of the image map area.
@@ -70,5 +71,12 @@ public interface ImageMapArea {
    */
   @Nullable
   String getAltText();
+
+  /**
+   * Returns link represent as link object
+   * @return Link object (may be invalid)
+   */
+  @Nullable
+  T getLink();
 
 }
