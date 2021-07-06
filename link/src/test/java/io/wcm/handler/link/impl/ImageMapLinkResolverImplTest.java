@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,17 +65,33 @@ class ImageMapLinkResolverImplTest {
 
   @Test
   void testResolveLink() {
-    assertValid("http://host", underTest.resolveLink("http://host", null, page.getContentResource()));
-    assertValid("/content/site1/en.html", underTest.resolveLink("/content/site1/en", null, page.getContentResource()));
+    assertValid(underTest.resolveLink("http://host", null, page.getContentResource()), "http://host");
+    assertValid(underTest.resolveLink("/content/site1/en", null, page.getContentResource()), "/content/site1/en.html");
     assertInvalid(underTest.resolveLink("/content/site1/en/invalid", null, page.getContentResource()));
   }
 
-  // TODO: testResolveLink with window target
+  @Test
+  void testResolveLink_WindowTarget() {
+    assertValid(underTest.resolveLink("http://host", "_blank", page.getContentResource()), "http://host", "_blank");
+    assertValid(underTest.resolveLink("/content/site1/en", "_blank", page.getContentResource()), "/content/site1/en.html", "_blank");
+    assertInvalid(underTest.resolveLink("/content/site1/en/invalid", "_blank", page.getContentResource()));
+  }
 
-  private void assertValid(String expectedUrl, Link link) {
+  private void assertValid(Link link, String expectedUrl) {
+    assertValid(link, expectedUrl, null);
+  }
+
+  private void assertValid(Link link, String expectedUrl, String expectedWindowTarget) {
     assertNotNull(link);
     assertTrue(link.isValid());
     assertEquals(expectedUrl, link.getUrl());
+
+    Map<String,Object> expectedAnchorAttributes = new HashMap<>();
+    expectedAnchorAttributes.put("href", expectedUrl);
+    if (expectedWindowTarget != null) {
+      expectedAnchorAttributes.put("target", expectedWindowTarget);
+    }
+    assertEquals(expectedAnchorAttributes, link.getAnchorAttributes());
   }
 
   private void assertInvalid(Link link) {

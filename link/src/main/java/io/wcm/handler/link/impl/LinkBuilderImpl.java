@@ -19,7 +19,9 @@
  */
 package io.wcm.handler.link.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -33,6 +35,7 @@ import io.wcm.handler.link.Link;
 import io.wcm.handler.link.LinkArgs;
 import io.wcm.handler.link.LinkBuilder;
 import io.wcm.handler.link.LinkComponentPropertyResolver;
+import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.LinkRequest;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
@@ -58,14 +61,18 @@ final class LinkBuilderImpl implements LinkBuilder {
     this.reference = null;
     this.linkHandler = linkHandler;
 
-    // resolve default settings from content policies and component properties
     if (resource != null) {
+      // resolve default settings from content policies and component properties
       try (LinkComponentPropertyResolver resolver = getLinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
         linkArgs.linkTargetUrlFallbackProperty(resolver.getLinkTargetUrlFallbackProperty());
+        linkArgs.linkTargetWindowTargetFallbackProperty(resolver.getLinkTargetWindowTargetFallbackProperty());
       }
       catch (Exception ex) {
         log.warn("Error closing component property resolver.", ex);
       }
+
+      // get window target from resource
+      linkArgs.windowTarget(getWindowTargetFromResource(resource, linkArgs));
     }
   }
 
@@ -79,6 +86,28 @@ final class LinkBuilderImpl implements LinkBuilder {
       // fallback mode if ComponentPropertyResolverFactory is not available
       return new LinkComponentPropertyResolver(resource);
     }
+  }
+
+  private static String getWindowTargetFromResource(@NotNull Resource resource, @NotNull LinkArgs linkArgs) {
+    ValueMap props = resource.getValueMap();
+    String windowTarget = null;
+
+    // check if a link target URL is set in the fallback property
+    String[] linkTargetWindowTargetFallbackProperty = linkArgs.getLinkTargetWindowTargetFallbackProperty();
+    if (linkTargetWindowTargetFallbackProperty != null) {
+      for (String propertyName : linkTargetWindowTargetFallbackProperty) {
+        windowTarget = props.get(propertyName, String.class);
+        if (StringUtils.isNotBlank(windowTarget)) {
+          break;
+        }
+      }
+    }
+
+    // read from resource with default property name
+    if (StringUtils.isBlank(windowTarget)) {
+      windowTarget = props.get(LinkNameConstants.PN_LINK_WINDOW_TARGET, String.class);
+    }
+    return windowTarget;
   }
 
   LinkBuilderImpl(Page page, LinkHandlerImpl linkHandler) {
@@ -163,6 +192,12 @@ final class LinkBuilderImpl implements LinkBuilder {
   @Override
   public @NotNull LinkBuilder fragment(@Nullable String value) {
     this.linkArgs.fragment(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull LinkBuilder windowTarget(@Nullable String value) {
+    this.linkArgs.windowTarget(value);
     return this;
   }
 

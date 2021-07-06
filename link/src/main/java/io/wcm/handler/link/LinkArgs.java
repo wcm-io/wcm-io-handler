@@ -49,8 +49,10 @@ public final class LinkArgs implements Cloneable {
   private String suffix;
   private String queryString;
   private String fragment;
+  private String windowTarget;
   private ValueMap properties;
   private String[] linkTargetUrlFallbackProperty;
+  private String[] linkTargetWindowTargetFallbackProperty;
 
   /**
    * @return URL mode for externalizing the URL
@@ -181,6 +183,22 @@ public final class LinkArgs implements Cloneable {
   }
 
   /**
+   * @return Link window target
+   */
+  public @Nullable String getWindowTarget() {
+    return this.windowTarget;
+  }
+
+  /**
+   * @param value Link window target
+   * @return this
+   */
+  public @NotNull LinkArgs windowTarget(@Nullable String value) {
+    this.windowTarget = value;
+    return this;
+  }
+
+  /**
    * Custom properties that my be used by application-specific markup builders or processors.
    * @param map Property map. Is merged with properties already set.
    * @return this
@@ -241,6 +259,26 @@ public final class LinkArgs implements Cloneable {
     return this.linkTargetUrlFallbackProperty;
   }
 
+  /**
+   * Defines a "fallback" property name that is used to load the "windows target" information from
+   * instead of the the default property. This property is used for migration
+   * from components that do not support Link Handler. It is only used for reading, and never written back to.
+   * When opened and saved in the link dialog, the property is removed and instead the dedicated properties are used.
+   * @param propertyNames Property name(s)
+   * @return this
+   */
+  public @NotNull LinkArgs linkTargetWindowTargetFallbackProperty(@NotNull String @Nullable... propertyNames) {
+    this.linkTargetWindowTargetFallbackProperty = propertyNames;
+    return this;
+  }
+
+  /**
+   * @return Property name(s)
+   */
+  public @Nullable String[] getLinkTargetWindowTargetFallbackProperty() {
+    return this.linkTargetWindowTargetFallbackProperty;
+  }
+
 
   @Override
   public int hashCode() {
@@ -275,9 +313,11 @@ public final class LinkArgs implements Cloneable {
     clone.suffix = this.suffix;
     clone.queryString = this.queryString;
     clone.fragment = this.fragment;
+    clone.windowTarget = this.windowTarget;
     clone.linkTargetUrlFallbackProperty = ArrayUtils.clone(this.linkTargetUrlFallbackProperty);
+    clone.linkTargetWindowTargetFallbackProperty = ArrayUtils.clone(this.linkTargetWindowTargetFallbackProperty);
     if (this.properties != null) {
-      clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
+      clone.properties = new ValueMapDecorator(new HashMap<>(this.properties));
     }
 
     return clone;

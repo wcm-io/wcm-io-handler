@@ -44,8 +44,9 @@ public class ImageMapLinkResolverImpl implements ImageMapLinkResolver<Link> {
   public @Nullable Link resolveLink(@NotNull String linkUrl, @Nullable String linkWindowTarget, @NotNull Resource context) {
     LinkHandler linkHandler = context.adaptTo(LinkHandler.class);
     if (linkHandler != null) {
-      // TODO: apply linkWindowTarget
-      return linkHandler.get(linkUrl).build();
+      return linkHandler.get(linkUrl)
+          .windowTarget(linkWindowTarget)
+          .build();
     }
     return null;
   }
