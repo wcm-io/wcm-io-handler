@@ -63,6 +63,13 @@ are overwritten or added.
   - fileReferenceParameter (String) = {default value configured in media handler}
 
   /**
+   * Prefix for all property names in the this component.
+   * Can be used to store the properties in another resource by setting e.g. to "./mySubNode/".
+   * Property value is ignored for properties name, fileNameParameter or fileReferenceParameter if those are set explicitly.
+   */
+  - namePrefix (String) = "./"
+
+  /**
    * The browse and selection filter for file selection. E.g. [".png",".jpg"] or ["image/\*"].
    */
   - mimeTypes (String) multiple = ["image/gif","image/jpeg","image/png","image/tiff","image/svg+xml"]
@@ -124,16 +131,17 @@ Config cfg = cmp.getConfig();
 ExpressionHelper ex = cmp.getExpressionHelper();
 
 // get default values for media ref properties as configured for media handler
-String propNameDefault = "./file";
-String propFileNameDefault = "./fileName";
-String propFileReferenceDefault = "./fileReference";
+String namePrefix = cfg.get("namePrefix", "./");
+String propNameDefault = namePrefix + "file";
+String propFileNameDefault = namePrefix + "fileName";
+String propFileReferenceDefault = namePrefix + "fileReference";
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 boolean hasTransformation = false;
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
-  propNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName();
-  propFileNameDefault = "./" + mediaHandlerConfig.getMediaInlineNodeName() + "Name";
-  propFileReferenceDefault = "./" + mediaHandlerConfig.getMediaRefProperty();
+  propNameDefault = namePrefix + mediaHandlerConfig.getMediaInlineNodeName();
+  propFileNameDefault = namePrefix + mediaHandlerConfig.getMediaInlineNodeName() + "Name";
+  propFileReferenceDefault = namePrefix + mediaHandlerConfig.getMediaRefProperty();
 
   // check if any transformations are defined
   ValueMap contentProps = contentResource.getValueMap();
@@ -188,6 +196,7 @@ dispatcher.include(slingRequest, slingResponse);
 // add pathfield widget
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
+pathFieldProps.put("namePrefix", namePrefix);
 pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
 pathFieldProps.put("required", cfg.get("required", false));
 

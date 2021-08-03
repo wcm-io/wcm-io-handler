@@ -25,6 +25,9 @@
 
     <release version="1.13.2" date="not released">
       <action type="update" dev="sseifert">
+        FileUpload/PathField GraniteUI component: Support namePrefix property to allow all properties to be stored in different resource.
+      </action>
+      <action type="update" dev="sseifert">
         ImageMapParser: Support returning actual link object form link handler for ImageMap results.
       </action>
     </release>

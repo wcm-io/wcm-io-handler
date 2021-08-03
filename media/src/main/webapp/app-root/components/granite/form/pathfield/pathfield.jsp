@@ -52,6 +52,13 @@ are overwritten or added.
   - name (String) = {default value configured in media handler for media reference}
 
   /**
+   * Prefix for all property names in the this component.
+   * Can be used to store the properties in another resource by setting e.g. to "./mySubNode/".
+   * Property value is ignored for property name if this is set explicitly.
+   */
+  - namePrefix (String) = "./"
+
+  /**
    * The path of the root of the pathfield.
    */
   - rootPath (StringEL) = {root path from media handler config}
@@ -103,11 +110,12 @@ Config cfg = cmp.getConfig();
 ExpressionHelper ex = cmp.getExpressionHelper();
 
 // get default values for media ref properties as configured for media handler
-String propNameDefault = "./fileReference";
+String namePrefix = cfg.get("namePrefix", "./");
+String propNameDefault = namePrefix + "fileReference";
 Resource contentResource = GraniteUi.getContentResourceOrParent(request);
 if (contentResource != null) {
   MediaHandlerConfig mediaHandlerConfig = contentResource.adaptTo(MediaHandlerConfig.class);
-  propNameDefault = "./" + mediaHandlerConfig.getMediaRefProperty();
+  propNameDefault = namePrefix + mediaHandlerConfig.getMediaRefProperty();
 }
 
 Map<String,Object> pathFieldProps = new HashMap<>();
