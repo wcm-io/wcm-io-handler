@@ -48,7 +48,6 @@ public final class DamContext implements Adaptable {
   private final DynamicMediaSupportService dynamicMediaSupportService;
   private final Adaptable adaptable;
 
-  private Boolean dynamicMediaEnabled;
   private String dynamicMediaObject;
   private String dynamicMediaServerUrl;
   private Dimension dynamicMediaImageSizeLimit;
@@ -95,10 +94,15 @@ public final class DamContext implements Adaptable {
    * @return Whether dynamic media is enabled on this AEM instance
    */
   public boolean isDynamicMediaEnabled() {
-    if (dynamicMediaEnabled == null) {
-      dynamicMediaEnabled = dynamicMediaSupportService.isDynamicMediaEnabled();
-    }
-    return dynamicMediaEnabled;
+    return dynamicMediaSupportService.isDynamicMediaEnabled();
+  }
+
+  /**
+   * @return Whether a transparent fallback to Media Handler-based rendering of renditions is allowed
+   *         if the appropriate Dynamic Media metadata is not preset for an asset.
+   */
+  public boolean isDynamicMediaAemFallbackDisabled() {
+    return dynamicMediaSupportService.isAemFallbackDisabled();
   }
 
   /**

@@ -115,7 +115,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
         }
       }
     }
-    if (url == null) {
+    if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
       // Render renditions in AEM: build externalized URL
       UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
       String mediaPath = this.rendition.getMediaPath(this.mediaArgs.isContentDispositionAttachment());

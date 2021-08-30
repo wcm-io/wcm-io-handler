@@ -79,6 +79,12 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     boolean authorPreviewMode() default false;
 
     @AttributeDefinition(
+        name = "Disable AEM Fallback",
+        description = "Disable the automatic fallback to AEM-based rendering of renditions (via Media Handler) "
+            + "if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata.")
+    boolean disableAemFallback() default false;
+
+    @AttributeDefinition(
         name = "Image width limit",
         description = "The configured width value for 'Reply Image Size Limit'.")
     long imageSizeLimitWidth() default 2000;
@@ -99,6 +105,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
   private boolean enabled;
   private boolean authorPreviewMode;
+  private boolean disableAemFallback;
   private Dimension imageSizeLimit;
 
   private static final String SERVICEUSER_SUBSERVICE = "dynamic-media-support";
@@ -110,12 +117,18 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   private void activate(Config config) {
     this.enabled = config.enabled();
     this.authorPreviewMode = config.authorPreviewMode();
+    this.disableAemFallback = config.disableAemFallback();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
   }
 
   @Override
   public boolean isDynamicMediaEnabled() {
     return this.enabled && featureFlagService.isEnabled(EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID);
+  }
+
+  @Override
+  public boolean isAemFallbackDisabled() {
+    return disableAemFallback;
   }
 
   @Override

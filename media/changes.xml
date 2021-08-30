@@ -30,6 +30,9 @@
       <action type="update" dev="sseifert">
         ImageMapParser: Support returning actual link object form link handler for ImageMap results.
       </action>
+      <action type="update" dev="sseifert">
+        Dynamic Media Support: Add configuration option to disable the automatic fallback to AEM-based rendering of renditions (via Media Handler) if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata.
+      </action>
     </release>
 
     <release version="1.13.0" date="2021-06-27">
