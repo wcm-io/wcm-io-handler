@@ -69,7 +69,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.media</artifactId>
-      <version>1.13.1-SNAPSHOT</version>
+      <version>1.13.2</version>
       <scope>compile</scope>
     </dependency>
 
