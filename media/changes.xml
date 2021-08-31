@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.13.2" date="not released">
+    <release version="1.13.2" date="2021-08-31">
       <action type="update" dev="sseifert">
         FileUpload/PathField GraniteUI component: Support namePrefix property to allow all properties to be stored in different resource.
       </action>
