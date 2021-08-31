@@ -32,6 +32,8 @@ The built-in principal `configuration-reader-service` has read access to `/conf`
 
 This configuration is required **for both author and publish instances**.
 
+Further system configuration options for [Dynamic Media][dynamic-media].
+
 
 ### Previews for inline images in Authoring
 
@@ -59,3 +61,4 @@ See this [How-to article][workflow-how-to] for details.
 
 [workflow-how-to]: https://wcm-io.atlassian.net/wiki/x/AQDrRw
 [wcmio-wcm-core-components]: https://wcm.io/wcm/core-components/
+[dynamic-media]: dynamic-media.html

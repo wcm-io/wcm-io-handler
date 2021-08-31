@@ -31,9 +31,10 @@ import org.osgi.annotation.versioning.ProviderType;
  * {@link org.apache.sling.api.SlingHttpServletRequest} or {@link org.apache.sling.api.resource.Resource} to get a
  * context-specific handler instance.
  * </p>
+ * @param <T> Link result type
  */
 @ProviderType
-public interface ImageMapParser {
+public interface ImageMapParser<T> {
 
   /**
    * Parses a map area string to {@link ImageMapArea} objects.
@@ -41,6 +42,6 @@ public interface ImageMapParser {
    * @return List of areas or null if none found
    */
   @Nullable
-  List<ImageMapArea> parseMap(@Nullable String mapString);
+  List<ImageMapArea<T>> parseMap(@Nullable String mapString);
 
 }

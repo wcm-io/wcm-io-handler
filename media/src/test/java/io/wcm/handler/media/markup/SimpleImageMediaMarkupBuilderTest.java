@@ -355,6 +355,7 @@ class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   void testBuild_Image_Map() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
@@ -363,7 +364,7 @@ class SimpleImageMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition));
-    media.setMap(EXPECTED_AREAS_RESOLVED);
+    media.setMap((List)EXPECTED_AREAS_RESOLVED);
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     HtmlElement<?> element = builder.build(media);
@@ -377,6 +378,7 @@ class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   void testBuild_Picture_Map() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
@@ -392,7 +394,7 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setAsset(asset);
     media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 32), rendition(RATIO, 16),
         rendition(RATIO2, 40), rendition(RATIO2, 20)));
-    media.setMap(EXPECTED_AREAS_RESOLVED);
+    media.setMap((List)EXPECTED_AREAS_RESOLVED);
 
     HtmlElement<?> picture = builder.build(media);
     assertTrue(picture instanceof Picture);

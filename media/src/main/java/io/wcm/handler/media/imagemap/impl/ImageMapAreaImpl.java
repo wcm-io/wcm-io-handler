@@ -30,12 +30,14 @@ import io.wcm.handler.media.imagemap.ImageMapArea;
 
 /**
  * Implementation of {@link ImageMapArea}.
+ * @param <T> Link result type
  */
-public class ImageMapAreaImpl implements ImageMapArea {
+public class ImageMapAreaImpl<T> implements ImageMapArea<T> {
 
   private final String shape;
   private final String coordinates;
   private final String relativeCoordinates;
+  private final @Nullable T link;
   private final String linkUrl;
   private final String linkWindowTarget;
   private final String altText;
@@ -49,10 +51,11 @@ public class ImageMapAreaImpl implements ImageMapArea {
    * @param altText Alt. text
    */
   public ImageMapAreaImpl(@NotNull String shape, @NotNull String coordinates, @Nullable String relativeCoordinates,
-      @NotNull String linkUrl, @Nullable String linkWindowTarget, @Nullable String altText) {
+      @Nullable T link, @NotNull String linkUrl, @Nullable String linkWindowTarget, @Nullable String altText) {
     this.shape = shape;
     this.coordinates = coordinates;
     this.relativeCoordinates = relativeCoordinates;
+    this.link = link;
     this.linkUrl = linkUrl;
     this.linkWindowTarget = linkWindowTarget;
     this.altText = altText;
@@ -89,13 +92,18 @@ public class ImageMapAreaImpl implements ImageMapArea {
   }
 
   @Override
+  public @Nullable T getLink() {
+    return link;
+  }
+
+  @Override
   public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
+    return HashCodeBuilder.reflectionHashCode(this, "link");
   }
 
   @Override
   public boolean equals(Object obj) {
-    return EqualsBuilder.reflectionEquals(this, obj);
+    return EqualsBuilder.reflectionEquals(this, obj, "link");
   }
 
   @Override

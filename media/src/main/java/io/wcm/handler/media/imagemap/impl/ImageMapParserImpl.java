@@ -37,11 +37,12 @@ import io.wcm.handler.media.spi.ImageMapLinkResolver;
 
 /**
  * Creates {@link ImageMapArea} from strings.
+ * @param <T> Link result type
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 }, adapters = ImageMapParser.class)
-public class ImageMapParserImpl implements ImageMapParser {
+public class ImageMapParserImpl<T> implements ImageMapParser<T> {
 
   @SlingObject
   private Resource resource;
@@ -50,18 +51,19 @@ public class ImageMapParserImpl implements ImageMapParser {
   private ImageMapLinkResolver linkResolver;
 
   @Override
-  public @Nullable List<ImageMapArea> parseMap(@Nullable String mapString) {
+  @SuppressWarnings({ "null", "unchecked" })
+  public @Nullable List<ImageMapArea<T>> parseMap(@Nullable String mapString) {
     if (StringUtils.isBlank(mapString)) {
       return null;
     }
 
-    List<ImageMapArea> areas = new ArrayList<>();
-    // Parse the image map areas as defined at {@code Image.PN_MAP}
+    List<ImageMapArea<T>> areas = new ArrayList<>();
+    // Parse the image map areas as defined at Image.PN_MAP
     String[] areaStrings = StringUtils.split(mapString, "][");
     for (String areaString : areaStrings) {
       int coordinatesEndIndex = areaString.indexOf(')');
       if (coordinatesEndIndex < 0) {
-        break;
+        continue;
       }
       String shapeAndCoords = StringUtils.substring(areaString, 0, coordinatesEndIndex + 1);
       String shape = StringUtils.substringBefore(shapeAndCoords, "(");
@@ -69,28 +71,35 @@ public class ImageMapParserImpl implements ImageMapParser {
       String remaining = StringUtils.substring(areaString, coordinatesEndIndex + 1);
       String[] remainingTokens = StringUtils.split(remaining, "|");
       if (StringUtils.isBlank(shape) || StringUtils.isBlank(coordinates)) {
-        break;
+        continue;
       }
       if (remainingTokens.length > 0) {
         String linkUrl = StringUtils.remove(remainingTokens[0], "\"");
-
-        // resolve and validate via link handler
-        if (linkResolver != null) {
-          linkUrl = linkResolver.resolve(linkUrl, resource);
-        }
-
-        if (linkUrl == null || StringUtils.isBlank(linkUrl)) {
-          break;
-        }
-
         String linkWindowTarget = remainingTokens.length > 1 ? StringUtils.remove(remainingTokens[1], "\"") : "";
         String altText = remainingTokens.length > 2 ? StringUtils.remove(remainingTokens[2], "\"") : "";
         String relativeCoordinates = remainingTokens.length > 3 ? remainingTokens[3] : "";
         relativeCoordinates = StringUtils.substringBetween(relativeCoordinates, "(", ")");
 
-        ImageMapArea area = new ImageMapAreaImpl(shape, coordinates,
+        // resolve and validate via link handler
+        T link = null;
+        if (linkResolver != null) {
+          link = (T)linkResolver.resolveLink(linkUrl, linkWindowTarget, resource);
+          if (link != null) {
+            linkUrl = linkResolver.getLinkUrl(link);
+          }
+          else {
+            // fallback to old signature
+            linkUrl = linkResolver.resolve(linkUrl, resource);
+          }
+        }
+
+        if (linkUrl == null || StringUtils.isBlank(linkUrl)) {
+          continue;
+        }
+
+        ImageMapArea<T> area = new ImageMapAreaImpl<>(shape, coordinates,
             StringUtils.trimToNull(relativeCoordinates),
-            linkUrl,
+            link, linkUrl,
             StringUtils.trimToNull(linkWindowTarget), StringUtils.trimToNull(altText));
 
         areas.add(area);

@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.13.2" date="2021-08-31">
+      <action type="update" dev="sseifert">
+        FileUpload/PathField GraniteUI component: Support namePrefix property to allow all properties to be stored in different resource.
+      </action>
+      <action type="update" dev="sseifert">
+        ImageMapParser: Support returning actual link object form link handler for ImageMap results.
+      </action>
+      <action type="update" dev="sseifert">
+        Dynamic Media Support: Add configuration option to disable the automatic fallback to AEM-based rendering of renditions (via Media Handler) if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata.
+      </action>
+    </release>
+
     <release version="1.13.0" date="2021-06-27">
       <action type="add" dev="sseifert">
         MediaHandlerConfig: Introduce enforceVirtualRenditions flag to enforce that all renditions are served as virtual renditions.

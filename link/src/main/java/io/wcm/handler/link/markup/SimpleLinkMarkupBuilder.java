@@ -22,14 +22,12 @@ package io.wcm.handler.link.markup;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.commons.dom.Anchor;
 import io.wcm.handler.link.Link;
-import io.wcm.handler.link.LinkNameConstants;
 import io.wcm.handler.link.spi.LinkMarkupBuilder;
 
 /**
@@ -48,13 +46,11 @@ public final class SimpleLinkMarkupBuilder implements LinkMarkupBuilder {
 
   @Override
   public Anchor build(@NotNull Link link) {
-    ValueMap props = link.getLinkRequest().getResourceProperties();
-
     // build anchor
     Anchor anchor = new Anchor(link.getUrl());
 
     // window target
-    String target = props.get(LinkNameConstants.PN_LINK_WINDOW_TARGET, String.class);
+    String target = link.getLinkRequest().getLinkArgs().getWindowTarget();
     if (StringUtils.isNotEmpty(target) && !"_self".equals(target)) {
       anchor.setTarget(target);
     }

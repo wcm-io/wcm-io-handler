@@ -74,7 +74,7 @@ class DamUriTemplate implements UriTemplate {
         }
       }
     }
-    if (url == null) {
+    if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
       // Render renditions in AEM: build externalized URL
       final long DUMMY_WIDTH = 999991;
       final long DUMMY_HEIGHT = 999992;

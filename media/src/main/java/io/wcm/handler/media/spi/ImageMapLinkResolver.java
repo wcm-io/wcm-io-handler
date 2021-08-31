@@ -26,18 +26,41 @@ import org.osgi.annotation.versioning.ConsumerType;
 
 /**
  * Resolves link URLs found in Image Map definitions.
- * To be implemented by an OSGi services provided by wcm.io Link Handler.
+ * To be implemented by an OSGi service provided by wcm.io Link Handler.
+ * @param <T> Link result type
  */
 @ConsumerType
-public interface ImageMapLinkResolver {
+public interface ImageMapLinkResolver<T> {
 
   /**
-   * Resolver link URL.
-   * @param linkUrl Link URL.
-   * @param context Context resource where the image map is defined.
+   * Resolve link URL.
+   * @param linkUrl Link URL
+   * @param context Context resource where the image map is defined
    * @return Resolved link URL or null.
    */
   @Nullable
   String resolve(@NotNull String linkUrl, @NotNull Resource context);
+
+  /**
+   * Resolve link.
+   * @param linkUrl Link URL
+   * @param linkWindowTarget Link window target
+   * @param context Context resource where the image map is defined
+   * @return Resolved link object (may be invalid)
+   */
+  @Nullable
+  default T resolveLink(@NotNull String linkUrl, @Nullable String linkWindowTarget, @NotNull Resource context) {
+    return null;
+  }
+
+  /**
+   * Get Link URL from link Object.
+   * @param link Link object
+   * @return Resolved link URL or null
+   */
+  @Nullable
+  default String getLinkUrl(@Nullable T link) {
+    return null;
+  }
 
 }

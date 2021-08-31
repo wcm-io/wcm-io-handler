@@ -32,19 +32,30 @@ import io.wcm.handler.media.spi.ImageMapLinkResolver;
  * Autodetects and resolves a link URL found by wcm.io Media Handler in a Image Map string.
  */
 @Component(service = ImageMapLinkResolver.class, immediate = true)
-public class ImageMapLinkResolverImpl implements ImageMapLinkResolver {
+public class ImageMapLinkResolverImpl implements ImageMapLinkResolver<Link> {
 
   @Override
   public @Nullable String resolve(@NotNull String linkUrl, @NotNull Resource context) {
+    Link link = resolveLink(linkUrl, null, context);
+    return getLinkUrl(link);
+  }
 
+  @Override
+  public @Nullable Link resolveLink(@NotNull String linkUrl, @Nullable String linkWindowTarget, @NotNull Resource context) {
     LinkHandler linkHandler = context.adaptTo(LinkHandler.class);
     if (linkHandler != null) {
-      Link link = linkHandler.get(linkUrl).build();
-      if (link.isValid()) {
-        return link.getUrl();
-      }
+      return linkHandler.get(linkUrl)
+          .windowTarget(linkWindowTarget)
+          .build();
     }
+    return null;
+  }
 
+  @Override
+  public @Nullable String getLinkUrl(@Nullable Link link) {
+    if (link != null && link.isValid()) {
+      return link.getUrl();
+    }
     return null;
   }
 

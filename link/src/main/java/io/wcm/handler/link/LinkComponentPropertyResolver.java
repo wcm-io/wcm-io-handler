@@ -20,6 +20,7 @@
 package io.wcm.handler.link;
 
 import static io.wcm.handler.link.LinkNameConstants.PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY;
+import static io.wcm.handler.link.LinkNameConstants.PN_COMPONENT_LINK_TARGET_WINDOW_TARGET_FALLBACK_PROPERTY;
 
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -72,6 +73,14 @@ public final class LinkComponentPropertyResolver implements AutoCloseable {
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public @NotNull String @Nullable [] getLinkTargetUrlFallbackProperty() {
     return resolver.get(PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, String[].class);
+  }
+
+  /**
+   * @return Link target window target fallback property name
+   */
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+  public @NotNull String @Nullable [] getLinkTargetWindowTargetFallbackProperty() {
+    return resolver.get(PN_COMPONENT_LINK_TARGET_WINDOW_TARGET_FALLBACK_PROPERTY, String[].class);
   }
 
   @Override

@@ -22,6 +22,7 @@ package io.wcm.handler.link;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.handler.link.LinkNameConstants.PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY;
+import static io.wcm.handler.link.LinkNameConstants.PN_COMPONENT_LINK_TARGET_WINDOW_TARGET_FALLBACK_PROPERTY;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -56,18 +57,21 @@ class LinkComponentPropertyResolverTest {
 
     try (LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertNull(underTest.getLinkTargetUrlFallbackProperty());
+      assertNull(underTest.getLinkTargetWindowTargetFallbackProperty());
     }
   }
 
   @Test
   void testGetLinkTargetUrlFallbackProperty_Component() throws Exception {
     context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, "property1");
+        PN_COMPONENT_LINK_TARGET_URL_FALLBACK_PROPERTY, "property1",
+        PN_COMPONENT_LINK_TARGET_WINDOW_TARGET_FALLBACK_PROPERTY, new String[] { "prop2a", "prop2b" });
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
 
     try (LinkComponentPropertyResolver underTest = new LinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertArrayEquals(new String[] { "property1" }, underTest.getLinkTargetUrlFallbackProperty());
+      assertArrayEquals(new String[] { "prop2a", "prop2b" }, underTest.getLinkTargetWindowTargetFallbackProperty());
     }
   }
 

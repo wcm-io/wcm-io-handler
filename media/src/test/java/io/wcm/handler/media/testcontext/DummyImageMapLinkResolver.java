@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
 import io.wcm.testing.mock.aem.context.AemContextImpl;
 
-public class DummyImageMapLinkResolver implements ImageMapLinkResolver {
+public class DummyImageMapLinkResolver implements ImageMapLinkResolver<String> {
 
   private final AemContextImpl context;
 
@@ -46,6 +46,22 @@ public class DummyImageMapLinkResolver implements ImageMapLinkResolver {
       return linkUrl;
     }
     return null;
+  }
+
+  @Override
+  public @NotNull String resolveLink(@NotNull String linkUrl, @Nullable String linkWindowTarget,
+      @NotNull Resource contextResource) {
+    return StringUtils.defaultString(resolve(linkUrl, contextResource));
+  }
+
+  @Override
+  public @Nullable String getLinkUrl(@Nullable String link) {
+    if (StringUtils.isBlank(link)) {
+      return null;
+    }
+    else {
+      return link;
+    }
   }
 
 }

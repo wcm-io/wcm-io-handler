@@ -54,16 +54,26 @@ public class ImageMapParserImplTest {
       // this rect has an invalid content reference and thus should be removed during parsing
       + "[rect(256,171,1023,682)\"" + INVALID_CONTENT_REF + "\"|\"\"|\"altText\"|(0.1992,0.2005,0.7992,0.7995)]";
 
-  public static final List<ImageMapArea> EXPECTED_AREAS_RESOLVED = ImmutableList.of(
-      new ImageMapAreaImpl("circle", "256,256,256", "0.2000,0.3001,0.2000", EXTERNAL_REF, null, null),
-      new ImageMapAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", VALID_CONTENT_REF + ".html", null, "altText"),
-      new ImageMapAreaImpl("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988", EXTERNAL_REF, "_blank", null));
+  @SuppressWarnings("null")
+  public static final List<ImageMapArea<String>> EXPECTED_AREAS_RESOLVED = ImmutableList.of(
+      new ImageMapAreaImpl<String>("circle", "256,256,256", "0.2000,0.3001,0.2000",
+          EXTERNAL_REF, EXTERNAL_REF, null, null),
+      new ImageMapAreaImpl<String>("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995",
+          VALID_CONTENT_REF + ".html", VALID_CONTENT_REF + ".html", null, "altText"),
+      new ImageMapAreaImpl<String>("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988",
+          EXTERNAL_REF, EXTERNAL_REF, "_blank",
+          null));
 
-  public static final List<ImageMapArea> EXPECTED_AREAS_UNRESOLVED = ImmutableList.of(
-      new ImageMapAreaImpl("circle", "256,256,256", "0.2000,0.3001,0.2000", EXTERNAL_REF, null, null),
-      new ImageMapAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", VALID_CONTENT_REF, null, "altText"),
-      new ImageMapAreaImpl("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988", EXTERNAL_REF, "_blank", null),
-      new ImageMapAreaImpl("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995", INVALID_CONTENT_REF, null, "altText"));
+  @SuppressWarnings("null")
+  public static final List<ImageMapArea<String>> EXPECTED_AREAS_UNRESOLVED = ImmutableList.of(
+      new ImageMapAreaImpl<String>("circle", "256,256,256", "0.2000,0.3001,0.2000",
+          null, EXTERNAL_REF, null, null),
+      new ImageMapAreaImpl<String>("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995",
+          null, VALID_CONTENT_REF, null, "altText"),
+      new ImageMapAreaImpl<String>("poly", "917,344,1280,852,532,852", "0.7164,0.4033,1.0000,0.9988,0.4156,0.9988",
+          null, EXTERNAL_REF, "_blank", null),
+      new ImageMapAreaImpl<String>("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995",
+          null, INVALID_CONTENT_REF, null, "altText"));
 
   private final AemContext context = AppAemContext.newAemContext();
 

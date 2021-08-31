@@ -81,6 +81,14 @@ public interface LinkBuilder {
   LinkBuilder fragment(@Nullable String fragment);
 
   /**
+   * Set link window target
+   * @param windowTarget link window target
+   * @return Link builder
+   */
+  @NotNull
+  LinkBuilder windowTarget(@Nullable String windowTarget);
+
+  /**
    * Set URL mode for externalizing the URL
    * @param urlMode URL mode. If null, default URL mode is used.
    * @return Link builder

@@ -20,7 +20,13 @@
 package io.wcm.handler.link.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.wcm.api.Page;
 
+import io.wcm.handler.link.Link;
 import io.wcm.handler.link.testcontext.AppAemContext;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -38,7 +45,7 @@ class ImageMapLinkResolverImplTest {
 
   final AemContext context = AppAemContext.newAemContext();
 
-  private ImageMapLinkResolver underTest;
+  private ImageMapLinkResolver<Link> underTest;
   private Page page;
 
   @BeforeEach
@@ -54,6 +61,42 @@ class ImageMapLinkResolverImplTest {
     assertEquals("http://host", underTest.resolve("http://host", page.getContentResource()));
     assertEquals("/content/site1/en.html", underTest.resolve("/content/site1/en", page.getContentResource()));
     assertNull(underTest.resolve("/content/site1/en/invalid", page.getContentResource()));
+  }
+
+  @Test
+  void testResolveLink() {
+    assertValid(underTest.resolveLink("http://host", null, page.getContentResource()), "http://host");
+    assertValid(underTest.resolveLink("/content/site1/en", null, page.getContentResource()), "/content/site1/en.html");
+    assertInvalid(underTest.resolveLink("/content/site1/en/invalid", null, page.getContentResource()));
+  }
+
+  @Test
+  void testResolveLink_WindowTarget() {
+    assertValid(underTest.resolveLink("http://host", "_blank", page.getContentResource()), "http://host", "_blank");
+    assertValid(underTest.resolveLink("/content/site1/en", "_blank", page.getContentResource()), "/content/site1/en.html", "_blank");
+    assertInvalid(underTest.resolveLink("/content/site1/en/invalid", "_blank", page.getContentResource()));
+  }
+
+  private void assertValid(Link link, String expectedUrl) {
+    assertValid(link, expectedUrl, null);
+  }
+
+  private void assertValid(Link link, String expectedUrl, String expectedWindowTarget) {
+    assertNotNull(link);
+    assertTrue(link.isValid());
+    assertEquals(expectedUrl, link.getUrl());
+
+    Map<String,Object> expectedAnchorAttributes = new HashMap<>();
+    expectedAnchorAttributes.put("href", expectedUrl);
+    if (expectedWindowTarget != null) {
+      expectedAnchorAttributes.put("target", expectedWindowTarget);
+    }
+    assertEquals(expectedAnchorAttributes, link.getAnchorAttributes());
+  }
+
+  private void assertInvalid(Link link) {
+    assertNotNull(link);
+    assertFalse(link.isValid());
   }
 
 }

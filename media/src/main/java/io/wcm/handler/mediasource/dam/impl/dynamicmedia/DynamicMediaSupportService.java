@@ -39,6 +39,12 @@ public interface DynamicMediaSupportService {
   boolean isDynamicMediaEnabled();
 
   /**
+   * @return Whether a transparent fallback to Media Handler-based rendering of renditions is allowed
+   *         if the appropriate Dynamic Media metadata is not preset for an asset.
+   */
+  boolean isAemFallbackDisabled();
+
+  /**
    * @return Reply image size limit as configured in dynamic media.
    */
   @NotNull

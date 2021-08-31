@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.7.0" date="not released">
+      <action type="add" dev="sseifert">
+        LinkBuilder: Allow to set link window target via link builder.
+      </action>
+      <action type="update" dev="sseifert">
+        ImageMapLinkResolver: Implement resolveLink and getLinkUrl to be able to return actual link object.
+      </action>
+      <action type="update" dev="sseifert">
+        LinkComponentPropertyResolver: Support component property "wcmio:linkTargetWindowTargetFallbackProperty" to define fallback property name for link window target.
+      </action>
+    </release>
+
     <release version="1.6.4" date="2021-06-15">
       <action type="update" dev="sseifert">
         Link Reference Container: Support 'required', 'requiredLink', 'requiredTitle' properties to make sure a valid link and/or title is defined.
