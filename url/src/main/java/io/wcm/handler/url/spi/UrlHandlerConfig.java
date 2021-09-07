@@ -83,4 +83,12 @@ public abstract class UrlHandlerConfig implements ContextAwareService {
     return ImmutableList.of();
   }
 
+  /**
+   *
+   * @return True if externalizer uses host provided by Sling Mapping instead of UrlConfig.
+   */
+  public boolean isHostProvidedBySlingMapping() {
+    return false;
+  }
+
 }

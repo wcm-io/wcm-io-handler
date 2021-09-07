@@ -45,6 +45,8 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
       IntegratorModes.EXTENDED
       );
 
+  private boolean hostProvidedBySlingMapping = false;
+
   @Override
   public List<IntegratorMode> getIntegratorModes() {
     return INTEGRATOR_MODES;
@@ -65,6 +67,15 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
   @Override
   public int getSiteRootLevel(Resource contextResource) {
     return SITE_ROOT_LEVEL;
+  }
+
+  @Override
+  public boolean isHostProvidedBySlingMapping() {
+    return hostProvidedBySlingMapping;
+  }
+
+  public void setHostProvidedBySlingMapping(boolean hostProvidedBySlingMapping) {
+    this.hostProvidedBySlingMapping = hostProvidedBySlingMapping;
   }
 
 }

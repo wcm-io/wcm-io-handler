@@ -113,6 +113,28 @@ class ExternalizerTest {
   }
 
   @Test
+  void testExternalizeUrlWithHost() {
+
+    // use mocked resolver to mock sling mapping
+    ResourceResolver mockedResolver = mock(ResourceResolver.class);
+    when(mockedResolver.map(same(context.request()), anyString())).then(new Answer<String>() {
+      @Override
+      public String answer(InvocationOnMock invocation) {
+        return "http://www.domain.com/context" + (String)invocation.getArguments()[1];
+      }
+    });
+
+    assertExternalizeUrlWithHost("http://www.domain.com/context/the/path", "/the/path", mockedResolver);
+    assertExternalizeUrlWithHost("http://www.domain.com/context/the/path?param=1", "/the/path?param=1", mockedResolver);
+    assertExternalizeUrlWithHost("http://www.domain.com/context/the/path#hash", "/the/path#hash", mockedResolver);
+
+  }
+
+  private void assertExternalizeUrlWithHost(String expected, String url, ResourceResolver resolver) {
+    assertEquals(expected, Externalizer.externalizeUrlWithHost(url, resolver, context.request()));
+  }
+
+  @Test
   void testIsExternalized() {
     assertFalse(Externalizer.isExternalized("/absolute/path"));
     assertFalse(Externalizer.isExternalized("/ns:absolute/path"));
