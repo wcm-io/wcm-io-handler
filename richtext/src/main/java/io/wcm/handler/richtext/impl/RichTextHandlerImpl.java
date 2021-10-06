@@ -49,6 +49,7 @@ import io.wcm.handler.richtext.RichTextRequest;
 import io.wcm.handler.richtext.TextMode;
 import io.wcm.handler.richtext.spi.RichTextHandlerConfig;
 import io.wcm.handler.richtext.util.RewriteContentHandler;
+import io.wcm.handler.richtext.util.RewriteRawTextHandler;
 import io.wcm.handler.richtext.util.RichTextUtil;
 import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
 import io.wcm.sling.models.annotations.AemObject;
@@ -71,6 +72,8 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   private ContextAwareServiceResolver serviceResolver;
 
   private List<RewriteContentHandler> rewriteContentHandlers;
+
+  private List<RewriteRawTextHandler> rewriteRawTextHandlers;
 
   @Override
   public @NotNull RichTextBuilder get(Resource resource) {
@@ -99,12 +102,12 @@ public final class RichTextHandlerImpl implements RichTextHandler {
   }
 
   private String getRawText(RichTextRequest richTextRequest) {
-    if (richTextRequest.getResource() != null) {
-      return richTextRequest.getResourceProperties().get(RichTextNameConstants.PN_TEXT, String.class);
+    String text = richTextRequest.getResource() != null ? richTextRequest.getResourceProperties().get(RichTextNameConstants.PN_TEXT, String.class)
+        : richTextRequest.getText();
+    for (RewriteRawTextHandler rewriteRawTextHandler : getRewriteRawTextHandlers()) {
+      text = rewriteRawTextHandler.rewriteText(text);
     }
-    else {
-      return richTextRequest.getText();
-    }
+    return text;
   }
 
   private TextMode getTextMode(RichTextRequest richTextRequest) {
@@ -171,20 +174,37 @@ public final class RichTextHandlerImpl implements RichTextHandler {
 
   private List<RewriteContentHandler> getRewriterContentHandlers() {
     if (rewriteContentHandlers == null) {
-      RichTextHandlerConfig config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
-      if (config != null) {
-        rewriteContentHandlers = new ArrayList<>();
-        for (Class<? extends RewriteContentHandler> clazz : config.getRewriteContentHandlers()) {
-          RewriteContentHandler rewriter = adaptable.adaptTo(clazz);
-          if (rewriter == null) {
-            throw new RuntimeException("Unable to adapt " + adaptable.getClass() + " to " + clazz.getName() + ". "
-                + "Make sure the class is a Sling Model and adaptable from Resource and SlingHttpServletRequest.");
-          }
-          rewriteContentHandlers.add(rewriter);
-        }
-      }
+      processRichTextHandlerConfig();
     }
     return rewriteContentHandlers;
+  }
+
+  private List<RewriteRawTextHandler> getRewriteRawTextHandlers() {
+    if (rewriteRawTextHandlers == null) {
+      processRichTextHandlerConfig();
+    }
+    return this.rewriteRawTextHandlers;
+  }
+
+  private void processRichTextHandlerConfig() {
+    RichTextHandlerConfig config = serviceResolver.resolve(RichTextHandlerConfig.class, adaptable);
+    if (config != null) {
+      rewriteContentHandlers = loadAdaptables(config.getRewriteContentHandlers());
+      rewriteRawTextHandlers = loadAdaptables(config.getRewriteRawTextHandlers());
+    }
+  }
+
+  private <T> List<T> loadAdaptables(List<Class<? extends T>> classes) {
+    List<T> result = new ArrayList<>(classes.size());
+    for (Class<? extends T> clazz : classes) {
+      T adaptTo = adaptable.adaptTo(clazz);
+      if (adaptTo == null) {
+        throw new RuntimeException("Unable to adapt " + adaptable.getClass() + " to " + clazz.getName() + ". "
+            + "Make sure the class is a Sling Model and adaptable from Resource and SlingHttpServletRequest.");
+      }
+      result.add(adaptTo);
+    }
+    return result;
   }
 
 }

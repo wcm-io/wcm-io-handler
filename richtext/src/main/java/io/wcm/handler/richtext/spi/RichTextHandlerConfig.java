@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.richtext.spi;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.richtext.DefaultRewriteContentHandler;
 import io.wcm.handler.richtext.util.RewriteContentHandler;
+import io.wcm.handler.richtext.util.RewriteRawTextHandler;
 import io.wcm.sling.commons.caservice.ContextAwareService;
 
 /**
@@ -48,6 +50,15 @@ public abstract class RichTextHandlerConfig implements ContextAwareService {
    */
   public @NotNull List<Class<? extends RewriteContentHandler>> getRewriteContentHandlers() {
     return DEFAULT_REWRITE_CONTENT_HANDLERS;
+  }
+
+  /**
+   * Defines a list of rewrite raw text handlers. If multiple implementations are provided, all
+   * are called on after another on the text of the richtext request.
+   * @return Available rewrite raw text handler
+   */
+  public @NotNull List<Class<? extends RewriteRawTextHandler>> getRewriteRawTextHandlers() {
+    return Collections.emptyList();
   }
 
 }
