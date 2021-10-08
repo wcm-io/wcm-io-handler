@@ -166,6 +166,22 @@ class RichTextUtilTest {
 
   }
 
+  @Test
+  void testRemovalOfUnallowedChars() throws Exception {
+    // build a string with all invalid control characters < #x20
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < 0x20; i++) {
+      sb.append((char)i);
+    }
+    // add some more unicode chars that should not be stripped out
+    sb.append("abcäöü€😁🇿🇼🚁");
+
+    Element element = RichTextUtil.parseText(sb.toString(), true);
+
+    // ensure only allowed are in the actual XHTML string
+    assertEquals("\t\nabcäöü€😁🇿🇼🚁", element.getText());
+  }
+
   private String rewriteContent(String input) throws Exception {
     Element root = RichTextUtil.parseText(input);
     RichTextUtil.rewriteContent(root, new TestRewriteContentHandler());

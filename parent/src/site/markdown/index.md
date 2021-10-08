@@ -27,8 +27,8 @@ Sources: https://github.com/wcm-io/wcm-io-handler
 
 ### Further Resources
 
+* [adaptTo() 2021 Talk: Dynamic Media Support in wcm.io Media Handler][adaptto-talk-2021-dynamic-media]
 * [adaptTo() 2019 Talk: Assets and Links in AEM Projects][adaptto-talk-2019-assets-links-in-aem-projects]
-
 
 
 
@@ -44,3 +44,4 @@ Sources: https://github.com/wcm-io/wcm-io-handler
 [wcmio-handler-migration]: https://wcm-io.atlassian.net/wiki/x/dhn9Ag
 [wcmio-maven-archetype-aem]: https://wcm.io/tooling/maven/archetypes/aem/
 [adaptto-talk-2019-assets-links-in-aem-projects]: https://adapt.to/2019/en/schedule/assets-and-links-in-aem-projects.html
+[adaptto-talk-2021-dynamic-media]: https://adapt.to/2021/en/schedule/dynamic-media-support-in-wcm-io-media-handler.html
