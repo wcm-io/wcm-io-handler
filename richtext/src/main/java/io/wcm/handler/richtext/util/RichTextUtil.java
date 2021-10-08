@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Content;
@@ -57,6 +58,18 @@ public final class RichTextUtil {
           + "<!ENTITY % HTMLspecial PUBLIC \"" + XHtmlResource.ENTITIES_SPECIAL.getPublicId() + "\" "
           + "\"" + XHtmlResource.ENTITIES_SPECIAL.getSystemId() + "\">"
           + "%HTMLspecial;";
+
+  /*
+   * Pattern that matches with all characters that are not allowed in XML 1.0 (https://www.w3.org/TR/REC-xml/#charsets).
+   * Actual regex pattern from https://stackoverflow.com/a/4237934
+   * Additionally to this list we remove "\r" to use only unix-style new lines.
+   */
+  private static final Pattern CONTROL_CHARS_NOT_ALLOWED_IN_XML10 = Pattern.compile("[^"
+      + "\u0009\n"
+      + "\u0020-\uD7FF"
+      + "\uE000-\uFFFD"
+      + "\ud800\udc00-\udbff\udfff"
+      + "]");
 
   /**
    * Check if the given formatted text block is empty.
@@ -140,10 +153,10 @@ public final class RichTextUtil {
    */
   public static @NotNull Element parseText(@NotNull String text, boolean xhtmlEntities) throws JDOMException {
 
-    // add root element
+    // add root element, remove invalid chars from input text
     String xhtmlString =
         (xhtmlEntities ? "<!DOCTYPE root [" + XHTML_ENTITY_DEF + "]>" : "")
-        + "<root>" + text + "</root>";
+        + "<root>" + removeCharsNotAllowedInXML10(text) + "</root>";
 
     try {
       SAXBuilder saxBuilder = new SAXBuilder();
@@ -159,6 +172,16 @@ public final class RichTextUtil {
       throw new RuntimeException("Error parsing XHTML fragment.", ex);
     }
 
+  }
+
+  /**
+   * Removes all control chars and other chars which are not allowed in XML 1.0.
+   * See <a href="https://www.w3.org/TR/xml/#charsets">https://www.w3.org/TR/xml/#charsets</a>.
+   * @param value String which should be parsed to XML 1.0
+   * @return Cleaned up string
+   */
+  private static String removeCharsNotAllowedInXML10(String value) {
+    return CONTROL_CHARS_NOT_ALLOWED_IN_XML10.matcher(value).replaceAll("");
   }
 
   /**
