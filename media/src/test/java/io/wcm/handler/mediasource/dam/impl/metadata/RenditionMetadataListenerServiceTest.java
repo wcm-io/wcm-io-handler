@@ -45,7 +45,7 @@ import com.day.cq.dam.api.DamEvent;
 import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
-import io.wcm.wcm.commons.util.RunMode;
+import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
 
 @ExtendWith(AemContextExtension.class)
 class RenditionMetadataListenerServiceTest {
@@ -67,7 +67,7 @@ class RenditionMetadataListenerServiceTest {
     assetResource = context.resourceResolver().getResource(ASSET_PATH);
     assertNotNull(assetResource);
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
   }
 
   @Test
@@ -95,7 +95,7 @@ class RenditionMetadataListenerServiceTest {
 
   @Test
   void testAddRendition_PublishInstance_NoMetadata() {
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
         "threadPoolSize", 0);
     addRendition("test.jpg");

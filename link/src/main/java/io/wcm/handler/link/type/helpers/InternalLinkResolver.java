@@ -29,7 +29,6 @@ import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
-import org.apache.sling.settings.SlingSettingsService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
@@ -49,8 +48,8 @@ import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.models.annotations.AemObject;
 import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.wcm.commons.instancetype.InstanceTypeService;
 import io.wcm.wcm.commons.util.Path;
-import io.wcm.wcm.commons.util.RunMode;
 
 /**
  * Implements resolving an internal link for link types. The primary goal is to support the implementation
@@ -83,7 +82,7 @@ public final class InternalLinkResolver {
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private WCMMode wcmMode;
   @OSGiService
-  private SlingSettingsService slingSettings;
+  private InstanceTypeService instanceTypeService;
 
   /**
    * Check if a given page is valid and acceptable to link upon.
@@ -91,7 +90,6 @@ public final class InternalLinkResolver {
    * @param options Options
    * @return true if link is acceptable
    */
-  @SuppressWarnings("deprecation")
   public boolean acceptPage(@Nullable Page page, @NotNull InternalLinkResolverOptions options) {
     if (page == null) {
       return false;
@@ -103,7 +101,7 @@ public final class InternalLinkResolver {
     }
 
     // check if page is valid concerning on/off-time (only in publish environment)
-    if (RunMode.isPublish(slingSettings.getRunModes()) && !page.isValid()) {
+    if (instanceTypeService.isPublish() && !page.isValid()) {
       return false;
     }
 

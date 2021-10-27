@@ -32,7 +32,6 @@ import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
-import org.apache.sling.settings.SlingSettingsService;
 import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.wcm.api.Page;
@@ -45,6 +44,7 @@ import io.wcm.handler.url.impl.clientlib.ClientlibProxyRewriter;
 import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.sling.models.annotations.AemObject;
+import io.wcm.wcm.commons.instancetype.InstanceTypeService;
 import io.wcm.wcm.commons.util.Path;
 
 /**
@@ -62,7 +62,7 @@ public final class UrlHandlerImpl implements UrlHandler {
   @SlingObject
   private ResourceResolver resolver;
   @OSGiService
-  private SlingSettingsService slingSettings;
+  private InstanceTypeService instanceTypeService;
   @OSGiService
   private ClientlibProxyRewriter clientlibProxyRewriter;
 
@@ -162,7 +162,7 @@ public final class UrlHandlerImpl implements UrlHandler {
   @SuppressWarnings("null")
   private String getLinkUrlPrefix(UrlMode urlMode, Page targetPage) {
     UrlMode mode = ObjectUtils.defaultIfNull(urlMode, urlHandlerConfig.getDefaultUrlMode());
-    return mode.getLinkUrlPrefix(self, slingSettings.getRunModes(), currentPage, targetPage);
+    return mode.getLinkUrlPrefix(self, instanceTypeService.getRunModes(), currentPage, targetPage);
   }
 
   String externalizeResourceUrl(final String url, final Resource targetResource, final UrlMode urlMode) {
@@ -200,7 +200,7 @@ public final class UrlHandlerImpl implements UrlHandler {
   @SuppressWarnings("null")
   private String getResourceUrlPrefix(UrlMode urlMode, Resource targetResource) {
     UrlMode mode = ObjectUtils.defaultIfNull(urlMode, urlHandlerConfig.getDefaultUrlMode());
-    return mode.getResourceUrlPrefix(self, slingSettings.getRunModes(), currentPage, targetResource);
+    return mode.getResourceUrlPrefix(self, instanceTypeService.getRunModes(), currentPage, targetResource);
   }
 
   String buildUrl(String path, String selector, String extension, String suffix) { //NOPMD

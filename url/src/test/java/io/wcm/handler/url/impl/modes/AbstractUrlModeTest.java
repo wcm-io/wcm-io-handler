@@ -22,7 +22,6 @@ package io.wcm.handler.url.impl.modes;
 import java.util.Set;
 
 import org.apache.sling.api.adapter.Adaptable;
-import org.apache.sling.settings.SlingSettingsService;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +38,7 @@ import io.wcm.handler.url.testcontext.DummyAppTemplate;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.wcm.commons.instancetype.InstanceTypeService;
 
 @ExtendWith(AemContextExtension.class)
 abstract class AbstractUrlModeTest {
@@ -51,7 +51,7 @@ abstract class AbstractUrlModeTest {
   protected Page integratorPageSimple;
   protected Page integratorPageSimpleSecure;
   protected Page integratorPageExtended;
-  protected SlingSettingsService slingSettings;
+  protected InstanceTypeService instanceTypeService;
 
   @BeforeEach
   void setUp() {
@@ -87,7 +87,7 @@ abstract class AbstractUrlModeTest {
         .put(IntegratorNameConstants.PN_INTEGRATOR_MODE, IntegratorModes.EXTENDED.getId())
         .build());
 
-    slingSettings = context.getService(SlingSettingsService.class);
+    instanceTypeService = context.getService(InstanceTypeService.class);
 
   }
 
@@ -96,7 +96,7 @@ abstract class AbstractUrlModeTest {
   }
 
   protected Set<String> runModes() {
-    return slingSettings.getRunModes();
+    return instanceTypeService.getRunModes();
   }
 
   protected void setSiteConfigNoUrl() {

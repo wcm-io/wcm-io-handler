@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorHandler;
-import io.wcm.wcm.commons.util.RunMode;
+import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
 
 class NoHostnameUrlModeTest extends AbstractUrlModeTest {
 
@@ -41,12 +41,12 @@ class NoHostnameUrlModeTest extends AbstractUrlModeTest {
   @Test
   void testSiteUrls() {
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -61,12 +61,12 @@ class NoHostnameUrlModeTest extends AbstractUrlModeTest {
 
     setSiteConfigNoUrl();
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -82,12 +82,12 @@ class NoHostnameUrlModeTest extends AbstractUrlModeTest {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     context.currentPage(integratorPageSimple);
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -103,12 +103,12 @@ class NoHostnameUrlModeTest extends AbstractUrlModeTest {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE_SECURE);
     context.currentPage(integratorPageSimpleSecure);
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -124,12 +124,12 @@ class NoHostnameUrlModeTest extends AbstractUrlModeTest {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     context.currentPage(integratorPageExtended);
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));

@@ -28,7 +28,7 @@ import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorHandler;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
-import io.wcm.wcm.commons.util.RunMode;
+import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
 
 class FullUrlForceSecureUrlModeTest extends AbstractUrlModeTest {
 
@@ -43,12 +43,12 @@ class FullUrlForceSecureUrlModeTest extends AbstractUrlModeTest {
   @Test
   void testSiteUrls() {
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals("https://de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals("https://author.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -63,12 +63,12 @@ class FullUrlForceSecureUrlModeTest extends AbstractUrlModeTest {
 
     setSiteConfigNoUrl();
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertNull(urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertNull(urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -84,12 +84,12 @@ class FullUrlForceSecureUrlModeTest extends AbstractUrlModeTest {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     context.currentPage(integratorPageSimple);
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals("https://de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals("https://author.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -105,12 +105,12 @@ class FullUrlForceSecureUrlModeTest extends AbstractUrlModeTest {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE_SECURE);
     context.currentPage(integratorPageSimpleSecure);
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals("https://de.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals("https://de.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals("https://author.dummysite.org", urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals("https://author.dummysite.org", urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
@@ -126,12 +126,12 @@ class FullUrlForceSecureUrlModeTest extends AbstractUrlModeTest {
     context.requestPathInfo().setSelectorString(IntegratorHandler.SELECTOR_INTEGRATORTEMPLATE);
     context.currentPage(integratorPageExtended);
 
-    context.runMode(RunMode.PUBLISH);
+    MockInstanceType.setPublish(context);
     assertEquals(IntegratorPlaceholder.URL_CONTENT_SECURE, urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals(IntegratorPlaceholder.URL_CONTENT_SECURE, urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals(IntegratorPlaceholder.URL_CONTENT_PROXY, urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
 
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
     assertEquals(IntegratorPlaceholder.URL_CONTENT_SECURE, urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, targetPage));
     assertEquals(IntegratorPlaceholder.URL_CONTENT_SECURE, urlMode().getLinkUrlPrefix(adaptable(), runModes(), currentPage, secureTargetPage));
     assertEquals(IntegratorPlaceholder.URL_CONTENT_PROXY, urlMode().getResourceUrlPrefix(adaptable(), runModes(), currentPage, null));
