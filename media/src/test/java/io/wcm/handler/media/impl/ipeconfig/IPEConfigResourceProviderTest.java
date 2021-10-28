@@ -56,7 +56,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
-import io.wcm.wcm.commons.util.RunMode;
+import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
 
 @ExtendWith(AemContextExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -72,7 +72,7 @@ class IPEConfigResourceProviderTest {
 
   @BeforeEach
   void setUp() {
-    context.runMode(RunMode.AUTHOR);
+    MockInstanceType.setAuthor(context);
 
     context.registerAdapter(ResourceResolver.class, ComponentManager.class, componentManager);
     context.registerAdapter(Resource.class, MediaFormatHandler.class, mediaFormatHandler);

@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.parent</artifactId>
-  <version>1.4.9-SNAPSHOT</version>
+  <version>1.4.10</version>
   <packaging>pom</packaging>
 
   <name>Handler</name>
@@ -88,7 +88,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.wcm.commons</artifactId>
-      <version>1.8.0</version>
+      <version>1.9.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -165,7 +165,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-      <version>4.0.4</version>
+      <version>4.1.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -189,7 +189,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.wcm</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -83,7 +83,7 @@ public final class MediaSourceDamAppAemContext {
   public static AemContext newAemContext(ResourceResolverType resourceResolverType) {
     return new AemContextBuilder()
         .plugin(CACONFIG)
-        .plugin(WCMIO_SLING, WCMIO_CACONFIG)
+        .plugin(WCMIO_SLING, WCMIO_WCM, WCMIO_CACONFIG)
         .afterSetUp(SETUP_CALLBACK)
         .resourceResolverType(resourceResolverType)
         .build();

@@ -60,20 +60,50 @@ final class LinkBuilderImpl implements LinkBuilder {
     this.page = null;
     this.reference = null;
     this.linkHandler = linkHandler;
+    resolveWindowTargetAndFallbackProperties(componentPropertyResolverFactory);
+  }
 
-    if (resource != null) {
-      // resolve default settings from content policies and component properties
-      try (LinkComponentPropertyResolver resolver = getLinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-        linkArgs.linkTargetUrlFallbackProperty(resolver.getLinkTargetUrlFallbackProperty());
-        linkArgs.linkTargetWindowTargetFallbackProperty(resolver.getLinkTargetWindowTargetFallbackProperty());
-      }
-      catch (Exception ex) {
-        log.warn("Error closing component property resolver.", ex);
-      }
+  LinkBuilderImpl(@NotNull LinkRequest linkRequest, @NotNull LinkHandlerImpl linkHandler,
+      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    this.resource = linkRequest.getResource();
+    this.page = linkRequest.getPage();
+    this.reference = linkRequest.getReference();
+    this.linkHandler = linkHandler;
+    // clone link args to make sure the original object is not modified
+    this.linkArgs = linkRequest.getLinkArgs().clone();
+    resolveWindowTargetAndFallbackProperties(componentPropertyResolverFactory);
+  }
 
-      // get window target from resource
-      linkArgs.windowTarget(getWindowTargetFromResource(resource, linkArgs));
+  LinkBuilderImpl(@Nullable Page page, @NotNull LinkHandlerImpl linkHandler) {
+    this.resource = null;
+    this.page = page;
+    this.reference = null;
+    this.linkHandler = linkHandler;
+  }
+
+  LinkBuilderImpl(@Nullable String reference, @NotNull LinkHandlerImpl linkHandler) {
+    this.resource = null;
+    this.page = null;
+    this.reference = reference;
+    this.linkHandler = linkHandler;
+  }
+
+  private void resolveWindowTargetAndFallbackProperties(@Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    if (resource == null) {
+      return;
     }
+
+    // resolve default settings from content policies and component properties
+    try (LinkComponentPropertyResolver resolver = getLinkComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+      linkArgs.linkTargetUrlFallbackProperty(resolver.getLinkTargetUrlFallbackProperty());
+      linkArgs.linkTargetWindowTargetFallbackProperty(resolver.getLinkTargetWindowTargetFallbackProperty());
+    }
+    catch (Exception ex) {
+      log.warn("Error closing component property resolver.", ex);
+    }
+
+    // get window target from resource
+    linkArgs.windowTarget(getWindowTargetFromResource(resource, linkArgs));
   }
 
   @SuppressWarnings("deprecation")
@@ -108,32 +138,6 @@ final class LinkBuilderImpl implements LinkBuilder {
       windowTarget = props.get(LinkNameConstants.PN_LINK_WINDOW_TARGET, String.class);
     }
     return windowTarget;
-  }
-
-  LinkBuilderImpl(Page page, LinkHandlerImpl linkHandler) {
-    this.resource = null;
-    this.page = page;
-    this.reference = null;
-    this.linkHandler = linkHandler;
-  }
-
-  LinkBuilderImpl(String reference, LinkHandlerImpl linkHandler) {
-    this.resource = null;
-    this.page = null;
-    this.reference = reference;
-    this.linkHandler = linkHandler;
-  }
-
-  LinkBuilderImpl(LinkRequest linkRequest, LinkHandlerImpl linkHandler) {
-    if (linkRequest == null) {
-      throw new IllegalArgumentException("Link request is null.");
-    }
-    this.resource = linkRequest.getResource();
-    this.page = linkRequest.getPage();
-    this.reference = linkRequest.getReference();
-    this.linkHandler = linkHandler;
-    // clone link args to make sure the original object is not modified
-    this.linkArgs = linkRequest.getLinkArgs().clone();
   }
 
   @Override
