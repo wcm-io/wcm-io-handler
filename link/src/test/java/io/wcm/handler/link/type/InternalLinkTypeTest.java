@@ -265,6 +265,7 @@ class InternalLinkTypeTest {
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
             .put(LinkNameConstants.PN_LINK_TYPE, InternalLinkType.ID)
             .put(LinkNameConstants.PN_LINK_CONTENT_REF, targetPage.getPath())
+            .put(LinkNameConstants.PN_LINK_WINDOW_TARGET, "_blank")
             .build());
 
     Page redirectRedirectInternalPage = context.create().page("/content/unittest/de_test/brand/de/section/redirectRedirectInternal",
@@ -278,6 +279,7 @@ class InternalLinkTypeTest {
     assertTrue(link.isValid(), "link valid");
     assertEquals("http://www.dummysite.org/content/unittest/de_test/brand/de/section/content.html", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
+    assertEquals("_blank", link.getAnchor().getTarget(), "target");
 
     List<Page> redirectPages = link.getRedirectPages();
     assertEquals(2, redirectPages.size());
@@ -293,6 +295,7 @@ class InternalLinkTypeTest {
         DummyAppTemplate.REDIRECT.getTemplatePath(), ImmutableValueMap.builder()
             .put(LinkNameConstants.PN_LINK_TYPE, ExternalLinkType.ID)
             .put(LinkNameConstants.PN_LINK_EXTERNAL_REF, "http://xyz/abc")
+            .put(LinkNameConstants.PN_LINK_WINDOW_TARGET, "_blank")
             .build());
 
     Link link = linkHandler.get(redirectExternalPage).build();
@@ -300,6 +303,7 @@ class InternalLinkTypeTest {
     assertTrue(link.isValid(), "link valid");
     assertEquals("http://xyz/abc", link.getUrl(), "link url");
     assertNotNull(link.getAnchor(), "anchor");
+    assertEquals("_blank", link.getAnchor().getTarget(), "target");
   }
 
   @Test

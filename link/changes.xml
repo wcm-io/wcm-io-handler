@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Eliminate usage of deprecated SlingSettingsService. Use wcm.io InstanceTypeService instead.
       </action>
+      <action type="fix" dev="sseifert">
+        Fix regression handling link window targets defined in redirect pages.
+      </action>
     </release>
 
     <release version="1.7.0" date="2021-08-31">
