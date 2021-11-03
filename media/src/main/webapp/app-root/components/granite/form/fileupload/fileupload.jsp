@@ -197,7 +197,7 @@ dispatcher.include(slingRequest, slingResponse);
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
 pathFieldProps.put("namePrefix", namePrefix);
-pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
+pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield " + cfg.get("granite:class", ""));
 pathFieldProps.put("required", cfg.get("required", false));
 
 // detect root path
