@@ -49,10 +49,10 @@ import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServi
  */
 public final class DamAsset extends SlingAdaptable implements Asset {
 
+  private final com.day.cq.dam.api.Asset damAsset;
   private final CropDimension cropDimension;
   private final Integer rotation;
   private final MediaArgs defaultMediaArgs;
-  private final ValueMap properties;
   private final DamContext damContext;
 
   /**
@@ -64,10 +64,10 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    */
   public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset, MediaHandlerConfig mediaHandlerConfig,
       DynamicMediaSupportService dynamicMediaSupportService, Adaptable adaptable) {
+    this.damAsset = damAsset;
     this.cropDimension = media.getCropDimension();
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
-    this.properties = new ValueMapDecorator(damAsset.getMetadata());
     this.damContext = new DamContext(damAsset, defaultMediaArgs.getUrlMode(), mediaHandlerConfig,
         dynamicMediaSupportService, adaptable);
   }
@@ -86,20 +86,20 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    * @return Single value
    */
   private @Nullable String getPropertyAwareOfArray(@NotNull String propertyName) {
-    Object value = this.properties.get(DamConstants.DC_TITLE);
-    if (value != null) {
-      //
-      if (value instanceof Object[]) {
-        Object[] valueArray = (Object[])value;
+    Object valueObject = damAsset.getMetadataValueFromJcr(propertyName);
+    String value = null;
+    if (valueObject != null) {
+      if (valueObject instanceof Object[]) {
+        Object[] valueArray = (Object[])valueObject;
         if (valueArray.length > 0) {
-          return valueArray[0].toString();
+          value = valueArray[0].toString();
         }
       }
       else {
-        return value.toString();
+        value = valueObject.toString();
       }
     }
-    return null;
+    return StringUtils.defaultIfBlank(value, null);
   }
 
   @Override
@@ -115,7 +115,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
 
   @Override
   public String getDescription() {
-    return this.properties.get(DamConstants.DC_DESCRIPTION, String.class);
+    return getPropertyAwareOfArray(DamConstants.DC_DESCRIPTION);
   }
 
   @Override
@@ -125,7 +125,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
 
   @Override
   public @NotNull ValueMap getProperties() {
-    return this.properties;
+    return new ValueMapDecorator(damAsset.getMetadata());
   }
 
   @Override

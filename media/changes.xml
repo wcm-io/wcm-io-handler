@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         FileUpload/PathField GraniteUI component: Pass through "granite:class" and "granite:data" properties to path field widget to allow to apply show/hide logic to both of them.
       </action>
+      <action type="fix" dev="sseifert">
+        DamAsset: Avoid calling getMetadata() which may try to get metadata from asset binary wherever possible and use getMetadataValueFromJcr instead.
+      </action>
     </release>
 
     <release version="1.13.4" date="2021-10-28">
