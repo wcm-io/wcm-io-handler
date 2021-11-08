@@ -161,12 +161,15 @@ if (contentResource != null && contentResource.getValueMap().get(LinkNameConstan
 
 
 // this is required to ensure that multiple link containers in the same dialog do not interfere with each other
-String showhideCssClass = "linkRefContainer-option-linktype-showhide-target-" + getUniqueCssClassSuffix(request);
+String showhideCssClass = "linkRefContainer-option-linktype-showhide-target";
+String parentCssClass = "linkRefContainer-option-linktype-showhide-parent";
 
 String[] allowedLinkTypes = cfg.get("linkTypes", new String[0]);
 Map<String,LinkType> linkTypes = getLinkTypes(contentResource, linkHandlerConfig, allowedLinkTypes);
 
-Resource container = GraniteUiSyntheticResource.wrap(resource);
+Resource container = GraniteUiSyntheticResource.wrapMerge(resource, ImmutableValueMap.builder()
+    .put("granite:class", parentCssClass)
+    .build());
 Resource items = GraniteUiSyntheticResource.child(container, "items", JcrConstants.NT_UNSTRUCTURED);
 
 
@@ -186,7 +189,7 @@ ImmutableValueMap.Builder linkTypeSelectProps = ImmutableValueMap.builder()
     .put("name", namePrefix + LinkNameConstants.PN_LINK_TYPE)
     .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.linkType.fieldLabel")
     .put("required", requiredLink)
-    .put("granite:class", "cq-dialog-dropdown-showhide");
+    .put("granite:class", "wcmio-dialog-showhide");
 if (linkTargetUrlFallbackTypeId != null) {
   linkTypeSelectProps.put("ignoreData", true);
 }
@@ -194,7 +197,8 @@ Resource linkTypeSelect = GraniteUiSyntheticResource.child(items, "linkType", "g
     linkTypeSelectProps.build());
 GraniteUiSyntheticResource.child(linkTypeSelect, "granite:data", JcrConstants.NT_UNSTRUCTURED,
     ImmutableValueMap.builder()
-    .put("cq-dialog-dropdown-showhide-target", "." + showhideCssClass)
+    .put("wcmio-dialog-showhide-target", "." + showhideCssClass)
+    .put("wcmio-dialog-showhide-parent", "." + parentCssClass)
     .build());
 Resource linkTypeItems = GraniteUiSyntheticResource.child(linkTypeSelect, "items", JcrConstants.NT_UNSTRUCTURED);
 for (LinkType linkType : linkTypes.values()) {
@@ -390,19 +394,5 @@ private void insertAdditionalComponents(Resource target, Resource source) {
   for (Resource sourceChild : source.getChildren()) {
     GraniteUiSyntheticResource.copySubtree(target, sourceChild);
   }
-}
-
-private String getUniqueCssClassSuffix(HttpServletRequest request) {
-  // use a request attribute to make sure multiple instances of this container in the same dialog do not interfere
-  String key = "io.wcm.handler.link_linkRefContainer_CssClassSuffix";
-  Integer count = (Integer)request.getAttribute(key);
-  if (count == null) {
-    count = 0;
-  }
-  else {
-    count++;
-  }
-  request.setAttribute(key, count);
-  return Integer.toString(count);
 }
 %>
