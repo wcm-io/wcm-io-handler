@@ -107,4 +107,12 @@ public abstract class LinkType {
    */
   public abstract @NotNull Link resolveLink(@NotNull Link link);
 
+  /**
+   * Granite UI component resource type to be used for editing this link type's properties in edit dialog.
+   * @return Granite UI component resource type or null, if none is available
+   */
+  public @Nullable String getEditComponentResourceType() {
+    return null;
+  }
+
 }

@@ -30,6 +30,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.models.annotations.Model;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.link.Link;
@@ -74,6 +75,11 @@ public final class ExternalLinkType extends LinkType {
   @Override
   public String getPrimaryLinkRefProperty() {
     return LinkNameConstants.PN_LINK_EXTERNAL_REF;
+  }
+
+  @Override
+  public @Nullable String getEditComponentResourceType() {
+    return "wcm-io/handler/link/components/granite/form/linktype/external";
   }
 
   @Override
