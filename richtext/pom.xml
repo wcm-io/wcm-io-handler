@@ -69,7 +69,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.link</artifactId>
-      <version>1.7.5-SNAPSHOT</version>
+      <version>1.8.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
