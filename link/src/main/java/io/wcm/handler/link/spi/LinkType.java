@@ -115,4 +115,13 @@ public abstract class LinkType {
     return null;
   }
 
+  /**
+   * Returns true if a RTE plugin is available for this link type. If not, it is not possible to select
+   * this link type in the rich text editor.
+   * @return true if a RTE plugin is available.
+   */
+  public boolean hasRichTextPlugin() {
+    return false;
+  }
+
 }

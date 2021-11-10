@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert">
         LinkType: Add method 'getEditComponentResourceType' to provide resource type to Granite UI components for edit dialog definition.
       </action>
+      <action type="add" dev="sseifert">
+        LinkType: Add method 'hasRichTextPlugin' to signal if a RTE plugin implementation is available for this link type.
+      </action>
       <action type="update" dev="sseifert">
         Link Reference Container: Split up edit dialog definition for link types in individual JSPs.
       </action>

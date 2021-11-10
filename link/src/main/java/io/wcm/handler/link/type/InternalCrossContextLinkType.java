@@ -92,6 +92,11 @@ public final class InternalCrossContextLinkType extends LinkType {
   }
 
   @Override
+  public boolean hasRichTextPlugin() {
+    return true;
+  }
+
+  @Override
   public boolean accepts(@NotNull String linkRef) {
     // accept as internal link if the ref starts with "/content/"
     return StringUtils.startsWith(linkRef, "/content/")
