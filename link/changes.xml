@@ -23,6 +23,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.8.0" date="2021-11-10">
+      <action type="add" dev="sseifert">
+        LinkType: Add method 'getEditComponentResourceType' to provide resource type to Granite UI components for edit dialog definition.
+      </action>
+      <action type="add" dev="sseifert">
+        LinkType: Add method 'hasRichTextPlugin' to signal if a RTE plugin implementation is available for this link type.
+      </action>
+      <action type="update" dev="sseifert">
+        Link Reference Container: Split up edit dialog definition for link types in individual JSPs.
+      </action>
+    </release>
+
     <release version="1.7.4" date="2021-11-08">
       <action type="fix" dev="sseifert"><![CDATA[
         Link Reference Container: Ensure show/hiding of dialog fields based on link type also works inside multi fields.<br/>

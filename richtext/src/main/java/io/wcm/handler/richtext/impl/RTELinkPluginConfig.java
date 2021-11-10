@@ -75,6 +75,7 @@ public class RTELinkPluginConfig extends SlingSafeMethodsServlet {
     LinkHandlerConfig linkHandlerConfig = AdaptTo.notNull(resource, LinkHandlerConfig.class);
     List<LinkType> linkTypes = linkHandlerConfig.getLinkTypes().stream()
         .map(linkTypeClass -> AdaptTo.notNull(resource, linkTypeClass))
+        .filter(LinkType::hasRichTextPlugin)
         .collect(Collectors.toList());
 
     try {

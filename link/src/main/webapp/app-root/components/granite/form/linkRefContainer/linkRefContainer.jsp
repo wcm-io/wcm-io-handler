@@ -212,124 +212,40 @@ for (LinkType linkType : linkTypes.values()) {
 }
 
 
-// --- Internal Link Well ---
-if (linkTypes.containsKey(InternalLinkType.ID)) {
-  Resource internalWell = GraniteUiSyntheticResource.child(items, "internalWell", "granite/ui/components/coral/foundation/well",
-      ImmutableValueMap.builder()
-      .put("granite:class", "hide " + showhideCssClass + " foundation-layout-util-vmargin")
-      .build());
-  GraniteUiSyntheticResource.child(internalWell, "granite:data", JcrConstants.NT_UNSTRUCTURED,
-      ImmutableValueMap.builder()
-      .put("showhidetargetvalue", InternalLinkType.ID)
-      .build());
-  Resource internalWellItems = GraniteUiSyntheticResource.child(internalWell, "items", JcrConstants.NT_UNSTRUCTURED);
-
-  ImmutableValueMap.Builder linkContentRefProps = ImmutableValueMap.builder()
-      .put("name", namePrefix + LinkNameConstants.PN_LINK_CONTENT_REF)
-      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldLabel")
-      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internal.linkContentRef.fieldDescription")
-      .put("required", requiredLink);
-  if (StringUtils.equals(linkTargetUrlFallbackTypeId, InternalLinkType.ID)) {
-    linkContentRefProps
-        .put("value", linkTargetUrlFallbackValue)
-        .put("ignoreData", true);
+// Render edit components for each link type (each within a well)
+for (LinkType linkType : linkTypes.values()) {
+  String linkTypeEditComponentResourceType = linkType.getEditComponentResourceType();
+  if (linkTypeEditComponentResourceType == null) {
+    continue;
   }
-  GraniteUiSyntheticResource.child(internalWellItems, "linkContentRef", "wcm-io/handler/link/components/granite/form/internalLinkPathField",
-      linkContentRefProps.build());
 
-  insertAdditionalComponents(internalWellItems, cfg.getChild("internalLinkFields"));
-}
-
-// --- Internal Cross-Context Link Well ---
-if (linkTypes.containsKey(InternalCrossContextLinkType.ID)) {
-  Resource internalCrossContextWell = GraniteUiSyntheticResource.child(items, "internalCrossContextWell", "granite/ui/components/coral/foundation/well",
+  Resource linkTypeWell = GraniteUiSyntheticResource.child(items, "linkTypeWell_" + linkType.getId(), "granite/ui/components/coral/foundation/well",
       ImmutableValueMap.builder()
       .put("granite:class", "hide " + showhideCssClass + " foundation-layout-util-vmargin")
       .build());
-  GraniteUiSyntheticResource.child(internalCrossContextWell, "granite:data", JcrConstants.NT_UNSTRUCTURED,
+  GraniteUiSyntheticResource.child(linkTypeWell, "granite:data", JcrConstants.NT_UNSTRUCTURED,
       ImmutableValueMap.builder()
-      .put("showhidetargetvalue", InternalCrossContextLinkType.ID)
+      .put("showhidetargetvalue", linkType.getId())
       .build());
-  Resource internalCrossContextWellItems = GraniteUiSyntheticResource.child(internalCrossContextWell, "items", JcrConstants.NT_UNSTRUCTURED);
+  Resource linkTypeWellItems = GraniteUiSyntheticResource.child(linkTypeWell, "items", JcrConstants.NT_UNSTRUCTURED);
 
-  ImmutableValueMap.Builder linkCrossContextContentRefProps = ImmutableValueMap.builder()
-      .put("name", namePrefix + LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF)
-      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldLabel")
-      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.internalCrossContext.linkCrossContextContentRef.fieldDescription")
-      .put("required", requiredLink);
-  if (StringUtils.equals(linkTargetUrlFallbackTypeId, InternalCrossContextLinkType.ID)) {
-    linkCrossContextContentRefProps
-        .put("value", linkTargetUrlFallbackValue)
-        .put("ignoreData", true);
-  }
-  GraniteUiSyntheticResource.child(internalCrossContextWellItems, "linkCrossContextContentRef", "wcm-io/handler/link/components/granite/form/internalCrossContextLinkPathField",
-      linkCrossContextContentRefProps.build());
-
-  insertAdditionalComponents(internalCrossContextWellItems, cfg.getChild("internalCrossContextLinkFields"));
-}
-
-// --- External Link Well ---
-if (linkTypes.containsKey(ExternalLinkType.ID)) {
-  Resource externalWell = GraniteUiSyntheticResource.child(items, "externalWell", "granite/ui/components/coral/foundation/well",
-      ImmutableValueMap.builder()
-      .put("granite:class", "hide " + showhideCssClass + " foundation-layout-util-vmargin")
-      .build());
-  GraniteUiSyntheticResource.child(externalWell, "granite:data", JcrConstants.NT_UNSTRUCTURED,
-      ImmutableValueMap.builder()
-      .put("showhidetargetvalue", ExternalLinkType.ID)
-      .build());
-  Resource externalWellItems = GraniteUiSyntheticResource.child(externalWell, "items", JcrConstants.NT_UNSTRUCTURED);
-
-  ImmutableValueMap.Builder linkExternalRefProps = ImmutableValueMap.builder()
-      .put("name", namePrefix + LinkNameConstants.PN_LINK_EXTERNAL_REF)
-      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldLabel")
-      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.external.linkExternalRef.fieldDescription")
+  ImmutableValueMap.Builder linkTypeEditComponentProps = ImmutableValueMap.builder()
+      .put("namePrefix", namePrefix)
       .put("required", requiredLink)
-      .put("validation", new String[] { "wcmio.handler.link.url" });
-  if (StringUtils.equals(linkTargetUrlFallbackTypeId, ExternalLinkType.ID)) {
-    linkExternalRefProps
-        .put("value", linkTargetUrlFallbackValue)
-        .put("ignoreData", true);
+      .put("showhideCssClass", showhideCssClass);
+  if (StringUtils.equals(linkTargetUrlFallbackTypeId, linkType.getId())) {
+    linkTypeEditComponentProps.put("linkTargetUrlFallbackValue", linkTargetUrlFallbackValue);
   }
-  GraniteUiSyntheticResource.child(externalWellItems, "linkExternalRef", "granite/ui/components/coral/foundation/form/textfield",
-      linkExternalRefProps.build());
+  Resource linkTypeEditComponent = GraniteUiSyntheticResource.child(linkTypeWellItems, "linkTypeEdit_" + linkType.getId(),
+      linkTypeEditComponentResourceType, linkTypeEditComponentProps.build());
 
-  insertAdditionalComponents(externalWellItems, cfg.getChild("externalLinkFields"));
+  // backward compatibility: handle special properties for defining additional link fields
+  if (StringUtils.equalsAny(linkType.getId(),
+      InternalLinkType.ID, InternalCrossContextLinkType.ID, ExternalLinkType.ID, MediaLinkType.ID)) {
+    addAdditionalComponents(linkTypeEditComponent, linkType.getId() + "LinkFields", cfg.getChild(linkType.getId() + "LinkFields"));
+  }
 }
 
-// --- Media Link Well ---
-if (linkTypes.containsKey(MediaLinkType.ID)) {
-  Resource mediaWell = GraniteUiSyntheticResource.child(items, "mediaWell", "granite/ui/components/coral/foundation/well",
-      ImmutableValueMap.builder()
-      .put("granite:class", "hide " + showhideCssClass + " foundation-layout-util-vmargin")
-      .build());
-  GraniteUiSyntheticResource.child(mediaWell, "granite:data", JcrConstants.NT_UNSTRUCTURED,
-      ImmutableValueMap.builder()
-      .put("showhidetargetvalue", MediaLinkType.ID)
-      .build());
-  Resource mediaWellItems = GraniteUiSyntheticResource.child(mediaWell, "items", JcrConstants.NT_UNSTRUCTURED);
-
-  ImmutableValueMap.Builder linkMediaRefProps = ImmutableValueMap.builder()
-      .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_REF)
-      .put("fieldLabel", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaRef.fieldLabel")
-      .put("required", requiredLink);
-  if (StringUtils.equals(linkTargetUrlFallbackTypeId, MediaLinkType.ID)) {
-    linkMediaRefProps
-        .put("value", linkTargetUrlFallbackValue)
-        .put("ignoreData", true);
-  }
-  GraniteUiSyntheticResource.child(mediaWellItems, "linkMediaRef", "wcm-io/handler/link/components/granite/form/mediaLinkPathField",
-      linkMediaRefProps.build());
-
-  GraniteUiSyntheticResource.child(mediaWellItems, "linkMediaDownload", "wcm-io/wcm/ui/granite/components/form/checkbox",
-      ImmutableValueMap.builder()
-      .put("name", namePrefix + LinkNameConstants.PN_LINK_MEDIA_DOWNLOAD)
-      .put("text", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaDownload.fieldLabel")
-      .put("fieldDescription", "io.wcm.handler.link.components.granite.form.linkRefContainer.media.linkMediaDownload.fieldDescription")
-      .build());
-
-  insertAdditionalComponents(mediaWellItems, cfg.getChild("mediaLinkFields"));
-}
 
 // Link window target
 Resource linkWindowTarget = GraniteUiSyntheticResource.child(items, "linkWindowTarget", "granite/ui/components/coral/foundation/form/select",
@@ -385,6 +301,16 @@ private Map<String,LinkType> getLinkTypes(Resource resource, LinkHandlerConfig l
     log.warn("Unable to get link types for link reference container - content resource not detected.");
   }
   return linkTypes;
+}
+
+private void addAdditionalComponents(Resource target, String propertyName, Resource source) {
+  if (source == null) {
+    return;
+  }
+  Resource targetChild = GraniteUiSyntheticResource.child(target, propertyName, JcrConstants.NT_UNSTRUCTURED);
+  for (Resource sourceChild : source.getChildren()) {
+    GraniteUiSyntheticResource.copySubtree(targetChild, sourceChild);
+  }
 }
 
 private void insertAdditionalComponents(Resource target, Resource source) {

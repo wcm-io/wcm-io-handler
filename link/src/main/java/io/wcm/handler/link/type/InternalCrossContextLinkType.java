@@ -29,6 +29,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.link.Link;
@@ -83,6 +84,16 @@ public final class InternalCrossContextLinkType extends LinkType {
   @Override
   public String getPrimaryLinkRefProperty() {
     return LinkNameConstants.PN_LINK_CROSSCONTEXT_CONTENT_REF;
+  }
+
+  @Override
+  public @Nullable String getEditComponentResourceType() {
+    return "wcm-io/handler/link/components/granite/form/linktype/internalCrossContext";
+  }
+
+  @Override
+  public boolean hasRichTextPlugin() {
+    return true;
   }
 
   @Override
