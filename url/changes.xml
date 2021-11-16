@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.6.0" date="not released">
+      <action type="add" dev="cnagel" issue="WHAN-49">
+        Add new flag "isHostProvidedBySlingMapping" to UrlHandlerConfig which directs the URL handler to also respect host names that are configured in the Sling Mapping configuration for externalization.
+      </action>
+    </release>
+
     <release version="1.5.4" date="2021-10-28">
       <action type="update" dev="sseifert">
         Eliminate usage of deprecated SlingSettingsService. Use wcm.io InstanceTypeService instead.

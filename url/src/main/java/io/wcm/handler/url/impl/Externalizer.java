@@ -52,6 +52,24 @@ final class Externalizer {
    *         configured), and the path is URL-encoded if it contains special chars.
    */
   public static @Nullable String externalizeUrl(@NotNull String url, @NotNull ResourceResolver resolver, @Nullable SlingHttpServletRequest request) {
+    return externalizeUrlWithSlingMapping(url, resolver, request, false);
+  }
+
+  /**
+   * Externalizes a URL by applying Sling Mapping. Hostname and scheme will be added. URLs that are already externalized
+   * remain untouched.
+   * @param url non-externalized URL (without scheme or hostname)
+   * @param resolver Resource resolver
+   * @param request Request
+   * @return Externalized URL with scheme or hostname, short URLs (if configured in Sling Mapping),
+   *         and the path is URL-encoded if it contains special chars.
+   */
+  public static @Nullable String externalizeUrlWithHost(@NotNull String url, @NotNull ResourceResolver resolver, @Nullable SlingHttpServletRequest request) {
+    return externalizeUrlWithSlingMapping(url, resolver, request, true);
+  }
+
+  private static @Nullable String externalizeUrlWithSlingMapping(@NotNull String url, @NotNull ResourceResolver resolver,
+      @Nullable SlingHttpServletRequest request, boolean keepHost) {
 
     // apply externalization only path part
     String path = url;
@@ -80,14 +98,15 @@ final class Externalizer {
       path = resolver.map(path);
     }
 
-    // remove scheme and hostname (probably added by sling mapping), but leave path in escaped form
-    try {
-      path = new URI(path).getRawPath();
-      // replace %2F back to / for better readability
-      path = StringUtils.replace(path, "%2F", "/");
-    }
-    catch (URISyntaxException ex) {
-      throw new RuntimeException("Sling map method returned invalid URI: " + path, ex);
+    if (!keepHost) {
+      // remove scheme and hostname (probably added by sling mapping), but leave path in escaped form
+      try {
+        path = new URI(path).getRawPath();
+        // replace %2F back to / for better readability
+        path = StringUtils.replace(path, "%2F", "/");
+      } catch (URISyntaxException ex) {
+        throw new RuntimeException("Sling map method returned invalid URI: " + path, ex);
+      }
     }
 
     // build full URL again

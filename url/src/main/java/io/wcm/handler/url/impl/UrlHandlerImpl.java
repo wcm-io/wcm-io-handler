@@ -149,13 +149,20 @@ public final class UrlHandlerImpl implements UrlHandler {
       return url;
     }
 
-    // apply sling mapping, namespace mangling and add webapp context path if required
-    String externalizedUrl = Externalizer.externalizeUrl(url, resolver, request);
-
-    // add link URL prefix (scheme/hostname or integrator placeholder) if required
-    String linkUrlPrefix = getLinkUrlPrefix(urlMode, targetPage);
-    externalizedUrl = StringUtils.defaultString(linkUrlPrefix) + externalizedUrl; //NOPMD
-
+    String externalizedUrl;
+    if (urlHandlerConfig.isHostProvidedBySlingMapping()) {
+      // apply sling mapping with host
+      externalizedUrl = Externalizer.externalizeUrlWithHost(url, resolver, request);
+    }
+    else {
+      // apply sling mapping, namespace mangling and add webapp context path if required
+      externalizedUrl = Externalizer.externalizeUrl(url, resolver, request);
+    }
+    if (externalizedUrl != null && !Externalizer.isExternalized(externalizedUrl)) {
+      // add link URL prefix (scheme/hostname or integrator placeholder) if required
+      String linkUrlPrefix = getLinkUrlPrefix(urlMode, targetPage);
+      externalizedUrl = StringUtils.defaultString(linkUrlPrefix) + externalizedUrl; //NOPMD
+    }
     return externalizedUrl;
   }
 
@@ -187,13 +194,19 @@ public final class UrlHandlerImpl implements UrlHandler {
     // check for reference to static resource from proxied client library
     String externalizedUrl = clientlibProxyRewriter.rewriteStaticResourcePath(url);
 
-    // apply sling mapping when externalizing URLs
-    externalizedUrl = Externalizer.externalizeUrl(externalizedUrl, resolver, request);
-
-    // add resource URL prefix (scheme/hostname or integrator placeholder) if required
-    String resourceUrlPrefix = getResourceUrlPrefix(urlMode, resource);
-    externalizedUrl = StringUtils.defaultString(resourceUrlPrefix) + externalizedUrl; //NOPMD
-
+    if (urlHandlerConfig.isHostProvidedBySlingMapping()) {
+      // apply sling mapping with host
+      externalizedUrl = Externalizer.externalizeUrlWithHost(externalizedUrl, resolver, request);
+    }
+    else {
+      // apply sling mapping when externalizing URLs
+      externalizedUrl = Externalizer.externalizeUrl(externalizedUrl, resolver, request);
+    }
+    if (externalizedUrl != null && !Externalizer.isExternalized(externalizedUrl)) {
+      // add resource URL prefix (scheme/hostname or integrator placeholder) if required
+      String resourceUrlPrefix = getResourceUrlPrefix(urlMode, resource);
+      externalizedUrl = StringUtils.defaultString(resourceUrlPrefix) + externalizedUrl; //NOPMD
+    }
     return externalizedUrl;
   }
 
