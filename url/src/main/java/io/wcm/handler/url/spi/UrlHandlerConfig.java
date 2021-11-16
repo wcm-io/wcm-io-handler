@@ -83,4 +83,15 @@ public abstract class UrlHandlerConfig implements ContextAwareService {
     return ImmutableList.of();
   }
 
+  /**
+   * By default, URL handler users Sling Mapping to externalize all URLs, but removes and host name
+   * that may be configured in the Sling Mapping to prefer the host names defined in the URL handler
+   * {@link io.wcm.handler.url.SiteConfig}. By setting this flag to true, URL handler also uses
+   * the host names provided by Sling Mapping, and falls back to the default behavior if no are defined.
+   * @return true if URL handler should also respect host names defined in Sling Mapping
+   */
+  public boolean isHostProvidedBySlingMapping() {
+    return false;
+  }
+
 }

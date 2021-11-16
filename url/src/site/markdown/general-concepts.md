@@ -62,6 +62,8 @@ The URL handler can externalize URLs that point to AEM content pages or assets w
 
 Unlike the AEM [Externalizer][aem-externalizer] service the configuration of these domains is done via Sling Context-Aware configuration and thus fully supporting a multi-tenancy context.
 
+Alternatively, the domain names which are configured as part of the Sling Mapping configuration can be used for externalization. This has to be enabled explicitly in the UrlHandlerConfig.
+
 
 ### URL modes
 
