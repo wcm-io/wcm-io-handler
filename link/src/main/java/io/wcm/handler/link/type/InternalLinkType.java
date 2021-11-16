@@ -29,6 +29,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.link.Link;
@@ -85,6 +86,16 @@ public final class InternalLinkType extends LinkType {
   @Override
   public String getPrimaryLinkRefProperty() {
     return LinkNameConstants.PN_LINK_CONTENT_REF;
+  }
+
+  @Override
+  public @Nullable String getEditComponentResourceType() {
+    return "wcm-io/handler/link/components/granite/form/linktype/internal";
+  }
+
+  @Override
+  public boolean hasRichTextPlugin() {
+    return true;
   }
 
   @Override

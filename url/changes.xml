@@ -28,6 +28,12 @@
       </action>
     </release>
 
+    <release version="1.5.4" date="2021-10-28">
+      <action type="update" dev="sseifert">
+        Eliminate usage of deprecated SlingSettingsService. Use wcm.io InstanceTypeService instead.
+      </action>
+    </release>
+
     <release version="1.5.2" date="2021-03-25">
       <action type="update" dev="sseifert" issue="WTOOL-72">
         Add sling-initial-content-transform-maven-plugin to alternatively allow to deploy OSGi bundle and content as content package separately in AEMaaCS.

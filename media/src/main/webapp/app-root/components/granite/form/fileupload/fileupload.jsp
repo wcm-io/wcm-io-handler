@@ -21,6 +21,7 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
+<%@page import="org.apache.sling.api.resource.ResourceUtil"%>
 <%@page import="org.apache.sling.api.resource.ValueMap"%>
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
@@ -197,7 +198,7 @@ dispatcher.include(slingRequest, slingResponse);
 Map<String,Object> pathFieldProps = new HashMap<>();
 pathFieldProps.put("name", fileUploadProps.get("fileReferenceParameter"));
 pathFieldProps.put("namePrefix", namePrefix);
-pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield");
+pathFieldProps.put("granite:class", "cq-FileUpload cq-droptarget wcm-io-handler-media-fileupload-pathfield " + cfg.get("granite:class", ""));
 pathFieldProps.put("required", cfg.get("required", false));
 
 // detect root path
@@ -206,6 +207,10 @@ pathFieldProps.putAll(getDamRootPathProperties(cmp, slingRequest, "/content/dam"
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
 Map<String,Object> dataProps = new HashMap<>();
+ValueMap dataFromConfig = ResourceUtil.getValueMap(cfg.getChild("granite:data"));
+for (Map.Entry<String,Object> entry : dataFromConfig.entrySet()) {
+  dataProps.put(entry.getKey(), entry.getValue());
+}
 if (mediaFormats != null && mediaFormats.length > 0) {
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
   if (mediaFormatsMandatory != null && mediaFormatsMandatory.length > 0) {

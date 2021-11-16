@@ -22,6 +22,8 @@
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="org.apache.sling.api.request.RequestDispatcherOptions"%>
+<%@page import="org.apache.sling.api.resource.ResourceUtil"%>
+<%@page import="org.apache.sling.api.resource.ValueMap"%>
 <%@page import="org.apache.sling.api.wrappers.ValueMapDecorator"%>
 <%@page import="com.adobe.granite.ui.components.Config"%>
 <%@page import="com.adobe.granite.ui.components.ExpressionHelper"%>
@@ -151,13 +153,20 @@ if (contentResource != null) {
 
 // simulate resource for dialog field def with updated properties
 Resource pathField = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(pathFieldProps));
+
+Map<String,Object> dataProps = new HashMap<>();
+ValueMap dataFromConfig = ResourceUtil.getValueMap(cfg.getChild("granite:data"));
+for (Map.Entry<String,Object> entry : dataFromConfig.entrySet()) {
+  dataProps.put(entry.getKey(), entry.getValue());
+}
 if (mediaFormats != null && mediaFormats.length > 0) {
-  Map<String,Object> dataProps = new HashMap<>();
   dataProps.put("wcmio-mediaformats", StringUtils.join(mediaFormats, ","));
   if (mediaFormatsMandatory != null && mediaFormatsMandatory.length > 0) {
     dataProps.put("wcmio-mediaformats-mandatory", StringUtils.join(mediaFormatsMandatory, ","));
   }
   dataProps.put("wcmio-media-cropauto", mediaCropAuto);
+}
+if (!dataProps.isEmpty()) {
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }
 

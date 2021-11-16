@@ -82,7 +82,7 @@ public final class LinkHandlerImpl implements LinkHandler {
 
   @Override
   public @NotNull LinkBuilder get(@NotNull LinkRequest linkRequest) {
-    return new LinkBuilderImpl(linkRequest, this);
+    return new LinkBuilderImpl(linkRequest, this, componentPropertyResolverFactory);
   }
 
   /**

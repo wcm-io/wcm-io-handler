@@ -35,7 +35,6 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.settings.SlingSettingsService;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -57,6 +56,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.wcm.handler.media.MediaFileType;
+import io.wcm.wcm.commons.instancetype.InstanceTypeService;
 import io.wcm.wcm.commons.util.RunMode;
 
 /**
@@ -104,7 +104,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
   @Reference
-  private SlingSettingsService slingSettings;
+  private InstanceTypeService instanceTypeService;
   @Reference
   private AssetSynchonizationService assetSynchronizationService;
   @Reference
@@ -118,7 +118,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     if (config.enabled()) {
       if (config.allowedRunMode() != null && config.allowedRunMode().length > 0) {
         // Activate only if configured run modes are met
-        this.enabled = !RunMode.disableIfNoRunModeActive(slingSettings.getRunModes(), config.allowedRunMode(), componentContext, log);
+        this.enabled = !RunMode.disableIfNoRunModeActive(instanceTypeService.getRunModes(), config.allowedRunMode(), componentContext, log);
       }
       else {
         this.enabled = true;
