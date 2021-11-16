@@ -407,22 +407,26 @@ class UrlHandlerImplTest {
     // set config flag
     ((DummyUrlHandlerConfig)context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
 
-    // mock request and resolver
-    ResourceResolver spyResolver = spy(context.request().getResourceResolver());
-    Answer<String> mappingAnswer = new Answer<String>() {
-      @Override
-      public String answer(InvocationOnMock invocation) {
-        return "http://www.domain.com/context" + (String)invocation.getArguments()[1];
-      }
-    };
-    when(spyResolver.map(any(SlingHttpServletRequest.class), anyString())).thenAnswer(mappingAnswer);
-    MockSlingHttpServletRequest newRequest = new MockSlingHttpServletRequest(spyResolver);
-    newRequest.setResource(context.request().getResource());
-    newRequest.setContextPath(context.request().getContextPath());
+    // apply sling mapping with host name
+    SlingHttpServletRequest request = applyHostNameMapping(context.request());
 
-    UrlHandler urlHandler = AdaptTo.notNull(newRequest, UrlHandler.class);
+    UrlHandler urlHandler = AdaptTo.notNull(request, UrlHandler.class);
     assertEquals("http://www.domain.com/context/content/unittest/de_test/brand/de/section2/page2a.html",
             externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", null));
+  }
+
+  @Test
+  void testExternalizeLinkUrlHostBySlingMappingWithoutActualSlingMappingConfiguration() {
+    // create more pages to simulate internal link
+    Page targetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page2a",
+        DummyAppTemplate.CONTENT.getTemplatePath());
+
+    // set config flag
+    ((DummyUrlHandlerConfig)context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
+
+    UrlHandler urlHandler = AdaptTo.notNull(context.request(), UrlHandler.class);
+    assertEquals("http://de.dummysite.org/content/unittest/de_test/brand/de/section2/page2a.html",
+        externalizeLinkUrl(urlHandler, targetPage.getPath() + ".html", null));
   }
 
   @Test
@@ -533,22 +537,26 @@ class UrlHandlerImplTest {
     // set config flag
     ((DummyUrlHandlerConfig)context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
 
-    // mock request and resolver
-    ResourceResolver spyResolver = spy(context.request().getResourceResolver());
-    Answer<String> mappingAnswer = new Answer<String>() {
-      @Override
-      public String answer(InvocationOnMock invocation) {
-        return "http://www.domain.com/context" + (String)invocation.getArguments()[1];
-      }
-    };
-    when(spyResolver.map(any(SlingHttpServletRequest.class), anyString())).thenAnswer(mappingAnswer);
-    MockSlingHttpServletRequest newRequest = new MockSlingHttpServletRequest(spyResolver);
-    newRequest.setResource(context.request().getResource());
-    newRequest.setContextPath(context.request().getContextPath());
+    // apply sling mapping with host name
+    SlingHttpServletRequest request = applyHostNameMapping(context.request());
 
-    UrlHandler urlHandler = AdaptTo.notNull(newRequest, UrlHandler.class);
+    UrlHandler urlHandler = AdaptTo.notNull(request, UrlHandler.class);
     assertEquals("http://www.domain.com/context/apps/testapp/docroot/img.png",
-            externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png"));
+        externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png", UrlModes.FULL_URL));
+  }
+
+  @Test
+  void testExternalizeResourceUrlHostBySlingMappingWithoutActualSlingMappingConfiguration() {
+    // create more pages to simulate internal link
+    context.create().page("/content/unittest/de_test/brand/de/section2/page2a",
+        DummyAppTemplate.CONTENT.getTemplatePath());
+
+    // set config flag
+    ((DummyUrlHandlerConfig)context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
+
+    UrlHandler urlHandler = AdaptTo.notNull(context.request(), UrlHandler.class);
+    assertEquals("http://de.dummysite.org/apps/testapp/docroot/img.png",
+        externalizeResourceUrl(urlHandler, "/apps/testapp/docroot/img.png", UrlModes.FULL_URL));
   }
 
   @Test
@@ -773,6 +781,24 @@ class UrlHandlerImplTest {
       }
     };
     when(spyResolver.map(anyString())).thenAnswer(mappingAnswer);
+    when(spyResolver.map(any(SlingHttpServletRequest.class), anyString())).thenAnswer(mappingAnswer);
+    MockSlingHttpServletRequest newRequest = new MockSlingHttpServletRequest(spyResolver);
+    newRequest.setResource(request.getResource());
+    newRequest.setContextPath(request.getContextPath());
+    return newRequest;
+  }
+
+  /**
+   * Simulate mapping: Externalize URLs with prefix http://www.domain.com/context
+   */
+  private static MockSlingHttpServletRequest applyHostNameMapping(SlingHttpServletRequest request) {
+    ResourceResolver spyResolver = spy(request.getResourceResolver());
+    Answer<String> mappingAnswer = new Answer<String>() {
+      @Override
+      public String answer(InvocationOnMock invocation) {
+        return "http://www.domain.com/context" + (String)invocation.getArguments()[1];
+      }
+    };
     when(spyResolver.map(any(SlingHttpServletRequest.class), anyString())).thenAnswer(mappingAnswer);
     MockSlingHttpServletRequest newRequest = new MockSlingHttpServletRequest(spyResolver);
     newRequest.setResource(request.getResource());

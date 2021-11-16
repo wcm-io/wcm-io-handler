@@ -127,11 +127,13 @@ class ExternalizerTest {
     assertExternalizeUrlWithHost("http://www.domain.com/context/the/path", "/the/path", mockedResolver);
     assertExternalizeUrlWithHost("http://www.domain.com/context/the/path?param=1", "/the/path?param=1", mockedResolver);
     assertExternalizeUrlWithHost("http://www.domain.com/context/the/path#hash", "/the/path#hash", mockedResolver);
-
   }
 
-  private void assertExternalizeUrlWithHost(String expected, String url, ResourceResolver resolver) {
-    assertEquals(expected, Externalizer.externalizeUrlWithHost(url, resolver, context.request()));
+  @Test
+  void testExternalizeUrlWithHostWithoutActualSlingMappingConfiguration() {
+    assertExternalizeUrlWithHost("/the/path", "/the/path", context.resourceResolver());
+    assertExternalizeUrlWithHost("/the/path?param=1", "/the/path?param=1", context.resourceResolver());
+    assertExternalizeUrlWithHost("/the/path#hash", "/the/path#hash", context.resourceResolver());
   }
 
   @Test
@@ -165,6 +167,10 @@ class ExternalizerTest {
     assertFalse(Externalizer.isExternalizable(""));
     assertFalse(Externalizer.isExternalizable("abc"));
     assertTrue(Externalizer.isExternalizable("/abc"));
+  }
+
+  private void assertExternalizeUrlWithHost(String expected, String url, ResourceResolver resolver) {
+    assertEquals(expected, Externalizer.externalizeUrlWithHost(url, resolver, context.request()));
   }
 
 }

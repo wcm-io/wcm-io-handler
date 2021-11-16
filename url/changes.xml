@@ -25,7 +25,7 @@
 
     <release version="1.6.0" date="not released">
       <action type="add" dev="cnagel" issue="WHAN-49">
-        Add configuration to keep host from Sling Mappings.
+        Add new flag "isHostProvidedBySlingMapping" to UrlHandlerConfig which directs the URL handler to also respect host names that are configured in the Sling Mapping configuration for externalization.
       </action>
     </release>
 
