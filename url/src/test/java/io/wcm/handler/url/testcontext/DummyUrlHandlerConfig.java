@@ -43,9 +43,9 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
   private static final List<IntegratorMode> INTEGRATOR_MODES = ImmutableList.<IntegratorMode>of(
       IntegratorModes.SIMPLE,
       IntegratorModes.EXTENDED
-      );
+  );
 
-  private boolean hostProvidedBySlingMapping = false;
+  private boolean hostProvidedBySlingMapping;
 
   @Override
   public List<IntegratorMode> getIntegratorModes() {

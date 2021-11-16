@@ -68,7 +68,8 @@ final class Externalizer {
     return externalizeUrlWithSlingMapping(url, resolver, request, true);
   }
 
-  private static @Nullable String externalizeUrlWithSlingMapping(@NotNull String url, @NotNull ResourceResolver resolver, @Nullable SlingHttpServletRequest request, boolean keepHost) {
+  private static @Nullable String externalizeUrlWithSlingMapping(@NotNull String url, @NotNull ResourceResolver resolver,
+      @Nullable SlingHttpServletRequest request, boolean keepHost) {
 
     // apply externalization only path part
     String path = url;

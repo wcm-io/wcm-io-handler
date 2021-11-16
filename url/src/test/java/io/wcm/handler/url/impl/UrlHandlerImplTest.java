@@ -33,8 +33,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-import io.wcm.handler.url.spi.UrlHandlerConfig;
-import io.wcm.handler.url.testcontext.DummyUrlHandlerConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -46,7 +44,6 @@ import org.apache.sling.servlethelpers.MockSlingHttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -57,8 +54,10 @@ import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.handler.url.integrator.IntegratorPlaceholder;
+import io.wcm.handler.url.spi.UrlHandlerConfig;
 import io.wcm.handler.url.testcontext.AppAemContext;
 import io.wcm.handler.url.testcontext.DummyAppTemplate;
+import io.wcm.handler.url.testcontext.DummyUrlHandlerConfig;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -406,7 +405,7 @@ class UrlHandlerImplTest {
             DummyAppTemplate.CONTENT.getTemplatePath());
 
     // set config flag
-    ((DummyUrlHandlerConfig) context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
+    ((DummyUrlHandlerConfig)context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
 
     // mock request and resolver
     ResourceResolver spyResolver = spy(context.request().getResourceResolver());
@@ -528,11 +527,11 @@ class UrlHandlerImplTest {
   @Test
   void testExternalizeResourceUrlHostBySlingMapping() {
     // create more pages to simulate internal link
-    Page targetPage = context.create().page("/content/unittest/de_test/brand/de/section2/page2a",
+    context.create().page("/content/unittest/de_test/brand/de/section2/page2a",
             DummyAppTemplate.CONTENT.getTemplatePath());
 
     // set config flag
-    ((DummyUrlHandlerConfig) context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
+    ((DummyUrlHandlerConfig)context.getService(UrlHandlerConfig.class)).setHostProvidedBySlingMapping(true);
 
     // mock request and resolver
     ResourceResolver spyResolver = spy(context.request().getResourceResolver());
