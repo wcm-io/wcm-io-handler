@@ -407,7 +407,7 @@ public abstract class MediaSource {
       media.setUrl(rendition.getUrl());
       renditionFound = true;
     }
-    log.trace("resolveFirstMatchRenditions: renditionFound={}, rendition={}", renditionFound, rendition);
+    log.trace("ResolveFirstMatchRenditions: renditionFound={}, rendition={}", renditionFound, rendition);
     return renditionFound;
   }
 
@@ -458,7 +458,7 @@ public abstract class MediaSource {
       media.setUrl(resolvedRenditions.get(0).getUrl());
     }
 
-    log.trace("resolveAllRenditions: anyResolved={}, allMandatoryResolved={}, resolvedRenditions={}", anyResolved, allMandatoryResolved, resolvedRenditions);
+    log.trace("ResolveAllRenditions: anyResolved={}, allMandatoryResolved={}, resolvedRenditions={}", anyResolved, allMandatoryResolved, resolvedRenditions);
     return anyResolved && allMandatoryResolved;
   }
 

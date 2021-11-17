@@ -21,15 +21,15 @@ package io.wcm.handler.media;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
-
-import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds all properties that are part of a media handling request.
@@ -170,7 +170,7 @@ public final class MediaRequest {
   public @NotNull ValueMap getResourceProperties() {
     if (this.resourceProperties == null) {
       // create a copy of the original map
-      this.resourceProperties = new ValueMapDecorator(new HashMap<String, Object>());
+      this.resourceProperties = new ValueMapDecorator(new HashMap<>());
       if (this.resource != null) {
         this.resourceProperties.putAll(resource.getValueMap());
       }
@@ -180,7 +180,18 @@ public final class MediaRequest {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+    ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    if (resource != null) {
+      sb.append("resource", resource.getPath());
+      sb.append("resourceProperties", "[" + StringUtils.join(resource.getValueMap().entrySet(), ",") + "]");
+    }
+    if (mediaRef != null) {
+      sb.append("mediaRef", mediaRef);
+    }
+    if (mediaArgs != null) {
+      sb.append("mediaArgs", mediaArgs);
+    }
+    return sb.build();
   }
 
 
@@ -260,7 +271,7 @@ public final class MediaRequest {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+      return ToStringBuilder.reflectionToString(this, io.wcm.wcm.commons.util.ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
     }
 
   }

@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,6 @@ import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.contenttype.FileExtension;
-import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds parameters to influence the media resolving process.
@@ -738,7 +738,74 @@ public final class MediaArgs implements Cloneable {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+    ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+    if (mediaFormatOptions != null && mediaFormatOptions.length > 0) {
+      sb.append("mediaFormats", "[" + StringUtils.join(mediaFormatOptions, ", ") + "]");
+    }
+    if (autoCrop) {
+      sb.append("autoCrop", autoCrop);
+    }
+    if (fileExtensions != null && fileExtensions.length > 0) {
+      sb.append("fileExtensions", StringUtils.join(fileExtensions, ","));
+    }
+    if (enforceOutputFileExtension != null) {
+      sb.append("enforceOutputFileExtension", enforceOutputFileExtension);
+    }
+    if (urlMode != null) {
+      sb.append("urlMode", urlMode);
+    }
+    if (fixedWidth > 0) {
+      sb.append("fixedWidth", fixedWidth);
+    }
+    if (fixedHeight > 0) {
+      sb.append("fixedHeight", fixedHeight);
+    }
+    if (download) {
+      sb.append("download", download);
+    }
+    if (contentDispositionAttachment) {
+      sb.append("contentDispositionAttachment", contentDispositionAttachment);
+    }
+    if (altText != null) {
+      sb.append("altText", altText);
+    }
+    if (forceAltValueFromAsset) {
+      sb.append("forceAltValueFromAsset", forceAltValueFromAsset);
+    }
+    if (decorative) {
+      sb.append("decorative", decorative);
+    }
+    if (!dummyImage) {
+      sb.append("dummyImage ", dummyImage);
+    }
+    if (dummyImageUrl != null) {
+      sb.append("dummyImageUrl", dummyImageUrl);
+    }
+    if (includeAssetThumbnails) {
+      sb.append("includeAssetThumbnails", includeAssetThumbnails);
+    }
+    if (includeAssetWebRenditions != null) {
+      sb.append("includeAssetWebRenditions", includeAssetWebRenditions);
+    }
+    if (imageSizes != null) {
+      sb.append("imageSizes", imageSizes);
+    }
+    if (pictureSourceSets != null && pictureSourceSets.length > 0) {
+      sb.append("pictureSourceSets", "[" + StringUtils.join(pictureSourceSets, ",") + "]");
+    }
+    if (dragDropSupport != DragDropSupport.AUTO) {
+      sb.append("dragDropSupport ", dragDropSupport);
+    }
+    if (ipeRatioCustomize != IPERatioCustomize.AUTO) {
+      sb.append("ipeRatioCustomize ", ipeRatioCustomize);
+    }
+    if (dynamicMediaDisabled) {
+      sb.append("dynamicMediaDisabled", dynamicMediaDisabled);
+    }
+    if (properties != null && !properties.isEmpty()) {
+      sb.append("properties", properties);
+    }
+    return sb.build();
   }
 
   /**
@@ -833,7 +900,7 @@ public final class MediaArgs implements Cloneable {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+      return mediaFormatToString(mediaFormat, mediaFormatName, mandatory);
     }
 
     @NotNull
@@ -844,6 +911,20 @@ public final class MediaArgs implements Cloneable {
       else {
         return new MediaFormatOption(this.mediaFormatName, newMandatory);
       }
+    }
+
+    static String mediaFormatToString(MediaFormat mediaFormat, String mediaFormatName, boolean mandatory) {
+      StringBuilder sb = new StringBuilder();
+      if (mediaFormat != null) {
+        sb.append(mediaFormat.toString());
+      }
+      else if (mediaFormatName != null) {
+        sb.append(mediaFormatName);
+      }
+      if (!mandatory) {
+        sb.append("[?]");
+      }
+      return sb.toString();
     }
 
   }
@@ -916,8 +997,14 @@ public final class MediaArgs implements Cloneable {
     }
 
     @Override
+    @SuppressWarnings("null")
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+      ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+      sb.append("sizes", sizes);
+      if (widthOptions != null && widthOptions.length > 0) {
+        sb.append("widthOptions", StringUtils.join(widthOptions, ","));
+      }
+      return sb.build();
     }
 
   }
@@ -1082,7 +1169,18 @@ public final class MediaArgs implements Cloneable {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+      ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+      sb.append("mediaFormat", MediaFormatOption.mediaFormatToString(mediaFormat, mediaFormatName, true));
+      if (media != null) {
+        sb.append("media", media);
+      }
+      if (sizes != null) {
+        sb.append("sizes", sizes);
+      }
+      if (widthOptions != null && widthOptions.length > 0) {
+        sb.append("widthOptions", StringUtils.join(widthOptions, ","));
+      }
+      return sb.build();
     }
 
   }
@@ -1131,7 +1229,12 @@ public final class MediaArgs implements Cloneable {
 
     @Override
     public String toString() {
-      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+      StringBuilder sb = new StringBuilder();
+      sb.append(Long.toString(width));
+      if (!mandatory) {
+        sb.append("?");
+      }
+      return sb.toString();
     }
 
   }

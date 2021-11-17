@@ -33,7 +33,7 @@ class DimensionTest {
 
     assertEquals(20, dimension.getWidth());
     assertEquals(10, dimension.getHeight());
-    assertEquals("Dimension[width=20,height=10]", dimension.toString());
+    assertEquals("[width=20,height=10]", dimension.toString());
   }
 
   @Test

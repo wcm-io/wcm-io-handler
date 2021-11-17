@@ -124,10 +124,6 @@ public final class AssetRendition {
       }
     }
 
-    if (log.isTraceEnabled()) {
-      log.trace("Rendition dimension for {}: {}", rendition.getPath(), dimension);
-    }
-
     return dimension;
   }
 

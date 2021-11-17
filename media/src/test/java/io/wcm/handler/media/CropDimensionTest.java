@@ -39,7 +39,7 @@ class CropDimensionTest {
     assertEquals(10, dimension.getHeight());
     assertEquals(35, dimension.getRight());
     assertEquals(15, dimension.getBottom());
-    assertEquals("CropDimension[left=15,top=5,width=20,height=10]", dimension.toString());
+    assertEquals("[left=15,top=5,width=20,height=10]", dimension.toString());
     assertEquals("15,5,35,15", dimension.getCropString());
     assertEquals(15, dimension.getRectangle().getX(), 0.0001);
     assertEquals(5, dimension.getRectangle().getY(), 0.0001);
@@ -160,7 +160,7 @@ class CropDimensionTest {
     assertEquals(10, dimension.getHeight());
     assertEquals(35, dimension.getRight());
     assertEquals(15, dimension.getBottom());
-    assertEquals("CropDimension[left=15,top=5,width=20,height=10]", dimension.toString());
+    assertEquals("[left=15,top=5,width=20,height=10]", dimension.toString());
     assertEquals("15,5,35,15", dimension.getCropString());
     assertEquals("15,5,20,10", dimension.getCropStringWidthHeight());
     assertEquals(15, dimension.getRectangle().getX(), 0.0001);
@@ -179,7 +179,7 @@ class CropDimensionTest {
     assertEquals(10, dimension.getHeight());
     assertEquals(35, dimension.getRight());
     assertEquals(15, dimension.getBottom());
-    assertEquals("CropDimension[left=15,top=5,width=20,height=10]", dimension.toString());
+    assertEquals("[left=15,top=5,width=20,height=10]", dimension.toString());
     assertEquals("15,5,35,15", dimension.getCropString());
     assertEquals("15,5,20,10", dimension.getCropStringWidthHeight());
     assertEquals(15, dimension.getRectangle().getX(), 0.0001);

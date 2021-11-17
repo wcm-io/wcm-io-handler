@@ -27,6 +27,8 @@ import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.CropDimension;
@@ -47,6 +49,8 @@ class DamRendition extends SlingAdaptable implements Rendition {
   private final MediaArgs mediaArgs;
   private final RenditionMetadata rendition;
   private boolean fallback;
+
+  private static final Logger log = LoggerFactory.getLogger(DamRendition.class);
 
   /**
    * @param cropDimension Crop dimension
@@ -96,6 +100,12 @@ class DamRendition extends SlingAdaptable implements Rendition {
         }
       }
     }
+
+    if (log.isTraceEnabled()) {
+      log.trace("DamRendition: resolvedRendition={}, mediaArgs={}, cropDimension={}, rotation={}",
+          resolvedRendition, mediaArgs, cropDimension, rotation);
+    }
+
     this.rendition = resolvedRendition;
   }
 

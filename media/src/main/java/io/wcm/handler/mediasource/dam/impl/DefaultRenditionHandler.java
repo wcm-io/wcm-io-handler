@@ -28,6 +28,8 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
@@ -49,6 +51,8 @@ class DefaultRenditionHandler implements RenditionHandler {
   private Set<RenditionMetadata> renditions;
   private final RenditionMetadata originalRendition;
   private final DamContext damContext;
+
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
   /**
    * @param damContext DAM context objects
@@ -168,6 +172,11 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // get rendition candidates matching for file extensions
     Set<RenditionMetadata> candidates = getRendtionsMatchingFileExtensions(requestedFileExtensions, mediaArgs);
+
+    if (log.isTraceEnabled()) {
+      log.trace("GetRendition: requestedFileExtensions={}, isSizeMatchingRequest={}, mediaArgs={}, candidates={}",
+          StringUtils.join(requestedFileExtensions, ","), isSizeMatchingRequest, mediaArgs, candidates);
+    }
 
     // if request does not contain any size restrictions return original image or first by filename matching rendition
     if (!isSizeMatchingRequest) {

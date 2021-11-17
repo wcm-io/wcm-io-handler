@@ -363,9 +363,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(getClass().getSimpleName())
-        .append(": ")
-        .append(this.rendition.getPath());
+    sb.append(this.rendition.getPath());
     if (this.width > 0 || this.height > 0) {
       sb.append(" (").append(Long.toString(this.width)).append("x").append(Long.toString(this.height)).append(")");
     }

@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jdom2.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,6 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Span;
 import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Holds information about a media request processed and resolved by {@link MediaHandler}.
@@ -259,15 +259,31 @@ public final class Media {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
+    ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
     if (isValid()) {
-      sb.append(getUrl());
+      sb.append("url", getUrl());
     }
     else {
-      sb.append(getMediaInvalidReason());
+      sb.append("mediaInvalidReason", this.mediaInvalidReason);
     }
-    sb.append("; ").append(ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE));
-    return sb.toString();
+    sb.append("mediaSource", mediaSource.getId());
+    if (asset != null) {
+      sb.append("asset", asset.getPath());
+    }
+    if (renditions != null) {
+      sb.append("renditions", renditions);
+    }
+    if (cropDimension != null) {
+      sb.append("cropDimension", cropDimension);
+    }
+    if (rotation != null) {
+      sb.append("rotation", rotation);
+    }
+    if (map != null) {
+      sb.append("map", map);
+    }
+    sb.append("mediaRequest", mediaRequest);
+    return sb.build();
   }
 
 }

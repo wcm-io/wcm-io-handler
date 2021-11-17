@@ -96,7 +96,7 @@ public final class DamMediaSource extends MediaSource {
   @OSGiService
   private DynamicMediaSupportService dynamicMediaSupportService;
 
-  private static final Logger log = LoggerFactory.getLogger(DamMediaSource.class);
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
   /**
    * Media source ID
