@@ -258,6 +258,11 @@ public final class MediaRequest {
       return this.mapProperty;
     }
 
+    @Override
+    public String toString() {
+      return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+    }
+
   }
 
 }

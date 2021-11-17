@@ -259,7 +259,15 @@ public final class Media {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+    StringBuilder sb = new StringBuilder();
+    if (isValid()) {
+      sb.append(getUrl());
+    }
+    else {
+      sb.append(getMediaInvalidReason());
+    }
+    sb.append("; ").append(ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE));
+    return sb.toString();
   }
 
 }

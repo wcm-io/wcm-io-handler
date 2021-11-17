@@ -50,7 +50,7 @@ final class MediaFormatResolver {
 
   private final MediaFormatHandler mediaFormatHandler;
 
-  private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(MediaFormatResolver.class);
 
   static final String MEDIAFORMAT_NAME_SEPARATOR = "___";
 
