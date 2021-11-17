@@ -115,17 +115,29 @@ class DamRendition extends SlingAdaptable implements Rendition {
       return null;
     }
     String url = null;
-    if (!mediaArgs.isDynamicMediaDisabled() && damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+    boolean dynamicMediaEnabled = damContext.isDynamicMediaEnabled() && !mediaArgs.isDynamicMediaDisabled();
+    if (dynamicMediaEnabled && damContext.isDynamicMediaAsset()) {
       // if DM is enabled: try to get rendition URL from dynamic media
       String dynamicMediaPath = this.rendition.getDynamicMediaPath(this.mediaArgs.isContentDispositionAttachment(), damContext);
-      if (dynamicMediaPath != null) {
-        String productionAssetUrl = damContext.getDynamicMediaServerUrl();
-        if (productionAssetUrl != null) {
-          url = productionAssetUrl + dynamicMediaPath;
-        }
+      String productionAssetUrl = damContext.getDynamicMediaServerUrl();
+      if (productionAssetUrl != null) {
+        url = productionAssetUrl + dynamicMediaPath;
       }
     }
-    if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
+    if (url == null) {
+      if (dynamicMediaEnabled) {
+        if (damContext.isDynamicMediaAemFallbackDisabled()) {
+          if (log.isWarnEnabled()) {
+            log.warn("Asset is not a valid DM asset, fallback disabled, rendition invalid: {}", this.rendition.getRendition().getPath());
+          }
+          return null;
+        }
+        else {
+          if (log.isTraceEnabled()) {
+            log.trace("Asset is not a valid DM asset, fallback to AEM-rendered rendition: {}", this.rendition.getRendition().getPath());
+          }
+        }
+      }
       // Render renditions in AEM: build externalized URL
       UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
       String mediaPath = this.rendition.getMediaPath(this.mediaArgs.isContentDispositionAttachment());

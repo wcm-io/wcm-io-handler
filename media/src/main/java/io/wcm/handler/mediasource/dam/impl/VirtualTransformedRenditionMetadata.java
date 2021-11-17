@@ -24,7 +24,6 @@ import java.io.InputStream;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
@@ -94,15 +93,9 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
-    if (contentDispositionAttachment) {
-      // do not use dynamic media for request forced with content disposition attachment
-      return null;
-    }
-    else {
-      // render virtual rendition with dynamic media
-      return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight(), this.cropDimension, this.rotation);
-    }
+  public @NotNull String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
+    // render virtual rendition with dynamic media (we ignore contentDispositionAttachment here)
+    return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight(), this.cropDimension, this.rotation);
   }
 
   @Override
