@@ -26,11 +26,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
-
-import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Crop dimension with left, top, width and height as integer.
@@ -113,7 +112,7 @@ public final class CropDimension extends Dimension {
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+    return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
         .append("left", getLeft())
         .append("top", getTop())
         .append("width", getWidth())

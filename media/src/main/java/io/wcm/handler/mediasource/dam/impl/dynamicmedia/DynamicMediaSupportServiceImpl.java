@@ -201,6 +201,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     catch (RepositoryException ex) {
       log.warn("Unable to get dynamic media production asset URLs for {}", assetResource.getPath(), ex);
     }
+    log.warn("Unable to get dynamic media production asset URLs for {}", assetResource.getPath());
     return null;
   }
 

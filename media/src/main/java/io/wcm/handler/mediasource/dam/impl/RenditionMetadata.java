@@ -30,7 +30,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
@@ -207,7 +206,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param damContext DAM context
    * @return Dynamic media path part or null if dynamic media not supported for this rendition
    */
-  public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
+  public @NotNull String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
     if (contentDispositionAttachment) {
       // serve static content from dynamic media for content disposition attachment
       return DynamicMediaPath.buildContent(damContext, true);
@@ -362,7 +361,12 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
 
   @Override
   public String toString() {
-    return this.rendition.getPath() + " (" + this.width + "x" + this.height + ")";
+    StringBuilder sb = new StringBuilder();
+    sb.append(this.rendition.getPath());
+    if (this.width > 0 || this.height > 0) {
+      sb.append(" (").append(Long.toString(this.width)).append("x").append(Long.toString(this.height)).append(")");
+    }
+    return sb.toString();
   }
 
   /**

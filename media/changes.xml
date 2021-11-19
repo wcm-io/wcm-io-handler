@@ -23,6 +23,15 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.13.8" date="2021-11-19">
+      <action type="update" dev="sseifert">
+        Improve debug/trace logging on media processing (categories io.wcm.handler.media and io.wcm.handler.mediasource).
+      </action>
+      <action type="update" dev="sseifert">
+        Dynamic Media Support: Even if the option to disable the automatic fallback to AEM-based rendering of renditions is switched on, it should take place if DM is explicitely disabled via MediaArgs.
+      </action>
+    </release>
+
     <release version="1.13.6" date="2021-11-08">
       <action type="update" dev="sseifert">
         FileUpload/PathField GraniteUI component: Pass through "granite:class" and "granite:data" properties to path field widget to allow to apply show/hide logic to both of them.

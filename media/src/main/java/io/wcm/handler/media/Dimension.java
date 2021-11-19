@@ -22,9 +22,8 @@ package io.wcm.handler.media;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.osgi.annotation.versioning.ProviderType;
-
-import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Dimension with width and height as integer.
@@ -71,7 +70,7 @@ public class Dimension {
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+    return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
         .append("width", getWidth())
         .append("height", getHeight())
         .build();

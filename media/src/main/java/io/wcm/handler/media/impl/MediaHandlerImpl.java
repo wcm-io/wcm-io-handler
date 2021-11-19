@@ -31,6 +31,8 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 
@@ -67,6 +69,8 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaFormatHandler mediaFormatHandler;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentPropertyResolverFactory componentPropertyResolverFactory;
+
+  private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
   public @NotNull MediaBuilder get(Resource resource) {
@@ -159,10 +163,15 @@ public final class MediaHandlerImpl implements MediaHandler {
       mediaRequest.getMediaArgs().includeAssetWebRenditions(mediaHandlerConfig.includeAssetWebRenditionsByDefault());
     }
 
+    if (log.isTraceEnabled()) {
+      log.trace("Start processing media request (mediaSource={}): {}", mediaSource.getId(), mediaRequest);
+    }
+
     // preprocess media request before resolving
     List<Class<? extends MediaProcessor>> mediaPreProcessors = mediaHandlerConfig.getPreProcessors();
     if (mediaPreProcessors != null) {
       for (Class<? extends MediaProcessor> processorClass : mediaPreProcessors) {
+        log.trace("Apply pre processor ({}): {}", processorClass, mediaRequest);
         MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
         media = processor.process(media);
         if (media == null) {
@@ -183,6 +192,7 @@ public final class MediaHandlerImpl implements MediaHandler {
       for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
         MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
         if (mediaMarkupBuilder.accepts(media)) {
+          log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
           media.setElement(mediaMarkupBuilder.build(media));
           break;
         }
@@ -193,6 +203,7 @@ public final class MediaHandlerImpl implements MediaHandler {
     List<Class<? extends MediaProcessor>> mediaPostProcessors = mediaHandlerConfig.getPostProcessors();
     if (mediaPostProcessors != null) {
       for (Class<? extends MediaProcessor> processorClass : mediaPostProcessors) {
+        log.trace("Apply post processor ({}): {}", processorClass, mediaRequest);
         MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
         media = processor.process(media);
         if (media == null) {
@@ -200,6 +211,8 @@ public final class MediaHandlerImpl implements MediaHandler {
         }
       }
     }
+
+    log.debug("Finished media processing: {}", media);
 
     return media;
   }

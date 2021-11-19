@@ -35,6 +35,8 @@ import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 
@@ -73,6 +75,8 @@ public abstract class MediaSource {
    * @return Name of the property in which the primary media request is stored
    */
   public abstract @Nullable String getPrimaryMediaRefProperty();
+
+  private static final Logger log = LoggerFactory.getLogger(MediaSource.class);
 
   /**
    * Checks whether a media request can be handled by this media source
@@ -397,12 +401,14 @@ public abstract class MediaSource {
    */
   private boolean resolveFirstMatchRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     Rendition rendition = asset.getRendition(mediaArgs);
+    boolean renditionFound = false;
     if (rendition != null) {
       media.setRenditions(ImmutableList.of(rendition));
       media.setUrl(rendition.getUrl());
-      return true;
+      renditionFound = true;
     }
-    return false;
+    log.trace("ResolveFirstMatchRenditions: renditionFound={}, rendition={}", renditionFound, rendition);
+    return renditionFound;
   }
 
   /**
@@ -418,7 +424,7 @@ public abstract class MediaSource {
     boolean allMandatoryResolved;
     final List<Rendition> resolvedRenditions = new ArrayList<>();
 
-    // 1. resolve main media formats (ignore responsive child formats)
+    // resolve main media formats (ignore responsive child formats)
     List<MediaFormatOption> parentMediaFormatOptions = getParentMediaFormats(mediaArgs);
     allMandatoryResolved = resolveRenditionsWithMediaFormats(asset, mediaArgs, parentMediaFormatOptions, resolvedRenditions);
 
@@ -451,6 +457,8 @@ public abstract class MediaSource {
       anyResolved = true;
       media.setUrl(resolvedRenditions.get(0).getUrl());
     }
+
+    log.trace("ResolveAllRenditions: anyResolved={}, allMandatoryResolved={}, resolvedRenditions={}", anyResolved, allMandatoryResolved, resolvedRenditions);
     return anyResolved && allMandatoryResolved;
   }
 

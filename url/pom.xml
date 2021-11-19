@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.url</artifactId>
-  <version>1.6.0</version>
+  <version>1.6.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>URL Handler</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>handler/url</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2021-11-16T14:54:16Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2021-11-16T14:57:18Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
