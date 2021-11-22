@@ -144,23 +144,27 @@ public final class MediaHandlerImpl implements MediaHandler {
       mediaSource = firstMediaSource;
     }
     Media media = new Media(mediaSource, mediaRequest);
+    MediaArgs mediaArgs = mediaRequest.getMediaArgs();
 
     // resolve media format names to media formats
     MediaFormatResolver mediaFormatResolver = new MediaFormatResolver(mediaFormatHandler);
-    if (!mediaFormatResolver.resolve(mediaRequest.getMediaArgs())) {
+    if (!mediaFormatResolver.resolve(mediaArgs)) {
       media.setMediaInvalidReason(MediaInvalidReason.INVALID_MEDIA_FORMAT);
       return media;
     }
 
     // if only downloads are accepted prepare media format filter set which only contains download media formats
-    if (!resolveDownloadMediaFormats(mediaRequest.getMediaArgs())) {
+    if (!resolveDownloadMediaFormats(mediaArgs)) {
       media.setMediaInvalidReason(MediaInvalidReason.INVALID_MEDIA_FORMAT);
       return media;
     }
 
     // apply defaults to media args
-    if (mediaRequest.getMediaArgs().isIncludeAssetWebRenditions() == null) {
-      mediaRequest.getMediaArgs().includeAssetWebRenditions(mediaHandlerConfig.includeAssetWebRenditionsByDefault());
+    if (mediaArgs.isIncludeAssetWebRenditions() == null) {
+      mediaArgs.includeAssetWebRenditions(mediaHandlerConfig.includeAssetWebRenditionsByDefault());
+    }
+    if (mediaArgs.isIgnoreAllDamRenditions() == null) {
+      mediaArgs.ignoreAllDamRenditions(mediaHandlerConfig.ignoreAllDamRenditions());
     }
 
     if (log.isTraceEnabled()) {

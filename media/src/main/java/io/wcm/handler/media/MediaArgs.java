@@ -66,6 +66,7 @@ public final class MediaArgs implements Cloneable {
   private String dummyImageUrl;
   private boolean includeAssetThumbnails;
   private Boolean includeAssetWebRenditions;
+  private Boolean ignoreAllDamRenditions;
   private ImageSizes imageSizes;
   private PictureSource[] pictureSourceSets;
   private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
@@ -602,6 +603,17 @@ public final class MediaArgs implements Cloneable {
     return this;
   }
 
+  // TODO: javadoc
+  public Boolean isIgnoreAllDamRenditions() {
+    return this.ignoreAllDamRenditions;
+  }
+
+  // TODO: javadoc
+  public @NotNull MediaArgs ignoreAllDamRenditions(Boolean value) {
+    this.ignoreAllDamRenditions = value;
+    return this;
+  }
+
   /**
    * @return Image sizes for responsive image handling
    */
@@ -787,6 +799,9 @@ public final class MediaArgs implements Cloneable {
     if (includeAssetWebRenditions != null) {
       sb.append("includeAssetWebRenditions", includeAssetWebRenditions);
     }
+    if (ignoreAllDamRenditions != null) {
+      sb.append("ignoreAllDamRenditions", ignoreAllDamRenditions);
+    }
     if (imageSizes != null) {
       sb.append("imageSizes", imageSizes);
     }
@@ -834,6 +849,7 @@ public final class MediaArgs implements Cloneable {
     clone.dummyImageUrl = this.dummyImageUrl;
     clone.includeAssetThumbnails = this.includeAssetThumbnails;
     clone.includeAssetWebRenditions = this.includeAssetWebRenditions;
+    clone.ignoreAllDamRenditions = this.ignoreAllDamRenditions;
     clone.imageSizes = this.imageSizes;
     clone.pictureSourceSets = ArrayUtils.clone(this.pictureSourceSets);
     clone.dragDropSupport = this.dragDropSupport;

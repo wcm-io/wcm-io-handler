@@ -194,6 +194,7 @@ class MediaArgsTest {
     mediaArgs.dummyImageUrl("/dummy/url");
     mediaArgs.includeAssetThumbnails(true);
     mediaArgs.includeAssetWebRenditions(true);
+    mediaArgs.ignoreAllDamRenditions(true);
     mediaArgs.imageSizes(imageSizes);
     mediaArgs.pictureSources(pictureSourceSets);
     mediaArgs.dragDropSupport(DragDropSupport.NEVER);
@@ -226,6 +227,7 @@ class MediaArgsTest {
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
     assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());
     assertEquals(mediaArgs.isIncludeAssetWebRenditions(), clone.isIncludeAssetWebRenditions());
+    assertEquals(mediaArgs.isIgnoreAllDamRenditions(), clone.isIgnoreAllDamRenditions());
     assertEquals(mediaArgs.getImageSizes(), clone.getImageSizes());
     assertArrayEquals(mediaArgs.getPictureSources(), clone.getPictureSources());
     assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());

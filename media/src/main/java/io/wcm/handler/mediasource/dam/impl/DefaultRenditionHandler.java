@@ -100,16 +100,21 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param rendition Rendition
    */
   private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
-    // ignore AEM-generated thumbnail renditions unless allowed via mediaargs
-    if (!mediaArgs.isIncludeAssetThumbnails() && AssetRendition.isThumbnailRendition(rendition)) {
-      return;
-    }
-    // ignore AEM-generated web renditions unless allowed via mediaargs
-    boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() != null
-        ? mediaArgs.isIncludeAssetWebRenditions()
-        : true;
-    if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
-      return;
+    if (!AssetRendition.isOriginal(rendition)) {
+      // check if all DAM renditions should be ignored
+      boolean isIgnoreAllDamRenditions = mediaArgs.isIgnoreAllDamRenditions() != null && mediaArgs.isIgnoreAllDamRenditions();
+      if (isIgnoreAllDamRenditions) {
+        return;
+      }
+      // ignore AEM-generated thumbnail renditions unless allowed via mediaargs
+      if (!mediaArgs.isIncludeAssetThumbnails() && AssetRendition.isThumbnailRendition(rendition)) {
+        return;
+      }
+      // ignore AEM-generated web renditions unless allowed via mediaargs
+      boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() != null && mediaArgs.isIncludeAssetWebRenditions();
+      if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
+        return;
+      }
     }
     RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
     candidates.add(renditionMetadata);

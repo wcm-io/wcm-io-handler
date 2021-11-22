@@ -20,5 +20,5 @@
 /**
  * SPI for configuring and tailoring media handler processing.
  */
-@org.osgi.annotation.versioning.Version("1.7")
+@org.osgi.annotation.versioning.Version("1.8")
 package io.wcm.handler.media.spi;

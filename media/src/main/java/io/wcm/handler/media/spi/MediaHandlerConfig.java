@@ -248,6 +248,14 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * @return If set to true, all renditions in DAM are ignored when resolving media, only the original
+   *         rendition is respected.
+   */
+  public boolean ignoreAllDamRenditions() {
+    return false;
+  }
+
+  /**
    * Get root path for picking assets using path field widgets.
    * @param page Context page
    * @return DAM root path
