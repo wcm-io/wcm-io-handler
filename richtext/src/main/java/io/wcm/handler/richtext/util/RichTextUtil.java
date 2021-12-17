@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.JDOMConstants;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;
 import org.jdom2.input.SAXBuilder;
@@ -163,6 +164,14 @@ public final class RichTextUtil {
 
       if (xhtmlEntities) {
         saxBuilder.setEntityResolver(XHtmlEntityResolver.getInstance());
+      }
+
+      // XXE prevention
+      saxBuilder.setFeature(JDOMConstants.SAX_FEATURE_EXTERNAL_ENT, false);
+      saxBuilder.setExpandEntities(false);
+      if (!xhtmlEntities) {
+        saxBuilder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        saxBuilder.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
       }
 
       Document doc = saxBuilder.build(new StringReader(xhtmlString));
