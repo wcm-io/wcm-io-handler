@@ -22,8 +22,10 @@ package io.wcm.handler.richtext.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +34,11 @@ import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;
+import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @SuppressWarnings("null")
 class RichTextUtilTest {
@@ -161,8 +166,10 @@ class RichTextUtilTest {
   @Test
   void testXhtmlEntities() throws Exception {
 
-    Element element = RichTextUtil.parseText("Der Jodelkaiser aus dem &Ouml;tztal.", true);
-    assertEquals("Der Jodelkaiser aus dem Ötztal.", element.getText());
+    Element element = RichTextUtil.parseText("<span title=\"Das &Ouml;tztal\">Der Jodelkaiser aus dem &Ouml;tztal.</span>", true);
+    Element span = element.getChild("span");
+    assertEquals("Der Jodelkaiser aus dem Ötztal.", span.getText());
+    assertEquals("Das Ötztal", span.getAttributeValue("title"));
 
   }
 
@@ -180,6 +187,28 @@ class RichTextUtilTest {
 
     // ensure only allowed are in the actual XHTML string
     assertEquals("\t\nabcäöü€😁🇿🇼🚁", element.getText());
+  }
+
+  /**
+   * It is never allowed to inject DOCTYPE declarations into XHTML that is parsed.
+   * This prevents XXE attacks: https://portswigger.net/web-security/xxe
+   * @param xhtmlEntities Parse with XHTML entities
+   */
+  @ParameterizedTest
+  @ValueSource(booleans = { true, false })
+  void testInjectDoctype_WithoutXhtmlEntities(boolean xhtmlEntities) throws Exception {
+    String xml = "<!DOCTYPE foo [ <!ELEMENT foo ANY > ]>\n"
+        + "<foo></foo>";
+
+    // ensure our test XML is valid and could be parsed by an unprotected SAXBuilder
+    SAXBuilder ownSaxBuilder = new SAXBuilder();
+    assertNotNull(ownSaxBuilder.build(new StringReader(xml)));
+
+    // but parsing XML with any DOCTYPE declaration using RichTextUtil will fail
+    // because it's always wrapped in a <root>...</root> element
+    assertThrows(JDOMException.class, () -> {
+      RichTextUtil.parseText(xml, xhtmlEntities);
+    });
   }
 
   private String rewriteContent(String input) throws Exception {
