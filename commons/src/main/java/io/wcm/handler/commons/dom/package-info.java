@@ -20,5 +20,5 @@
 /**
  * DOM convenience objects used by handler implementations to build markup fragments for links and media.
  */
-@org.osgi.annotation.versioning.Version("1.2")
+@org.osgi.annotation.versioning.Version("1.3")
 package io.wcm.handler.commons.dom;
