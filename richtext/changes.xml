@@ -23,9 +23,9 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.5.8" date="not released">
+    <release version="1.5.8" date="2021-12-18">
       <action type="update" dev="sseifert" issue="WHAN-50">
-        Configure JSOM SAXBuilder more conservatively to not expand entities to prevent XXE.
+        Configure JSOM SAXBuilder more conservatively: do not expand entities to prevent XXE.
       </action>
     </release>
 
