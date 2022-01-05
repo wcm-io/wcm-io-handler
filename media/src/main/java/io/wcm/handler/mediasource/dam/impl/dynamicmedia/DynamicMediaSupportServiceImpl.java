@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.s7dam.utils.PublishUtils;
-import com.day.cq.dam.entitlement.api.EntitlementConstants;
 import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
@@ -96,6 +95,11 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
   }
 
+  /**
+   * Feature flag signaling activation of DM on AEM instance.
+   */
+  public static final String ASSETS_SCENE7_FEATURE_FLAG_PID = "com.adobe.dam.asset.scene7.feature.flag";
+
   @Reference
   private Features featureFlagService;
   @Reference
@@ -123,7 +127,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
   @Override
   public boolean isDynamicMediaEnabled() {
-    return this.enabled && featureFlagService.isEnabled(EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID);
+    return this.enabled && featureFlagService.isEnabled(ASSETS_SCENE7_FEATURE_FLAG_PID);
   }
 
   @Override

@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,7 +40,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
-import com.day.cq.dam.entitlement.api.EntitlementConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.Dimension;
@@ -193,7 +193,7 @@ class DynamicMediaSupportServiceImplTest {
 
   private void activateDynamicMediaFeature() {
     context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID,
+        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
         "enabled", true);
   }
 

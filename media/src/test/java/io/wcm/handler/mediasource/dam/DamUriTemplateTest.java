@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam;
 
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.io.FilenameUtils;
@@ -28,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.entitlement.api.EntitlementConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.Media;
@@ -109,7 +109,7 @@ class DamUriTemplateTest {
   void testGetUriTemplate_CropCenter_DynamicMedia() {
     // activate dynamic media
     context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID,
+        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
         "enabled", true);
 
     Media media = mediaHandler.get(asset.getPath()).build();
@@ -125,7 +125,7 @@ class DamUriTemplateTest {
   void testGetUriTemplate_ScaleWidth_DynamicMedia() {
     // activate dynamic media
     context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID,
+        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
         "enabled", true);
 
     Media media = mediaHandler.get(asset.getPath()).build();
@@ -141,7 +141,7 @@ class DamUriTemplateTest {
   void testGetUriTemplate_ScaleHeight_DynamicMedia() {
     // activate dynamic media
     context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID,
+        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
         "enabled", true);
 
     Media media = mediaHandler.get(asset.getPath()).build();

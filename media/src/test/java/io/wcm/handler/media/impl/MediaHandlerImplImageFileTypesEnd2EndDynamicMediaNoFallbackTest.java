@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.commons.io.FilenameUtils;
@@ -29,7 +30,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.entitlement.api.EntitlementConstants;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
@@ -50,7 +50,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends Me
   void setUp() {
     // activate dynamic media
     context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", EntitlementConstants.ASSETS_SCENE7_FEATURE_FLAG_PID,
+        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
         "enabled", true);
     // disable AEM fallback
     context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
