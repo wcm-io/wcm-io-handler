@@ -1,5 +1,0 @@
-#base=js
-
-namespace.js
-linkDialog.js
-linkPlugin.js

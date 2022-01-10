@@ -39,11 +39,6 @@
 
   <modules>
     <module>parent</module>
-    <module>commons</module>
-    <module>url</module>
-    <module>media</module>
-    <module>link</module>
-    <module>richtext</module>
   </modules>
 
   <build>
